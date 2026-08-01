@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL — Mega Professional League</title>
     <style>
-        /* ===== RESET & BASE ===== */
         * {
             margin: 0;
             padding: 0;
@@ -129,13 +128,15 @@
         body.light .news-item .news-text {
             color: #1a212b;
         }
+        body.light .login-box {
+            background: #f5f8fc;
+        }
 
         .container {
             max-width: 1600px;
             width: 100%;
         }
 
-        /* ===== HEADER ===== */
         .header {
             display: flex;
             justify-content: space-between;
@@ -190,7 +191,61 @@
             background: #2a3546;
         }
 
-        /* ===== NAV ===== */
+        /* ===== LOGIN ===== */
+        .login-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #141b24;
+            padding: 4px 12px 4px 16px;
+            border-radius: 30px;
+        }
+        .login-box input {
+            background: #0e1217;
+            border: 1px solid #2a3546;
+            color: #c7d5e0;
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-size: 12px;
+            outline: none;
+            width: 120px;
+        }
+        .login-box input:focus {
+            border-color: #ffb347;
+        }
+        .login-box .login-btn {
+            background: #ffb347;
+            border: none;
+            color: #0e1217;
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+        }
+        .login-box .login-btn:hover {
+            background: #e6a030;
+        }
+        .login-box .user-name {
+            color: #ffb347;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .login-box .logout-btn {
+            background: transparent;
+            border: none;
+            color: #e07a7a;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .login-box .logout-btn:hover {
+            color: #ff4444;
+        }
+        .login-box .login-hint {
+            font-size: 11px;
+            color: #6e7f94;
+        }
+
         .nav {
             display: flex;
             gap: 4px;
@@ -220,7 +275,6 @@
             color: #0e1217;
         }
 
-        /* ===== CONTENT ===== */
         .tab-content {
             display: none;
             animation: fade 0.3s ease;
@@ -233,7 +287,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== MAIN GRID (3 колонки как на HLTV) ===== */
         .main-grid {
             display: grid;
             grid-template-columns: 1fr 1.6fr 1fr;
@@ -251,7 +304,6 @@
             }
         }
 
-        /* ===== LEFT PANEL ===== */
         .left-panel {
             background: #1a212b;
             border-radius: 8px;
@@ -275,7 +327,6 @@
             font-size: 13px;
         }
 
-        /* ===== TOP PLAYER ROW ===== */
         .top-player-row {
             display: flex;
             align-items: center;
@@ -357,7 +408,6 @@
             color: #e07a7a;
         }
 
-        /* ===== PLAYER DETAIL ===== */
         .player-detail {
             display: none;
             background: #141b24;
@@ -436,7 +486,6 @@
             color: #c7d5e0;
         }
 
-        /* ===== CENTER PANEL (НОВОСТИ) ===== */
         .center-panel {
             background: #1a212b;
             border-radius: 8px;
@@ -460,7 +509,6 @@
             font-size: 13px;
         }
 
-        /* ===== НОВОСТИ ===== */
         .news-form {
             background: #141b24;
             border-radius: 6px;
@@ -502,6 +550,18 @@
         }
         .news-form .publish-btn:hover {
             background: #e6a030;
+        }
+        .news-form .publish-btn:disabled {
+            background: #4a5a6e;
+            cursor: not-allowed;
+        }
+        .news-form .login-notice {
+            font-size: 12px;
+            color: #6e7f94;
+            margin-top: 6px;
+        }
+        .news-form .login-notice b {
+            color: #ffb347;
         }
 
         .news-list {
@@ -566,8 +626,10 @@
             color: #ff4444;
             transform: scale(1.2);
         }
+        .news-item .news-delete.hidden {
+            display: none;
+        }
 
-        /* ===== RIGHT PANEL ===== */
         .right-panel {
             display: flex;
             flex-direction: column;
@@ -590,7 +652,6 @@
             font-size: 13px;
         }
 
-        /* ===== MATCH CARDS ===== */
         .match-card {
             background: #1a212b;
             border-radius: 6px;
@@ -680,7 +741,6 @@
             color: #4a5a6e;
         }
 
-        /* ===== MATCH DETAIL ===== */
         .match-detail {
             display: none;
             margin-top: 8px;
@@ -743,7 +803,6 @@
             color: #e07a7a;
         }
 
-        /* ===== SCROLL ===== */
         .scroll-area {
             max-height: 500px;
             overflow-y: auto;
@@ -767,7 +826,6 @@
             }
         }
 
-        /* ===== FOOTER ===== */
         .footer {
             margin-top: 24px;
             padding-top: 14px;
@@ -780,7 +838,6 @@
             color: #6e7f94;
         }
 
-        /* ===== ACHIEVEMENTS BAR ===== */
         .achievements-bar {
             display: flex;
             flex-wrap: wrap;
@@ -824,6 +881,14 @@
         <div class="header-right">
             <span>📅 Май-Июль 2026</span>
             <span class="status">● LIVE</span>
+            <!-- LOGIN -->
+            <div class="login-box" id="loginBox">
+                <span class="login-hint" id="loginHint">🔑 Войдите</span>
+                <input type="password" id="loginPass" placeholder="Пароль..." onkeydown="if(event.key==='Enter') login()">
+                <button class="login-btn" onclick="login()">Войти</button>
+                <span class="user-name" id="userName" style="display:none;"></span>
+                <button class="logout-btn" id="logoutBtn" style="display:none;" onclick="logout()">✕</button>
+            </div>
             <button class="theme-toggle" onclick="toggleTheme()">🌓 Тема</button>
         </div>
     </div>
@@ -836,11 +901,10 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- TAB 1: ГЛАВНАЯ (3 колонки) -->
+    <!-- TAB 1: ГЛАВНАЯ -->
     <!-- ============================================ -->
     <div id="tab-main" class="tab-content active">
 
-        <!-- ACHIEVEMENTS BAR -->
         <div class="achievements-bar">
             <div class="ach-item"><span class="ach-icon">🥇</span><span class="ach-name">Лучший K/D:</span><span class="ach-player">bomba69</span></div>
             <div class="ach-item"><span class="ach-icon">💥</span><span class="ach-name">Лучший ADR:</span><span class="ach-player">bomba69</span></div>
@@ -857,9 +921,7 @@
                     🏆 Топ игроков
                     <span>по K/D</span>
                 </div>
-                <div class="scroll-area" id="playerList">
-                    <!-- Рендерится через JS -->
-                </div>
+                <div class="scroll-area" id="playerList"></div>
                 <div style="font-size:10px; color:#4a5a6e; margin-top:8px; text-align:center; border-top:1px solid #1f2835; padding-top:8px;">
                     🟡 <b style="color:#ffb347;">bomba69</b> — лидер
                 </div>
@@ -873,16 +935,15 @@
                 </div>
 
                 <!-- Форма добавления новости -->
-                <div class="news-form">
+                <div class="news-form" id="newsForm">
                     <input type="text" id="newsTitle" placeholder="Заголовок новости..." maxlength="60">
                     <textarea id="newsText" placeholder="Текст новости..."></textarea>
-                    <button class="publish-btn" onclick="publishNews()">📝 Опубликовать</button>
+                    <button class="publish-btn" id="publishBtn" onclick="publishNews()" disabled>📝 Опубликовать</button>
+                    <div class="login-notice" id="publishNotice">🔒 Только <b>bomba69</b> может публиковать новости. Войдите!</div>
                 </div>
 
                 <!-- Список новостей -->
-                <div class="news-list" id="newsList">
-                    <!-- Новости рендерятся через JS -->
-                </div>
+                <div class="news-list" id="newsList"></div>
             </div>
 
             <!-- ===== RIGHT: MATCHES ===== -->
@@ -951,7 +1012,7 @@
                                 <div class="player-stat"><span class="pname highlight">uxaxaxaxa</span><span class="pstats">17-5 · +76</span></div>
                                 <div class="player-stat"><span class="pname">simple</span><span class="pstats">14-9 · +20</span></div>
                                 <div class="player-stat"><span class="pname">wadsf</span><span class="pstats">13-6 · +7</span></div>
-                                <div class="player-stat"><span class="pname">Корнишон</span><span class="pstats">8-5 · +20</span></div>
+                                <div class="player-stat"><span class="pname">AFKE</span><span class="pstats">8-5 · +20</span></div>
                             </div>
                             <div class="team-detail">
                                 <div class="td-title loss">❌ Team 1</div>
@@ -986,7 +1047,7 @@
                                 <div class="td-title loss">❌ Team 2</div>
                                 <div class="player-stat"><span class="pname">simple</span><span class="pstats">14-15 · +11</span></div>
                                 <div class="player-stat"><span class="pname">wadsf</span><span class="pstats">10-14 · -37</span></div>
-                                <div class="player-stat"><span class="pname">Корнишон</span><span class="pstats">6-15 · -30</span></div>
+                                <div class="player-stat"><span class="pname">AFKE</span><span class="pstats">6-15 · -30</span></div>
                                 <div class="player-stat"><span class="pname worst-text">baksyhanov</span><span class="pstats worst-text">3-15 · -66</span></div>
                             </div>
                             <div class="team-detail">
@@ -1150,7 +1211,10 @@
 </div>
 
 <script>
-    // ===== ДАННЫЕ ИГРОКОВ =====
+    // ===== ПАРОЛЬ ДЛЯ АВТОРИЗАЦИИ =====
+    const ADMIN_PASSWORD = 'bomba69';
+
+    // ===== ДАННЫЕ ИГРОКОВ (с AFKE вместо Корнишон) =====
     const playersData = [
         { name: 'bomba69', matches: 4, k: 66, d: 42, a: 4, kd: 1.57, adr: 92, diff: 24, rating: 1.39, you: true },
         { name: 'абдалбек', matches: 4, k: 58, d: 53, a: 7, kd: 1.09, adr: 85, diff: 5, rating: 1.22, you: false },
@@ -1158,8 +1222,8 @@
         { name: 'Adjiare Gudju', matches: 3, k: 46, d: 54, a: 14, kd: 0.85, adr: 69, diff: -27, rating: 0.95, you: false },
         { name: 'uxaxaxaxa', matches: 4, k: 49, d: 53, a: 8, kd: 0.92, adr: 74, diff: -4, rating: 0.98, you: false },
         { name: 'Gonduras228', matches: 4, k: 42, d: 52, a: 15, kd: 0.81, adr: 70, diff: -10, rating: 0.92, you: false },
+        { name: 'AFKE', matches: 4, k: 22, d: 44, a: 18, kd: 0.50, adr: 59, diff: -22, rating: 0.71, you: false },
         { name: 'wadsf', matches: 3, k: 34, d: 35, a: 5, kd: 0.97, adr: 57, diff: -1, rating: 0.90, you: false },
-        { name: 'Корнишон Истом...', matches: 2, k: 14, d: 20, a: 6, kd: 0.70, adr: 65, diff: -10, rating: 0.91, you: false },
         { name: 'balchuqov_valera', matches: 1, k: 9, d: 17, a: 3, kd: 0.53, adr: 49, diff: -40, rating: 0.69, you: false },
         { name: 'baksyhanovvand...', matches: 3, k: 24, d: 61, a: 7, kd: 0.39, adr: 46, diff: -37, rating: 0.38, you: false }
     ];
@@ -1171,11 +1235,47 @@
         'Adjiare Gudju': ['#0 BO3 (24-28)', '#3 (11-13) как fort[чилл]', '#4 (11-13) как fort[чилл]'],
         'uxaxaxaxa': ['#0 BO3 (34-16)', '#1 (17-5)', '#2 (10-10)', '#4 (11-14)'],
         'Gonduras228': ['#0 BO3 (16-32)', '#1 (6-13)', '#2 (9-9)', '#4 (13-14)'],
+        'AFKE': ['#0 BO3 (14-24)', '#1 (8-5)', '#2 (6-15)'],
         'wadsf': ['#1 (13-6)', '#2 (10-14)', '#4 (11-15)'],
-        'Корнишон Истом...': ['#1 (8-5)', '#2 (6-15)'],
         'balchuqov_valera': ['#4 (9-17)'],
         'baksyhanovvand...': ['#0 BO3 (14-31)', '#2 (3-15)', '#4 (4-17)']
     };
+
+    // ===== АВТОРИЗАЦИЯ =====
+    let isAdmin = false;
+
+    function login() {
+        const pass = document.getElementById('loginPass').value;
+        if (pass === ADMIN_PASSWORD) {
+            isAdmin = true;
+            document.getElementById('loginHint').style.display = 'none';
+            document.getElementById('loginPass').style.display = 'none';
+            document.querySelector('.login-box .login-btn').style.display = 'none';
+            document.getElementById('userName').style.display = 'inline';
+            document.getElementById('userName').textContent = '⭐ bomba69';
+            document.getElementById('logoutBtn').style.display = 'inline';
+            document.getElementById('publishBtn').disabled = false;
+            document.getElementById('publishNotice').innerHTML = '✅ Вы вошли как <b>bomba69</b>. Можете публиковать новости!';
+            // Показываем кнопки удаления
+            document.querySelectorAll('.news-delete').forEach(el => el.classList.remove('hidden'));
+            document.getElementById('loginPass').value = '';
+        } else {
+            alert('❌ Неверный пароль!');
+            document.getElementById('loginPass').value = '';
+        }
+    }
+
+    function logout() {
+        isAdmin = false;
+        document.getElementById('loginHint').style.display = 'inline';
+        document.getElementById('loginPass').style.display = 'inline';
+        document.querySelector('.login-box .login-btn').style.display = 'inline';
+        document.getElementById('userName').style.display = 'none';
+        document.getElementById('logoutBtn').style.display = 'none';
+        document.getElementById('publishBtn').disabled = true;
+        document.getElementById('publishNotice').innerHTML = '🔒 Только <b>bomba69</b> может публиковать новости. Войдите!';
+        document.querySelectorAll('.news-delete').forEach(el => el.classList.add('hidden'));
+    }
 
     // ===== РЕНДЕР ТОП ИГРОКОВ =====
     function renderPlayers() {
@@ -1270,7 +1370,7 @@
                 <div class="news-header">
                     <span class="news-title">${n.title}</span>
                     <span class="news-date">${n.date.toLocaleString('ru-RU')}</span>
-                    <button class="news-delete" onclick="deleteNews(${n.id})">✕</button>
+                    <button class="news-delete ${isAdmin ? '' : 'hidden'}" onclick="deleteNews(${n.id})">✕</button>
                 </div>
                 <div class="news-text">${n.text}</div>
             </div>
@@ -1278,6 +1378,7 @@
     }
 
     function publishNews() {
+        if (!isAdmin) { alert('❌ Только bomba69 может публиковать новости!'); return; }
         const title = document.getElementById('newsTitle').value.trim();
         const text = document.getElementById('newsText').value.trim();
         if (!title || !text) { alert('Заполните заголовок и текст!'); return; }
@@ -1288,6 +1389,7 @@
     }
 
     function deleteNews(id) {
+        if (!isAdmin) { alert('❌ Только bomba69 может удалять новости!'); return; }
         newsData = newsData.filter(n => n.id !== id);
         renderNews();
     }
@@ -1305,7 +1407,7 @@
         const maxRating = sortedByRating[0].rating;
 
         document.getElementById('kdChart').innerHTML = sortedByKd.map(p => `
-            <div class="chart-bar" style="display:flex;align-items:center;gap:6px;margin:2px 0;font-size:11px;">
+            <div style="display:flex;align-items:center;gap:6px;margin:2px 0;font-size:11px;">
                 <span style="min-width:80px;text-align:right;color:#8b9bb0;">${p.name}</span>
                 <div style="flex:1;height:14px;background:#1f2835;border-radius:3px;overflow:hidden;">
                     <div style="height:100%;width:${(p.kd/maxKd*100)}%;background:linear-gradient(90deg,#ffb347,#ff8c00);border-radius:3px;"></div>
@@ -1345,20 +1447,11 @@
         `).join('');
     }
 
-    // ===== СТИЛИ ДЛЯ ГРАФИКОВ =====
-    const style = document.createElement('style');
-    style.textContent = `
-        .chart-bar { display:flex; align-items:center; gap:6px; margin:2px 0; font-size:11px; }
-        .chart-bar .c-label { min-width:80px; text-align:right; color:#8b9bb0; }
-        .chart-bar .c-bar-bg { flex:1; height:14px; background:#1f2835; border-radius:3px; overflow:hidden; }
-        .chart-bar .c-bar-fill { height:100%; border-radius:3px; }
-        .chart-bar .c-value { min-width:36px; font-weight:600; }
-    `;
-    document.head.appendChild(style);
-
     // ===== ИНИЦИАЛИЗАЦИЯ =====
     renderPlayers();
     renderNews();
+    // Скрываем кнопки удаления для неавторизованных
+    document.querySelectorAll('.news-delete').forEach(el => el.classList.add('hidden'));
 </script>
 
 </body>
