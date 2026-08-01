@@ -1543,40 +1543,43 @@
     let githubToken = localStorage.getItem('mpl_github_token') || '';
 
     function login() {
-        const pass = document.getElementById('loginPass').value;
-        if (pass === ADMIN_PASSWORD) {
-            isAdmin = true;
-            document.getElementById('loginStatus').textContent = '✅ Админ';
-            document.getElementById('loginStatus').className = 'login-status admin';
-            document.getElementById('logoutBtn').style.display = 'inline';
-            document.getElementById('loginPass').value = '';
-            document.getElementById('loginPass').placeholder = 'Админ';
-            document.getElementById('publishBtn').classList.add('active');
-            document.getElementById('publishNotice').innerHTML = '✅ Вы вошли как <b>bomba69</b>. Можете публиковать новости!';
-            document.querySelectorAll('.news-delete').forEach(el => el.classList.add('active'));
+    const pass = document.getElementById('loginPass').value;
+    if (pass === ADMIN_PASSWORD) {
+        isAdmin = true;
+        document.getElementById('loginStatus').textContent = '✅ Админ';
+        document.getElementById('loginStatus').className = 'login-status admin';
+        document.getElementById('logoutBtn').style.display = 'inline';
+        document.getElementById('loginPass').value = '';
+        document.getElementById('loginPass').placeholder = 'Админ';
+        document.getElementById('publishBtn').classList.add('active');
+        document.getElementById('publishNotice').innerHTML = '✅ Вы вошли как <b>bomba69</b>. Можете публиковать новости!';
+        document.querySelectorAll('.news-delete').forEach(el => el.classList.add('active'));
 
-            // Показываем поле для токена
-            if (githubToken) {
-                document.getElementById('tokenInput').value = githubToken;
-                document.getElementById('tokenStatus').textContent = '✅ Токен уже сохранён';
-                document.getElementById('tokenStatus').className = 'token-status success';
-                document.getElementById('tokenSetup').classList.remove('show');
-                loadAvatarsFromGitHub();
-                loadNewsFromGitHub().then(data => {
-                    newsData = data;
-                    renderNews();
-                });
-            } else {
-                document.getElementById('tokenSetup').classList.add('show');
-                document.getElementById('tokenStatus').textContent = '⏳ Введите токен';
-                document.getElementById('tokenStatus').className = 'token-status';
-            }
+        // ✅ ПОКАЗЫВАЕМ ПОЛЕ ДЛЯ ТОКЕНА
+        document.getElementById('tokenSetup').style.display = 'block';
+        document.getElementById('tokenSetup').classList.add('show');
+        
+        // Проверяем, есть ли уже сохранённый токен
+        if (githubToken) {
+            document.getElementById('tokenInput').value = githubToken;
+            document.getElementById('tokenStatus').textContent = '✅ Токен уже сохранён';
+            document.getElementById('tokenStatus').className = 'token-status success';
+            document.getElementById('tokenSetup').style.display = 'none';
+            loadAvatarsFromGitHub();
+            loadNewsFromGitHub().then(data => {
+                newsData = data;
+                renderNews();
+            });
         } else {
-            alert('❌ Неверный пароль!');
-            document.getElementById('loginPass').value = '';
+            document.getElementById('tokenStatus').textContent = '⏳ Введите GitHub токен для загрузки аватарок и новостей';
+            document.getElementById('tokenStatus').className = 'token-status';
         }
+    } else {
+        alert('❌ Неверный пароль!');
+        document.getElementById('loginPass').value = '';
     }
-
+}
+    
     function logout() {
         isAdmin = false;
         document.getElementById('loginStatus').textContent = '🔒';
