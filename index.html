@@ -562,12 +562,6 @@
         .news-form .login-notice b {
             color: #ffb347;
         }
-        .news-form .loading-indicator {
-            font-size: 12px;
-            color: #ffb347;
-            margin-top: 6px;
-            display: none;
-        }
 
         .news-list {
             display: flex;
@@ -886,13 +880,6 @@
         <div class="header-right">
             <span>📅 Май-Июль 2026</span>
             <span class="status">● LIVE</span>
-            <div class="login-box" id="loginBox">
-                <span class="login-hint" id="loginHint">🔑 Войдите</span>
-                <input type="password" id="loginPass" placeholder="Пароль..." onkeydown="if(event.key==='Enter') login()">
-                <button class="login-btn" onclick="login()">Войти</button>
-                <span class="user-name" id="userName" style="display:none;"></span>
-                <button class="logout-btn" id="logoutBtn" style="display:none;" onclick="logout()">✕</button>
-            </div>
             <button class="theme-toggle" onclick="toggleTheme()">🌓 Тема</button>
         </div>
     </div>
@@ -911,8 +898,8 @@
 
         <div class="achievements-bar">
             <div class="ach-item"><span class="ach-icon">🥇</span><span class="ach-name">Лучший K/D:</span><span class="ach-player">bomba69</span></div>
-            <div class="ach-item"><span class="ach-icon">💥</span><span class="ach-name">Лучший ADR:</span><span class="ach-player">bomba69</span></div>
-            <div class="ach-item"><span class="ach-icon">📊</span><span class="ach-name">Лучший рейтинг:</span><span class="ach-player">bomba69</span></div>
+            <div class="ach-item"><span class="ach-icon">💥</span><span class="ach-name">Лучший ADR:</span><span class="ach-player">Хомяк с авт</span></div>
+            <div class="ach-item"><span class="ach-icon">📊</span><span class="ach-name">Лучший рейтинг:</span><span class="ach-player">Хомяк с авт</span></div>
             <div class="ach-item"><span class="ach-icon">🔥</span><span class="ach-name">Самый результативный:</span><span class="ach-player">bomba69 (24-4)</span></div>
             <div class="ach-item"><span class="ach-icon">💀</span><span class="ach-name">Худший K/D:</span><span class="ach-player" style="color:#e07a7a;">baksyhanovvand...</span></div>
         </div>
@@ -927,7 +914,7 @@
                 </div>
                 <div class="scroll-area" id="playerList"></div>
                 <div style="font-size:10px; color:#4a5a6e; margin-top:8px; text-align:center; border-top:1px solid #1f2835; padding-top:8px;">
-                    🟡 <b style="color:#ffb347;">bomba69</b> — лидер
+                    🟡 <b style="color:#ffb347;">bomba69</b> — лидер по K/D
                 </div>
             </div>
 
@@ -941,9 +928,8 @@
                 <div class="news-form" id="newsForm">
                     <input type="text" id="newsTitle" placeholder="Заголовок новости..." maxlength="60">
                     <textarea id="newsText" placeholder="Текст новости..."></textarea>
-                    <button class="publish-btn" id="publishBtn" onclick="publishNews()" disabled>📝 Опубликовать</button>
-                    <div class="login-notice" id="publishNotice">🔒 Только <b>bomba69</b> может публиковать новости. Войдите!</div>
-                    <div class="loading-indicator" id="loadingIndicator">⏳ Сохранение...</div>
+                    <button class="publish-btn" id="publishBtn" onclick="publishNews()">📝 Опубликовать</button>
+                    <div class="login-notice" id="publishNotice">✏️ Все могут публиковать новости</div>
                 </div>
 
                 <div class="news-list" id="newsList"></div>
@@ -956,39 +942,40 @@
                     <span>всего 5</span>
                 </div>
 
-                <!-- MATCH #0 -->
+                <!-- MATCH #0: BO3 -->
                 <div class="match-card" onclick="toggleMatchDetail(this)">
                     <div class="match-top">
-                        <span class="title">🏆 Матч #0</span>
+                        <span class="title">🏆 Матч #0 — BO3</span>
                         <span class="date">30.07.2026 · 2:0</span>
                         <span class="click-hint">▶</span>
                     </div>
                     <div class="match-teams">
-                        <div class="team win"><span class="name">TF2</span><span class="score">2</span></div>
+                        <div class="team win"><span class="name">Team Fortress 2</span><span class="score">2</span></div>
                         <span class="vs">vs</span>
-                        <div class="team loss"><span class="score">0</span><span class="name">Magic</span></div>
+                        <div class="team loss"><span class="score">0</span><span class="name">Team Magic</span></div>
                     </div>
                     <div class="match-stats-row">
-                        <span>🏆 <b class="mvp">bomba69</b></span>
-                        <span>💀 <b class="bad">baksyhanov</b></span>
+                        <span>🏆 <b class="mvp">bomba69</b> (37-15, 2.47)</span>
+                        <span>💀 <b class="bad">baksyhanovvand...</b> (14-31, 0.45)</span>
                     </div>
                     <div class="match-detail">
                         <div class="detail-grid">
                             <div class="team-detail">
-                                <div class="td-title win">🏆 TF2</div>
-                                <div class="player-stat"><span class="pname highlight">bomba69</span><span class="pstats">37-15 · +86</span></div>
-                                <div class="player-stat"><span class="pname">uxaxaxaxa</span><span class="pstats">34-16 · +94</span></div>
-                                <div class="player-stat"><span class="pname">Хомяк с авт</span><span class="pstats">35-19 · +85</span></div>
-                                <div class="player-stat"><span class="pname">AFKE</span><span class="pstats">14-24 · -37</span></div>
+                                <div class="td-title win">🏆 Team Fortress 2</div>
+                                <div class="player-stat"><span class="pname highlight">bomba69</span><span class="pstats">37-15 · K/D 2.47 · +86</span></div>
+                                <div class="player-stat"><span class="pname">uxaxaxaxa</span><span class="pstats">34-16 · K/D 2.13 · +94</span></div>
+                                <div class="player-stat"><span class="pname">Хомяк с авт</span><span class="pstats">35-19 · K/D 1.84 · +85</span></div>
+                                <div class="player-stat"><span class="pname">AFKE</span><span class="pstats">14-24 · K/D 0.58 · -37</span></div>
                             </div>
                             <div class="team-detail">
-                                <div class="td-title loss">💀 Magic</div>
-                                <div class="player-stat"><span class="pname">Adjiare</span><span class="pstats">24-28 · -43</span></div>
-                                <div class="player-stat"><span class="pname">abdalbek</span><span class="pstats">20-30 · -41</span></div>
-                                <div class="player-stat"><span class="pname">Gonduras</span><span class="pstats">16-32 · -68</span></div>
-                                <div class="player-stat"><span class="pname worst-text">baksyhanov</span><span class="pstats worst-text">14-31 · -80</span></div>
+                                <div class="td-title loss">💀 Team Magic</div>
+                                <div class="player-stat"><span class="pname">Adjiare Gudju</span><span class="pstats">24-28 · K/D 0.86 · -43</span></div>
+                                <div class="player-stat"><span class="pname">abdalbek</span><span class="pstats">20-30 · K/D 0.67 · -41</span></div>
+                                <div class="player-stat"><span class="pname">Gonduras228</span><span class="pstats">16-32 · K/D 0.50 · -68</span></div>
+                                <div class="player-stat"><span class="pname worst-text">baksyhanovvand...</span><span class="pstats worst-text">14-31 · K/D 0.45 · -80</span></div>
                             </div>
                         </div>
+                        <div style="font-size:10px; color:#4a5a6e; text-align:center; margin-top:4px;">Ancient 13:4 · Anubis 13:6</div>
                     </div>
                 </div>
 
@@ -1005,24 +992,24 @@
                         <div class="team loss"><span class="score">1</span><span class="name">Team 1</span></div>
                     </div>
                     <div class="match-stats-row">
-                        <span>🏆 <b class="mvp">uxaxaxaxa</b></span>
-                        <span>💀 <b class="bad">baksyhanov</b></span>
+                        <span>🏆 <b class="mvp">uxaxaxaxa</b> (17-5, +76)</span>
+                        <span>💀 <b class="bad">baksyhanovvand...</b> (0-13)</span>
                     </div>
                     <div class="match-detail">
                         <div class="detail-grid">
                             <div class="team-detail">
                                 <div class="td-title win">✅ Team 2</div>
-                                <div class="player-stat"><span class="pname highlight">uxaxaxaxa</span><span class="pstats">17-5 · +76</span></div>
-                                <div class="player-stat"><span class="pname">simple</span><span class="pstats">14-9 · +20</span></div>
-                                <div class="player-stat"><span class="pname">wadsf</span><span class="pstats">13-6 · +7</span></div>
-                                <div class="player-stat"><span class="pname">AFKE</span><span class="pstats">8-5 · +20</span></div>
+                                <div class="player-stat"><span class="pname highlight">uxaxaxaxa</span><span class="pstats">17-5 · ADR 131 · +76</span></div>
+                                <div class="player-stat"><span class="pname">Хомяк с авт</span><span class="pstats">14-9 · ADR 105 · +20</span></div>
+                                <div class="player-stat"><span class="pname">wadsf</span><span class="pstats">13-6 · ADR 72 · +7</span></div>
+                                <div class="player-stat"><span class="pname">AFKE</span><span class="pstats">8-5 · ADR 65 · +20</span></div>
                             </div>
                             <div class="team-detail">
                                 <div class="td-title loss">❌ Team 1</div>
-                                <div class="player-stat"><span class="pname">абдалбек</span><span class="pstats">8-13 · -13</span></div>
-                                <div class="player-stat"><span class="pname">bomba69</span><span class="pstats">10-13 · -1</span></div>
-                                <div class="player-stat"><span class="pname">Gonduras</span><span class="pstats">6-13 · -38</span></div>
-                                <div class="player-stat"><span class="pname worst-text">baksyhanov</span><span class="pstats worst-text">0-13 · -74</span></div>
+                                <div class="player-stat"><span class="pname">abdalbek</span><span class="pstats">8-13 · ADR 79 · -13</span></div>
+                                <div class="player-stat"><span class="pname">bomba69</span><span class="pstats">10-13 · ADR 95 · -1</span></div>
+                                <div class="player-stat"><span class="pname">Gonduras228</span><span class="pstats">6-13 · ADR 55 · -38</span></div>
+                                <div class="player-stat"><span class="pname worst-text">baksyhanovvand...</span><span class="pstats worst-text">0-13 · ADR 19 · -74</span></div>
                             </div>
                         </div>
                     </div>
@@ -1041,24 +1028,24 @@
                         <div class="team win"><span class="score">13</span><span class="name">Team 1</span></div>
                     </div>
                     <div class="match-stats-row">
-                        <span>🏆 <b class="mvp">bomba69</b></span>
-                        <span>💀 <b class="bad">baksyhanov</b></span>
+                        <span>🏆 <b class="mvp">bomba69</b> (24-4, +80)</span>
+                        <span>💀 <b class="bad">baksyhanovvand...</b> (3-15)</span>
                     </div>
                     <div class="match-detail">
                         <div class="detail-grid">
                             <div class="team-detail">
                                 <div class="td-title loss">❌ Team 2</div>
-                                <div class="player-stat"><span class="pname">simple</span><span class="pstats">14-15 · +11</span></div>
-                                <div class="player-stat"><span class="pname">wadsf</span><span class="pstats">10-14 · -37</span></div>
-                                <div class="player-stat"><span class="pname">AFKE</span><span class="pstats">6-15 · -30</span></div>
-                                <div class="player-stat"><span class="pname worst-text">baksyhanov</span><span class="pstats worst-text">3-15 · -66</span></div>
+                                <div class="player-stat"><span class="pname">Хомяк с авт</span><span class="pstats">14-15 · ADR 94 · +11</span></div>
+                                <div class="player-stat"><span class="pname">wadsf</span><span class="pstats">10-14 · ADR 50 · -37</span></div>
+                                <div class="player-stat"><span class="pname">AFKE</span><span class="pstats">6-15 · ADR 65 · -30</span></div>
+                                <div class="player-stat"><span class="pname worst-text">baksyhanovvand...</span><span class="pstats worst-text">3-15 · ADR 28 · -66</span></div>
                             </div>
                             <div class="team-detail">
                                 <div class="td-title win">✅ Team 1</div>
-                                <div class="player-stat"><span class="pname highlight">bomba69</span><span class="pstats">24-4 · +80</span></div>
-                                <div class="player-stat"><span class="pname">абдалбек</span><span class="pstats">16-11 · +39</span></div>
-                                <div class="player-stat"><span class="pname">Gonduras</span><span class="pstats">9-9 · +15</span></div>
-                                <div class="player-stat"><span class="pname">uxaxaxaxa</span><span class="pstats">10-10 · -19</span></div>
+                                <div class="player-stat"><span class="pname highlight">bomba69</span><span class="pstats">24-4 · ADR 117 · +80</span></div>
+                                <div class="player-stat"><span class="pname">abdalbek</span><span class="pstats">16-11 · ADR 112 · +39</span></div>
+                                <div class="player-stat"><span class="pname">Gonduras228</span><span class="pstats">9-9 · ADR 79 · +15</span></div>
+                                <div class="player-stat"><span class="pname">uxaxaxaxa</span><span class="pstats">10-10 · ADR 64 · -19</span></div>
                             </div>
                         </div>
                     </div>
@@ -1077,22 +1064,22 @@
                         <div class="team win"><span class="score">13</span><span class="name">Team 1</span></div>
                     </div>
                     <div class="match-stats-row">
-                        <span>🏆 <b class="mvp">wadsf / Gonduras</b></span>
-                        <span>💀 <b class="bad">baksyhanov</b></span>
+                        <span>🏆 <b class="mvp">wadsf / Gonduras228</b></span>
+                        <span>💀 <b class="bad">baksyhanovvand...</b></span>
                     </div>
                     <div class="match-detail">
                         <div class="detail-grid">
                             <div class="team-detail">
                                 <div class="td-title loss">❌ Team 2</div>
-                                <div class="player-stat"><span class="pname">абданбек</span><span class="pstats">рейтинг 1.39</span></div>
+                                <div class="player-stat"><span class="pname">abdalbek</span><span class="pstats">рейтинг 1.39</span></div>
                                 <div class="player-stat"><span class="pname">fort[чилл]</span><span class="pstats">рейтинг 1.19</span></div>
-                                <div class="player-stat"><span class="pname">balchuqov</span><span class="pstats">рейтинг 0.54</span></div>
-                                <div class="player-stat"><span class="pname worst-text">baksyhanov</span><span class="pstats worst-text">рейтинг -0.02</span></div>
+                                <div class="player-stat"><span class="pname">balchuqov_valera</span><span class="pstats">рейтинг 0.54</span></div>
+                                <div class="player-stat"><span class="pname worst-text">baksyhanovvand...</span><span class="pstats worst-text">рейтинг -0.02</span></div>
                             </div>
                             <div class="team-detail">
                                 <div class="td-title win">✅ Team 1</div>
                                 <div class="player-stat"><span class="pname">wadsf</span><span class="pstats">рейтинг 1.77</span></div>
-                                <div class="player-stat"><span class="pname">Gonduras</span><span class="pstats">рейтинг 1.39</span></div>
+                                <div class="player-stat"><span class="pname">Gonduras228</span><span class="pstats">рейтинг 1.39</span></div>
                                 <div class="player-stat"><span class="pname">bomba69</span><span class="pstats">рейтинг 1.19</span></div>
                                 <div class="player-stat"><span class="pname">uxaxaxaxa</span><span class="pstats">рейтинг +1.17</span></div>
                             </div>
@@ -1113,31 +1100,31 @@
                         <div class="team win"><span class="score">13</span><span class="name">Team 1</span></div>
                     </div>
                     <div class="match-stats-row">
-                        <span>🏆 <b class="mvp">bomba69</b></span>
-                        <span>💀 <b class="bad">baksyhanov</b></span>
+                        <span>🏆 <b class="mvp">bomba69</b> (16-12, +31)</span>
+                        <span>💀 <b class="bad">baksyhanovvand...</b> (4-17)</span>
                     </div>
                     <div class="match-detail">
                         <div class="detail-grid">
                             <div class="team-detail">
                                 <div class="td-title loss">❌ Team 2</div>
-                                <div class="player-stat"><span class="pname">Gonduras</span><span class="pstats">13-14 · +5</span></div>
-                                <div class="player-stat"><span class="pname">balchuqov</span><span class="pstats">9-17 · -40</span></div>
-                                <div class="player-stat"><span class="pname">wadsf</span><span class="pstats">11-15 · -41</span></div>
-                                <div class="player-stat"><span class="pname worst-text">baksyhanov</span><span class="pstats worst-text">4-17 · -66</span></div>
+                                <div class="player-stat"><span class="pname">Gonduras228</span><span class="pstats">13-14 · ADR 78 · +5</span></div>
+                                <div class="player-stat"><span class="pname">balchuqov_valera</span><span class="pstats">9-17 · ADR 49 · -40</span></div>
+                                <div class="player-stat"><span class="pname">wadsf</span><span class="pstats">11-15 · ADR 49 · -41</span></div>
+                                <div class="player-stat"><span class="pname worst-text">baksyhanovvand...</span><span class="pstats worst-text">4-17 · ADR 18 · -66</span></div>
                             </div>
                             <div class="team-detail">
                                 <div class="td-title win">✅ Team 1</div>
-                                <div class="player-stat"><span class="pname highlight">bomba69</span><span class="pstats">16-12 · +31</span></div>
-                                <div class="player-stat"><span class="pname">абдалбек</span><span class="pstats">16-14 · +1</span></div>
-                                <div class="player-stat"><span class="pname">fort[чилл]</span><span class="pstats">11-13 · +8</span></div>
-                                <div class="player-stat"><span class="pname">uxaxaxaxa</span><span class="pstats">11-14 · -22</span></div>
+                                <div class="player-stat"><span class="pname highlight">bomba69</span><span class="pstats">16-12 · ADR 90 · +31</span></div>
+                                <div class="player-stat"><span class="pname">abdalbek</span><span class="pstats">16-14 · ADR 73 · +1</span></div>
+                                <div class="player-stat"><span class="pname">fort[чилл]</span><span class="pstats">11-13 · ADR 71 · +8</span></div>
+                                <div class="player-stat"><span class="pname">uxaxaxaxa</span><span class="pstats">11-14 · ADR 46 · -22</span></div>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div style="text-align:center; color:#4a5a6e; font-size:10px; margin-top:4px;">
-                    Mirage · 4v4
+                    Все матчи на Mirage · 4v4
                 </div>
             </div>
 
@@ -1181,12 +1168,12 @@
             <div style="background:#1a212b; border-radius:8px; padding:16px; text-align:center; border:1px solid #2a3546;">
                 <div style="font-size:40px;">💥</div>
                 <div style="font-weight:700; font-size:16px; color:#7a9bcb;">Лучший ADR</div>
-                <div style="font-size:13px;"><b>bomba69</b> — 92</div>
+                <div style="font-size:13px;"><b>Хомяк с авт</b> — 100</div>
             </div>
             <div style="background:#1a212b; border-radius:8px; padding:16px; text-align:center; border:1px solid #2a3546;">
                 <div style="font-size:40px;">📊</div>
                 <div style="font-weight:700; font-size:16px; color:#7ddfa0;">Лучший рейтинг</div>
-                <div style="font-size:13px;"><b>bomba69</b> — 1.39</div>
+                <div style="font-size:13px;"><b>Хомяк с авт</b> — 1.47</div>
             </div>
             <div style="background:#1a212b; border-radius:8px; padding:16px; text-align:center; border:1px solid #2a3546;">
                 <div style="font-size:40px;">🔥</div>
@@ -1201,7 +1188,7 @@
             <div style="background:#1a212b; border-radius:8px; padding:16px; text-align:center; border:1px solid #2a3546;">
                 <div style="font-size:40px;">🏅</div>
                 <div style="font-weight:700; font-size:16px; color:#c9a85c;">Лучшая разница</div>
-                <div style="font-size:13px;"><b>uxaxaxaxa</b> — +94</div>
+                <div style="font-size:13px;"><b>Хомяк с авт</b> — +116</div>
             </div>
         </div>
     </div>
@@ -1209,29 +1196,17 @@
     <!-- ===== FOOTER ===== -->
     <div class="footer">
         MPL · Mega Professional League · <b>HLTV-style</b> · Май-Июль 2026
+        <br>simple → Хомяк с авт · абданбек → абдалбек
     </div>
 
 </div>
 
 <script>
-    // ===== НАСТРОЙКИ GITHUB =====
-    // ⚠️ ЗАМЕНИТЕ ЭТИ ДАННЫЕ НА СВОИ!
-    const GITHUB_USER = 'Mpc-MegaProfessionalLeague1';  // Ваш ник на GitHub
-    const GITHUB_REPO = 'Mpc-MegaProfessionalLeague1.github.io';  // Название репозитория
-    const GITHUB_TOKEN = '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';  // Вставьте ваш токен сюда!
-
-    // Файл для хранения новостей
-    const NEWS_FILE = 'news.json';
-
-    // ===== ПАРОЛЬ ДЛЯ АВТОРИЗАЦИИ =====
-    const ADMIN_PASSWORD = 'bomba69';
-    let isAdmin = false;
-
-    // ===== ДАННЫЕ ИГРОКОВ =====
+    // ===== ДАННЫЕ ИГРОКОВ (ИСПРАВЛЕННЫЕ) =====
     const playersData = [
         { name: 'bomba69', matches: 4, k: 66, d: 42, a: 4, kd: 1.57, adr: 92, diff: 24, rating: 1.39, you: true },
-        { name: 'абдалбек', matches: 4, k: 58, d: 53, a: 7, kd: 1.09, adr: 85, diff: 5, rating: 1.22, you: false },
-        { name: 'simple', matches: 2, k: 28, d: 24, a: 6, kd: 1.17, adr: 100, diff: 4, rating: 1.35, you: false },
+        { name: 'Хомяк с авт', matches: 3, k: 63, d: 43, a: 11, kd: 1.47, adr: 100, diff: 116, rating: 1.47, you: false },
+        { name: 'abdalbek', matches: 4, k: 58, d: 53, a: 7, kd: 1.09, adr: 85, diff: 5, rating: 1.22, you: false },
         { name: 'Adjiare Gudju', matches: 3, k: 46, d: 54, a: 14, kd: 0.85, adr: 69, diff: -27, rating: 0.95, you: false },
         { name: 'uxaxaxaxa', matches: 4, k: 49, d: 53, a: 8, kd: 0.92, adr: 74, diff: -4, rating: 0.98, you: false },
         { name: 'Gonduras228', matches: 4, k: 42, d: 52, a: 15, kd: 0.81, adr: 70, diff: -10, rating: 0.92, you: false },
@@ -1243,8 +1218,8 @@
 
     const playerMatches = {
         'bomba69': ['#0 BO3 (37-15)', '#1 (10-13)', '#2 (24-4)', '#4 (16-12)'],
-        'абдалбек': ['#0 BO3 (20-30)', '#1 (8-13)', '#2 (16-11)', '#4 (16-14)'],
-        'simple': ['#1 (14-9)', '#2 (14-15)'],
+        'Хомяк с авт': ['#0 BO3 (35-19)', '#1 (14-9)', '#2 (14-15)'],
+        'abdalbek': ['#0 BO3 (20-30)', '#1 (8-13)', '#2 (16-11)', '#3 (рейтинг 1.39)', '#4 (16-14)'],
         'Adjiare Gudju': ['#0 BO3 (24-28)', '#3 (11-13) как fort[чилл]', '#4 (11-13) как fort[чилл]'],
         'uxaxaxaxa': ['#0 BO3 (34-16)', '#1 (17-5)', '#2 (10-10)', '#4 (11-14)'],
         'Gonduras228': ['#0 BO3 (16-32)', '#1 (6-13)', '#2 (9-9)', '#4 (13-14)'],
@@ -1254,132 +1229,17 @@
         'baksyhanovvand...': ['#0 BO3 (14-31)', '#2 (3-15)', '#4 (4-17)']
     };
 
-    // ===== РАБОТА С НОВОСТЯМИ ЧЕРЕЗ GITHUB API =====
+    // ===== НОВОСТИ (локальное хранилище) =====
+    let newsData = JSON.parse(localStorage.getItem('mpl_news')) || [
+        { id: 1, title: '🏆 Старт сезона MPL!', text: 'Дружеский турнир MPL начался! Следите за матчами и статистикой.', date: new Date('2026-05-09T10:00:00').toISOString() },
+        { id: 2, title: '🔥 Bomba69 делает 24-4!', text: 'В матче #2 Bomba69 показал невероятный результат — 24 убийства при 4 смертях!', date: new Date('2026-05-09T15:30:00').toISOString() },
+        { id: 3, title: '📊 Обновлена статистика', text: 'simple переименован в Хомяк с авт, абданбек исправлен на абдалбек.', date: new Date().toISOString() }
+    ];
 
-    function getDefaultNews() {
-        return [
-            { id: 1, title: '🏆 Старт сезона MPL!', text: 'Дружеский турнир MPL начался! Следите за матчами и статистикой.', date: new Date('2026-05-09T10:00:00').toISOString() },
-            { id: 2, title: '🔥 Bomba69 делает 24-4!', text: 'В матче #2 Bomba69 показал невероятный результат — 24 убийства при 4 смертях!', date: new Date('2026-05-09T15:30:00').toISOString() },
-            { id: 3, title: '📊 Обновлена статистика', text: 'Добавлены графики, достижения и сравнение игроков. Сайт становится лучше!', date: new Date('2026-07-30T12:00:00').toISOString() }
-        ];
+    function saveNews() {
+        localStorage.setItem('mpl_news', JSON.stringify(newsData));
     }
 
-    async function loadNewsFromGitHub() {
-        try {
-            const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${NEWS_FILE}`;
-            const response = await fetch(url, {
-                headers: {
-                    'Authorization': `token ${GITHUB_TOKEN}`,
-                    'Accept': 'application/vnd.github.v3+json'
-                }
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                const content = atob(data.content);
-                const parsed = JSON.parse(content);
-                return parsed.map(n => ({ ...n, date: n.date }));
-            } else if (response.status === 404) {
-                // Файла нет — создаём с дефолтными новостями
-                const defaultNews = getDefaultNews();
-                await saveNewsToGitHub(defaultNews);
-                return defaultNews;
-            } else {
-                console.error('Ошибка загрузки новостей:', response.status);
-                return getDefaultNews();
-            }
-        } catch (e) {
-            console.error('Ошибка загрузки новостей:', e);
-            return getDefaultNews();
-        }
-    }
-
-    async function saveNewsToGitHub(newsData) {
-        try {
-            const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${NEWS_FILE}`;
-            const content = btoa(unescape(encodeURIComponent(JSON.stringify(newsData, null, 2))));
-
-            // Проверяем, существует ли файл
-            let sha = '';
-            try {
-                const checkResponse = await fetch(url, {
-                    headers: {
-                        'Authorization': `token ${GITHUB_TOKEN}`,
-                        'Accept': 'application/vnd.github.v3+json'
-                    }
-                });
-                if (checkResponse.ok) {
-                    const data = await checkResponse.json();
-                    sha = data.sha;
-                }
-            } catch(e) {}
-
-            const body = {
-                message: 'Обновление новостей MPL',
-                content: content,
-                branch: 'main'
-            };
-            if (sha) body.sha = sha;
-
-            const response = await fetch(url, {
-                method: 'PUT',
-                headers: {
-                    'Authorization': `token ${GITHUB_TOKEN}`,
-                    'Accept': 'application/vnd.github.v3+json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify(body)
-            });
-
-            if (!response.ok) {
-                const error = await response.json();
-                console.error('Ошибка сохранения:', error);
-                throw new Error('Не удалось сохранить новости');
-            }
-
-            return true;
-        } catch (e) {
-            console.error('Ошибка сохранения новостей:', e);
-            throw e;
-        }
-    }
-
-    let newsData = [];
-
-    // ===== АВТОРИЗАЦИЯ =====
-    function login() {
-        const pass = document.getElementById('loginPass').value;
-        if (pass === ADMIN_PASSWORD) {
-            isAdmin = true;
-            document.getElementById('loginHint').style.display = 'none';
-            document.getElementById('loginPass').style.display = 'none';
-            document.querySelector('.login-box .login-btn').style.display = 'none';
-            document.getElementById('userName').style.display = 'inline';
-            document.getElementById('userName').textContent = '⭐ bomba69';
-            document.getElementById('logoutBtn').style.display = 'inline';
-            document.getElementById('publishBtn').disabled = false;
-            document.getElementById('publishNotice').innerHTML = '✅ Вы вошли как <b>bomba69</b>. Можете публиковать новости!';
-            document.querySelectorAll('.news-delete').forEach(el => el.classList.remove('hidden'));
-            document.getElementById('loginPass').value = '';
-        } else {
-            alert('❌ Неверный пароль!');
-            document.getElementById('loginPass').value = '';
-        }
-    }
-
-    function logout() {
-        isAdmin = false;
-        document.getElementById('loginHint').style.display = 'inline';
-        document.getElementById('loginPass').style.display = 'inline';
-        document.querySelector('.login-box .login-btn').style.display = 'inline';
-        document.getElementById('userName').style.display = 'none';
-        document.getElementById('logoutBtn').style.display = 'none';
-        document.getElementById('publishBtn').disabled = true;
-        document.getElementById('publishNotice').innerHTML = '🔒 Только <b>bomba69</b> может публиковать новости. Войдите!';
-        document.querySelectorAll('.news-delete').forEach(el => el.classList.add('hidden'));
-    }
-
-    // ===== НОВОСТИ =====
     function renderNews() {
         const container = document.getElementById('newsList');
         const sorted = [...newsData].sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -1388,51 +1248,28 @@
                 <div class="news-header">
                     <span class="news-title">${n.title}</span>
                     <span class="news-date">${new Date(n.date).toLocaleString('ru-RU')}</span>
-                    <button class="news-delete ${isAdmin ? '' : 'hidden'}" onclick="deleteNews(${n.id})">✕</button>
+                    <button class="news-delete" onclick="deleteNews(${n.id})">✕</button>
                 </div>
                 <div class="news-text">${n.text}</div>
             </div>
         `).join('');
     }
 
-    async function publishNews() {
-        if (!isAdmin) { alert('❌ Только bomba69 может публиковать новости!'); return; }
+    function publishNews() {
         const title = document.getElementById('newsTitle').value.trim();
         const text = document.getElementById('newsText').value.trim();
         if (!title || !text) { alert('Заполните заголовок и текст!'); return; }
-
-        const loading = document.getElementById('loadingIndicator');
-        loading.style.display = 'block';
-        document.getElementById('publishBtn').disabled = true;
-
-        try {
-            newsData.push({ id: Date.now(), title, text, date: new Date().toISOString() });
-            await saveNewsToGitHub(newsData);
-            document.getElementById('newsTitle').value = '';
-            document.getElementById('newsText').value = '';
-            renderNews();
-        } catch (e) {
-            alert('❌ Ошибка сохранения новостей. Проверьте токен и настройки GitHub.');
-            // Откатываем
-            newsData = await loadNewsFromGitHub();
-            renderNews();
-        }
-
-        loading.style.display = 'none';
-        document.getElementById('publishBtn').disabled = false;
+        newsData.push({ id: Date.now(), title, text, date: new Date().toISOString() });
+        saveNews();
+        document.getElementById('newsTitle').value = '';
+        document.getElementById('newsText').value = '';
+        renderNews();
     }
 
-    async function deleteNews(id) {
-        if (!isAdmin) { alert('❌ Только bomba69 может удалять новости!'); return; }
+    function deleteNews(id) {
         newsData = newsData.filter(n => n.id !== id);
-        try {
-            await saveNewsToGitHub(newsData);
-            renderNews();
-        } catch (e) {
-            alert('❌ Ошибка удаления новости.');
-            newsData = await loadNewsFromGitHub();
-            renderNews();
-        }
+        saveNews();
+        renderNews();
     }
 
     // ===== РЕНДЕР ТОП ИГРОКОВ =====
@@ -1567,23 +1404,8 @@
     }
 
     // ===== ИНИЦИАЛИЗАЦИЯ =====
-    async function init() {
-        renderPlayers();
-
-        // Загружаем новости из GitHub
-        try {
-            newsData = await loadNewsFromGitHub();
-        } catch (e) {
-            console.error('Ошибка загрузки новостей:', e);
-            newsData = getDefaultNews();
-        }
-        renderNews();
-
-        // Скрываем кнопки удаления
-        document.querySelectorAll('.news-delete').forEach(el => el.classList.add('hidden'));
-    }
-
-    init();
+    renderPlayers();
+    renderNews();
 </script>
 
 </body>
