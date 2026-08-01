@@ -153,18 +153,6 @@
             background: #6c5ce7;
             color: #fff;
         }
-        body.light .token-setup {
-            background: rgba(255, 255, 255, 0.8);
-            border-color: rgba(0, 0, 0, 0.1);
-        }
-        body.light .token-setup input {
-            background: #e8ecf1;
-            color: #141a24;
-            border-color: rgba(0, 0, 0, 0.1);
-        }
-        body.light .token-setup .token-status {
-            color: #4a5a6e;
-        }
         body.light .login-box {
             background: rgba(255, 255, 255, 0.8);
         }
@@ -183,7 +171,6 @@
             padding: 0 16px;
         }
 
-        /* ===== HEADER ===== */
         .header {
             position: sticky;
             top: 0;
@@ -275,7 +262,6 @@
             display: inline-block;
         }
 
-        /* ===== LOGIN BOX ===== */
         .login-box {
             display: flex;
             align-items: center;
@@ -337,7 +323,6 @@
             transform: scale(1.15);
         }
 
-        /* ===== NAV ===== */
         .nav {
             display: flex;
             gap: 4px;
@@ -384,7 +369,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* ===== GLASS CARDS ===== */
         .glass-card {
             background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(16px);
@@ -416,17 +400,9 @@
             }
         }
 
-        .left-panel {
-            composes: glass-card;
-        }
-        .center-panel {
-            composes: glass-card;
-        }
-        .right-panel {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
+        .left-panel { composes: glass-card; }
+        .center-panel { composes: glass-card; }
+        .right-panel { display: flex; flex-direction: column; gap: 10px; }
 
         .panel-title {
             font-size: 15px;
@@ -467,15 +443,9 @@
             min-width: 26px;
             color: #6e7f94;
         }
-        .top-player-row .rank.gold {
-            color: #f9ca24;
-        }
-        .top-player-row .rank.silver {
-            color: #bdc3c7;
-        }
-        .top-player-row .rank.bronze {
-            color: #e67e22;
-        }
+        .top-player-row .rank.gold { color: #f9ca24; }
+        .top-player-row .rank.silver { color: #bdc3c7; }
+        .top-player-row .rank.bronze { color: #e67e22; }
         .player-avatar-mini {
             width: 30px;
             height: 30px;
@@ -503,24 +473,16 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-        .top-player-row .pname.you {
-            color: #a29bfe;
-        }
+        .top-player-row .pname.you { color: #a29bfe; }
         .top-player-row .pstats {
             display: flex;
             gap: 8px;
             font-size: 11px;
             color: #8b9bb0;
         }
-        .top-player-row .pstats b {
-            color: #c7d5e0;
-        }
-        .top-player-row .pstats .best {
-            color: #00b894;
-        }
-        .top-player-row .pstats .worst {
-            color: #e17055;
-        }
+        .top-player-row .pstats b { color: #c7d5e0; }
+        .top-player-row .pstats .best { color: #00b894; }
+        .top-player-row .pstats .worst { color: #e17055; }
         .badge-kd {
             background: rgba(255, 255, 255, 0.06);
             padding: 2px 10px;
@@ -564,76 +526,6 @@
             border-radius: 4px;
         }
 
-        /* ===== TOKEN SETUP ===== */
-        .token-setup {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 12px;
-            padding: 16px 20px;
-            margin-bottom: 16px;
-            display: none;
-        }
-        .token-setup.show {
-            display: block;
-        }
-        .token-setup .token-title {
-            font-weight: 600;
-            font-size: 14px;
-            color: #e8eff7;
-            margin-bottom: 8px;
-        }
-        .token-setup .token-desc {
-            font-size: 12px;
-            color: #6e7f94;
-            margin-bottom: 10px;
-        }
-        .token-setup .token-input-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        .token-setup input {
-            flex: 1;
-            min-width: 200px;
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            color: #c7d5e0;
-            padding: 8px 14px;
-            border-radius: 8px;
-            font-size: 13px;
-            outline: none;
-            font-family: 'Inter', sans-serif;
-        }
-        .token-setup input:focus {
-            border-color: #6c5ce7;
-        }
-        .token-setup .token-btn {
-            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
-            border: none;
-            color: #fff;
-            padding: 8px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 13px;
-            cursor: pointer;
-            transition: 0.25s;
-        }
-        .token-setup .token-btn:hover {
-            transform: scale(1.03);
-        }
-        .token-setup .token-status {
-            font-size: 12px;
-            margin-top: 8px;
-            color: #6e7f94;
-        }
-        .token-setup .token-status.success {
-            color: #00b894;
-        }
-        .token-setup .token-status.error {
-            color: #e17055;
-        }
-
-        /* ===== MATCH CARDS ===== */
         .match-card {
             background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(8px);
@@ -651,9 +543,7 @@
             transform: translateY(-2px);
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
         }
-        .match-card.loss {
-            border-left-color: #e17055;
-        }
+        .match-card.loss { border-left-color: #e17055; }
         .match-card .match-top {
             display: flex;
             justify-content: space-between;
@@ -661,14 +551,8 @@
             flex-wrap: wrap;
             gap: 4px 10px;
         }
-        .match-card .match-top .title {
-            font-weight: 600;
-            font-size: 13px;
-        }
-        .match-card .match-top .date {
-            color: #6e7f94;
-            font-size: 10px;
-        }
+        .match-card .match-top .title { font-weight: 600; font-size: 13px; }
+        .match-card .match-top .date { color: #6e7f94; font-size: 10px; }
         .match-card .match-teams {
             display: flex;
             justify-content: space-between;
@@ -683,21 +567,15 @@
             align-items: center;
             gap: 6px;
         }
-        .match-card .match-teams .team .name {
-            font-weight: 500;
-        }
+        .match-card .match-teams .team .name { font-weight: 500; }
         .match-card .match-teams .team .score {
             font-weight: 700;
             font-size: 15px;
             min-width: 22px;
             text-align: center;
         }
-        .match-card .match-teams .team.win .score {
-            color: #00b894;
-        }
-        .match-card .match-teams .team.loss .score {
-            color: #e17055;
-        }
+        .match-card .match-teams .team.win .score { color: #00b894; }
+        .match-card .match-teams .team.loss .score { color: #e17055; }
         .match-card .match-teams .vs {
             color: #4a5a6e;
             font-weight: 700;
@@ -713,19 +591,10 @@
             font-size: 11px;
             color: #6e7f94;
         }
-        .match-card .match-stats-row b {
-            color: #c7d5e0;
-        }
-        .match-card .match-stats-row .mvp {
-            color: #a29bfe;
-        }
-        .match-card .match-stats-row .bad {
-            color: #e17055;
-        }
-        .match-card .click-hint {
-            font-size: 9px;
-            color: #4a5a6e;
-        }
+        .match-card .match-stats-row b { color: #c7d5e0; }
+        .match-card .match-stats-row .mvp { color: #a29bfe; }
+        .match-card .match-stats-row .bad { color: #e17055; }
+        .match-card .click-hint { font-size: 9px; color: #4a5a6e; }
 
         .match-detail {
             display: none;
@@ -734,18 +603,14 @@
             border-top: 1px solid rgba(255, 255, 255, 0.06);
             animation: fadeUp 0.3s ease;
         }
-        .match-detail.open {
-            display: block;
-        }
+        .match-detail.open { display: block; }
         .match-detail .detail-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 8px;
         }
         @media (max-width: 600px) {
-            .match-detail .detail-grid {
-                grid-template-columns: 1fr;
-            }
+            .match-detail .detail-grid { grid-template-columns: 1fr; }
         }
         .match-detail .team-detail {
             background: rgba(0, 0, 0, 0.2);
@@ -759,12 +624,8 @@
             padding-bottom: 3px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         }
-        .match-detail .team-detail .td-title.win {
-            color: #00b894;
-        }
-        .match-detail .team-detail .td-title.loss {
-            color: #e17055;
-        }
+        .match-detail .team-detail .td-title.win { color: #00b894; }
+        .match-detail .team-detail .td-title.loss { color: #e17055; }
         .match-detail .player-stat {
             display: flex;
             justify-content: space-between;
@@ -772,24 +633,12 @@
             font-size: 11px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.03);
         }
-        .match-detail .player-stat:last-child {
-            border-bottom: none;
-        }
-        .match-detail .player-stat .pname {
-            color: #b0c4de;
-        }
-        .match-detail .player-stat .pstats {
-            color: #6e7f94;
-            font-size: 10px;
-        }
-        .match-detail .player-stat .highlight {
-            color: #a29bfe;
-        }
-        .match-detail .player-stat .worst-text {
-            color: #e17055;
-        }
+        .match-detail .player-stat:last-child { border-bottom: none; }
+        .match-detail .player-stat .pname { color: #b0c4de; }
+        .match-detail .player-stat .pstats { color: #6e7f94; font-size: 10px; }
+        .match-detail .player-stat .highlight { color: #a29bfe; }
+        .match-detail .player-stat .worst-text { color: #e17055; }
 
-        /* ===== PROFILE ===== */
         .profile-overlay {
             display: none;
             position: fixed;
@@ -806,9 +655,7 @@
             padding: 20px;
             animation: fadeUp 0.3s ease;
         }
-        .profile-overlay.open {
-            display: flex;
-        }
+        .profile-overlay.open { display: flex; }
         .profile-panel {
             background: #141a24;
             border-radius: 20px;
@@ -901,12 +748,8 @@
             border: 2px solid #141a24;
             transition: 0.25s;
         }
-        .profile-avatar-upload:hover {
-            transform: scale(1.12);
-        }
-        .profile-avatar-upload input {
-            display: none;
-        }
+        .profile-avatar-upload:hover { transform: scale(1.12); }
+        .profile-avatar-upload input { display: none; }
 
         .profile-header-info h2 {
             font-size: 24px;
@@ -929,9 +772,7 @@
             margin-bottom: 18px;
         }
         @media (max-width: 600px) {
-            .profile-stats {
-                grid-template-columns: 1fr 1fr;
-            }
+            .profile-stats { grid-template-columns: 1fr 1fr; }
         }
         .profile-stat {
             background: rgba(255, 255, 255, 0.04);
@@ -944,12 +785,8 @@
             font-weight: 700;
             color: #a29bfe;
         }
-        .profile-stat .num.good {
-            color: #00b894;
-        }
-        .profile-stat .num.bad {
-            color: #e17055;
-        }
+        .profile-stat .num.good { color: #00b894; }
+        .profile-stat .num.bad { color: #e17055; }
         .profile-stat .label {
             font-size: 10px;
             color: #6e7f94;
@@ -976,12 +813,8 @@
             gap: 6px;
             border: 1px solid rgba(255, 255, 255, 0.04);
         }
-        .profile-achievement .ach-icon {
-            font-size: 16px;
-        }
-        .profile-achievement .ach-name {
-            color: #8b9bb0;
-        }
+        .profile-achievement .ach-icon { font-size: 16px; }
+        .profile-achievement .ach-name { color: #8b9bb0; }
 
         .profile-matches-title {
             font-weight: 600;
@@ -999,24 +832,15 @@
             border-bottom: 1px solid rgba(255, 255, 255, 0.03);
             font-size: 13px;
         }
-        .profile-match-row:last-child {
-            border-bottom: none;
-        }
-        .profile-match-row .match-name {
-            color: #8b9bb0;
-        }
+        .profile-match-row:last-child { border-bottom: none; }
+        .profile-match-row .match-name { color: #8b9bb0; }
         .profile-match-row .match-stats {
             color: #c7d5e0;
             font-weight: 500;
         }
-        .profile-match-row .match-stats .good {
-            color: #00b894;
-        }
-        .profile-match-row .match-stats .bad {
-            color: #e17055;
-        }
+        .profile-match-row .match-stats .good { color: #00b894; }
+        .profile-match-row .match-stats .bad { color: #e17055; }
 
-        /* ===== NEWS ===== */
         .news-form {
             background: rgba(255, 255, 255, 0.03);
             border-radius: 12px;
@@ -1073,9 +897,7 @@
             color: #6e7f94;
             margin-top: 6px;
         }
-        .news-form .login-notice b {
-            color: #a29bfe;
-        }
+        .news-form .login-notice b { color: #a29bfe; }
 
         .news-list {
             display: flex;
@@ -1185,9 +1007,7 @@
             font-size: 12px;
             cursor: pointer;
         }
-        .comment-input button:hover {
-            transform: scale(1.03);
-        }
+        .comment-input button:hover { transform: scale(1.03); }
         .comment-item {
             padding: 4px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.03);
@@ -1217,11 +1037,8 @@
             cursor: pointer;
             font-size: 12px;
         }
-        .comment-item .comment-delete:hover {
-            color: #e17055;
-        }
+        .comment-item .comment-delete:hover { color: #e17055; }
 
-        /* ===== CHART ===== */
         .chart-container {
             background: rgba(255, 255, 255, 0.04);
             backdrop-filter: blur(12px);
@@ -1294,7 +1111,6 @@
             background: linear-gradient(180deg, #e17055, #d63031);
         }
 
-        /* ===== FOOTER ===== */
         .footer {
             margin-top: 30px;
             padding-top: 16px;
@@ -1303,9 +1119,7 @@
             font-size: 12px;
             color: #4a5a6e;
         }
-        .footer b {
-            color: #6e7f94;
-        }
+        .footer b { color: #6e7f94; }
 
         .achievements-bar {
             display: flex;
@@ -1327,16 +1141,9 @@
             gap: 4px;
             border: 1px solid rgba(255, 255, 255, 0.04);
         }
-        .ach-item .ach-icon {
-            font-size: 14px;
-        }
-        .ach-item .ach-name {
-            color: #8b9bb0;
-        }
-        .ach-item .ach-player {
-            color: #a29bfe;
-            font-weight: 600;
-        }
+        .ach-item .ach-icon { font-size: 14px; }
+        .ach-item .ach-name { color: #8b9bb0; }
+        .ach-item .ach-player { color: #a29bfe; font-weight: 600; }
     </style>
 </head>
 <body>
@@ -1352,7 +1159,6 @@
             <span>📅 Май-Июль 2026</span>
             <span class="status">● LIVE</span>
 
-            <!-- ===== LOGIN BOX ===== -->
             <div class="login-box">
                 <input type="password" id="loginPass" placeholder="Пароль..." onkeydown="if(event.key==='Enter') login()">
                 <button class="login-btn" onclick="login()">Войти</button>
@@ -1373,25 +1179,8 @@
         <button class="nav-btn" data-tab="tab-achievements">🏅 Достижения</button>
     </div>
 
-    <!-- ===== TOKEN SETUP ===== -->
-    <div class="token-setup" id="tokenSetup">
-        <div class="token-title">🔑 Настройка GitHub токена</div>
-        <div class="token-desc">
-            Введите ваш GitHub Personal Access Token для загрузки аватарок.<br>
-            <b style="color:#a29bfe;">Нужны права: repo (все галочки)</b>
-        </div>
-        <div class="token-input-group">
-            <input type="password" id="tokenInput" placeholder="Вставьте ваш GitHub токен..." autocomplete="off">
-            <button class="token-btn" onclick="saveToken()">💾 Сохранить</button>
-        </div>
-        <div class="token-status" id="tokenStatus">⏳ Введите токен</div>
-    </div>
-
-    <!-- ============================================ -->
-    <!-- TAB 1: ГЛАВНАЯ -->
-    <!-- ============================================ -->
+    <!-- ===== TAB 1: MAIN ===== -->
     <div id="tab-main" class="tab-content active">
-
         <div class="achievements-bar">
             <div class="ach-item"><span class="ach-icon">🥇</span><span class="ach-name">Лучший K/D:</span><span class="ach-player">bomba69</span></div>
             <div class="ach-item"><span class="ach-icon">💥</span><span class="ach-name">Лучший ADR:</span><span class="ach-player">Хомяк с авт</span></div>
@@ -1401,25 +1190,18 @@
         </div>
 
         <div class="main-grid">
-
-            <!-- ===== LEFT: TOP PLAYERS ===== -->
+            <!-- LEFT: TOP PLAYERS -->
             <div class="left-panel">
-                <div class="panel-title">
-                    🏆 Топ игроков
-                    <span>кликните для профиля</span>
-                </div>
+                <div class="panel-title">🏆 Топ игроков <span>кликните для профиля</span></div>
                 <div class="scroll-area" id="playerList"></div>
                 <div style="font-size:10px; color:#4a5a6e; margin-top:10px; text-align:center; border-top:1px solid rgba(255,255,255,0.04); padding-top:10px;">
                     🟣 <b style="color:#a29bfe;">bomba69</b> — лидер по K/D
                 </div>
             </div>
 
-            <!-- ===== CENTER: НОВОСТИ ===== -->
+            <!-- CENTER: NEWS -->
             <div class="center-panel">
-                <div class="panel-title">
-                    📰 Новости
-                    <span>с комментариями</span>
-                </div>
+                <div class="panel-title">📰 Новости <span>с комментариями</span></div>
 
                 <div class="news-form">
                     <input type="text" id="newsTitleInput" placeholder="Заголовок новости..." maxlength="60">
@@ -1431,12 +1213,9 @@
                 <div class="news-list" id="newsList"></div>
             </div>
 
-            <!-- ===== RIGHT: MATCHES ===== -->
+            <!-- RIGHT: MATCHES -->
             <div class="right-panel">
-                <div class="panel-title" style="padding:0 4px 10px 4px;">
-                    📋 Матчи
-                    <span>всего 5</span>
-                </div>
+                <div class="panel-title" style="padding:0 4px 10px 4px;">📋 Матчи <span>всего 5</span></div>
 
                 <div class="match-card" onclick="toggleMatchDetail(this)">
                     <div class="match-top">
@@ -1618,13 +1397,10 @@
                     Все матчи на Mirage · 4v4
                 </div>
             </div>
-
         </div>
     </div>
 
-    <!-- ============================================ -->
-    <!-- TAB 2: ГРАФИКИ -->
-    <!-- ============================================ -->
+    <!-- ===== TAB 2: CHARTS ===== -->
     <div id="tab-charts" class="tab-content">
         <div class="chart-container">
             <div class="chart-title">📊 K/D по матчам</div>
@@ -1633,60 +1409,22 @@
         </div>
 
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px;">
-            <div class="glass-card">
-                <div style="font-weight:700; margin-bottom:10px;">📊 K/D всех игроков</div>
-                <div id="kdChart"></div>
-            </div>
-            <div class="glass-card">
-                <div style="font-weight:700; margin-bottom:10px;">📈 ADR всех игроков</div>
-                <div id="adrChart"></div>
-            </div>
-            <div class="glass-card">
-                <div style="font-weight:700; margin-bottom:10px;">📊 Разница (±)</div>
-                <div id="diffChart"></div>
-            </div>
-            <div class="glass-card">
-                <div style="font-weight:700; margin-bottom:10px;">🏆 Рейтинг</div>
-                <div id="ratingChart"></div>
-            </div>
+            <div class="glass-card"><div style="font-weight:700; margin-bottom:10px;">📊 K/D всех игроков</div><div id="kdChart"></div></div>
+            <div class="glass-card"><div style="font-weight:700; margin-bottom:10px;">📈 ADR всех игроков</div><div id="adrChart"></div></div>
+            <div class="glass-card"><div style="font-weight:700; margin-bottom:10px;">📊 Разница (±)</div><div id="diffChart"></div></div>
+            <div class="glass-card"><div style="font-weight:700; margin-bottom:10px;">🏆 Рейтинг</div><div id="ratingChart"></div></div>
         </div>
     </div>
 
-    <!-- ============================================ -->
-    <!-- TAB 3: ДОСТИЖЕНИЯ -->
-    <!-- ============================================ -->
+    <!-- ===== TAB 3: ACHIEVEMENTS ===== -->
     <div id="tab-achievements" class="tab-content">
         <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px;">
-            <div class="glass-card" style="text-align:center;">
-                <div style="font-size:40px;">🥇</div>
-                <div style="font-weight:700; font-size:16px; color:#a29bfe;">Лучший K/D</div>
-                <div style="font-size:13px;"><b>bomba69</b> — 1.57</div>
-            </div>
-            <div class="glass-card" style="text-align:center;">
-                <div style="font-size:40px;">💥</div>
-                <div style="font-weight:700; font-size:16px; color:#00b894;">Лучший ADR</div>
-                <div style="font-size:13px;"><b>Хомяк с авт</b> — 100</div>
-            </div>
-            <div class="glass-card" style="text-align:center;">
-                <div style="font-size:40px;">📊</div>
-                <div style="font-weight:700; font-size:16px; color:#6c5ce7;">Лучший рейтинг</div>
-                <div style="font-size:13px;"><b>Хомяк с авт</b> — 1.47</div>
-            </div>
-            <div class="glass-card" style="text-align:center;">
-                <div style="font-size:40px;">🔥</div>
-                <div style="font-weight:700; font-size:16px; color:#f9ca24;">Самый результативный</div>
-                <div style="font-size:13px;"><b>bomba69</b> — 24-4</div>
-            </div>
-            <div class="glass-card" style="text-align:center;">
-                <div style="font-size:40px;">💀</div>
-                <div style="font-weight:700; font-size:16px; color:#e17055;">Худший K/D</div>
-                <div style="font-size:13px;"><b style="color:#e17055;">baksyhanovvand...</b> — 0.39</div>
-            </div>
-            <div class="glass-card" style="text-align:center;">
-                <div style="font-size:40px;">🏅</div>
-                <div style="font-weight:700; font-size:16px; color:#f0932b;">Лучшая разница</div>
-                <div style="font-size:13px;"><b>Хомяк с авт</b> — +116</div>
-            </div>
+            <div class="glass-card" style="text-align:center;"><div style="font-size:40px;">🥇</div><div style="font-weight:700; font-size:16px; color:#a29bfe;">Лучший K/D</div><div style="font-size:13px;"><b>bomba69</b> — 1.57</div></div>
+            <div class="glass-card" style="text-align:center;"><div style="font-size:40px;">💥</div><div style="font-weight:700; font-size:16px; color:#00b894;">Лучший ADR</div><div style="font-size:13px;"><b>Хомяк с авт</b> — 100</div></div>
+            <div class="glass-card" style="text-align:center;"><div style="font-size:40px;">📊</div><div style="font-weight:700; font-size:16px; color:#6c5ce7;">Лучший рейтинг</div><div style="font-size:13px;"><b>Хомяк с авт</b> — 1.47</div></div>
+            <div class="glass-card" style="text-align:center;"><div style="font-size:40px;">🔥</div><div style="font-weight:700; font-size:16px; color:#f9ca24;">Самый результативный</div><div style="font-size:13px;"><b>bomba69</b> — 24-4</div></div>
+            <div class="glass-card" style="text-align:center;"><div style="font-size:40px;">💀</div><div style="font-weight:700; font-size:16px; color:#e17055;">Худший K/D</div><div style="font-size:13px;"><b style="color:#e17055;">baksyhanovvand...</b> — 0.39</div></div>
+            <div class="glass-card" style="text-align:center;"><div style="font-size:40px;">🏅</div><div style="font-weight:700; font-size:16px; color:#f0932b;">Лучшая разница</div><div style="font-size:13px;"><b>Хомяк с авт</b> — +116</div></div>
         </div>
     </div>
 
@@ -1707,6 +1445,13 @@
 </div>
 
 <script>
+    // ===== ТОКЕН ЗАХАРДКОЖЕН =====
+    // ⚠️ ВНИМАНИЕ: Токен встроен в код. Не публикуйте этот код в открытых репозиториях!
+    const GITHUB_TOKEN = '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';
+    const GITHUB_USER = 'Mpc-MegaProfessionalChampionsLeague1';
+    const GITHUB_REPO = 'Mpc-MegaProfessionalLeague1.github.io';
+    const NEWS_FILE = 'news.json';
+
     // ===== АВТОРИЗАЦИЯ =====
     const ADMIN_PASSWORD = 'bomba69';
     let isAdmin = false;
@@ -1824,41 +1569,13 @@
         return ach;
     }
 
-    // ===== ТОКЕН =====
-    let githubToken = localStorage.getItem('mpl_github_token') || '';
-
-    function saveToken() {
-        const input = document.getElementById('tokenInput');
-        const token = input.value.trim();
-        if (!token) {
-            document.getElementById('tokenStatus').textContent = '❌ Введите токен!';
-            document.getElementById('tokenStatus').className = 'token-status error';
-            return;
-        }
-        localStorage.setItem('mpl_github_token', token);
-        githubToken = token;
-        document.getElementById('tokenStatus').textContent = '✅ Токен сохранён, загрузка...';
-        document.getElementById('tokenStatus').className = 'token-status success';
-        document.getElementById('tokenSetup').classList.remove('show');
-        loadAvatarsFromGitHub();
-    }
-
     // ===== ЗАГРУЗКА АВАТАРОК =====
     async function loadAvatarsFromGitHub() {
-        if (!githubToken || githubToken === '') {
-            document.getElementById('tokenStatus').textContent = '⏳ Токен не сохранён';
-            document.getElementById('tokenStatus').className = 'token-status';
-            document.getElementById('tokenSetup').classList.add('show');
-            renderPlayers();
-            return;
-        }
-
         try {
-            const url = `https://api.github.com/repos/Mpc-MegaProfessionalChampionsLeague1/Mpc-MegaProfessionalLeague1.github.io/contents/avatars`;
-            
+            const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/avatars`;
             const response = await fetch(url, {
                 headers: {
-                    'Authorization': `token ${githubToken}`,
+                    'Authorization': `token ${GITHUB_TOKEN}`,
                     'Accept': 'application/vnd.github.v3+json'
                 }
             });
@@ -1877,32 +1594,20 @@
                         }
                     }
                 });
-                document.getElementById('tokenStatus').textContent = `✅ Загружено ${loaded} аватарок`;
-                document.getElementById('tokenStatus').className = 'token-status success';
-                document.getElementById('tokenSetup').classList.remove('show');
+                console.log(`✅ Загружено ${loaded} аватарок`);
             } else if (response.status === 404) {
-                document.getElementById('tokenStatus').textContent = '⚠️ Папка avatars не найдена. Создайте её в репозитории!';
-                document.getElementById('tokenStatus').className = 'token-status error';
+                console.warn('⚠️ Папка avatars не найдена');
             } else {
-                const errorData = await response.json();
-                document.getElementById('tokenStatus').textContent = `❌ Ошибка ${response.status}: ${errorData.message || 'неизвестная ошибка'}`;
-                document.getElementById('tokenStatus').className = 'token-status error';
+                console.error(`❌ Ошибка ${response.status}`);
             }
         } catch(e) {
-            document.getElementById('tokenStatus').textContent = '❌ Ошибка подключения: ' + e.message;
-            document.getElementById('tokenStatus').className = 'token-status error';
+            console.error('❌ Ошибка загрузки аватарок:', e);
         }
         renderPlayers();
     }
 
     // ===== СОХРАНЕНИЕ АВАТАРКИ =====
     async function saveAvatarToGitHub(playerName, dataUrl) {
-        if (!githubToken || githubToken === '') {
-            alert('❌ Сначала сохраните GitHub токен!');
-            document.getElementById('tokenSetup').classList.add('show');
-            return;
-        }
-
         try {
             const response = await fetch(dataUrl);
             const blob = await response.blob();
@@ -1911,13 +1616,13 @@
             reader.onloadend = async function() {
                 const base64 = reader.result.split(',')[1];
                 const fileName = `${playerName}.png`;
-                const url = `https://api.github.com/repos/Mpc-MegaProfessionalChampionsLeague1/Mpc-MegaProfessionalLeague1.github.io/contents/avatars/${fileName}`;
+                const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/avatars/${fileName}`;
 
                 let sha = '';
                 try {
                     const checkResponse = await fetch(url, {
                         headers: {
-                            'Authorization': `token ${githubToken}`,
+                            'Authorization': `token ${GITHUB_TOKEN}`,
                             'Accept': 'application/vnd.github.v3+json'
                         }
                     });
@@ -1937,7 +1642,7 @@
                 const uploadResponse = await fetch(url, {
                     method: 'PUT',
                     headers: {
-                        'Authorization': `token ${githubToken}`,
+                        'Authorization': `token ${GITHUB_TOKEN}`,
                         'Accept': 'application/vnd.github.v3+json',
                         'Content-Type': 'application/json'
                     },
@@ -2039,15 +1744,13 @@
         `).join('');
     }
 
-    // ===== НОВОСТИ (СОХРАНЕНИЕ В GITHUB) =====
-    const NEWS_FILE = 'news.json';
-
+    // ===== НОВОСТИ =====
     async function loadNewsFromGitHub() {
         try {
-            const url = `https://api.github.com/repos/Mpc-MegaProfessionalChampionsLeague1/Mpc-MegaProfessionalLeague1.github.io/contents/${NEWS_FILE}`;
+            const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${NEWS_FILE}`;
             const response = await fetch(url, {
                 headers: {
-                    'Authorization': `token ${githubToken}`,
+                    'Authorization': `token ${GITHUB_TOKEN}`,
                     'Accept': 'application/vnd.github.v3+json'
                 }
             });
@@ -2057,7 +1760,6 @@
                 const content = atob(data.content);
                 return JSON.parse(content);
             } else if (response.status === 404) {
-                // Файла нет — создаём с дефолтными новостями
                 const defaultNews = [
                     { id: 1, title: '🏆 Старт сезона MPL!', text: 'Дружеский турнир MPL начался!', date: new Date('2026-05-09T10:00:00').toISOString(), comments: [{ author: 'bomba69', text: '🔥 Погнали!', time: Date.now() - 3600000 }] },
                     { id: 2, title: '🔥 Bomba69 делает 24-4!', text: 'В матче #2 Bomba69 показал невероятный результат!', date: new Date('2026-05-09T15:30:00').toISOString(), comments: [{ author: 'Хомяк с авт', text: 'Красава!', time: Date.now() - 1800000 }] }
@@ -2083,14 +1785,15 @@
 
     async function saveNewsToGitHub(newsData) {
         try {
-            const url = `https://api.github.com/repos/Mpc-MegaProfessionalChampionsLeague1/Mpc-MegaProfessionalLeague1.github.io/contents/${NEWS_FILE}`;
-            const content = btoa(unescape(encodeURIComponent(JSON.stringify(newsData, null, 2))));
+            const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${NEWS_FILE}`;
+            const jsonString = JSON.stringify(newsData, null, 2);
+            const content = btoa(unescape(encodeURIComponent(jsonString)));
 
             let sha = '';
             try {
                 const checkResponse = await fetch(url, {
                     headers: {
-                        'Authorization': `token ${githubToken}`,
+                        'Authorization': `token ${GITHUB_TOKEN}`,
                         'Accept': 'application/vnd.github.v3+json'
                     }
                 });
@@ -2110,7 +1813,7 @@
             const response = await fetch(url, {
                 method: 'PUT',
                 headers: {
-                    'Authorization': `token ${githubToken}`,
+                    'Authorization': `token ${GITHUB_TOKEN}`,
                     'Accept': 'application/vnd.github.v3+json',
                     'Content-Type': 'application/json'
                 },
@@ -2164,11 +1867,6 @@
             alert('❌ Только администратор может публиковать новости!');
             return;
         }
-        if (!githubToken || githubToken === '') {
-            alert('❌ Сначала сохраните GitHub токен!');
-            document.getElementById('tokenSetup').classList.add('show');
-            return;
-        }
         const title = document.getElementById('newsTitleInput').value.trim();
         const text = document.getElementById('newsTextInput').value.trim();
         if (!title || !text) { alert('Заполните заголовок и текст!'); return; }
@@ -2179,7 +1877,7 @@
             document.getElementById('newsTextInput').value = '';
             renderNews();
         } catch(e) {
-            alert('❌ Ошибка сохранения новостей. Проверьте токен.');
+            alert('❌ Ошибка сохранения новостей.');
         }
     }
 
@@ -2343,35 +2041,14 @@
     document.getElementById('profileOverlay').addEventListener('click', (e) => { if (e.target === this) closeProfile(); });
 
     // ===== ИНИЦИАЛИЗАЦИЯ =====
-    if (githubToken) {
-        document.getElementById('tokenInput').value = githubToken;
-        document.getElementById('tokenStatus').textContent = '⏳ Загрузка...';
-        document.getElementById('tokenStatus').className = 'token-status';
-        loadAvatarsFromGitHub();
-        // Загружаем новости
-        loadNewsFromGitHub().then(data => {
-            newsData = data;
-            renderNews();
-        });
-    } else {
-        document.getElementById('tokenSetup').classList.add('show');
-        // Загружаем новости без токена (только чтение)
-        fetch(`https://api.github.com/repos/Mpc-MegaProfessionalChampionsLeague1/Mpc-MegaProfessionalLeague1.github.io/contents/${NEWS_FILE}`)
-            .then(res => res.json())
-            .then(data => {
-                if (data.content) {
-                    const content = atob(data.content);
-                    newsData = JSON.parse(content);
-                    renderNews();
-                }
-            })
-            .catch(() => {
-                newsData = getDefaultNews();
-                renderNews();
-            });
-    }
-
-    renderPlayers();
+    loadAvatarsFromGitHub();
+    loadNewsFromGitHub().then(data => {
+        newsData = data;
+        renderNews();
+    }).catch(() => {
+        newsData = getDefaultNews();
+        renderNews();
+    });
     renderCharts();
 </script>
 
