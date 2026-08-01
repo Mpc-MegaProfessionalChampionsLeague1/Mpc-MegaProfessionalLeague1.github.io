@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL — Mega Professional League</title>
-    <link rel="manifest" href="data:application/json,{&quot;name&quot;:&quot;MPL&quot;,&quot;short_name&quot;:&quot;MPL&quot;,&quot;start_url&quot;:&quot;/&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;theme_color&quot;:&quot;#0e1217&quot;,&quot;background_color&quot;:&quot;#0e1217&quot;,&quot;icons&quot;:[{&quot;src&quot;:&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' fill='%23ffb347'/%3E%3Ctext x='50' y='68' font-size='60' text-anchor='middle' fill='%230e1217' font-family='Arial' font-weight='bold'%3EMPL%3C/text%3E%3C/svg%3E&quot;,&quot;sizes&quot;:&quot;192x192&quot;,&quot;type&quot;:&quot;image/svg+xml&quot;}]}">
     <style>
         * {
             margin: 0;
@@ -34,8 +33,7 @@
         body.light .news-item,
         body.light .news-form,
         body.light .profile-panel,
-        body.light .profile-achievement,
-        body.light .comment-section {
+        body.light .profile-achievement {
             background: #ffffff;
             color: #1a212b;
             border-color: #d0d7e0;
@@ -114,39 +112,39 @@
             background: #f0d0d0;
             color: #b03030;
         }
-        body.light .comment-input {
+        body.light .compare-box {
+            background: #f5f8fc;
+        }
+        body.light .news-form textarea,
+        body.light .news-form input {
             background: #e8ecf1;
             color: #1a212b;
             border-color: #d0d7e0;
         }
-        body.light .comment-item {
-            border-color: #e0e5ec;
+        body.light .news-form .publish-btn {
+            background: #ffb347;
+            color: #0e1217;
         }
-        body.light .comment-item .comment-author {
-            color: #1a212b;
-        }
-        body.light .comment-item .comment-text {
-            color: #1a212b;
-        }
-        body.light .comment-item .comment-time {
+        body.light .news-item .news-date {
             color: #6e7f94;
         }
-        body.light .tournament-table th {
-            background: #e8ecf1;
+        body.light .news-item .news-text {
             color: #1a212b;
         }
-        body.light .tournament-table td {
+        body.light .login-box {
+            background: #f5f8fc;
+        }
+        body.light .profile-close {
+            color: #1a212b;
+        }
+        body.light .profile-close:hover {
+            background: #e0e5ec;
+        }
+        body.light .profile-stat {
+            background: #f5f8fc;
+        }
+        body.light .profile-match-row {
             border-color: #e0e5ec;
-            color: #1a212b;
-        }
-        body.light .tournament-table tr:hover td {
-            background: #f0f3f8;
-        }
-        body.light .video-item {
-            border-color: #e0e5ec;
-        }
-        body.light .video-item .video-title {
-            color: #1a212b;
         }
 
         .container {
@@ -188,7 +186,6 @@
             gap: 16px;
             font-size: 13px;
             color: #8b9bb0;
-            flex-wrap: wrap;
         }
         .header-right .status {
             background: #1e8b4c;
@@ -212,23 +209,59 @@
         .theme-toggle:hover {
             background: #2a3546;
         }
-        .install-btn {
+
+        .login-box {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #141b24;
+            padding: 4px 12px 4px 16px;
+            border-radius: 30px;
+        }
+        .login-box input {
+            background: #0e1217;
+            border: 1px solid #2a3546;
+            color: #c7d5e0;
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-size: 12px;
+            outline: none;
+            width: 120px;
+        }
+        .login-box input:focus {
+            border-color: #ffb347;
+        }
+        .login-box .login-btn {
             background: #ffb347;
             border: none;
             color: #0e1217;
-            padding: 6px 14px;
+            padding: 4px 14px;
             border-radius: 30px;
-            cursor: pointer;
-            font-size: 13px;
             font-weight: 600;
-            transition: 0.2s;
-            display: none;
+            font-size: 12px;
+            cursor: pointer;
         }
-        .install-btn:hover {
+        .login-box .login-btn:hover {
             background: #e6a030;
         }
-        .install-btn.show {
-            display: inline-block;
+        .login-box .user-name {
+            color: #ffb347;
+            font-weight: 600;
+            font-size: 13px;
+        }
+        .login-box .logout-btn {
+            background: transparent;
+            border: none;
+            color: #e07a7a;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .login-box .logout-btn:hover {
+            color: #ff4444;
+        }
+        .login-box .login-hint {
+            font-size: 11px;
+            color: #6e7f94;
         }
 
         .nav {
@@ -272,6 +305,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* ===== MAIN GRID ===== */
         .main-grid {
             display: grid;
             grid-template-columns: 1fr 1.6fr 1fr;
@@ -289,6 +323,7 @@
             }
         }
 
+        /* ===== LEFT PANEL ===== */
         .left-panel {
             background: #1a212b;
             border-radius: 8px;
@@ -415,6 +450,7 @@
             }
         }
 
+        /* ===== CENTER PANEL ===== */
         .center-panel {
             background: #1a212b;
             border-radius: 8px;
@@ -493,7 +529,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            max-height: 400px;
+            max-height: 500px;
             overflow-y: auto;
             padding-right: 4px;
         }
@@ -552,82 +588,7 @@
             transform: scale(1.2);
         }
 
-        /* ===== COMMENTS ===== */
-        .comment-section {
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid #26303f;
-        }
-        .comment-section .comment-title {
-            font-size: 12px;
-            font-weight: 600;
-            color: #8b9bb0;
-            margin-bottom: 6px;
-        }
-        .comment-input {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 8px;
-        }
-        .comment-input input {
-            flex: 1;
-            background: #0e1217;
-            border: 1px solid #2a3546;
-            color: #c7d5e0;
-            padding: 6px 10px;
-            border-radius: 4px;
-            font-size: 12px;
-            outline: none;
-        }
-        .comment-input input:focus {
-            border-color: #ffb347;
-        }
-        .comment-input button {
-            background: #ffb347;
-            border: none;
-            color: #0e1217;
-            padding: 6px 14px;
-            border-radius: 4px;
-            font-weight: 600;
-            font-size: 12px;
-            cursor: pointer;
-        }
-        .comment-input button:hover {
-            background: #e6a030;
-        }
-        .comment-item {
-            padding: 4px 0;
-            border-bottom: 1px solid #1f2835;
-            font-size: 12px;
-            display: flex;
-            gap: 8px;
-            align-items: flex-start;
-        }
-        .comment-item .comment-author {
-            color: #ffb347;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-        .comment-item .comment-text {
-            color: #b0c4de;
-            flex: 1;
-        }
-        .comment-item .comment-time {
-            color: #6e7f94;
-            font-size: 10px;
-            white-space: nowrap;
-        }
-        .comment-item .comment-delete {
-            background: transparent;
-            border: none;
-            color: #e07a7a;
-            cursor: pointer;
-            font-size: 12px;
-        }
-        .comment-item .comment-delete:hover {
-            color: #ff4444;
-        }
-
+        /* ===== RIGHT PANEL ===== */
         .right-panel {
             display: flex;
             flex-direction: column;
@@ -991,151 +952,7 @@
             color: #e07a7a;
         }
 
-        /* ===== TOURNAMENT TABLE ===== */
-        .tournament-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 13px;
-        }
-        .tournament-table th {
-            background: #141b24;
-            color: #8b9bb0;
-            font-weight: 600;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-            padding: 8px 10px;
-            text-align: left;
-            border-bottom: 2px solid #2a3546;
-        }
-        .tournament-table td {
-            padding: 6px 10px;
-            border-bottom: 1px solid #1f2835;
-            color: #c7d5e0;
-        }
-        .tournament-table tr:hover td {
-            background: #1f2835;
-        }
-        .tournament-table .rank-num {
-            font-weight: 700;
-            color: #6e7f94;
-        }
-        .tournament-table .rank-1 {
-            color: #ffb347;
-        }
-        .tournament-table .rank-2 {
-            color: #9bb7e6;
-        }
-        .tournament-table .rank-3 {
-            color: #c9a85c;
-        }
-        .tournament-table .win {
-            color: #7ddfa0;
-        }
-        .tournament-table .loss {
-            color: #e07a7a;
-        }
-
-        /* ===== VIDEOS ===== */
-        .video-section {
-            margin-top: 14px;
-            padding-top: 14px;
-            border-top: 1px solid #2a3546;
-        }
-        .video-section .video-title-main {
-            font-weight: 600;
-            font-size: 14px;
-            color: #e8eff7;
-            margin-bottom: 10px;
-        }
-        .video-form {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 10px;
-            flex-wrap: wrap;
-        }
-        .video-form input {
-            flex: 1;
-            min-width: 150px;
-            background: #0e1217;
-            border: 1px solid #2a3546;
-            color: #c7d5e0;
-            padding: 6px 10px;
-            border-radius: 4px;
-            font-size: 12px;
-            outline: none;
-        }
-        .video-form input:focus {
-            border-color: #ffb347;
-        }
-        .video-form button {
-            background: #ffb347;
-            border: none;
-            color: #0e1217;
-            padding: 6px 16px;
-            border-radius: 4px;
-            font-weight: 600;
-            font-size: 12px;
-            cursor: pointer;
-        }
-        .video-form button:hover {
-            background: #e6a030;
-        }
-        .video-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            max-height: 300px;
-            overflow-y: auto;
-        }
-        .video-list::-webkit-scrollbar {
-            width: 4px;
-        }
-        .video-list::-webkit-scrollbar-track {
-            background: #141b24;
-            border-radius: 4px;
-        }
-        .video-list::-webkit-scrollbar-thumb {
-            background: #2a3546;
-            border-radius: 4px;
-        }
-        .video-item {
-            background: #141b24;
-            border-radius: 6px;
-            padding: 10px 14px;
-            border-left: 3px solid #ffb347;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-        .video-item .video-title {
-            color: #b0c4de;
-            font-size: 13px;
-            font-weight: 500;
-        }
-        .video-item .video-link {
-            color: #7a9bcb;
-            font-size: 12px;
-            text-decoration: none;
-            word-break: break-all;
-        }
-        .video-item .video-link:hover {
-            color: #ffb347;
-            text-decoration: underline;
-        }
-        .video-item .video-delete {
-            background: transparent;
-            border: none;
-            color: #e07a7a;
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .video-item .video-delete:hover {
-            color: #ff4444;
-        }
-
+        /* ===== FOOTER ===== */
         .footer {
             margin-top: 24px;
             padding-top: 14px;
@@ -1191,7 +1008,6 @@
         <div class="header-right">
             <span>📅 Май-Июль 2026</span>
             <span class="status">● LIVE</span>
-            <button class="install-btn" id="installBtn" onclick="installApp()">📱 Установить</button>
             <button class="theme-toggle" onclick="toggleTheme()">🌓 Тема</button>
         </div>
     </div>
@@ -1199,8 +1015,6 @@
     <!-- ===== NAV ===== -->
     <div class="nav">
         <button class="nav-btn active" data-tab="tab-main">📊 Главная</button>
-        <button class="nav-btn" data-tab="tab-tournament">🏆 Турнир</button>
-        <button class="nav-btn" data-tab="tab-videos">🎥 Видео</button>
         <button class="nav-btn" data-tab="tab-charts">📈 Графики</button>
         <button class="nav-btn" data-tab="tab-achievements">🏅 Достижения</button>
     </div>
@@ -1232,11 +1046,11 @@
                 </div>
             </div>
 
-            <!-- ===== CENTER: НОВОСТИ + КОММЕНТАРИИ ===== -->
+            <!-- ===== CENTER: НОВОСТИ ===== -->
             <div class="center-panel">
                 <div class="panel-title">
                     📰 Новости
-                    <span>с комментариями</span>
+                    <span>последние обновления</span>
                 </div>
 
                 <div class="news-form" id="newsForm">
@@ -1256,6 +1070,7 @@
                     <span>всего 5</span>
                 </div>
 
+                <!-- MATCH #0 -->
                 <div class="match-card" onclick="toggleMatchDetail(this)">
                     <div class="match-top">
                         <span class="title">🏆 Матч #0 — BO3</span>
@@ -1263,9 +1078,9 @@
                         <span class="click-hint">▶</span>
                     </div>
                     <div class="match-teams">
-                        <div class="team win"><span class="name">TF2</span><span class="score">2</span></div>
+                        <div class="team win"><span class="name">Team Fortress 2</span><span class="score">2</span></div>
                         <span class="vs">vs</span>
-                        <div class="team loss"><span class="score">0</span><span class="name">Magic</span></div>
+                        <div class="team loss"><span class="score">0</span><span class="name">Team Magic</span></div>
                     </div>
                     <div class="match-stats-row">
                         <span>🏆 <b class="mvp">bomba69</b> (37-15)</span>
@@ -1274,24 +1089,24 @@
                     <div class="match-detail">
                         <div class="detail-grid">
                             <div class="team-detail">
-                                <div class="td-title win">🏆 TF2</div>
+                                <div class="td-title win">🏆 Team Fortress 2</div>
                                 <div class="player-stat"><span class="pname highlight">bomba69</span><span class="pstats">37-15 · +86</span></div>
                                 <div class="player-stat"><span class="pname">uxaxaxaxa</span><span class="pstats">34-16 · +94</span></div>
                                 <div class="player-stat"><span class="pname">Хомяк с авт</span><span class="pstats">35-19 · +85</span></div>
                                 <div class="player-stat"><span class="pname">AFKE</span><span class="pstats">14-24 · -37</span></div>
                             </div>
                             <div class="team-detail">
-                                <div class="td-title loss">💀 Magic</div>
+                                <div class="td-title loss">💀 Team Magic</div>
                                 <div class="player-stat"><span class="pname">Adjiare Gudju</span><span class="pstats">24-28 · -43</span></div>
                                 <div class="player-stat"><span class="pname">abdalbek</span><span class="pstats">20-30 · -41</span></div>
                                 <div class="player-stat"><span class="pname">Gonduras228</span><span class="pstats">16-32 · -68</span></div>
                                 <div class="player-stat"><span class="pname worst-text">baksyhanovvand...</span><span class="pstats worst-text">14-31 · -80</span></div>
                             </div>
                         </div>
-                        <div style="font-size:10px; color:#4a5a6e; text-align:center; margin-top:4px;">Ancient 13:4 · Anubis 13:6</div>
                     </div>
                 </div>
 
+                <!-- MATCH #1 -->
                 <div class="match-card" onclick="toggleMatchDetail(this)">
                     <div class="match-top">
                         <span class="title">Матч #1</span>
@@ -1327,6 +1142,7 @@
                     </div>
                 </div>
 
+                <!-- MATCH #2 -->
                 <div class="match-card loss" onclick="toggleMatchDetail(this)">
                     <div class="match-top">
                         <span class="title">Матч #2</span>
@@ -1362,6 +1178,7 @@
                     </div>
                 </div>
 
+                <!-- MATCH #3 -->
                 <div class="match-card loss" onclick="toggleMatchDetail(this)">
                     <div class="match-top">
                         <span class="title">Матч #3</span>
@@ -1397,6 +1214,7 @@
                     </div>
                 </div>
 
+                <!-- MATCH #4 -->
                 <div class="match-card loss" onclick="toggleMatchDetail(this)">
                     <div class="match-top">
                         <span class="title">Матч #4</span>
@@ -1441,79 +1259,7 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- TAB 2: ТУРНИРНАЯ ТАБЛИЦА -->
-    <!-- ============================================ -->
-    <div id="tab-tournament" class="tab-content">
-        <div style="background:#1a212b; border-radius:8px; padding:20px;">
-            <h2 style="color:#e8eff7; margin-bottom:16px;">🏆 Турнирная таблица</h2>
-            <table class="tournament-table">
-                <thead>
-                    <tr><th>#</th><th>Команда</th><th>Матчи</th><th>Победы</th><th>Поражения</th><th>Карты +/−</th><th>Очки</th></tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td><span class="rank-num rank-1">1</span></td>
-                        <td><b style="color:#7ddfa0;">Team Fortress 2</b></td>
-                        <td>1</td>
-                        <td class="win">1</td>
-                        <td class="loss">0</td>
-                        <td class="win">+2</td>
-                        <td><b>3</b></td>
-                    </tr>
-                    <tr>
-                        <td><span class="rank-num">2</span></td>
-                        <td><b>Team Magic</b></td>
-                        <td>1</td>
-                        <td class="win">0</td>
-                        <td class="loss">1</td>
-                        <td class="loss">-2</td>
-                        <td><b>0</b></td>
-                    </tr>
-                    <tr style="color:#6e7f94;">
-                        <td><span class="rank-num">3</span></td>
-                        <td>Team 1</td>
-                        <td>4</td>
-                        <td class="win">3</td>
-                        <td class="loss">1</td>
-                        <td class="win">+26</td>
-                        <td><b>9</b></td>
-                    </tr>
-                    <tr style="color:#6e7f94;">
-                        <td><span class="rank-num">4</span></td>
-                        <td>Team 2</td>
-                        <td>4</td>
-                        <td class="win">1</td>
-                        <td class="loss">3</td>
-                        <td class="loss">-26</td>
-                        <td><b>3</b></td>
-                    </tr>
-                </tbody>
-            </table>
-            <div style="font-size:11px; color:#4a5a6e; margin-top:10px; text-align:center;">
-                🏆 Лидер: <b style="color:#7ddfa0;">Team Fortress 2</b> · Следующий матч: TBD
-            </div>
-        </div>
-    </div>
-
-    <!-- ============================================ -->
-    <!-- TAB 3: ВИДЕО -->
-    <!-- ============================================ -->
-    <div id="tab-videos" class="tab-content">
-        <div style="background:#1a212b; border-radius:8px; padding:20px;">
-            <h2 style="color:#e8eff7; margin-bottom:12px;">🎥 Видео матчей</h2>
-            <div class="video-section">
-                <div class="video-form">
-                    <input type="text" id="videoTitle" placeholder="Название видео...">
-                    <input type="text" id="videoUrl" placeholder="Ссылка YouTube / Twitch...">
-                    <button onclick="addVideo()">➕ Добавить</button>
-                </div>
-                <div class="video-list" id="videoList"></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- ============================================ -->
-    <!-- TAB 4: ГРАФИКИ -->
+    <!-- TAB 2: ГРАФИКИ -->
     <!-- ============================================ -->
     <div id="tab-charts" class="tab-content">
         <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
@@ -1537,7 +1283,7 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- TAB 5: ДОСТИЖЕНИЯ -->
+    <!-- TAB 3: ДОСТИЖЕНИЯ -->
     <!-- ============================================ -->
     <div id="tab-achievements" class="tab-content">
         <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px;">
@@ -1577,7 +1323,7 @@
     <!-- ===== FOOTER ===== -->
     <div class="footer">
         MPL · Mega Professional League · <b>HLTV-style</b> · Май-Июль 2026
-        <br>👆 Кликните на игрока в топе для профиля · 💬 Комментируйте новости · 🎥 Добавляйте видео
+        <br>👆 Кликните на игрока в топе, чтобы открыть профиль
     </div>
 
 </div>
@@ -1605,7 +1351,7 @@
         { name: 'baksyhanovvand...', matches: 3, k: 24, d: 61, a: 7, kd: 0.39, adr: 46, diff: -37, rating: 0.38, you: false }
     ];
 
-    // ===== МАТЧИ ИГРОКОВ =====
+    // ===== МАТЧИ ИГРОКОВ (для профиля) =====
     const playerMatchHistory = {
         'bomba69': [
             { match: '#0 BO3', k: 37, d: 15, diff: 22, map: 'Ancient + Anubis' },
@@ -1675,7 +1421,7 @@
         return ach;
     }
 
-    // ===== ПРОФИЛЬ =====
+    // ===== ОТКРЫТИЕ ПРОФИЛЯ =====
     function openProfile(playerName) {
         const player = playersData.find(p => p.name === playerName);
         if (!player) return;
@@ -1695,15 +1441,55 @@
                     </div>
                 </div>
             </div>
+
             <div class="profile-stats">
-                <div class="profile-stat"><div class="num">${player.kd.toFixed(2)}</div><div class="label">K/D</div></div>
-                <div class="profile-stat"><div class="num">${player.adr}</div><div class="label">ADR</div></div>
-                <div class="profile-stat"><div class="num ${player.diff > 0 ? 'good' : 'bad'}">${player.diff > 0 ? '+' : ''}${player.diff}</div><div class="label">Разница</div></div>
-                <div class="profile-stat"><div class="num">${player.rating.toFixed(2)}</div><div class="label">Рейтинг</div></div>
+                <div class="profile-stat">
+                    <div class="num">${player.kd.toFixed(2)}</div>
+                    <div class="label">K/D</div>
+                </div>
+                <div class="profile-stat">
+                    <div class="num">${player.adr}</div>
+                    <div class="label">ADR</div>
+                </div>
+                <div class="profile-stat">
+                    <div class="num ${player.diff > 0 ? 'good' : 'bad'}">${player.diff > 0 ? '+' : ''}${player.diff}</div>
+                    <div class="label">Разница</div>
+                </div>
+                <div class="profile-stat">
+                    <div class="num">${player.rating.toFixed(2)}</div>
+                    <div class="label">Рейтинг</div>
+                </div>
             </div>
-            ${achievements.length > 0 ? `<div class="profile-achievements">${achievements.map(a => `<div class="profile-achievement"><span class="ach-icon">${a.icon}</span><span class="ach-name">${a.name}</span></div>`).join('')}</div>` : `<div style="font-size:12px; color:#6e7f94; margin-bottom:12px;">Нет достижений</div>`}
+
+            ${achievements.length > 0 ? `
+                <div class="profile-achievements">
+                    ${achievements.map(a => `
+                        <div class="profile-achievement">
+                            <span class="ach-icon">${a.icon}</span>
+                            <span class="ach-name">${a.name}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            ` : `
+                <div style="font-size:12px; color:#6e7f94; margin-bottom:12px;">Нет достижений</div>
+            `}
+
             <div class="profile-matches-title">📋 История матчей</div>
-            ${history.length > 0 ? history.map(m => `<div class="profile-match-row"><span class="match-name">${m.match} — ${m.map}</span><span class="match-stats">${m.k} - ${m.d} <span class="${m.diff > 0 ? 'good' : 'bad'}">${m.diff > 0 ? '+' : ''}${m.diff}</span></span></div>`).join('') : '<div style="font-size:12px; color:#6e7f94;">Нет данных о матчах</div>'}
+            ${history.length > 0 ? history.map(m => `
+                <div class="profile-match-row">
+                    <span class="match-name">${m.match} — ${m.map}</span>
+                    <span class="match-stats">
+                        ${m.k} - ${m.d}
+                        <span class="${m.diff > 0 ? 'good' : 'bad'}">${m.diff > 0 ? '+' : ''}${m.diff}</span>
+                    </span>
+                </div>
+            `).join('') : `
+                <div style="font-size:12px; color:#6e7f94;">Нет данных о матчах</div>
+            `}
+
+            <div style="margin-top:14px; font-size:11px; color:#4a5a6e; text-align:center; border-top:1px solid #1f2835; padding-top:10px;">
+                🟡 K/D: ${player.kd.toFixed(2)} · 💥 ADR: ${player.adr} · 📊 Рейтинг: ${player.rating.toFixed(2)}
+            </div>
         `;
 
         document.getElementById('profileOverlay').classList.add('open');
@@ -1720,21 +1506,31 @@
         const container = document.getElementById('playerList');
         const sorted = [...playersData].sort((a, b) => b.kd - a.kd);
         const ranks = ['gold', 'silver', 'bronze', '', '', '', '', '', '', ''];
-        container.innerHTML = sorted.map((p, i) => `
-            <div class="top-player-row" onclick="openProfile('${p.name}')">
-                <span class="rank ${ranks[i] || ''}">#${i+1}</span>
-                <span class="pname ${p.you ? 'you' : ''}">${p.name}</span>
-                <span class="badge-kd ${i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : i === sorted.length - 1 ? 'red' : ''}">${p.kd.toFixed(2)}</span>
-                <span class="pstats"><b class="${p.diff > 0 ? 'best' : 'worst'}">${p.diff > 0 ? '+' : ''}${p.diff}</b></span>
-            </div>
-        `).join('');
+
+        let html = '';
+        sorted.forEach((p, i) => {
+            const rankClass = ranks[i] || '';
+            const youClass = p.you ? 'you' : '';
+            const kdClass = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : i === sorted.length - 1 ? 'red' : '';
+            const diffClass = p.diff > 0 ? 'best' : 'worst';
+
+            html += `
+                <div class="top-player-row" onclick="openProfile('${p.name}')">
+                    <span class="rank ${rankClass}">#${i+1}</span>
+                    <span class="pname ${youClass}">${p.name}</span>
+                    <span class="badge-kd ${kdClass}">${p.kd.toFixed(2)}</span>
+                    <span class="pstats"><b class="${diffClass}">${p.diff > 0 ? '+' : ''}${p.diff}</b></span>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
     }
 
-    // ===== НОВОСТИ + КОММЕНТАРИИ =====
+    // ===== НОВОСТИ (локальное хранилище) =====
     let newsData = JSON.parse(localStorage.getItem('mpl_news')) || [
-        { id: 1, title: '🏆 Старт сезона MPL!', text: 'Дружеский турнир MPL начался!', date: new Date('2026-05-09T10:00:00').toISOString(), comments: [{ author: 'bomba69', text: '🔥 Погнали!', time: Date.now() - 3600000 }] },
-        { id: 2, title: '🔥 Bomba69 делает 24-4!', text: 'В матче #2 Bomba69 показал невероятный результат!', date: new Date('2026-05-09T15:30:00').toISOString(), comments: [{ author: 'Хомяк с авт', text: 'Красава!', time: Date.now() - 1800000 }] },
-        { id: 3, title: '📊 Добавлены профили игроков!', text: 'Теперь можно кликнуть на игрока и посмотреть его статистику.', date: new Date().toISOString(), comments: [] }
+        { id: 1, title: '🏆 Старт сезона MPL!', text: 'Дружеский турнир MPL начался! Следите за матчами и статистикой.', date: new Date('2026-05-09T10:00:00').toISOString() },
+        { id: 2, title: '🔥 Bomba69 делает 24-4!', text: 'В матче #2 Bomba69 показал невероятный результат — 24 убийства при 4 смертях!', date: new Date('2026-05-09T15:30:00').toISOString() },
+        { id: 3, title: '📊 Добавлены профили игроков!', text: 'Теперь можно кликнуть на игрока в топе и посмотреть его полную статистику.', date: new Date().toISOString() }
     ];
 
     function saveNews() {
@@ -1752,21 +1548,6 @@
                     <button class="news-delete" onclick="deleteNews(${n.id})">✕</button>
                 </div>
                 <div class="news-text">${n.text}</div>
-                <div class="comment-section">
-                    <div class="comment-title">💬 Комментарии (${(n.comments || []).length})</div>
-                    <div class="comment-input">
-                        <input type="text" id="commentInput_${n.id}" placeholder="Ваш комментарий..." onkeydown="if(event.key==='Enter') addComment(${n.id})">
-                        <button onclick="addComment(${n.id})">Отправить</button>
-                    </div>
-                    ${(n.comments || []).slice().reverse().map(c => `
-                        <div class="comment-item">
-                            <span class="comment-author">${c.author}</span>
-                            <span class="comment-text">${c.text}</span>
-                            <span class="comment-time">${new Date(c.time).toLocaleTimeString()}</span>
-                            <button class="comment-delete" onclick="deleteComment(${n.id}, '${c.author}', ${c.time})">✕</button>
-                        </div>
-                    `).join('')}
-                </div>
             </div>
         `).join('');
     }
@@ -1775,7 +1556,7 @@
         const title = document.getElementById('newsTitle').value.trim();
         const text = document.getElementById('newsText').value.trim();
         if (!title || !text) { alert('Заполните заголовок и текст!'); return; }
-        newsData.push({ id: Date.now(), title, text, date: new Date().toISOString(), comments: [] });
+        newsData.push({ id: Date.now(), title, text, date: new Date().toISOString() });
         saveNews();
         document.getElementById('newsTitle').value = '';
         document.getElementById('newsText').value = '';
@@ -1788,142 +1569,14 @@
         renderNews();
     }
 
-    function addComment(newsId) {
-        const input = document.getElementById(`commentInput_${newsId}`);
-        const text = input.value.trim();
-        if (!text) return;
-        const news = newsData.find(n => n.id === newsId);
-        if (!news) return;
-        if (!news.comments) news.comments = [];
-        const author = prompt('Ваш ник:', 'Игрок') || 'Аноним';
-        news.comments.push({ author, text, time: Date.now() });
-        saveNews();
-        renderNews();
-        input.value = '';
-    }
-
-    function deleteComment(newsId, author, time) {
-        if (!confirm(`Удалить комментарий от ${author}?`)) return;
-        const news = newsData.find(n => n.id === newsId);
-        if (!news) return;
-        news.comments = news.comments.filter(c => !(c.author === author && c.time === time));
-        saveNews();
-        renderNews();
-    }
-
-    // ===== ВИДЕО =====
-    let videos = JSON.parse(localStorage.getItem('mpl_videos')) || [
-        { title: '🎬 Матч #2 — Bomba69 24-4', url: 'https://youtube.com/watch?v=example1' },
-        { title: '📹 Матч #0 — BO3 Team Fortress 2 vs Magic', url: 'https://youtube.com/watch?v=example2' }
-    ];
-
-    function saveVideos() {
-        localStorage.setItem('mpl_videos', JSON.stringify(videos));
-    }
-
-    function renderVideos() {
-        const container = document.getElementById('videoList');
-        container.innerHTML = videos.map((v, i) => `
-            <div class="video-item">
-                <span class="video-title">${v.title}</span>
-                <a class="video-link" href="${v.url}" target="_blank">${v.url}</a>
-                <button class="video-delete" onclick="deleteVideo(${i})">✕</button>
-            </div>
-        `).join('');
-    }
-
-    function addVideo() {
-        const title = document.getElementById('videoTitle').value.trim();
-        const url = document.getElementById('videoUrl').value.trim();
-        if (!title || !url) { alert('Заполните название и ссылку!'); return; }
-        videos.push({ title, url });
-        saveVideos();
-        renderVideos();
-        document.getElementById('videoTitle').value = '';
-        document.getElementById('videoUrl').value = '';
-    }
-
-    function deleteVideo(index) {
-        videos.splice(index, 1);
-        saveVideos();
-        renderVideos();
-    }
-
-    // ===== ГРАФИКИ =====
-    function renderCharts() {
-        const maxKd = Math.max(...playersData.map(p => p.kd));
-        const maxAdr = Math.max(...playersData.map(p => p.adr));
-        const maxDiff = Math.max(...playersData.map(p => Math.abs(p.diff)));
-        const maxRating = Math.max(...playersData.map(p => p.rating));
-
-        ['kdChart', 'adrChart', 'diffChart', 'ratingChart'].forEach(id => document.getElementById(id).innerHTML = '');
-
-        document.getElementById('kdChart').innerHTML = [...playersData].sort((a,b) => b.kd - a.kd).map(p => `
-            <div style="display:flex;align-items:center;gap:6px;margin:2px 0;font-size:11px;">
-                <span style="min-width:80px;text-align:right;color:#8b9bb0;">${p.name}</span>
-                <div style="flex:1;height:14px;background:#1f2835;border-radius:3px;overflow:hidden;">
-                    <div style="height:100%;width:${p.kd/maxKd*100}%;background:linear-gradient(90deg,#ffb347,#ff8c00);border-radius:3px;"></div>
-                </div>
-                <span style="min-width:36px;font-weight:600;">${p.kd.toFixed(2)}</span>
-            </div>
-        `).join('');
-
-        document.getElementById('adrChart').innerHTML = [...playersData].sort((a,b) => b.adr - a.adr).map(p => `
-            <div style="display:flex;align-items:center;gap:6px;margin:2px 0;font-size:11px;">
-                <span style="min-width:80px;text-align:right;color:#8b9bb0;">${p.name}</span>
-                <div style="flex:1;height:14px;background:#1f2835;border-radius:3px;overflow:hidden;">
-                    <div style="height:100%;width:${p.adr/maxAdr*100}%;background:linear-gradient(90deg,#27ae60,#7ddfa0);border-radius:3px;"></div>
-                </div>
-                <span style="min-width:36px;font-weight:600;">${p.adr}</span>
-            </div>
-        `).join('');
-
-        document.getElementById('diffChart').innerHTML = [...playersData].sort((a,b) => b.diff - a.diff).map(p => `
-            <div style="display:flex;align-items:center;gap:6px;margin:2px 0;font-size:11px;">
-                <span style="min-width:80px;text-align:right;color:#8b9bb0;">${p.name}</span>
-                <div style="flex:1;height:14px;background:#1f2835;border-radius:3px;overflow:hidden;">
-                    <div style="height:100%;width:${Math.abs(p.diff)/maxDiff*100}%;background:${p.diff>=0?'linear-gradient(90deg,#27ae60,#7ddfa0)':'linear-gradient(90deg,#c0392b,#e67e6b)'};border-radius:3px;"></div>
-                </div>
-                <span style="min-width:36px;font-weight:600;">${p.diff > 0 ? '+' : ''}${p.diff}</span>
-            </div>
-        `).join('');
-
-        document.getElementById('ratingChart').innerHTML = [...playersData].sort((a,b) => b.rating - a.rating).map(p => `
-            <div style="display:flex;align-items:center;gap:6px;margin:2px 0;font-size:11px;">
-                <span style="min-width:80px;text-align:right;color:#8b9bb0;">${p.name}</span>
-                <div style="flex:1;height:14px;background:#1f2835;border-radius:3px;overflow:hidden;">
-                    <div style="height:100%;width:${p.rating/maxRating*100}%;background:linear-gradient(90deg,#4b7bec,#7aa4f0);border-radius:3px;"></div>
-                </div>
-                <span style="min-width:36px;font-weight:600;">${p.rating.toFixed(2)}</span>
-            </div>
-        `).join('');
-    }
-
-    // ===== ТЕМА =====
+    // ===== ПЕРЕКЛЮЧЕНИЕ ТЕМЫ =====
     function toggleTheme() {
         document.body.classList.toggle('light');
-        document.querySelector('.theme-toggle').textContent = document.body.classList.contains('light') ? '🌙 Тема' : '🌓 Тема';
+        const btn = document.querySelector('.theme-toggle');
+        btn.textContent = document.body.classList.contains('light') ? '🌙 Тема' : '🌓 Тема';
     }
 
-    // ===== PWA / УСТАНОВКА =====
-    let deferredPrompt;
-    window.addEventListener('beforeinstallprompt', (e) => {
-        e.preventDefault();
-        deferredPrompt = e;
-        document.getElementById('installBtn').classList.add('show');
-    });
-
-    function installApp() {
-        if (deferredPrompt) {
-            deferredPrompt.prompt();
-            deferredPrompt.userChoice.then(() => {
-                document.getElementById('installBtn').classList.remove('show');
-                deferredPrompt = null;
-            });
-        }
-    }
-
-    // ===== НАВИГАЦИЯ =====
+    // ===== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК =====
     document.querySelectorAll('.nav-btn').forEach(btn => {
         btn.addEventListener('click', function() {
             document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
@@ -1944,14 +1597,72 @@
         }
     }
 
-    // ===== ЗАКРЫТИЕ ПРОФИЛЯ =====
-    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeProfile(); });
-    document.getElementById('profileOverlay').addEventListener('click', (e) => { if (e.target === this) closeProfile(); });
+    // ===== ЗАКРЫТИЕ ПРОФИЛЯ ПО ESC =====
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeProfile();
+    });
+
+    // ===== ЗАКРЫТИЕ ПРОФИЛЯ ПО КЛИКУ ВНЕ =====
+    document.getElementById('profileOverlay').addEventListener('click', function(e) {
+        if (e.target === this) closeProfile();
+    });
+
+    // ===== ГРАФИКИ =====
+    function renderCharts() {
+        const sortedByKd = [...playersData].sort((a, b) => b.kd - a.kd);
+        const sortedByAdr = [...playersData].sort((a, b) => b.adr - a.adr);
+        const sortedByDiff = [...playersData].sort((a, b) => b.diff - a.diff);
+        const sortedByRating = [...playersData].sort((a, b) => b.rating - a.rating);
+
+        const maxKd = sortedByKd[0].kd;
+        const maxAdr = sortedByAdr[0].adr;
+        const maxDiff = Math.max(...playersData.map(p => Math.abs(p.diff)));
+        const maxRating = sortedByRating[0].rating;
+
+        document.getElementById('kdChart').innerHTML = sortedByKd.map(p => `
+            <div style="display:flex;align-items:center;gap:6px;margin:2px 0;font-size:11px;">
+                <span style="min-width:80px;text-align:right;color:#8b9bb0;">${p.name}</span>
+                <div style="flex:1;height:14px;background:#1f2835;border-radius:3px;overflow:hidden;">
+                    <div style="height:100%;width:${(p.kd/maxKd*100)}%;background:linear-gradient(90deg,#ffb347,#ff8c00);border-radius:3px;"></div>
+                </div>
+                <span style="min-width:36px;font-weight:600;">${p.kd.toFixed(2)}</span>
+            </div>
+        `).join('');
+
+        document.getElementById('adrChart').innerHTML = sortedByAdr.map(p => `
+            <div style="display:flex;align-items:center;gap:6px;margin:2px 0;font-size:11px;">
+                <span style="min-width:80px;text-align:right;color:#8b9bb0;">${p.name}</span>
+                <div style="flex:1;height:14px;background:#1f2835;border-radius:3px;overflow:hidden;">
+                    <div style="height:100%;width:${(p.adr/maxAdr*100)}%;background:linear-gradient(90deg,#27ae60,#7ddfa0);border-radius:3px;"></div>
+                </div>
+                <span style="min-width:36px;font-weight:600;">${p.adr}</span>
+            </div>
+        `).join('');
+
+        document.getElementById('diffChart').innerHTML = sortedByDiff.map(p => `
+            <div style="display:flex;align-items:center;gap:6px;margin:2px 0;font-size:11px;">
+                <span style="min-width:80px;text-align:right;color:#8b9bb0;">${p.name}</span>
+                <div style="flex:1;height:14px;background:#1f2835;border-radius:3px;overflow:hidden;">
+                    <div style="height:100%;width:${Math.abs(p.diff)/maxDiff*100}%;background:${p.diff>=0?'linear-gradient(90deg,#27ae60,#7ddfa0)':'linear-gradient(90deg,#c0392b,#e67e6b)'};border-radius:3px;"></div>
+                </div>
+                <span style="min-width:36px;font-weight:600;">${p.diff > 0 ? '+' : ''}${p.diff}</span>
+            </div>
+        `).join('');
+
+        document.getElementById('ratingChart').innerHTML = sortedByRating.map(p => `
+            <div style="display:flex;align-items:center;gap:6px;margin:2px 0;font-size:11px;">
+                <span style="min-width:80px;text-align:right;color:#8b9bb0;">${p.name}</span>
+                <div style="flex:1;height:14px;background:#1f2835;border-radius:3px;overflow:hidden;">
+                    <div style="height:100%;width:${(p.rating/maxRating*100)}%;background:linear-gradient(90deg,#4b7bec,#7aa4f0);border-radius:3px;"></div>
+                </div>
+                <span style="min-width:36px;font-weight:600;">${p.rating.toFixed(2)}</span>
+            </div>
+        `).join('');
+    }
 
     // ===== ИНИЦИАЛИЗАЦИЯ =====
     renderPlayers();
     renderNews();
-    renderVideos();
 </script>
 
 </body>
