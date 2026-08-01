@@ -191,7 +191,6 @@
             background: #2a3546;
         }
 
-        /* ===== LOGIN ===== */
         .login-box {
             display: flex;
             align-items: center;
@@ -881,7 +880,6 @@
         <div class="header-right">
             <span>📅 Май-Июль 2026</span>
             <span class="status">● LIVE</span>
-            <!-- LOGIN -->
             <div class="login-box" id="loginBox">
                 <span class="login-hint" id="loginHint">🔑 Войдите</span>
                 <input type="password" id="loginPass" placeholder="Пароль..." onkeydown="if(event.key==='Enter') login()">
@@ -934,7 +932,6 @@
                     <span>последние обновления</span>
                 </div>
 
-                <!-- Форма добавления новости -->
                 <div class="news-form" id="newsForm">
                     <input type="text" id="newsTitle" placeholder="Заголовок новости..." maxlength="60">
                     <textarea id="newsText" placeholder="Текст новости..."></textarea>
@@ -942,7 +939,6 @@
                     <div class="login-notice" id="publishNotice">🔒 Только <b>bomba69</b> может публиковать новости. Войдите!</div>
                 </div>
 
-                <!-- Список новостей -->
                 <div class="news-list" id="newsList"></div>
             </div>
 
@@ -1214,7 +1210,7 @@
     // ===== ПАРОЛЬ ДЛЯ АВТОРИЗАЦИИ =====
     const ADMIN_PASSWORD = 'bomba69';
 
-    // ===== ДАННЫЕ ИГРОКОВ (с AFKE вместо Корнишон) =====
+    // ===== ДАННЫЕ ИГРОКОВ =====
     const playersData = [
         { name: 'bomba69', matches: 4, k: 66, d: 42, a: 4, kd: 1.57, adr: 92, diff: 24, rating: 1.39, you: true },
         { name: 'абдалбек', matches: 4, k: 58, d: 53, a: 7, kd: 1.09, adr: 85, diff: 5, rating: 1.22, you: false },
@@ -1256,7 +1252,6 @@
             document.getElementById('logoutBtn').style.display = 'inline';
             document.getElementById('publishBtn').disabled = false;
             document.getElementById('publishNotice').innerHTML = '✅ Вы вошли как <b>bomba69</b>. Можете публиковать новости!';
-            // Показываем кнопки удаления
             document.querySelectorAll('.news-delete').forEach(el => el.classList.remove('hidden'));
             document.getElementById('loginPass').value = '';
         } else {
@@ -1275,6 +1270,69 @@
         document.getElementById('publishBtn').disabled = true;
         document.getElementById('publishNotice').innerHTML = '🔒 Только <b>bomba69</b> может публиковать новости. Войдите!';
         document.querySelectorAll('.news-delete').forEach(el => el.classList.add('hidden'));
+    }
+
+    // ===== НОВОСТИ С СОХРАНЕНИЕМ В localStorage =====
+    function loadNews() {
+        const saved = localStorage.getItem('mpl_news');
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                // Восстанавливаем объекты Date
+                return parsed.map(n => ({ ...n, date: new Date(n.date) }));
+            } catch(e) {
+                return getDefaultNews();
+            }
+        }
+        return getDefaultNews();
+    }
+
+    function getDefaultNews() {
+        return [
+            { id: 1, title: '🏆 Старт сезона MPL!', text: 'Дружеский турнир MPL начался! Следите за матчами и статистикой.', date: new Date('2026-05-09T10:00:00') },
+            { id: 2, title: '🔥 Bomba69 делает 24-4!', text: 'В матче #2 Bomba69 показал невероятный результат — 24 убийства при 4 смертях!', date: new Date('2026-05-09T15:30:00') },
+            { id: 3, title: '📊 Обновлена статистика', text: 'Добавлены графики, достижения и сравнение игроков. Сайт становится лучше!', date: new Date('2026-07-30T12:00:00') }
+        ];
+    }
+
+    function saveNews(news) {
+        localStorage.setItem('mpl_news', JSON.stringify(news));
+    }
+
+    let newsData = loadNews();
+
+    function renderNews() {
+        const container = document.getElementById('newsList');
+        const sorted = [...newsData].sort((a, b) => b.date - a.date);
+        container.innerHTML = sorted.map(n => `
+            <div class="news-item">
+                <div class="news-header">
+                    <span class="news-title">${n.title}</span>
+                    <span class="news-date">${n.date.toLocaleString('ru-RU')}</span>
+                    <button class="news-delete ${isAdmin ? '' : 'hidden'}" onclick="deleteNews(${n.id})">✕</button>
+                </div>
+                <div class="news-text">${n.text}</div>
+            </div>
+        `).join('');
+    }
+
+    function publishNews() {
+        if (!isAdmin) { alert('❌ Только bomba69 может публиковать новости!'); return; }
+        const title = document.getElementById('newsTitle').value.trim();
+        const text = document.getElementById('newsText').value.trim();
+        if (!title || !text) { alert('Заполните заголовок и текст!'); return; }
+        newsData.push({ id: Date.now(), title, text, date: new Date() });
+        saveNews(newsData);
+        document.getElementById('newsTitle').value = '';
+        document.getElementById('newsText').value = '';
+        renderNews();
+    }
+
+    function deleteNews(id) {
+        if (!isAdmin) { alert('❌ Только bomba69 может удалять новости!'); return; }
+        newsData = newsData.filter(n => n.id !== id);
+        saveNews(newsData);
+        renderNews();
     }
 
     // ===== РЕНДЕР ТОП ИГРОКОВ =====
@@ -1355,45 +1413,6 @@
         }
     }
 
-    // ===== НОВОСТИ =====
-    let newsData = [
-        { id: 1, title: '🏆 Старт сезона MPL!', text: 'Дружеский турнир MPL начался! Следите за матчами и статистикой.', date: new Date('2026-05-09T10:00:00') },
-        { id: 2, title: '🔥 Bomba69 делает 24-4!', text: 'В матче #2 Bomba69 показал невероятный результат — 24 убийства при 4 смертях!', date: new Date('2026-05-09T15:30:00') },
-        { id: 3, title: '📊 Обновлена статистика', text: 'Добавлены графики, достижения и сравнение игроков. Сайт становится лучше!', date: new Date('2026-07-30T12:00:00') }
-    ];
-
-    function renderNews() {
-        const container = document.getElementById('newsList');
-        const sorted = [...newsData].sort((a, b) => b.date - a.date);
-        container.innerHTML = sorted.map(n => `
-            <div class="news-item">
-                <div class="news-header">
-                    <span class="news-title">${n.title}</span>
-                    <span class="news-date">${n.date.toLocaleString('ru-RU')}</span>
-                    <button class="news-delete ${isAdmin ? '' : 'hidden'}" onclick="deleteNews(${n.id})">✕</button>
-                </div>
-                <div class="news-text">${n.text}</div>
-            </div>
-        `).join('');
-    }
-
-    function publishNews() {
-        if (!isAdmin) { alert('❌ Только bomba69 может публиковать новости!'); return; }
-        const title = document.getElementById('newsTitle').value.trim();
-        const text = document.getElementById('newsText').value.trim();
-        if (!title || !text) { alert('Заполните заголовок и текст!'); return; }
-        newsData.push({ id: Date.now(), title, text, date: new Date() });
-        document.getElementById('newsTitle').value = '';
-        document.getElementById('newsText').value = '';
-        renderNews();
-    }
-
-    function deleteNews(id) {
-        if (!isAdmin) { alert('❌ Только bomba69 может удалять новости!'); return; }
-        newsData = newsData.filter(n => n.id !== id);
-        renderNews();
-    }
-
     // ===== ГРАФИКИ =====
     function renderCharts() {
         const sortedByKd = [...playersData].sort((a, b) => b.kd - a.kd);
@@ -1450,7 +1469,6 @@
     // ===== ИНИЦИАЛИЗАЦИЯ =====
     renderPlayers();
     renderNews();
-    // Скрываем кнопки удаления для неавторизованных
     document.querySelectorAll('.news-delete').forEach(el => el.classList.add('hidden'));
 </script>
 
