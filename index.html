@@ -6,7 +6,6 @@
     <title>MPL — Mega Professional League</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* ===== ВЕСЬ СТИЛЬ ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -1308,7 +1307,7 @@
             <!-- RIGHT: MATCHES -->
             <div class="right-panel">
                 <div class="panel-title" style="padding:0 4px 10px 4px;">📋 Матчи <span>всего 5</span></div>
-                <!-- Матчи (такие же как в предыдущей версии) -->
+
                 <div class="match-card" onclick="toggleMatchDetail(this)">
                     <div class="match-top">
                         <span class="title">🏆 Матч #0 — BO3</span>
@@ -1546,6 +1545,7 @@
         const pass = document.getElementById('loginPass').value;
         if (pass === ADMIN_PASSWORD) {
             isAdmin = true;
+            // Обновляем интерфейс
             document.getElementById('loginStatus').textContent = '✅ Админ';
             document.getElementById('loginStatus').className = 'login-status admin';
             document.getElementById('logoutBtn').style.display = 'inline';
@@ -1555,15 +1555,19 @@
             document.getElementById('publishNotice').innerHTML = '✅ Вы вошли как <b>bomba69</b>. Можете публиковать новости!';
             document.querySelectorAll('.news-delete').forEach(el => el.classList.add('active'));
 
-            // ✅ ПОКАЗЫВАЕМ ПОЛЕ ДЛЯ ТОКЕНА
-            document.getElementById('tokenSetup').style.display = 'block';
-            document.getElementById('tokenSetup').classList.add('show');
+            // ✅ ПРИНУДИТЕЛЬНО ПОКАЗЫВАЕМ ПОЛЕ ДЛЯ ТОКЕНА
+            const tokenSetup = document.getElementById('tokenSetup');
+            tokenSetup.style.display = 'block';
+            tokenSetup.classList.add('show');
 
-            if (githubToken) {
-                document.getElementById('tokenInput').value = githubToken;
-                document.getElementById('tokenStatus').textContent = '✅ Токен уже сохранён';
+            // Проверяем сохранённый токен
+            const savedToken = localStorage.getItem('mpl_github_token');
+            if (savedToken) {
+                document.getElementById('tokenInput').value = savedToken;
+                document.getElementById('tokenStatus').textContent = '✅ Токен уже сохранён (можно обновить)';
                 document.getElementById('tokenStatus').className = 'token-status success';
-                document.getElementById('tokenSetup').style.display = 'none';
+                githubToken = savedToken;
+                // Загружаем данные
                 loadAvatarsFromGitHub();
                 loadNewsFromGitHub().then(data => {
                     newsData = data;
