@@ -6,11 +6,8 @@
     <title>MPL — Mega Professional League</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        /* ===== ВЕСЬ СТИЛЬ ОСТАЁТСЯ БЕЗ ИЗМЕНЕНИЙ (как в предыдущей версии) ===== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: #080c14;
@@ -168,6 +165,17 @@
         body.light .token-setup .token-status {
             color: #4a5a6e;
         }
+        body.light .login-box {
+            background: rgba(255, 255, 255, 0.8);
+        }
+        body.light .login-box input {
+            background: #e8ecf1;
+            color: #141a24;
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+        body.light .login-box .login-status {
+            color: #4a5a6e;
+        }
 
         .container {
             max-width: 1440px;
@@ -265,6 +273,68 @@
         }
         .install-btn.show {
             display: inline-block;
+        }
+
+        /* ===== LOGIN BOX ===== */
+        .login-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            padding: 4px 12px;
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .login-box input {
+            background: rgba(255, 255, 255, 0.04);
+            border: none;
+            color: #c7d5e0;
+            padding: 4px 10px;
+            border-radius: 30px;
+            font-size: 12px;
+            outline: none;
+            width: 100px;
+            font-family: 'Inter', sans-serif;
+        }
+        .login-box input::placeholder {
+            color: #6e7f94;
+        }
+        .login-box input:focus {
+            border-color: #6c5ce7;
+        }
+        .login-box .login-btn {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            border: none;
+            color: #fff;
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 11px;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+        .login-box .login-btn:hover {
+            transform: scale(1.05);
+        }
+        .login-box .login-status {
+            font-size: 11px;
+            color: #6e7f94;
+        }
+        .login-box .login-status.admin {
+            color: #a29bfe;
+            font-weight: 600;
+        }
+        .login-box .logout-btn {
+            background: transparent;
+            border: none;
+            color: #e17055;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0 4px;
+            transition: 0.25s;
+        }
+        .login-box .logout-btn:hover {
+            transform: scale(1.15);
         }
 
         /* ===== NAV ===== */
@@ -987,8 +1057,14 @@
             cursor: pointer;
             margin-top: 8px;
             transition: 0.25s;
+            opacity: 0.5;
+            pointer-events: none;
         }
-        .news-form .publish-btn:hover {
+        .news-form .publish-btn.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .news-form .publish-btn:hover.active {
             transform: scale(1.03);
             box-shadow: 0 4px 20px rgba(108, 92, 231, 0.35);
         }
@@ -1058,8 +1134,14 @@
             font-size: 14px;
             padding: 0 4px;
             transition: 0.2s;
+            opacity: 0.3;
+            pointer-events: none;
         }
-        .news-item .news-delete:hover {
+        .news-item .news-delete.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .news-item .news-delete:hover.active {
             color: #e17055;
             transform: scale(1.15);
         }
@@ -1269,6 +1351,15 @@
         <div class="header-right">
             <span>📅 Май-Июль 2026</span>
             <span class="status">● LIVE</span>
+
+            <!-- ===== LOGIN BOX ===== -->
+            <div class="login-box">
+                <input type="password" id="loginPass" placeholder="Пароль..." onkeydown="if(event.key==='Enter') login()">
+                <button class="login-btn" onclick="login()">Войти</button>
+                <span class="login-status" id="loginStatus">🔒</span>
+                <button class="logout-btn" id="logoutBtn" style="display:none;" onclick="logout()">✕</button>
+            </div>
+
             <button class="install-btn" id="installBtn" onclick="installApp()">📱 Установить</button>
             <button class="lang-toggle" onclick="toggleLang()">🇬🇧 EN</button>
             <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
@@ -1333,8 +1424,8 @@
                 <div class="news-form">
                     <input type="text" id="newsTitleInput" placeholder="Заголовок новости..." maxlength="60">
                     <textarea id="newsTextInput" placeholder="Текст новости..."></textarea>
-                    <button class="publish-btn" onclick="publishNews()">📝 Опубликовать</button>
-                    <div class="login-notice">✏️ Все могут публиковать новости</div>
+                    <button class="publish-btn" id="publishBtn" onclick="publishNews()">📝 Опубликовать</button>
+                    <div class="login-notice" id="publishNotice">🔒 <b>Только администратор</b> может публиковать новости. Войдите!</div>
                 </div>
 
                 <div class="news-list" id="newsList"></div>
@@ -1616,6 +1707,39 @@
 </div>
 
 <script>
+    // ===== АВТОРИЗАЦИЯ =====
+    const ADMIN_PASSWORD = 'bomba69';
+    let isAdmin = false;
+
+    function login() {
+        const pass = document.getElementById('loginPass').value;
+        if (pass === ADMIN_PASSWORD) {
+            isAdmin = true;
+            document.getElementById('loginStatus').textContent = '✅ Админ';
+            document.getElementById('loginStatus').className = 'login-status admin';
+            document.getElementById('logoutBtn').style.display = 'inline';
+            document.getElementById('loginPass').value = '';
+            document.getElementById('loginPass').placeholder = 'Админ';
+            document.getElementById('publishBtn').classList.add('active');
+            document.getElementById('publishNotice').innerHTML = '✅ Вы вошли как <b>bomba69</b>. Можете публиковать новости!';
+            document.querySelectorAll('.news-delete').forEach(el => el.classList.add('active'));
+        } else {
+            alert('❌ Неверный пароль!');
+            document.getElementById('loginPass').value = '';
+        }
+    }
+
+    function logout() {
+        isAdmin = false;
+        document.getElementById('loginStatus').textContent = '🔒';
+        document.getElementById('loginStatus').className = 'login-status';
+        document.getElementById('logoutBtn').style.display = 'none';
+        document.getElementById('loginPass').placeholder = 'Пароль...';
+        document.getElementById('publishBtn').classList.remove('active');
+        document.getElementById('publishNotice').innerHTML = '🔒 <b>Только администратор</b> может публиковать новости. Войдите!';
+        document.querySelectorAll('.news-delete').forEach(el => el.classList.remove('active'));
+    }
+
     // ===== ДАННЫЕ ИГРОКОВ =====
     const playersData = [
         { name: 'bomba69', matches: 4, k: 66, d: 42, a: 4, kd: 1.57, adr: 92, diff: 24, rating: 1.39, you: true, avatar: '' },
@@ -1719,7 +1843,7 @@
         loadAvatarsFromGitHub();
     }
 
-    // ===== ЗАГРУЗКА АВАТАРОК (С ПРАВИЛЬНЫМ ПУТЁМ) =====
+    // ===== ЗАГРУЗКА АВАТАРОК =====
     async function loadAvatarsFromGitHub() {
         if (!githubToken || githubToken === '') {
             document.getElementById('tokenStatus').textContent = '⏳ Токен не сохранён';
@@ -1730,7 +1854,6 @@
         }
 
         try {
-            // ✅ ПРАВИЛЬНЫЙ ПУТЬ К РЕПОЗИТОРИЮ (С ChampionsLeague)
             const url = `https://api.github.com/repos/Mpc-MegaProfessionalChampionsLeague1/Mpc-MegaProfessionalLeague1.github.io/contents/avatars`;
             
             const response = await fetch(url, {
@@ -1772,7 +1895,7 @@
         renderPlayers();
     }
 
-    // ===== СОХРАНЕНИЕ АВАТАРКИ (С ПРАВИЛЬНЫМ ПУТЁМ) =====
+    // ===== СОХРАНЕНИЕ АВАТАРКИ =====
     async function saveAvatarToGitHub(playerName, dataUrl) {
         if (!githubToken || githubToken === '') {
             alert('❌ Сначала сохраните GitHub токен!');
@@ -1788,7 +1911,6 @@
             reader.onloadend = async function() {
                 const base64 = reader.result.split(',')[1];
                 const fileName = `${playerName}.png`;
-                // ✅ ПРАВИЛЬНЫЙ ПУТЬ К РЕПОЗИТОРИЮ
                 const url = `https://api.github.com/repos/Mpc-MegaProfessionalChampionsLeague1/Mpc-MegaProfessionalLeague1.github.io/contents/avatars/${fileName}`;
 
                 let sha = '';
@@ -1959,6 +2081,10 @@
     }
 
     function publishNews() {
+        if (!isAdmin) {
+            alert('❌ Только администратор может публиковать новости!');
+            return;
+        }
         const title = document.getElementById('newsTitleInput').value.trim();
         const text = document.getElementById('newsTextInput').value.trim();
         if (!title || !text) { alert('Заполните заголовок и текст!'); return; }
@@ -1970,6 +2096,10 @@
     }
 
     function deleteNews(id) {
+        if (!isAdmin) {
+            alert('❌ Только администратор может удалять новости!');
+            return;
+        }
         newsData = newsData.filter(n => n.id !== id);
         saveNews();
         renderNews();
@@ -2121,6 +2251,7 @@
     document.getElementById('profileOverlay').addEventListener('click', (e) => { if (e.target === this) closeProfile(); });
 
     // ===== ИНИЦИАЛИЗАЦИЯ =====
+    // Проверяем сохранённый токен
     if (githubToken) {
         document.getElementById('tokenInput').value = githubToken;
         document.getElementById('tokenStatus').textContent = '⏳ Загрузка аватарок...';
