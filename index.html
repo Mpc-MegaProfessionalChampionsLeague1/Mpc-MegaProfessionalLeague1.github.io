@@ -18,6 +18,7 @@
             justify-content: center;
             padding: 20px 12px;
             transition: background 0.3s, color 0.3s;
+            min-height: 100vh;
         }
         body.light {
             background: #e8ecf1;
@@ -30,7 +31,9 @@
         body.light .stat-box,
         body.light .filter-section,
         body.light .news-item,
-        body.light .news-form {
+        body.light .news-form,
+        body.light .profile-panel,
+        body.light .profile-achievement {
             background: #ffffff;
             color: #1a212b;
             border-color: #d0d7e0;
@@ -131,6 +134,18 @@
         body.light .login-box {
             background: #f5f8fc;
         }
+        body.light .profile-close {
+            color: #1a212b;
+        }
+        body.light .profile-close:hover {
+            background: #e0e5ec;
+        }
+        body.light .profile-stat {
+            background: #f5f8fc;
+        }
+        body.light .profile-match-row {
+            border-color: #e0e5ec;
+        }
 
         .container {
             max-width: 1600px;
@@ -151,6 +166,10 @@
             font-weight: 800;
             color: #e8eff7;
             letter-spacing: 0.5px;
+            cursor: pointer;
+        }
+        .logo h1:hover {
+            color: #ffb347;
         }
         .logo span {
             color: #ffb347;
@@ -286,6 +305,7 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* ===== MAIN GRID ===== */
         .main-grid {
             display: grid;
             grid-template-columns: 1fr 1.6fr 1fr;
@@ -303,6 +323,7 @@
             }
         }
 
+        /* ===== LEFT PANEL ===== */
         .left-panel {
             background: #1a212b;
             border-radius: 8px;
@@ -407,84 +428,29 @@
             color: #e07a7a;
         }
 
-        .player-detail {
-            display: none;
+        .scroll-area {
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+        .scroll-area::-webkit-scrollbar {
+            width: 4px;
+        }
+        .scroll-area::-webkit-scrollbar-track {
             background: #141b24;
-            border-radius: 6px;
-            padding: 10px 12px;
-            margin-top: 4px;
-            margin-bottom: 4px;
-            border-left: 3px solid #ffb347;
-            animation: fade 0.25s ease;
+            border-radius: 4px;
         }
-        .player-detail.open {
-            display: block;
+        .scroll-area::-webkit-scrollbar-thumb {
+            background: #2a3546;
+            border-radius: 4px;
         }
-        .player-detail .detail-title {
-            font-weight: 700;
-            font-size: 13px;
-            color: #e8eff7;
-            margin-bottom: 4px;
-        }
-        .player-detail .detail-title .sub {
-            color: #6e7f94;
-            font-weight: 400;
-            font-size: 11px;
-        }
-        .player-detail .detail-stats {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr 1fr;
-            gap: 4px;
-            margin-bottom: 6px;
-        }
-        @media (max-width: 600px) {
-            .player-detail .detail-stats {
-                grid-template-columns: 1fr 1fr;
+        @media (max-width: 900px) {
+            .scroll-area {
+                max-height: none;
             }
         }
-        .player-detail .detail-stat {
-            background: #0e1217;
-            border-radius: 4px;
-            padding: 4px 8px;
-            text-align: center;
-        }
-        .player-detail .detail-stat .num {
-            font-size: 16px;
-            font-weight: 700;
-            color: #ffb347;
-        }
-        .player-detail .detail-stat .num.good {
-            color: #7ddfa0;
-        }
-        .player-detail .detail-stat .num.bad {
-            color: #e07a7a;
-        }
-        .player-detail .detail-stat .label {
-            font-size: 9px;
-            color: #6e7f94;
-            text-transform: uppercase;
-            letter-spacing: 0.3px;
-        }
-        .player-detail .detail-matches {
-            font-size: 11px;
-            color: #8b9bb0;
-        }
-        .player-detail .detail-matches b {
-            color: #c7d5e0;
-        }
-        .player-detail .detail-matches .match-item {
-            display: inline-block;
-            background: #0e1217;
-            padding: 1px 8px;
-            border-radius: 20px;
-            margin: 1px 2px;
-            font-size: 10px;
-            color: #6e7f94;
-        }
-        .player-detail .detail-matches .match-item .kd {
-            color: #c7d5e0;
-        }
 
+        /* ===== CENTER PANEL ===== */
         .center-panel {
             background: #1a212b;
             border-radius: 8px;
@@ -549,10 +515,6 @@
         }
         .news-form .publish-btn:hover {
             background: #e6a030;
-        }
-        .news-form .publish-btn:disabled {
-            background: #4a5a6e;
-            cursor: not-allowed;
         }
         .news-form .login-notice {
             font-size: 12px;
@@ -625,10 +587,8 @@
             color: #ff4444;
             transform: scale(1.2);
         }
-        .news-item .news-delete.hidden {
-            display: none;
-        }
 
+        /* ===== RIGHT PANEL ===== */
         .right-panel {
             display: flex;
             flex-direction: column;
@@ -802,29 +762,197 @@
             color: #e07a7a;
         }
 
-        .scroll-area {
-            max-height: 500px;
-            overflow-y: auto;
-            padding-right: 4px;
+        /* ===== PROFILE OVERLAY ===== */
+        .profile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            animation: fade 0.3s ease;
         }
-        .scroll-area::-webkit-scrollbar {
+        .profile-overlay.open {
+            display: flex;
+        }
+        .profile-panel {
+            background: #1a212b;
+            border-radius: 12px;
+            padding: 30px 35px;
+            max-width: 800px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            border: 1px solid #2a3546;
+            animation: slideUp 0.3s ease;
+        }
+        @keyframes slideUp {
+            from { transform: translateY(30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        .profile-panel::-webkit-scrollbar {
             width: 4px;
         }
-        .scroll-area::-webkit-scrollbar-track {
+        .profile-panel::-webkit-scrollbar-track {
             background: #141b24;
             border-radius: 4px;
         }
-        .scroll-area::-webkit-scrollbar-thumb {
+        .profile-panel::-webkit-scrollbar-thumb {
             background: #2a3546;
             border-radius: 4px;
         }
 
-        @media (max-width: 900px) {
-            .scroll-area {
-                max-height: none;
-            }
+        .profile-close {
+            position: absolute;
+            top: 12px;
+            right: 18px;
+            font-size: 28px;
+            cursor: pointer;
+            color: #6e7f94;
+            transition: 0.2s;
+            background: none;
+            border: none;
+        }
+        .profile-close:hover {
+            color: #e07a7a;
+            transform: rotate(90deg);
         }
 
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #2a3546;
+        }
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #2a3546;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            font-weight: 700;
+            color: #ffb347;
+            flex-shrink: 0;
+        }
+        .profile-header-info h2 {
+            font-size: 24px;
+            color: #e8eff7;
+        }
+        .profile-header-info .sub {
+            color: #6e7f94;
+            font-size: 13px;
+        }
+        .profile-header-info .sub span {
+            color: #c7d5e0;
+            font-weight: 600;
+        }
+
+        .profile-stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-bottom: 18px;
+        }
+        @media (max-width: 600px) {
+            .profile-stats {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        .profile-stat {
+            background: #141b24;
+            border-radius: 6px;
+            padding: 10px 12px;
+            text-align: center;
+        }
+        .profile-stat .num {
+            font-size: 22px;
+            font-weight: 700;
+            color: #ffb347;
+        }
+        .profile-stat .num.good {
+            color: #7ddfa0;
+        }
+        .profile-stat .num.bad {
+            color: #e07a7a;
+        }
+        .profile-stat .label {
+            font-size: 11px;
+            color: #6e7f94;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .profile-achievements {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 16px;
+            padding: 12px 14px;
+            background: #141b24;
+            border-radius: 6px;
+        }
+        .profile-achievement {
+            background: #0e1217;
+            border-radius: 30px;
+            padding: 3px 12px;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid #2a3546;
+        }
+        .profile-achievement .ach-icon {
+            font-size: 16px;
+        }
+        .profile-achievement .ach-name {
+            color: #8b9bb0;
+        }
+
+        .profile-matches-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: #e8eff7;
+            margin-bottom: 10px;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #2a3546;
+        }
+        .profile-match-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 0;
+            border-bottom: 1px solid #1f2835;
+            font-size: 13px;
+        }
+        .profile-match-row:last-child {
+            border-bottom: none;
+        }
+        .profile-match-row .match-name {
+            color: #8b9bb0;
+        }
+        .profile-match-row .match-stats {
+            color: #c7d5e0;
+            font-weight: 500;
+        }
+        .profile-match-row .match-stats .good {
+            color: #7ddfa0;
+        }
+        .profile-match-row .match-stats .bad {
+            color: #e07a7a;
+        }
+
+        /* ===== FOOTER ===== */
         .footer {
             margin-top: 24px;
             padding-top: 14px;
@@ -875,7 +1003,7 @@
     <!-- ===== HEADER ===== -->
     <div class="header">
         <div class="logo">
-            <h1>MPL <span>›</span> <small>Mega Professional League</small></h1>
+            <h1 onclick="closeProfile()">MPL <span>›</span> <small>Mega Professional League</small></h1>
         </div>
         <div class="header-right">
             <span>📅 Май-Июль 2026</span>
@@ -910,7 +1038,7 @@
             <div class="left-panel">
                 <div class="panel-title">
                     🏆 Топ игроков
-                    <span>по K/D</span>
+                    <span>кликните для профиля</span>
                 </div>
                 <div class="scroll-area" id="playerList"></div>
                 <div style="font-size:10px; color:#4a5a6e; margin-top:8px; text-align:center; border-top:1px solid #1f2835; padding-top:8px;">
@@ -928,8 +1056,8 @@
                 <div class="news-form" id="newsForm">
                     <input type="text" id="newsTitle" placeholder="Заголовок новости..." maxlength="60">
                     <textarea id="newsText" placeholder="Текст новости..."></textarea>
-                    <button class="publish-btn" id="publishBtn" onclick="publishNews()">📝 Опубликовать</button>
-                    <div class="login-notice" id="publishNotice">✏️ Все могут публиковать новости</div>
+                    <button class="publish-btn" onclick="publishNews()">📝 Опубликовать</button>
+                    <div class="login-notice">✏️ Все могут публиковать новости</div>
                 </div>
 
                 <div class="news-list" id="newsList"></div>
@@ -942,7 +1070,7 @@
                     <span>всего 5</span>
                 </div>
 
-                <!-- MATCH #0: BO3 -->
+                <!-- MATCH #0 -->
                 <div class="match-card" onclick="toggleMatchDetail(this)">
                     <div class="match-top">
                         <span class="title">🏆 Матч #0 — BO3</span>
@@ -955,27 +1083,26 @@
                         <div class="team loss"><span class="score">0</span><span class="name">Team Magic</span></div>
                     </div>
                     <div class="match-stats-row">
-                        <span>🏆 <b class="mvp">bomba69</b> (37-15, 2.47)</span>
-                        <span>💀 <b class="bad">baksyhanovvand...</b> (14-31, 0.45)</span>
+                        <span>🏆 <b class="mvp">bomba69</b> (37-15)</span>
+                        <span>💀 <b class="bad">baksyhanovvand...</b></span>
                     </div>
                     <div class="match-detail">
                         <div class="detail-grid">
                             <div class="team-detail">
                                 <div class="td-title win">🏆 Team Fortress 2</div>
-                                <div class="player-stat"><span class="pname highlight">bomba69</span><span class="pstats">37-15 · K/D 2.47 · +86</span></div>
-                                <div class="player-stat"><span class="pname">uxaxaxaxa</span><span class="pstats">34-16 · K/D 2.13 · +94</span></div>
-                                <div class="player-stat"><span class="pname">Хомяк с авт</span><span class="pstats">35-19 · K/D 1.84 · +85</span></div>
-                                <div class="player-stat"><span class="pname">AFKE</span><span class="pstats">14-24 · K/D 0.58 · -37</span></div>
+                                <div class="player-stat"><span class="pname highlight">bomba69</span><span class="pstats">37-15 · +86</span></div>
+                                <div class="player-stat"><span class="pname">uxaxaxaxa</span><span class="pstats">34-16 · +94</span></div>
+                                <div class="player-stat"><span class="pname">Хомяк с авт</span><span class="pstats">35-19 · +85</span></div>
+                                <div class="player-stat"><span class="pname">AFKE</span><span class="pstats">14-24 · -37</span></div>
                             </div>
                             <div class="team-detail">
                                 <div class="td-title loss">💀 Team Magic</div>
-                                <div class="player-stat"><span class="pname">Adjiare Gudju</span><span class="pstats">24-28 · K/D 0.86 · -43</span></div>
-                                <div class="player-stat"><span class="pname">abdalbek</span><span class="pstats">20-30 · K/D 0.67 · -41</span></div>
-                                <div class="player-stat"><span class="pname">Gonduras228</span><span class="pstats">16-32 · K/D 0.50 · -68</span></div>
-                                <div class="player-stat"><span class="pname worst-text">baksyhanovvand...</span><span class="pstats worst-text">14-31 · K/D 0.45 · -80</span></div>
+                                <div class="player-stat"><span class="pname">Adjiare Gudju</span><span class="pstats">24-28 · -43</span></div>
+                                <div class="player-stat"><span class="pname">abdalbek</span><span class="pstats">20-30 · -41</span></div>
+                                <div class="player-stat"><span class="pname">Gonduras228</span><span class="pstats">16-32 · -68</span></div>
+                                <div class="player-stat"><span class="pname worst-text">baksyhanovvand...</span><span class="pstats worst-text">14-31 · -80</span></div>
                             </div>
                         </div>
-                        <div style="font-size:10px; color:#4a5a6e; text-align:center; margin-top:4px;">Ancient 13:4 · Anubis 13:6</div>
                     </div>
                 </div>
 
@@ -992,24 +1119,24 @@
                         <div class="team loss"><span class="score">1</span><span class="name">Team 1</span></div>
                     </div>
                     <div class="match-stats-row">
-                        <span>🏆 <b class="mvp">uxaxaxaxa</b> (17-5, +76)</span>
-                        <span>💀 <b class="bad">baksyhanovvand...</b> (0-13)</span>
+                        <span>🏆 <b class="mvp">uxaxaxaxa</b> (17-5)</span>
+                        <span>💀 <b class="bad">baksyhanovvand...</b></span>
                     </div>
                     <div class="match-detail">
                         <div class="detail-grid">
                             <div class="team-detail">
                                 <div class="td-title win">✅ Team 2</div>
-                                <div class="player-stat"><span class="pname highlight">uxaxaxaxa</span><span class="pstats">17-5 · ADR 131 · +76</span></div>
-                                <div class="player-stat"><span class="pname">Хомяк с авт</span><span class="pstats">14-9 · ADR 105 · +20</span></div>
-                                <div class="player-stat"><span class="pname">wadsf</span><span class="pstats">13-6 · ADR 72 · +7</span></div>
-                                <div class="player-stat"><span class="pname">AFKE</span><span class="pstats">8-5 · ADR 65 · +20</span></div>
+                                <div class="player-stat"><span class="pname highlight">uxaxaxaxa</span><span class="pstats">17-5 · +76</span></div>
+                                <div class="player-stat"><span class="pname">Хомяк с авт</span><span class="pstats">14-9 · +20</span></div>
+                                <div class="player-stat"><span class="pname">wadsf</span><span class="pstats">13-6 · +7</span></div>
+                                <div class="player-stat"><span class="pname">AFKE</span><span class="pstats">8-5 · +20</span></div>
                             </div>
                             <div class="team-detail">
                                 <div class="td-title loss">❌ Team 1</div>
-                                <div class="player-stat"><span class="pname">abdalbek</span><span class="pstats">8-13 · ADR 79 · -13</span></div>
-                                <div class="player-stat"><span class="pname">bomba69</span><span class="pstats">10-13 · ADR 95 · -1</span></div>
-                                <div class="player-stat"><span class="pname">Gonduras228</span><span class="pstats">6-13 · ADR 55 · -38</span></div>
-                                <div class="player-stat"><span class="pname worst-text">baksyhanovvand...</span><span class="pstats worst-text">0-13 · ADR 19 · -74</span></div>
+                                <div class="player-stat"><span class="pname">abdalbek</span><span class="pstats">8-13 · -13</span></div>
+                                <div class="player-stat"><span class="pname">bomba69</span><span class="pstats">10-13 · -1</span></div>
+                                <div class="player-stat"><span class="pname">Gonduras228</span><span class="pstats">6-13 · -38</span></div>
+                                <div class="player-stat"><span class="pname worst-text">baksyhanovvand...</span><span class="pstats worst-text">0-13 · -74</span></div>
                             </div>
                         </div>
                     </div>
@@ -1028,24 +1155,24 @@
                         <div class="team win"><span class="score">13</span><span class="name">Team 1</span></div>
                     </div>
                     <div class="match-stats-row">
-                        <span>🏆 <b class="mvp">bomba69</b> (24-4, +80)</span>
-                        <span>💀 <b class="bad">baksyhanovvand...</b> (3-15)</span>
+                        <span>🏆 <b class="mvp">bomba69</b> (24-4)</span>
+                        <span>💀 <b class="bad">baksyhanovvand...</b></span>
                     </div>
                     <div class="match-detail">
                         <div class="detail-grid">
                             <div class="team-detail">
                                 <div class="td-title loss">❌ Team 2</div>
-                                <div class="player-stat"><span class="pname">Хомяк с авт</span><span class="pstats">14-15 · ADR 94 · +11</span></div>
-                                <div class="player-stat"><span class="pname">wadsf</span><span class="pstats">10-14 · ADR 50 · -37</span></div>
-                                <div class="player-stat"><span class="pname">AFKE</span><span class="pstats">6-15 · ADR 65 · -30</span></div>
-                                <div class="player-stat"><span class="pname worst-text">baksyhanovvand...</span><span class="pstats worst-text">3-15 · ADR 28 · -66</span></div>
+                                <div class="player-stat"><span class="pname">Хомяк с авт</span><span class="pstats">14-15 · +11</span></div>
+                                <div class="player-stat"><span class="pname">wadsf</span><span class="pstats">10-14 · -37</span></div>
+                                <div class="player-stat"><span class="pname">AFKE</span><span class="pstats">6-15 · -30</span></div>
+                                <div class="player-stat"><span class="pname worst-text">baksyhanovvand...</span><span class="pstats worst-text">3-15 · -66</span></div>
                             </div>
                             <div class="team-detail">
                                 <div class="td-title win">✅ Team 1</div>
-                                <div class="player-stat"><span class="pname highlight">bomba69</span><span class="pstats">24-4 · ADR 117 · +80</span></div>
-                                <div class="player-stat"><span class="pname">abdalbek</span><span class="pstats">16-11 · ADR 112 · +39</span></div>
-                                <div class="player-stat"><span class="pname">Gonduras228</span><span class="pstats">9-9 · ADR 79 · +15</span></div>
-                                <div class="player-stat"><span class="pname">uxaxaxaxa</span><span class="pstats">10-10 · ADR 64 · -19</span></div>
+                                <div class="player-stat"><span class="pname highlight">bomba69</span><span class="pstats">24-4 · +80</span></div>
+                                <div class="player-stat"><span class="pname">abdalbek</span><span class="pstats">16-11 · +39</span></div>
+                                <div class="player-stat"><span class="pname">Gonduras228</span><span class="pstats">9-9 · +15</span></div>
+                                <div class="player-stat"><span class="pname">uxaxaxaxa</span><span class="pstats">10-10 · -19</span></div>
                             </div>
                         </div>
                     </div>
@@ -1100,24 +1227,24 @@
                         <div class="team win"><span class="score">13</span><span class="name">Team 1</span></div>
                     </div>
                     <div class="match-stats-row">
-                        <span>🏆 <b class="mvp">bomba69</b> (16-12, +31)</span>
-                        <span>💀 <b class="bad">baksyhanovvand...</b> (4-17)</span>
+                        <span>🏆 <b class="mvp">bomba69</b> (16-12)</span>
+                        <span>💀 <b class="bad">baksyhanovvand...</b></span>
                     </div>
                     <div class="match-detail">
                         <div class="detail-grid">
                             <div class="team-detail">
                                 <div class="td-title loss">❌ Team 2</div>
-                                <div class="player-stat"><span class="pname">Gonduras228</span><span class="pstats">13-14 · ADR 78 · +5</span></div>
-                                <div class="player-stat"><span class="pname">balchuqov_valera</span><span class="pstats">9-17 · ADR 49 · -40</span></div>
-                                <div class="player-stat"><span class="pname">wadsf</span><span class="pstats">11-15 · ADR 49 · -41</span></div>
-                                <div class="player-stat"><span class="pname worst-text">baksyhanovvand...</span><span class="pstats worst-text">4-17 · ADR 18 · -66</span></div>
+                                <div class="player-stat"><span class="pname">Gonduras228</span><span class="pstats">13-14 · +5</span></div>
+                                <div class="player-stat"><span class="pname">balchuqov_valera</span><span class="pstats">9-17 · -40</span></div>
+                                <div class="player-stat"><span class="pname">wadsf</span><span class="pstats">11-15 · -41</span></div>
+                                <div class="player-stat"><span class="pname worst-text">baksyhanovvand...</span><span class="pstats worst-text">4-17 · -66</span></div>
                             </div>
                             <div class="team-detail">
                                 <div class="td-title win">✅ Team 1</div>
-                                <div class="player-stat"><span class="pname highlight">bomba69</span><span class="pstats">16-12 · ADR 90 · +31</span></div>
-                                <div class="player-stat"><span class="pname">abdalbek</span><span class="pstats">16-14 · ADR 73 · +1</span></div>
-                                <div class="player-stat"><span class="pname">fort[чилл]</span><span class="pstats">11-13 · ADR 71 · +8</span></div>
-                                <div class="player-stat"><span class="pname">uxaxaxaxa</span><span class="pstats">11-14 · ADR 46 · -22</span></div>
+                                <div class="player-stat"><span class="pname highlight">bomba69</span><span class="pstats">16-12 · +31</span></div>
+                                <div class="player-stat"><span class="pname">abdalbek</span><span class="pstats">16-14 · +1</span></div>
+                                <div class="player-stat"><span class="pname">fort[чилл]</span><span class="pstats">11-13 · +8</span></div>
+                                <div class="player-stat"><span class="pname">uxaxaxaxa</span><span class="pstats">11-14 · -22</span></div>
                             </div>
                         </div>
                     </div>
@@ -1196,13 +1323,21 @@
     <!-- ===== FOOTER ===== -->
     <div class="footer">
         MPL · Mega Professional League · <b>HLTV-style</b> · Май-Июль 2026
-        <br>simple → Хомяк с авт · абданбек → абдалбек
+        <br>👆 Кликните на игрока в топе, чтобы открыть профиль
     </div>
 
 </div>
 
+<!-- ===== PROFILE OVERLAY ===== -->
+<div class="profile-overlay" id="profileOverlay">
+    <div class="profile-panel" id="profilePanel">
+        <button class="profile-close" onclick="closeProfile()">✕</button>
+        <div id="profileContent"></div>
+    </div>
+</div>
+
 <script>
-    // ===== ДАННЫЕ ИГРОКОВ (ИСПРАВЛЕННЫЕ) =====
+    // ===== ДАННЫЕ ИГРОКОВ =====
     const playersData = [
         { name: 'bomba69', matches: 4, k: 66, d: 42, a: 4, kd: 1.57, adr: 92, diff: 24, rating: 1.39, you: true },
         { name: 'Хомяк с авт', matches: 3, k: 63, d: 43, a: 11, kd: 1.47, adr: 100, diff: 116, rating: 1.47, you: false },
@@ -1216,24 +1351,186 @@
         { name: 'baksyhanovvand...', matches: 3, k: 24, d: 61, a: 7, kd: 0.39, adr: 46, diff: -37, rating: 0.38, you: false }
     ];
 
-    const playerMatches = {
-        'bomba69': ['#0 BO3 (37-15)', '#1 (10-13)', '#2 (24-4)', '#4 (16-12)'],
-        'Хомяк с авт': ['#0 BO3 (35-19)', '#1 (14-9)', '#2 (14-15)'],
-        'abdalbek': ['#0 BO3 (20-30)', '#1 (8-13)', '#2 (16-11)', '#3 (рейтинг 1.39)', '#4 (16-14)'],
-        'Adjiare Gudju': ['#0 BO3 (24-28)', '#3 (11-13) как fort[чилл]', '#4 (11-13) как fort[чилл]'],
-        'uxaxaxaxa': ['#0 BO3 (34-16)', '#1 (17-5)', '#2 (10-10)', '#4 (11-14)'],
-        'Gonduras228': ['#0 BO3 (16-32)', '#1 (6-13)', '#2 (9-9)', '#4 (13-14)'],
-        'AFKE': ['#0 BO3 (14-24)', '#1 (8-5)', '#2 (6-15)'],
-        'wadsf': ['#1 (13-6)', '#2 (10-14)', '#4 (11-15)'],
-        'balchuqov_valera': ['#4 (9-17)'],
-        'baksyhanovvand...': ['#0 BO3 (14-31)', '#2 (3-15)', '#4 (4-17)']
+    // ===== МАТЧИ ИГРОКОВ (для профиля) =====
+    const playerMatchHistory = {
+        'bomba69': [
+            { match: '#0 BO3', k: 37, d: 15, diff: 22, map: 'Ancient + Anubis' },
+            { match: '#1', k: 10, d: 13, diff: -3, map: 'Mirage' },
+            { match: '#2', k: 24, d: 4, diff: 20, map: 'Mirage' },
+            { match: '#4', k: 16, d: 12, diff: 4, map: 'Mirage' }
+        ],
+        'Хомяк с авт': [
+            { match: '#0 BO3', k: 35, d: 19, diff: 16, map: 'Ancient + Anubis' },
+            { match: '#1', k: 14, d: 9, diff: 5, map: 'Mirage' },
+            { match: '#2', k: 14, d: 15, diff: -1, map: 'Mirage' }
+        ],
+        'abdalbek': [
+            { match: '#0 BO3', k: 20, d: 30, diff: -10, map: 'Ancient + Anubis' },
+            { match: '#1', k: 8, d: 13, diff: -5, map: 'Mirage' },
+            { match: '#2', k: 16, d: 11, diff: 5, map: 'Mirage' },
+            { match: '#4', k: 16, d: 14, diff: 2, map: 'Mirage' }
+        ],
+        'Adjiare Gudju': [
+            { match: '#0 BO3', k: 24, d: 28, diff: -4, map: 'Ancient + Anubis' },
+            { match: '#3', k: 11, d: 13, diff: -2, map: 'Mirage (как fort[чилл])' },
+            { match: '#4', k: 11, d: 13, diff: -2, map: 'Mirage (как fort[чилл])' }
+        ],
+        'uxaxaxaxa': [
+            { match: '#0 BO3', k: 34, d: 16, diff: 18, map: 'Ancient + Anubis' },
+            { match: '#1', k: 17, d: 5, diff: 12, map: 'Mirage' },
+            { match: '#2', k: 10, d: 10, diff: 0, map: 'Mirage' },
+            { match: '#4', k: 11, d: 14, diff: -3, map: 'Mirage' }
+        ],
+        'Gonduras228': [
+            { match: '#0 BO3', k: 16, d: 32, diff: -16, map: 'Ancient + Anubis' },
+            { match: '#1', k: 6, d: 13, diff: -7, map: 'Mirage' },
+            { match: '#2', k: 9, d: 9, diff: 0, map: 'Mirage' },
+            { match: '#4', k: 13, d: 14, diff: -1, map: 'Mirage' }
+        ],
+        'AFKE': [
+            { match: '#0 BO3', k: 14, d: 24, diff: -10, map: 'Ancient + Anubis' },
+            { match: '#1', k: 8, d: 5, diff: 3, map: 'Mirage' },
+            { match: '#2', k: 6, d: 15, diff: -9, map: 'Mirage' }
+        ],
+        'wadsf': [
+            { match: '#1', k: 13, d: 6, diff: 7, map: 'Mirage' },
+            { match: '#2', k: 10, d: 14, diff: -4, map: 'Mirage' },
+            { match: '#4', k: 11, d: 15, diff: -4, map: 'Mirage' }
+        ],
+        'balchuqov_valera': [
+            { match: '#4', k: 9, d: 17, diff: -8, map: 'Mirage' }
+        ],
+        'baksyhanovvand...': [
+            { match: '#0 BO3', k: 14, d: 31, diff: -17, map: 'Ancient + Anubis' },
+            { match: '#2', k: 3, d: 15, diff: -12, map: 'Mirage' },
+            { match: '#4', k: 4, d: 17, diff: -13, map: 'Mirage' }
+        ]
     };
+
+    // ===== ДОСТИЖЕНИЯ =====
+    function getAchievements(player) {
+        const ach = [];
+        if (player.kd > 1.5) ach.push({ icon: '🥇', name: 'Элитный K/D' });
+        if (player.kd > 2.0) ach.push({ icon: '💎', name: 'Легендарный K/D' });
+        if (player.diff > 100) ach.push({ icon: '⚡', name: 'Доминатор' });
+        if (player.diff > 50 && player.diff <= 100) ach.push({ icon: '🔥', name: 'Кипящий' });
+        if (player.adr > 90) ach.push({ icon: '💥', name: 'Урон-машина' });
+        if (player.matches >= 4) ach.push({ icon: '🏅', name: 'Ветеран' });
+        if (player.name === 'bomba69') ach.push({ icon: '⭐', name: 'MVP турнира' });
+        if (player.name === 'Хомяк с авт' && player.diff === 116) ach.push({ icon: '🏆', name: 'Лучшая разница' });
+        return ach;
+    }
+
+    // ===== ОТКРЫТИЕ ПРОФИЛЯ =====
+    function openProfile(playerName) {
+        const player = playersData.find(p => p.name === playerName);
+        if (!player) return;
+
+        const history = playerMatchHistory[playerName] || [];
+        const achievements = getAchievements(player);
+
+        const content = document.getElementById('profileContent');
+        content.innerHTML = `
+            <div class="profile-header">
+                <div class="profile-avatar">${playerName.charAt(0).toUpperCase()}</div>
+                <div class="profile-header-info">
+                    <h2>${playerName} ${player.you ? '⭐' : ''}</h2>
+                    <div class="sub">
+                        ${player.matches} матчей · ${player.k} убийств · ${player.d} смертей
+                        ${player.you ? ' · <b style="color:#ffb347;">Это вы!</b>' : ''}
+                    </div>
+                </div>
+            </div>
+
+            <div class="profile-stats">
+                <div class="profile-stat">
+                    <div class="num">${player.kd.toFixed(2)}</div>
+                    <div class="label">K/D</div>
+                </div>
+                <div class="profile-stat">
+                    <div class="num">${player.adr}</div>
+                    <div class="label">ADR</div>
+                </div>
+                <div class="profile-stat">
+                    <div class="num ${player.diff > 0 ? 'good' : 'bad'}">${player.diff > 0 ? '+' : ''}${player.diff}</div>
+                    <div class="label">Разница</div>
+                </div>
+                <div class="profile-stat">
+                    <div class="num">${player.rating.toFixed(2)}</div>
+                    <div class="label">Рейтинг</div>
+                </div>
+            </div>
+
+            ${achievements.length > 0 ? `
+                <div class="profile-achievements">
+                    ${achievements.map(a => `
+                        <div class="profile-achievement">
+                            <span class="ach-icon">${a.icon}</span>
+                            <span class="ach-name">${a.name}</span>
+                        </div>
+                    `).join('')}
+                </div>
+            ` : `
+                <div style="font-size:12px; color:#6e7f94; margin-bottom:12px;">Нет достижений</div>
+            `}
+
+            <div class="profile-matches-title">📋 История матчей</div>
+            ${history.length > 0 ? history.map(m => `
+                <div class="profile-match-row">
+                    <span class="match-name">${m.match} — ${m.map}</span>
+                    <span class="match-stats">
+                        ${m.k} - ${m.d}
+                        <span class="${m.diff > 0 ? 'good' : 'bad'}">${m.diff > 0 ? '+' : ''}${m.diff}</span>
+                    </span>
+                </div>
+            `).join('') : `
+                <div style="font-size:12px; color:#6e7f94;">Нет данных о матчах</div>
+            `}
+
+            <div style="margin-top:14px; font-size:11px; color:#4a5a6e; text-align:center; border-top:1px solid #1f2835; padding-top:10px;">
+                🟡 K/D: ${player.kd.toFixed(2)} · 💥 ADR: ${player.adr} · 📊 Рейтинг: ${player.rating.toFixed(2)}
+            </div>
+        `;
+
+        document.getElementById('profileOverlay').classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeProfile() {
+        document.getElementById('profileOverlay').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    // ===== РЕНДЕР ТОП ИГРОКОВ =====
+    function renderPlayers() {
+        const container = document.getElementById('playerList');
+        const sorted = [...playersData].sort((a, b) => b.kd - a.kd);
+        const ranks = ['gold', 'silver', 'bronze', '', '', '', '', '', '', ''];
+
+        let html = '';
+        sorted.forEach((p, i) => {
+            const rankClass = ranks[i] || '';
+            const youClass = p.you ? 'you' : '';
+            const kdClass = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : i === sorted.length - 1 ? 'red' : '';
+            const diffClass = p.diff > 0 ? 'best' : 'worst';
+
+            html += `
+                <div class="top-player-row" onclick="openProfile('${p.name}')">
+                    <span class="rank ${rankClass}">#${i+1}</span>
+                    <span class="pname ${youClass}">${p.name}</span>
+                    <span class="badge-kd ${kdClass}">${p.kd.toFixed(2)}</span>
+                    <span class="pstats"><b class="${diffClass}">${p.diff > 0 ? '+' : ''}${p.diff}</b></span>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    }
 
     // ===== НОВОСТИ (локальное хранилище) =====
     let newsData = JSON.parse(localStorage.getItem('mpl_news')) || [
         { id: 1, title: '🏆 Старт сезона MPL!', text: 'Дружеский турнир MPL начался! Следите за матчами и статистикой.', date: new Date('2026-05-09T10:00:00').toISOString() },
         { id: 2, title: '🔥 Bomba69 делает 24-4!', text: 'В матче #2 Bomba69 показал невероятный результат — 24 убийства при 4 смертях!', date: new Date('2026-05-09T15:30:00').toISOString() },
-        { id: 3, title: '📊 Обновлена статистика', text: 'simple переименован в Хомяк с авт, абданбек исправлен на абдалбек.', date: new Date().toISOString() }
+        { id: 3, title: '📊 Добавлены профили игроков!', text: 'Теперь можно кликнуть на игрока в топе и посмотреть его полную статистику.', date: new Date().toISOString() }
     ];
 
     function saveNews() {
@@ -1272,45 +1569,6 @@
         renderNews();
     }
 
-    // ===== РЕНДЕР ТОП ИГРОКОВ =====
-    function renderPlayers() {
-        const container = document.getElementById('playerList');
-        const sorted = [...playersData].sort((a, b) => b.kd - a.kd);
-        const ranks = ['gold', 'silver', 'bronze', '', '', '', '', '', '', ''];
-
-        let html = '';
-        sorted.forEach((p, i) => {
-            const rankClass = ranks[i] || '';
-            const youClass = p.you ? 'you' : '';
-            const kdClass = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : i === sorted.length - 1 ? 'red' : '';
-            const diffClass = p.diff > 0 ? 'best' : 'worst';
-
-            html += `
-                <div class="top-player-row" onclick="togglePlayerDetail(this)">
-                    <span class="rank ${rankClass}">#${i+1}</span>
-                    <span class="pname ${youClass}">${p.name}</span>
-                    <span class="badge-kd ${kdClass}">${p.kd.toFixed(2)}</span>
-                    <span class="pstats"><b class="${diffClass}">${p.diff > 0 ? '+' : ''}${p.diff}</b></span>
-                    <div class="player-detail">
-                        <div class="detail-title">${p.name} ${p.you ? '⭐' : ''}</div>
-                        <div class="detail-stats">
-                            <div class="detail-stat"><div class="num">${p.matches}</div><div class="label">Матчи</div></div>
-                            <div class="detail-stat"><div class="num ${p.kd > 1 ? 'good' : ''}">${p.k}</div><div class="label">Убийства</div></div>
-                            <div class="detail-stat"><div class="num">${p.d}</div><div class="label">Смерти</div></div>
-                            <div class="detail-stat"><div class="num ${p.kd > 1 ? 'good' : 'bad'}">${p.kd.toFixed(2)}</div><div class="label">K/D</div></div>
-                        </div>
-                        <div class="detail-matches">
-                            <b>Матчи:</b>
-                            ${(playerMatches[p.name] || []).map(m => `<span class="match-item">${m}</span>`).join('')}
-                            <br>ADR ${p.adr} · ± ${p.diff > 0 ? '+' : ''}${p.diff} · Рейтинг ${p.rating.toFixed(2)}
-                        </div>
-                    </div>
-                </div>
-            `;
-        });
-        container.innerHTML = html;
-    }
-
     // ===== ПЕРЕКЛЮЧЕНИЕ ТЕМЫ =====
     function toggleTheme() {
         document.body.classList.toggle('light');
@@ -1339,16 +1597,15 @@
         }
     }
 
-    // ===== ДЕТАЛИ ИГРОКА =====
-    function togglePlayerDetail(row) {
-        const detail = row.querySelector('.player-detail');
-        if (detail) {
-            document.querySelectorAll('.player-detail.open').forEach(d => {
-                if (d !== detail) d.classList.remove('open');
-            });
-            detail.classList.toggle('open');
-        }
-    }
+    // ===== ЗАКРЫТИЕ ПРОФИЛЯ ПО ESC =====
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeProfile();
+    });
+
+    // ===== ЗАКРЫТИЕ ПРОФИЛЯ ПО КЛИКУ ВНЕ =====
+    document.getElementById('profileOverlay').addEventListener('click', function(e) {
+        if (e.target === this) closeProfile();
+    });
 
     // ===== ГРАФИКИ =====
     function renderCharts() {
