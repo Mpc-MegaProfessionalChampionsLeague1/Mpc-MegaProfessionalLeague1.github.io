@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL — Mega Professional League</title>
     <style>
+        /* ===== RESET & BASE ===== */
         * {
             margin: 0;
             padding: 0;
@@ -17,9 +18,120 @@
             display: flex;
             justify-content: center;
             padding: 20px 12px;
+            transition: background 0.3s, color 0.3s;
         }
+        body.light {
+            background: #e8ecf1;
+            color: #1a212b;
+        }
+        body.light .left-panel,
+        body.light .right-panel .match-card,
+        body.light .center-panel,
+        body.light .top-badge,
+        body.light .stat-box,
+        body.light .filter-section,
+        body.light .news-item,
+        body.light .news-form {
+            background: #ffffff;
+            color: #1a212b;
+            border-color: #d0d7e0;
+        }
+        body.light .match-card .match-stats-row {
+            border-color: #d0d7e0;
+        }
+        body.light .match-card .match-stats-row b {
+            color: #1a212b;
+        }
+        body.light .top-player-row {
+            border-color: #e0e5ec;
+        }
+        body.light .top-player-row:hover {
+            background: #f0f3f8;
+        }
+        body.light .player-detail {
+            background: #f5f8fc;
+        }
+        body.light .match-detail .team-detail {
+            background: #f5f8fc;
+        }
+        body.light .match-detail .player-stat {
+            border-color: #e0e5ec;
+        }
+        body.light .match-detail .player-stat .pname {
+            color: #1a212b;
+        }
+        body.light .header {
+            border-color: #d0d7e0;
+        }
+        body.light .footer {
+            border-color: #d0d7e0;
+            color: #6e7f94;
+        }
+        body.light .nav {
+            background: #ffffff;
+        }
+        body.light .nav-btn {
+            color: #6e7f94;
+        }
+        body.light .nav-btn:hover {
+            background: #e8ecf1;
+            color: #1a212b;
+        }
+        body.light .nav-btn.active {
+            background: #ffb347;
+            color: #0e1217;
+        }
+        body.light .theme-toggle {
+            background: #e8ecf1;
+            color: #1a212b;
+        }
+        body.light .top-player-row .pstats {
+            color: #6e7f94;
+        }
+        body.light .top-player-row .pstats b {
+            color: #1a212b;
+        }
+        body.light .top-player-row .badge-kd {
+            background: #e8ecf1;
+        }
+        body.light .top-player-row .badge-kd.gold {
+            background: #f5e6b8;
+            color: #8a6d1b;
+        }
+        body.light .top-player-row .badge-kd.silver {
+            background: #d5dce6;
+            color: #3a4a5e;
+        }
+        body.light .top-player-row .badge-kd.bronze {
+            background: #e8dcc8;
+            color: #6e5a2c;
+        }
+        body.light .top-player-row .badge-kd.red {
+            background: #f0d0d0;
+            color: #b03030;
+        }
+        body.light .compare-box {
+            background: #f5f8fc;
+        }
+        body.light .news-form textarea,
+        body.light .news-form input {
+            background: #e8ecf1;
+            color: #1a212b;
+            border-color: #d0d7e0;
+        }
+        body.light .news-form .publish-btn {
+            background: #ffb347;
+            color: #0e1217;
+        }
+        body.light .news-item .news-date {
+            color: #6e7f94;
+        }
+        body.light .news-item .news-text {
+            color: #1a212b;
+        }
+
         .container {
-            max-width: 1400px;
+            max-width: 1600px;
             width: 100%;
         }
 
@@ -64,21 +176,82 @@
             font-size: 11px;
             letter-spacing: 0.3px;
         }
+        .theme-toggle {
+            background: #1a212b;
+            border: none;
+            color: #c7d5e0;
+            padding: 6px 14px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 13px;
+            transition: 0.2s;
+        }
+        .theme-toggle:hover {
+            background: #2a3546;
+        }
 
-        /* ===== MAIN LAYOUT ===== */
+        /* ===== NAV ===== */
+        .nav {
+            display: flex;
+            gap: 4px;
+            margin: 14px 0 18px;
+            background: #1a212b;
+            border-radius: 8px;
+            padding: 4px;
+            flex-wrap: wrap;
+        }
+        .nav-btn {
+            background: transparent;
+            border: none;
+            color: #8b9bb0;
+            padding: 8px 22px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .nav-btn:hover {
+            color: #e8eff7;
+            background: #252f3e;
+        }
+        .nav-btn.active {
+            background: #ffb347;
+            color: #0e1217;
+        }
+
+        /* ===== CONTENT ===== */
+        .tab-content {
+            display: none;
+            animation: fade 0.3s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+        @keyframes fade {
+            from { opacity: 0.4; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ===== MAIN GRID (3 колонки как на HLTV) ===== */
         .main-grid {
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            grid-template-columns: 1fr 1.6fr 1fr;
+            gap: 18px;
             margin-top: 16px;
         }
-        @media (max-width: 900px) {
+        @media (max-width: 1100px) {
+            .main-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 700px) {
             .main-grid {
                 grid-template-columns: 1fr;
             }
         }
 
-        /* ===== LEFT: TOP PLAYERS ===== */
+        /* ===== LEFT PANEL ===== */
         .left-panel {
             background: #1a212b;
             border-radius: 8px;
@@ -94,6 +267,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            flex-wrap: wrap;
         }
         .left-panel .panel-title span {
             color: #6e7f94;
@@ -101,25 +275,25 @@
             font-size: 13px;
         }
 
-        /* ===== PLAYER ROW (кликабельный) ===== */
+        /* ===== TOP PLAYER ROW ===== */
         .top-player-row {
             display: flex;
             align-items: center;
-            padding: 6px 8px;
+            padding: 5px 6px;
             border-radius: 4px;
             transition: 0.15s;
             cursor: pointer;
-            gap: 8px;
+            gap: 6px;
             border-bottom: 1px solid #1f2835;
-            font-size: 13px;
+            font-size: 12px;
         }
         .top-player-row:hover {
             background: #1f2835;
         }
         .top-player-row .rank {
             font-weight: 700;
-            font-size: 14px;
-            min-width: 28px;
+            font-size: 13px;
+            min-width: 24px;
             color: #6e7f94;
         }
         .top-player-row .rank.gold {
@@ -137,14 +311,15 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            font-size: 12px;
         }
         .top-player-row .pname.you {
             color: #ffb347;
         }
         .top-player-row .pstats {
             display: flex;
-            gap: 12px;
-            font-size: 12px;
+            gap: 8px;
+            font-size: 11px;
             color: #8b9bb0;
         }
         .top-player-row .pstats b {
@@ -158,11 +333,11 @@
         }
         .top-player-row .badge-kd {
             background: #1f2835;
-            padding: 1px 10px;
+            padding: 1px 8px;
             border-radius: 30px;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 600;
-            min-width: 44px;
+            min-width: 38px;
             text-align: center;
         }
         .top-player-row .badge-kd.gold {
@@ -182,13 +357,13 @@
             color: #e07a7a;
         }
 
-        /* ===== PLAYER DETAIL (POPUP) ===== */
+        /* ===== PLAYER DETAIL ===== */
         .player-detail {
             display: none;
             background: #141b24;
             border-radius: 6px;
-            padding: 12px 14px;
-            margin-top: 6px;
+            padding: 10px 12px;
+            margin-top: 4px;
             margin-bottom: 4px;
             border-left: 3px solid #ffb347;
             animation: fade 0.25s ease;
@@ -196,26 +371,22 @@
         .player-detail.open {
             display: block;
         }
-        @keyframes fade {
-            from { opacity: 0.3; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
         .player-detail .detail-title {
             font-weight: 700;
-            font-size: 14px;
+            font-size: 13px;
             color: #e8eff7;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
         .player-detail .detail-title .sub {
             color: #6e7f94;
             font-weight: 400;
-            font-size: 12px;
+            font-size: 11px;
         }
         .player-detail .detail-stats {
             display: grid;
             grid-template-columns: 1fr 1fr 1fr 1fr;
-            gap: 6px;
-            margin-bottom: 8px;
+            gap: 4px;
+            margin-bottom: 6px;
         }
         @media (max-width: 600px) {
             .player-detail .detail-stats {
@@ -225,11 +396,11 @@
         .player-detail .detail-stat {
             background: #0e1217;
             border-radius: 4px;
-            padding: 6px 10px;
+            padding: 4px 8px;
             text-align: center;
         }
         .player-detail .detail-stat .num {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             color: #ffb347;
         }
@@ -240,13 +411,13 @@
             color: #e07a7a;
         }
         .player-detail .detail-stat .label {
-            font-size: 10px;
+            font-size: 9px;
             color: #6e7f94;
             text-transform: uppercase;
             letter-spacing: 0.3px;
         }
         .player-detail .detail-matches {
-            font-size: 12px;
+            font-size: 11px;
             color: #8b9bb0;
         }
         .player-detail .detail-matches b {
@@ -255,17 +426,148 @@
         .player-detail .detail-matches .match-item {
             display: inline-block;
             background: #0e1217;
-            padding: 1px 10px;
+            padding: 1px 8px;
             border-radius: 20px;
-            margin: 2px 3px;
-            font-size: 11px;
+            margin: 1px 2px;
+            font-size: 10px;
             color: #6e7f94;
         }
         .player-detail .detail-matches .match-item .kd {
             color: #c7d5e0;
         }
 
-        /* ===== RIGHT: MATCHES ===== */
+        /* ===== CENTER PANEL (НОВОСТИ) ===== */
+        .center-panel {
+            background: #1a212b;
+            border-radius: 8px;
+            padding: 16px 18px;
+        }
+        .center-panel .panel-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #e8eff7;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #2a3546;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .center-panel .panel-title span {
+            color: #6e7f94;
+            font-weight: 400;
+            font-size: 13px;
+        }
+
+        /* ===== НОВОСТИ ===== */
+        .news-form {
+            background: #141b24;
+            border-radius: 6px;
+            padding: 12px 14px;
+            margin-bottom: 14px;
+        }
+        .news-form input,
+        .news-form textarea {
+            width: 100%;
+            background: #0e1217;
+            border: 1px solid #2a3546;
+            color: #c7d5e0;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            outline: none;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            resize: vertical;
+        }
+        .news-form input:focus,
+        .news-form textarea:focus {
+            border-color: #ffb347;
+        }
+        .news-form textarea {
+            min-height: 60px;
+            margin-top: 6px;
+        }
+        .news-form .publish-btn {
+            background: #ffb347;
+            border: none;
+            color: #0e1217;
+            padding: 6px 20px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: 0.2s;
+        }
+        .news-form .publish-btn:hover {
+            background: #e6a030;
+        }
+
+        .news-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+        .news-list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .news-list::-webkit-scrollbar-track {
+            background: #141b24;
+            border-radius: 4px;
+        }
+        .news-list::-webkit-scrollbar-thumb {
+            background: #2a3546;
+            border-radius: 4px;
+        }
+
+        .news-item {
+            background: #141b24;
+            border-radius: 6px;
+            padding: 12px 14px;
+            border-left: 3px solid #ffb347;
+            animation: fade 0.3s ease;
+        }
+        .news-item .news-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+        .news-item .news-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: #e8eff7;
+        }
+        .news-item .news-date {
+            font-size: 11px;
+            color: #6e7f94;
+        }
+        .news-item .news-text {
+            font-size: 13px;
+            color: #b0c4de;
+            line-height: 1.4;
+        }
+        .news-item .news-delete {
+            background: transparent;
+            border: none;
+            color: #e07a7a;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0 4px;
+            transition: 0.2s;
+        }
+        .news-item .news-delete:hover {
+            color: #ff4444;
+            transform: scale(1.2);
+        }
+
+        /* ===== RIGHT PANEL ===== */
         .right-panel {
             display: flex;
             flex-direction: column;
@@ -280,6 +582,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            flex-wrap: wrap;
         }
         .right-panel .panel-title span {
             color: #6e7f94;
@@ -291,7 +594,7 @@
         .match-card {
             background: #1a212b;
             border-radius: 6px;
-            padding: 12px 16px;
+            padding: 10px 14px;
             border-left: 3px solid #ffb347;
             cursor: pointer;
             transition: 0.15s;
@@ -308,37 +611,38 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 4px 12px;
+            gap: 4px 8px;
         }
         .match-card .match-top .title {
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
         }
         .match-card .match-top .date {
             color: #6e7f94;
-            font-size: 11px;
+            font-size: 10px;
         }
         .match-card .match-teams {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 4px 12px;
-            font-size: 13px;
-            margin-top: 4px;
+            gap: 4px 8px;
+            font-size: 12px;
+            margin-top: 3px;
         }
         .match-card .match-teams .team {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
         }
         .match-card .match-teams .team .name {
             font-weight: 500;
+            font-size: 12px;
         }
         .match-card .match-teams .team .score {
             font-weight: 700;
-            font-size: 15px;
-            min-width: 24px;
+            font-size: 14px;
+            min-width: 20px;
             text-align: center;
         }
         .match-card .match-teams .team.win .score {
@@ -350,16 +654,16 @@
         .match-card .match-teams .vs {
             color: #4a5a6e;
             font-weight: 700;
-            font-size: 12px;
+            font-size: 11px;
         }
         .match-card .match-stats-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 4px 18px;
-            margin-top: 6px;
-            padding-top: 6px;
+            gap: 4px 12px;
+            margin-top: 4px;
+            padding-top: 4px;
             border-top: 1px solid #1f2835;
-            font-size: 12px;
+            font-size: 11px;
             color: #6e7f94;
         }
         .match-card .match-stats-row b {
@@ -372,15 +676,15 @@
             color: #e07a7a;
         }
         .match-card .click-hint {
-            font-size: 10px;
+            font-size: 9px;
             color: #4a5a6e;
         }
 
         /* ===== MATCH DETAIL ===== */
         .match-detail {
             display: none;
-            margin-top: 10px;
-            padding-top: 10px;
+            margin-top: 8px;
+            padding-top: 8px;
             border-top: 1px solid #26303f;
             animation: fade 0.25s ease;
         }
@@ -390,7 +694,7 @@
         .match-detail .detail-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 8px;
+            gap: 6px;
         }
         @media (max-width: 600px) {
             .match-detail .detail-grid {
@@ -400,13 +704,13 @@
         .match-detail .team-detail {
             background: #141b24;
             border-radius: 4px;
-            padding: 8px 12px;
+            padding: 6px 10px;
         }
         .match-detail .team-detail .td-title {
             font-weight: 600;
-            font-size: 12px;
-            margin-bottom: 4px;
-            padding-bottom: 3px;
+            font-size: 11px;
+            margin-bottom: 3px;
+            padding-bottom: 2px;
             border-bottom: 1px solid #1f2835;
         }
         .match-detail .team-detail .td-title.win {
@@ -419,7 +723,7 @@
             display: flex;
             justify-content: space-between;
             padding: 2px 0;
-            font-size: 12px;
+            font-size: 11px;
             border-bottom: 1px solid #111a22;
         }
         .match-detail .player-stat:last-child {
@@ -430,13 +734,37 @@
         }
         .match-detail .player-stat .pstats {
             color: #6e7f94;
-            font-size: 11px;
+            font-size: 10px;
         }
         .match-detail .player-stat .highlight {
             color: #ffb347;
         }
         .match-detail .player-stat .worst-text {
             color: #e07a7a;
+        }
+
+        /* ===== SCROLL ===== */
+        .scroll-area {
+            max-height: 500px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+        .scroll-area::-webkit-scrollbar {
+            width: 4px;
+        }
+        .scroll-area::-webkit-scrollbar-track {
+            background: #141b24;
+            border-radius: 4px;
+        }
+        .scroll-area::-webkit-scrollbar-thumb {
+            background: #2a3546;
+            border-radius: 4px;
+        }
+
+        @media (max-width: 900px) {
+            .scroll-area {
+                max-height: none;
+            }
         }
 
         /* ===== FOOTER ===== */
@@ -452,30 +780,35 @@
             color: #6e7f94;
         }
 
-        .scroll-area {
-            max-height: 600px;
-            overflow-y: auto;
-            padding-right: 4px;
-        }
-        .scroll-area::-webkit-scrollbar {
-            width: 4px;
-        }
-        .scroll-area::-webkit-scrollbar-track {
+        /* ===== ACHIEVEMENTS BAR ===== */
+        .achievements-bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-bottom: 12px;
+            padding: 8px 12px;
             background: #141b24;
-            border-radius: 4px;
+            border-radius: 6px;
         }
-        .scroll-area::-webkit-scrollbar-thumb {
-            background: #2a3546;
-            border-radius: 4px;
+        .ach-item {
+            background: #0e1217;
+            border-radius: 30px;
+            padding: 3px 12px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            border: 1px solid #2a3546;
         }
-        .scroll-area::-webkit-scrollbar-thumb:hover {
-            background: #3a4a5e;
+        .ach-item .ach-icon {
+            font-size: 14px;
         }
-
-        @media (max-width: 900px) {
-            .scroll-area {
-                max-height: none;
-            }
+        .ach-item .ach-name {
+            color: #8b9bb0;
+        }
+        .ach-item .ach-player {
+            color: #ffb347;
+            font-weight: 600;
         }
     </style>
 </head>
@@ -483,7 +816,7 @@
 
 <div class="container">
 
-    <!-- HEADER -->
+    <!-- ===== HEADER ===== -->
     <div class="header">
         <div class="logo">
             <h1>MPL <span>›</span> <small>Mega Professional League</small></h1>
@@ -491,538 +824,541 @@
         <div class="header-right">
             <span>📅 Май-Июль 2026</span>
             <span class="status">● LIVE</span>
+            <button class="theme-toggle" onclick="toggleTheme()">🌓 Тема</button>
         </div>
     </div>
 
-    <!-- MAIN GRID -->
-    <div class="main-grid">
-
-        <!-- ===== LEFT: ТОП ИГРОКОВ ===== -->
-        <div class="left-panel">
-            <div class="panel-title">
-                🏆 Топ игроков
-                <span>по K/D · кликните для инфо</span>
-            </div>
-
-            <div class="scroll-area">
-
-                <!-- 1: bomba69 -->
-                <div class="top-player-row" onclick="togglePlayerDetail(this)">
-                    <span class="rank gold">#1</span>
-                    <span class="pname you">bomba69</span>
-                    <span class="badge-kd gold">1.57</span>
-                    <span class="pstats">K/D <b class="best">+24</b> · ADR 92</span>
-                    <div class="player-detail">
-                        <div class="detail-title">bomba69 <span class="sub">— MVP турнира</span></div>
-                        <div class="detail-stats">
-                            <div class="detail-stat"><div class="num">4</div><div class="label">Матчи</div></div>
-                            <div class="detail-stat"><div class="num good">66</div><div class="label">Убийства</div></div>
-                            <div class="detail-stat"><div class="num">42</div><div class="label">Смерти</div></div>
-                            <div class="detail-stat"><div class="num good">1.57</div><div class="label">K/D</div></div>
-                        </div>
-                        <div class="detail-matches">
-                            <b>Матчи:</b>
-                            <span class="match-item">#0 BO3 <span class="kd">(37-15)</span></span>
-                            <span class="match-item">#1 <span class="kd">(10-13)</span></span>
-                            <span class="match-item">#2 <span class="kd">(24-4)</span></span>
-                            <span class="match-item">#4 <span class="kd">(16-12)</span></span>
-                            <br><b style="color:#6e7f94;">ADR:</b> 92 · <b style="color:#6e7f94;">±:</b> +24 · <b style="color:#6e7f94;">Рейтинг:</b> 1.39
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 2: абдалбек -->
-                <div class="top-player-row" onclick="togglePlayerDetail(this)">
-                    <span class="rank silver">#2</span>
-                    <span class="pname">абдалбек</span>
-                    <span class="badge-kd silver">1.09</span>
-                    <span class="pstats">K/D <b>+5</b> · ADR 85</span>
-                    <div class="player-detail">
-                        <div class="detail-title">абдалбек</div>
-                        <div class="detail-stats">
-                            <div class="detail-stat"><div class="num">4</div><div class="label">Матчи</div></div>
-                            <div class="detail-stat"><div class="num">58</div><div class="label">Убийства</div></div>
-                            <div class="detail-stat"><div class="num">53</div><div class="label">Смерти</div></div>
-                            <div class="detail-stat"><div class="num">1.09</div><div class="label">K/D</div></div>
-                        </div>
-                        <div class="detail-matches">
-                            <b>Матчи:</b>
-                            <span class="match-item">#0 BO3 <span class="kd">(20-30)</span></span>
-                            <span class="match-item">#1 <span class="kd">(8-13)</span></span>
-                            <span class="match-item">#2 <span class="kd">(16-11)</span></span>
-                            <span class="match-item">#4 <span class="kd">(16-14)</span></span>
-                            <br><b style="color:#6e7f94;">ADR:</b> 85 · <b style="color:#6e7f94;">±:</b> +5 · <b style="color:#6e7f94;">Рейтинг:</b> 1.22
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 3: simple -->
-                <div class="top-player-row" onclick="togglePlayerDetail(this)">
-                    <span class="rank bronze">#3</span>
-                    <span class="pname">simple</span>
-                    <span class="badge-kd bronze">1.17</span>
-                    <span class="pstats">K/D <b>+4</b> · ADR 100</span>
-                    <div class="player-detail">
-                        <div class="detail-title">simple</div>
-                        <div class="detail-stats">
-                            <div class="detail-stat"><div class="num">2</div><div class="label">Матчи</div></div>
-                            <div class="detail-stat"><div class="num">28</div><div class="label">Убийства</div></div>
-                            <div class="detail-stat"><div class="num">24</div><div class="label">Смерти</div></div>
-                            <div class="detail-stat"><div class="num">1.17</div><div class="label">K/D</div></div>
-                        </div>
-                        <div class="detail-matches">
-                            <b>Матчи:</b>
-                            <span class="match-item">#1 <span class="kd">(14-9)</span></span>
-                            <span class="match-item">#2 <span class="kd">(14-15)</span></span>
-                            <br><b style="color:#6e7f94;">ADR:</b> 100 · <b style="color:#6e7f94;">±:</b> +4 · <b style="color:#6e7f94;">Рейтинг:</b> 1.35
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 4: Adjiare Gudju (объединённый) -->
-                <div class="top-player-row" onclick="togglePlayerDetail(this)">
-                    <span class="rank">#4</span>
-                    <span class="pname">Adjiare Gudju</span>
-                    <span class="badge-kd">0.85</span>
-                    <span class="pstats">K/D <b>-27</b> · ADR 69</span>
-                    <div class="player-detail">
-                        <div class="detail-title">Adjiare Gudju <span class="sub">(играл как fort[чилл])</span></div>
-                        <div class="detail-stats">
-                            <div class="detail-stat"><div class="num">3</div><div class="label">Матчи</div></div>
-                            <div class="detail-stat"><div class="num">46</div><div class="label">Убийства</div></div>
-                            <div class="detail-stat"><div class="num">54</div><div class="label">Смерти</div></div>
-                            <div class="detail-stat"><div class="num">0.85</div><div class="label">K/D</div></div>
-                        </div>
-                        <div class="detail-matches">
-                            <b>Матчи:</b>
-                            <span class="match-item">#0 BO3 <span class="kd">(24-28)</span></span>
-                            <span class="match-item">#3 <span class="kd">(11-13) как fort[чилл]</span></span>
-                            <span class="match-item">#4 <span class="kd">(11-13) как fort[чилл]</span></span>
-                            <br><b style="color:#6e7f94;">ADR:</b> 69 · <b style="color:#6e7f94;">±:</b> -27 · <b style="color:#6e7f94;">Рейтинг:</b> 0.95
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 5: uxaxaxaxa -->
-                <div class="top-player-row" onclick="togglePlayerDetail(this)">
-                    <span class="rank">#5</span>
-                    <span class="pname">uxaxaxaxa</span>
-                    <span class="badge-kd">0.92</span>
-                    <span class="pstats">K/D <b>-4</b> · ADR 74</span>
-                    <div class="player-detail">
-                        <div class="detail-title">uxaxaxaxa</div>
-                        <div class="detail-stats">
-                            <div class="detail-stat"><div class="num">4</div><div class="label">Матчи</div></div>
-                            <div class="detail-stat"><div class="num">49</div><div class="label">Убийства</div></div>
-                            <div class="detail-stat"><div class="num">53</div><div class="label">Смерти</div></div>
-                            <div class="detail-stat"><div class="num">0.92</div><div class="label">K/D</div></div>
-                        </div>
-                        <div class="detail-matches">
-                            <b>Матчи:</b>
-                            <span class="match-item">#0 BO3 <span class="kd">(34-16)</span></span>
-                            <span class="match-item">#1 <span class="kd">(17-5)</span></span>
-                            <span class="match-item">#2 <span class="kd">(10-10)</span></span>
-                            <span class="match-item">#4 <span class="kd">(11-14)</span></span>
-                            <br><b style="color:#6e7f94;">ADR:</b> 74 · <b style="color:#6e7f94;">±:</b> -4 · <b style="color:#6e7f94;">Рейтинг:</b> 0.98
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 6: Gonduras228 -->
-                <div class="top-player-row" onclick="togglePlayerDetail(this)">
-                    <span class="rank">#6</span>
-                    <span class="pname">Gonduras228</span>
-                    <span class="badge-kd">0.81</span>
-                    <span class="pstats">K/D <b>-10</b> · ADR 70</span>
-                    <div class="player-detail">
-                        <div class="detail-title">Gonduras228</div>
-                        <div class="detail-stats">
-                            <div class="detail-stat"><div class="num">4</div><div class="label">Матчи</div></div>
-                            <div class="detail-stat"><div class="num">42</div><div class="label">Убийства</div></div>
-                            <div class="detail-stat"><div class="num">52</div><div class="label">Смерти</div></div>
-                            <div class="detail-stat"><div class="num">0.81</div><div class="label">K/D</div></div>
-                        </div>
-                        <div class="detail-matches">
-                            <b>Матчи:</b>
-                            <span class="match-item">#0 BO3 <span class="kd">(16-32)</span></span>
-                            <span class="match-item">#1 <span class="kd">(6-13)</span></span>
-                            <span class="match-item">#2 <span class="kd">(9-9)</span></span>
-                            <span class="match-item">#4 <span class="kd">(13-14)</span></span>
-                            <br><b style="color:#6e7f94;">ADR:</b> 70 · <b style="color:#6e7f94;">±:</b> -10 · <b style="color:#6e7f94;">Рейтинг:</b> 0.92
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 7: wadsf -->
-                <div class="top-player-row" onclick="togglePlayerDetail(this)">
-                    <span class="rank">#7</span>
-                    <span class="pname">wadsf</span>
-                    <span class="badge-kd">0.97</span>
-                    <span class="pstats">K/D <b>-1</b> · ADR 57</span>
-                    <div class="player-detail">
-                        <div class="detail-title">wadsf</div>
-                        <div class="detail-stats">
-                            <div class="detail-stat"><div class="num">3</div><div class="label">Матчи</div></div>
-                            <div class="detail-stat"><div class="num">34</div><div class="label">Убийства</div></div>
-                            <div class="detail-stat"><div class="num">35</div><div class="label">Смерти</div></div>
-                            <div class="detail-stat"><div class="num">0.97</div><div class="label">K/D</div></div>
-                        </div>
-                        <div class="detail-matches">
-                            <b>Матчи:</b>
-                            <span class="match-item">#1 <span class="kd">(13-6)</span></span>
-                            <span class="match-item">#2 <span class="kd">(10-14)</span></span>
-                            <span class="match-item">#4 <span class="kd">(11-15)</span></span>
-                            <br><b style="color:#6e7f94;">ADR:</b> 57 · <b style="color:#6e7f94;">±:</b> -1 · <b style="color:#6e7f94;">Рейтинг:</b> 0.90
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 8: Корнишон Истом... -->
-                <div class="top-player-row" onclick="togglePlayerDetail(this)">
-                    <span class="rank">#8</span>
-                    <span class="pname">Корнишон Истом...</span>
-                    <span class="badge-kd">0.70</span>
-                    <span class="pstats">K/D <b>-10</b> · ADR 65</span>
-                    <div class="player-detail">
-                        <div class="detail-title">Корнишон Истомин</div>
-                        <div class="detail-stats">
-                            <div class="detail-stat"><div class="num">2</div><div class="label">Матчи</div></div>
-                            <div class="detail-stat"><div class="num">14</div><div class="label">Убийства</div></div>
-                            <div class="detail-stat"><div class="num">20</div><div class="label">Смерти</div></div>
-                            <div class="detail-stat"><div class="num">0.70</div><div class="label">K/D</div></div>
-                        </div>
-                        <div class="detail-matches">
-                            <b>Матчи:</b>
-                            <span class="match-item">#1 <span class="kd">(8-5)</span></span>
-                            <span class="match-item">#2 <span class="kd">(6-15)</span></span>
-                            <br><b style="color:#6e7f94;">ADR:</b> 65 · <b style="color:#6e7f94;">±:</b> -10 · <b style="color:#6e7f94;">Рейтинг:</b> 0.91
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 9: balchuqov_valera -->
-                <div class="top-player-row" onclick="togglePlayerDetail(this)">
-                    <span class="rank">#9</span>
-                    <span class="pname">balchuqov_valera</span>
-                    <span class="badge-kd">0.53</span>
-                    <span class="pstats">K/D <b class="worst">-40</b> · ADR 49</span>
-                    <div class="player-detail">
-                        <div class="detail-title">balchuqov_valera</div>
-                        <div class="detail-stats">
-                            <div class="detail-stat"><div class="num">1</div><div class="label">Матчи</div></div>
-                            <div class="detail-stat"><div class="num">9</div><div class="label">Убийства</div></div>
-                            <div class="detail-stat"><div class="num">17</div><div class="label">Смерти</div></div>
-                            <div class="detail-stat"><div class="num">0.53</div><div class="label">K/D</div></div>
-                        </div>
-                        <div class="detail-matches">
-                            <b>Матчи:</b>
-                            <span class="match-item">#4 <span class="kd">(9-17)</span></span>
-                            <br><b style="color:#6e7f94;">ADR:</b> 49 · <b style="color:#6e7f94;">±:</b> -40 · <b style="color:#6e7f94;">Рейтинг:</b> 0.69
-                        </div>
-                    </div>
-                </div>
-
-                <!-- 10: baksyhanovvand... -->
-                <div class="top-player-row" onclick="togglePlayerDetail(this)">
-                    <span class="rank" style="color:#e07a7a;">#10</span>
-                    <span class="pname" style="color:#e07a7a;">baksyhanovvand...</span>
-                    <span class="badge-kd red">0.39</span>
-                    <span class="pstats">K/D <b class="worst">-37</b> · ADR 46</span>
-                    <div class="player-detail">
-                        <div class="detail-title" style="color:#e07a7a;">baksyhanovvand... <span class="sub">— худший игрок</span></div>
-                        <div class="detail-stats">
-                            <div class="detail-stat"><div class="num">3</div><div class="label">Матчи</div></div>
-                            <div class="detail-stat"><div class="num bad">24</div><div class="label">Убийства</div></div>
-                            <div class="detail-stat"><div class="num bad">61</div><div class="label">Смерти</div></div>
-                            <div class="detail-stat"><div class="num bad">0.39</div><div class="label">K/D</div></div>
-                        </div>
-                        <div class="detail-matches">
-                            <b>Матчи:</b>
-                            <span class="match-item">#0 BO3 <span class="kd">(14-31)</span></span>
-                            <span class="match-item">#2 <span class="kd">(3-15)</span></span>
-                            <span class="match-item">#4 <span class="kd">(4-17)</span></span>
-                            <br><b style="color:#6e7f94;">ADR:</b> 46 · <b style="color:#6e7f94;">±:</b> -37 · <b style="color:#6e7f94;">Рейтинг:</b> 0.38
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <div style="font-size:11px; color:#4a5a6e; margin-top:10px; text-align:center; border-top:1px solid #1f2835; padding-top:10px;">
-                🟡 <b style="color:#ffb347;">bomba69</b> — лидер по K/D, ADR и рейтингу
-                <br>🔴 <b style="color:#e07a7a;">baksyhanovvand...</b> — худший K/D (0.39)
-            </div>
-        </div>
-
-        <!-- ===== RIGHT: МАТЧИ ===== -->
-        <div class="right-panel">
-            <div class="panel-title">
-                📋 Матчи
-                <span>всего 5</span>
-            </div>
-
-            <!-- МАТЧ #0: BO3 -->
-            <div class="match-card" onclick="toggleMatchDetail(this)">
-                <div class="match-top">
-                    <span class="title">🏆 Матч #0 — BO3</span>
-                    <span class="date">30.07.2026 · 2:0</span>
-                    <span class="click-hint">▶ нажмите</span>
-                </div>
-                <div class="match-teams">
-                    <div class="team win">
-                        <span class="name">Team Fortress 2</span>
-                        <span class="score">2</span>
-                        <span style="color:#7ddfa0;">✓</span>
-                    </div>
-                    <span class="vs">vs</span>
-                    <div class="team loss">
-                        <span style="color:#e07a7a;">✗</span>
-                        <span class="score">0</span>
-                        <span class="name">Team Magic</span>
-                    </div>
-                </div>
-                <div class="match-stats-row">
-                    <span>🏆 <b class="mvp">MVP:</b> bomba69 (37-15, 2.47)</span>
-                    <span>💀 <b class="bad">Худший:</b> baksyhanovvand... (0.45)</span>
-                </div>
-                <div class="match-detail">
-                    <div class="detail-grid">
-                        <div class="team-detail">
-                            <div class="td-title win">🏆 Team Fortress 2</div>
-                            <div class="player-stat"><span class="pname highlight">bomba69</span><span class="pstats">37-15 · K/D 2.47 · +86</span></div>
-                            <div class="player-stat"><span class="pname">uxaxaxaxa</span><span class="pstats">34-16 · K/D 2.13 · +94</span></div>
-                            <div class="player-stat"><span class="pname">Хомяк с авт</span><span class="pstats">35-19 · K/D 1.84 · +85</span></div>
-                            <div class="player-stat"><span class="pname">AFKE</span><span class="pstats">14-24 · K/D 0.58 · -37</span></div>
-                        </div>
-                        <div class="team-detail">
-                            <div class="td-title loss">💀 Team Magic</div>
-                            <div class="player-stat"><span class="pname">Adjiare Gudju</span><span class="pstats">24-28 · K/D 0.86 · -43</span></div>
-                            <div class="player-stat"><span class="pname">abdalbek</span><span class="pstats">20-30 · K/D 0.67 · -41</span></div>
-                            <div class="player-stat"><span class="pname">Gonduras228</span><span class="pstats">16-32 · K/D 0.50 · -68</span></div>
-                            <div class="player-stat"><span class="pname worst-text">baksyhanovvand...</span><span class="pstats worst-text">14-31 · K/D 0.45 · -80</span></div>
-                        </div>
-                    </div>
-                    <div style="font-size:11px; color:#4a5a6e; text-align:center; margin-top:6px;">
-                        Ancient 13:4 · Anubis 13:6
-                    </div>
-                </div>
-            </div>
-
-            <!-- МАТЧ #1 -->
-            <div class="match-card" onclick="toggleMatchDetail(this)">
-                <div class="match-top">
-                    <span class="title">Матч #1</span>
-                    <span class="date">09.05.2026 · 13:1</span>
-                    <span class="click-hint">▶ нажмите</span>
-                </div>
-                <div class="match-teams">
-                    <div class="team win">
-                        <span class="name">Team 2</span>
-                        <span class="score">13</span>
-                        <span style="color:#7ddfa0;">✓</span>
-                    </div>
-                    <span class="vs">vs</span>
-                    <div class="team loss">
-                        <span style="color:#e07a7a;">✗</span>
-                        <span class="score">1</span>
-                        <span class="name">Team 1</span>
-                    </div>
-                </div>
-                <div class="match-stats-row">
-                    <span>🏆 <b class="mvp">MVP:</b> uxaxaxaxa (17-5, +76)</span>
-                    <span>💀 <b class="bad">Худший:</b> baksyhanovvand... (0-13)</span>
-                </div>
-                <div class="match-detail">
-                    <div class="detail-grid">
-                        <div class="team-detail">
-                            <div class="td-title win">✅ Team 2</div>
-                            <div class="player-stat"><span class="pname highlight">uxaxaxaxa</span><span class="pstats">17-5 · ADR 131 · +76</span></div>
-                            <div class="player-stat"><span class="pname">simple</span><span class="pstats">14-9 · ADR 105 · +20</span></div>
-                            <div class="player-stat"><span class="pname">wadsf</span><span class="pstats">13-6 · ADR 72 · +7</span></div>
-                            <div class="player-stat"><span class="pname">Корнишон Истом...</span><span class="pstats">8-5 · ADR 65 · +20</span></div>
-                        </div>
-                        <div class="team-detail">
-                            <div class="td-title loss">❌ Team 1</div>
-                            <div class="player-stat"><span class="pname">абдалбек</span><span class="pstats">8-13 · ADR 79 · -13</span></div>
-                            <div class="player-stat"><span class="pname">bomba69</span><span class="pstats">10-13 · ADR 95 · -1</span></div>
-                            <div class="player-stat"><span class="pname">Gonduras228</span><span class="pstats">6-13 · ADR 55 · -38</span></div>
-                            <div class="player-stat"><span class="pname worst-text">baksyhanovvand...</span><span class="pstats worst-text">0-13 · ADR 19 · -74</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- МАТЧ #2 -->
-            <div class="match-card loss" onclick="toggleMatchDetail(this)">
-                <div class="match-top">
-                    <span class="title">Матч #2</span>
-                    <span class="date">09.05.2026 · 3:13</span>
-                    <span class="click-hint">▶ нажмите</span>
-                </div>
-                <div class="match-teams">
-                    <div class="team loss">
-                        <span class="name">Team 2</span>
-                        <span class="score">3</span>
-                        <span style="color:#e07a7a;">✗</span>
-                    </div>
-                    <span class="vs">vs</span>
-                    <div class="team win">
-                        <span style="color:#7ddfa0;">✓</span>
-                        <span class="score">13</span>
-                        <span class="name">Team 1</span>
-                    </div>
-                </div>
-                <div class="match-stats-row">
-                    <span>🏆 <b class="mvp">MVP:</b> bomba69 (24-4, +80)</span>
-                    <span>💀 <b class="bad">Худший:</b> baksyhanovvand... (3-15)</span>
-                </div>
-                <div class="match-detail">
-                    <div class="detail-grid">
-                        <div class="team-detail">
-                            <div class="td-title loss">❌ Team 2</div>
-                            <div class="player-stat"><span class="pname">simple</span><span class="pstats">14-15 · ADR 94 · +11</span></div>
-                            <div class="player-stat"><span class="pname">wadsf</span><span class="pstats">10-14 · ADR 50 · -37</span></div>
-                            <div class="player-stat"><span class="pname">Корнишон Истом...</span><span class="pstats">6-15 · ADR 65 · -30</span></div>
-                            <div class="player-stat"><span class="pname worst-text">baksyhanovvand...</span><span class="pstats worst-text">3-15 · ADR 28 · -66</span></div>
-                        </div>
-                        <div class="team-detail">
-                            <div class="td-title win">✅ Team 1</div>
-                            <div class="player-stat"><span class="pname highlight">bomba69</span><span class="pstats">24-4 · ADR 117 · +80</span></div>
-                            <div class="player-stat"><span class="pname">абдалбек</span><span class="pstats">16-11 · ADR 112 · +39</span></div>
-                            <div class="player-stat"><span class="pname">Gonduras228</span><span class="pstats">9-9 · ADR 79 · +15</span></div>
-                            <div class="player-stat"><span class="pname">uxaxaxaxa</span><span class="pstats">10-10 · ADR 64 · -19</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- МАТЧ #3 -->
-            <div class="match-card loss" onclick="toggleMatchDetail(this)">
-                <div class="match-top">
-                    <span class="title">Матч #3</span>
-                    <span class="date">17.05.2026 · 3:13</span>
-                    <span class="click-hint">▶ нажмите</span>
-                </div>
-                <div class="match-teams">
-                    <div class="team loss">
-                        <span class="name">Team 2</span>
-                        <span class="score">3</span>
-                        <span style="color:#e07a7a;">✗</span>
-                    </div>
-                    <span class="vs">vs</span>
-                    <div class="team win">
-                        <span style="color:#7ddfa0;">✓</span>
-                        <span class="score">13</span>
-                        <span class="name">Team 1</span>
-                    </div>
-                </div>
-                <div class="match-stats-row">
-                    <span>🏆 <b class="mvp">MVP:</b> wadsf / Gonduras228</span>
-                    <span>💀 <b class="bad">Худший:</b> baksyhanovvand...</span>
-                </div>
-                <div class="match-detail">
-                    <div class="detail-grid">
-                        <div class="team-detail">
-                            <div class="td-title loss">❌ Team 2</div>
-                            <div class="player-stat"><span class="pname">абданбек</span><span class="pstats">рейтинг 1.39</span></div>
-                            <div class="player-stat"><span class="pname">fort[чилл]</span><span class="pstats">рейтинг 1.19</span></div>
-                            <div class="player-stat"><span class="pname">balchuqov_valera</span><span class="pstats">рейтинг 0.54</span></div>
-                            <div class="player-stat"><span class="pname worst-text">baksyhanovvand...</span><span class="pstats worst-text">рейтинг -0.02</span></div>
-                        </div>
-                        <div class="team-detail">
-                            <div class="td-title win">✅ Team 1</div>
-                            <div class="player-stat"><span class="pname">wadsf</span><span class="pstats">рейтинг 1.77</span></div>
-                            <div class="player-stat"><span class="pname">Gonduras228</span><span class="pstats">рейтинг 1.39</span></div>
-                            <div class="player-stat"><span class="pname">bomba69</span><span class="pstats">рейтинг 1.19</span></div>
-                            <div class="player-stat"><span class="pname">uxaxaxaxa</span><span class="pstats">рейтинг +1.17</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- МАТЧ #4 -->
-            <div class="match-card loss" onclick="toggleMatchDetail(this)">
-                <div class="match-top">
-                    <span class="title">Матч #4</span>
-                    <span class="date">17.05.2026 · 8:13</span>
-                    <span class="click-hint">▶ нажмите</span>
-                </div>
-                <div class="match-teams">
-                    <div class="team loss">
-                        <span class="name">Team 2</span>
-                        <span class="score">8</span>
-                        <span style="color:#e07a7a;">✗</span>
-                    </div>
-                    <span class="vs">vs</span>
-                    <div class="team win">
-                        <span style="color:#7ddfa0;">✓</span>
-                        <span class="score">13</span>
-                        <span class="name">Team 1</span>
-                    </div>
-                </div>
-                <div class="match-stats-row">
-                    <span>🏆 <b class="mvp">MVP:</b> bomba69 (16-12, +31)</span>
-                    <span>💀 <b class="bad">Худший:</b> baksyhanovvand... (4-17)</span>
-                </div>
-                <div class="match-detail">
-                    <div class="detail-grid">
-                        <div class="team-detail">
-                            <div class="td-title loss">❌ Team 2</div>
-                            <div class="player-stat"><span class="pname">Gonduras228</span><span class="pstats">13-14 · ADR 78 · +5</span></div>
-                            <div class="player-stat"><span class="pname">balchuqov_valera</span><span class="pstats">9-17 · ADR 49 · -40</span></div>
-                            <div class="player-stat"><span class="pname">wadsf</span><span class="pstats">11-15 · ADR 49 · -41</span></div>
-                            <div class="player-stat"><span class="pname worst-text">baksyhanovvand...</span><span class="pstats worst-text">4-17 · ADR 18 · -66</span></div>
-                        </div>
-                        <div class="team-detail">
-                            <div class="td-title win">✅ Team 1</div>
-                            <div class="player-stat"><span class="pname highlight">bomba69</span><span class="pstats">16-12 · ADR 90 · +31</span></div>
-                            <div class="player-stat"><span class="pname">абдалбек</span><span class="pstats">16-14 · ADR 73 · +1</span></div>
-                            <div class="player-stat"><span class="pname">fort[чилл]</span><span class="pstats">11-13 · ADR 71 · +8</span></div>
-                            <div class="player-stat"><span class="pname">uxaxaxaxa</span><span class="pstats">11-14 · ADR 46 · -22</span></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div style="text-align:center; color:#4a5a6e; font-size:11px; margin-top:4px;">
-                Mirage · 4v4 · кликните по матчу для статистики
-            </div>
-        </div>
-
+    <!-- ===== NAV ===== -->
+    <div class="nav">
+        <button class="nav-btn active" data-tab="tab-main">📊 Главная</button>
+        <button class="nav-btn" data-tab="tab-charts">📈 Графики</button>
+        <button class="nav-btn" data-tab="tab-achievements">🏅 Достижения</button>
     </div>
 
-    <!-- FOOTER -->
+    <!-- ============================================ -->
+    <!-- TAB 1: ГЛАВНАЯ (3 колонки) -->
+    <!-- ============================================ -->
+    <div id="tab-main" class="tab-content active">
+
+        <!-- ACHIEVEMENTS BAR -->
+        <div class="achievements-bar">
+            <div class="ach-item"><span class="ach-icon">🥇</span><span class="ach-name">Лучший K/D:</span><span class="ach-player">bomba69</span></div>
+            <div class="ach-item"><span class="ach-icon">💥</span><span class="ach-name">Лучший ADR:</span><span class="ach-player">bomba69</span></div>
+            <div class="ach-item"><span class="ach-icon">📊</span><span class="ach-name">Лучший рейтинг:</span><span class="ach-player">bomba69</span></div>
+            <div class="ach-item"><span class="ach-icon">🔥</span><span class="ach-name">Самый результативный:</span><span class="ach-player">bomba69 (24-4)</span></div>
+            <div class="ach-item"><span class="ach-icon">💀</span><span class="ach-name">Худший K/D:</span><span class="ach-player" style="color:#e07a7a;">baksyhanovvand...</span></div>
+        </div>
+
+        <div class="main-grid">
+
+            <!-- ===== LEFT: TOP PLAYERS ===== -->
+            <div class="left-panel">
+                <div class="panel-title">
+                    🏆 Топ игроков
+                    <span>по K/D</span>
+                </div>
+                <div class="scroll-area" id="playerList">
+                    <!-- Рендерится через JS -->
+                </div>
+                <div style="font-size:10px; color:#4a5a6e; margin-top:8px; text-align:center; border-top:1px solid #1f2835; padding-top:8px;">
+                    🟡 <b style="color:#ffb347;">bomba69</b> — лидер
+                </div>
+            </div>
+
+            <!-- ===== CENTER: НОВОСТИ ===== -->
+            <div class="center-panel">
+                <div class="panel-title">
+                    📰 Новости
+                    <span>последние обновления</span>
+                </div>
+
+                <!-- Форма добавления новости -->
+                <div class="news-form">
+                    <input type="text" id="newsTitle" placeholder="Заголовок новости..." maxlength="60">
+                    <textarea id="newsText" placeholder="Текст новости..."></textarea>
+                    <button class="publish-btn" onclick="publishNews()">📝 Опубликовать</button>
+                </div>
+
+                <!-- Список новостей -->
+                <div class="news-list" id="newsList">
+                    <!-- Новости рендерятся через JS -->
+                </div>
+            </div>
+
+            <!-- ===== RIGHT: MATCHES ===== -->
+            <div class="right-panel">
+                <div class="panel-title">
+                    📋 Матчи
+                    <span>всего 5</span>
+                </div>
+
+                <!-- MATCH #0 -->
+                <div class="match-card" onclick="toggleMatchDetail(this)">
+                    <div class="match-top">
+                        <span class="title">🏆 Матч #0</span>
+                        <span class="date">30.07.2026 · 2:0</span>
+                        <span class="click-hint">▶</span>
+                    </div>
+                    <div class="match-teams">
+                        <div class="team win"><span class="name">TF2</span><span class="score">2</span></div>
+                        <span class="vs">vs</span>
+                        <div class="team loss"><span class="score">0</span><span class="name">Magic</span></div>
+                    </div>
+                    <div class="match-stats-row">
+                        <span>🏆 <b class="mvp">bomba69</b></span>
+                        <span>💀 <b class="bad">baksyhanov</b></span>
+                    </div>
+                    <div class="match-detail">
+                        <div class="detail-grid">
+                            <div class="team-detail">
+                                <div class="td-title win">🏆 TF2</div>
+                                <div class="player-stat"><span class="pname highlight">bomba69</span><span class="pstats">37-15 · +86</span></div>
+                                <div class="player-stat"><span class="pname">uxaxaxaxa</span><span class="pstats">34-16 · +94</span></div>
+                                <div class="player-stat"><span class="pname">Хомяк с авт</span><span class="pstats">35-19 · +85</span></div>
+                                <div class="player-stat"><span class="pname">AFKE</span><span class="pstats">14-24 · -37</span></div>
+                            </div>
+                            <div class="team-detail">
+                                <div class="td-title loss">💀 Magic</div>
+                                <div class="player-stat"><span class="pname">Adjiare</span><span class="pstats">24-28 · -43</span></div>
+                                <div class="player-stat"><span class="pname">abdalbek</span><span class="pstats">20-30 · -41</span></div>
+                                <div class="player-stat"><span class="pname">Gonduras</span><span class="pstats">16-32 · -68</span></div>
+                                <div class="player-stat"><span class="pname worst-text">baksyhanov</span><span class="pstats worst-text">14-31 · -80</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MATCH #1 -->
+                <div class="match-card" onclick="toggleMatchDetail(this)">
+                    <div class="match-top">
+                        <span class="title">Матч #1</span>
+                        <span class="date">09.05.2026 · 13:1</span>
+                        <span class="click-hint">▶</span>
+                    </div>
+                    <div class="match-teams">
+                        <div class="team win"><span class="name">Team 2</span><span class="score">13</span></div>
+                        <span class="vs">vs</span>
+                        <div class="team loss"><span class="score">1</span><span class="name">Team 1</span></div>
+                    </div>
+                    <div class="match-stats-row">
+                        <span>🏆 <b class="mvp">uxaxaxaxa</b></span>
+                        <span>💀 <b class="bad">baksyhanov</b></span>
+                    </div>
+                    <div class="match-detail">
+                        <div class="detail-grid">
+                            <div class="team-detail">
+                                <div class="td-title win">✅ Team 2</div>
+                                <div class="player-stat"><span class="pname highlight">uxaxaxaxa</span><span class="pstats">17-5 · +76</span></div>
+                                <div class="player-stat"><span class="pname">simple</span><span class="pstats">14-9 · +20</span></div>
+                                <div class="player-stat"><span class="pname">wadsf</span><span class="pstats">13-6 · +7</span></div>
+                                <div class="player-stat"><span class="pname">Корнишон</span><span class="pstats">8-5 · +20</span></div>
+                            </div>
+                            <div class="team-detail">
+                                <div class="td-title loss">❌ Team 1</div>
+                                <div class="player-stat"><span class="pname">абдалбек</span><span class="pstats">8-13 · -13</span></div>
+                                <div class="player-stat"><span class="pname">bomba69</span><span class="pstats">10-13 · -1</span></div>
+                                <div class="player-stat"><span class="pname">Gonduras</span><span class="pstats">6-13 · -38</span></div>
+                                <div class="player-stat"><span class="pname worst-text">baksyhanov</span><span class="pstats worst-text">0-13 · -74</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MATCH #2 -->
+                <div class="match-card loss" onclick="toggleMatchDetail(this)">
+                    <div class="match-top">
+                        <span class="title">Матч #2</span>
+                        <span class="date">09.05.2026 · 3:13</span>
+                        <span class="click-hint">▶</span>
+                    </div>
+                    <div class="match-teams">
+                        <div class="team loss"><span class="name">Team 2</span><span class="score">3</span></div>
+                        <span class="vs">vs</span>
+                        <div class="team win"><span class="score">13</span><span class="name">Team 1</span></div>
+                    </div>
+                    <div class="match-stats-row">
+                        <span>🏆 <b class="mvp">bomba69</b></span>
+                        <span>💀 <b class="bad">baksyhanov</b></span>
+                    </div>
+                    <div class="match-detail">
+                        <div class="detail-grid">
+                            <div class="team-detail">
+                                <div class="td-title loss">❌ Team 2</div>
+                                <div class="player-stat"><span class="pname">simple</span><span class="pstats">14-15 · +11</span></div>
+                                <div class="player-stat"><span class="pname">wadsf</span><span class="pstats">10-14 · -37</span></div>
+                                <div class="player-stat"><span class="pname">Корнишон</span><span class="pstats">6-15 · -30</span></div>
+                                <div class="player-stat"><span class="pname worst-text">baksyhanov</span><span class="pstats worst-text">3-15 · -66</span></div>
+                            </div>
+                            <div class="team-detail">
+                                <div class="td-title win">✅ Team 1</div>
+                                <div class="player-stat"><span class="pname highlight">bomba69</span><span class="pstats">24-4 · +80</span></div>
+                                <div class="player-stat"><span class="pname">абдалбек</span><span class="pstats">16-11 · +39</span></div>
+                                <div class="player-stat"><span class="pname">Gonduras</span><span class="pstats">9-9 · +15</span></div>
+                                <div class="player-stat"><span class="pname">uxaxaxaxa</span><span class="pstats">10-10 · -19</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MATCH #3 -->
+                <div class="match-card loss" onclick="toggleMatchDetail(this)">
+                    <div class="match-top">
+                        <span class="title">Матч #3</span>
+                        <span class="date">17.05.2026 · 3:13</span>
+                        <span class="click-hint">▶</span>
+                    </div>
+                    <div class="match-teams">
+                        <div class="team loss"><span class="name">Team 2</span><span class="score">3</span></div>
+                        <span class="vs">vs</span>
+                        <div class="team win"><span class="score">13</span><span class="name">Team 1</span></div>
+                    </div>
+                    <div class="match-stats-row">
+                        <span>🏆 <b class="mvp">wadsf / Gonduras</b></span>
+                        <span>💀 <b class="bad">baksyhanov</b></span>
+                    </div>
+                    <div class="match-detail">
+                        <div class="detail-grid">
+                            <div class="team-detail">
+                                <div class="td-title loss">❌ Team 2</div>
+                                <div class="player-stat"><span class="pname">абданбек</span><span class="pstats">рейтинг 1.39</span></div>
+                                <div class="player-stat"><span class="pname">fort[чилл]</span><span class="pstats">рейтинг 1.19</span></div>
+                                <div class="player-stat"><span class="pname">balchuqov</span><span class="pstats">рейтинг 0.54</span></div>
+                                <div class="player-stat"><span class="pname worst-text">baksyhanov</span><span class="pstats worst-text">рейтинг -0.02</span></div>
+                            </div>
+                            <div class="team-detail">
+                                <div class="td-title win">✅ Team 1</div>
+                                <div class="player-stat"><span class="pname">wadsf</span><span class="pstats">рейтинг 1.77</span></div>
+                                <div class="player-stat"><span class="pname">Gonduras</span><span class="pstats">рейтинг 1.39</span></div>
+                                <div class="player-stat"><span class="pname">bomba69</span><span class="pstats">рейтинг 1.19</span></div>
+                                <div class="player-stat"><span class="pname">uxaxaxaxa</span><span class="pstats">рейтинг +1.17</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- MATCH #4 -->
+                <div class="match-card loss" onclick="toggleMatchDetail(this)">
+                    <div class="match-top">
+                        <span class="title">Матч #4</span>
+                        <span class="date">17.05.2026 · 8:13</span>
+                        <span class="click-hint">▶</span>
+                    </div>
+                    <div class="match-teams">
+                        <div class="team loss"><span class="name">Team 2</span><span class="score">8</span></div>
+                        <span class="vs">vs</span>
+                        <div class="team win"><span class="score">13</span><span class="name">Team 1</span></div>
+                    </div>
+                    <div class="match-stats-row">
+                        <span>🏆 <b class="mvp">bomba69</b></span>
+                        <span>💀 <b class="bad">baksyhanov</b></span>
+                    </div>
+                    <div class="match-detail">
+                        <div class="detail-grid">
+                            <div class="team-detail">
+                                <div class="td-title loss">❌ Team 2</div>
+                                <div class="player-stat"><span class="pname">Gonduras</span><span class="pstats">13-14 · +5</span></div>
+                                <div class="player-stat"><span class="pname">balchuqov</span><span class="pstats">9-17 · -40</span></div>
+                                <div class="player-stat"><span class="pname">wadsf</span><span class="pstats">11-15 · -41</span></div>
+                                <div class="player-stat"><span class="pname worst-text">baksyhanov</span><span class="pstats worst-text">4-17 · -66</span></div>
+                            </div>
+                            <div class="team-detail">
+                                <div class="td-title win">✅ Team 1</div>
+                                <div class="player-stat"><span class="pname highlight">bomba69</span><span class="pstats">16-12 · +31</span></div>
+                                <div class="player-stat"><span class="pname">абдалбек</span><span class="pstats">16-14 · +1</span></div>
+                                <div class="player-stat"><span class="pname">fort[чилл]</span><span class="pstats">11-13 · +8</span></div>
+                                <div class="player-stat"><span class="pname">uxaxaxaxa</span><span class="pstats">11-14 · -22</span></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align:center; color:#4a5a6e; font-size:10px; margin-top:4px;">
+                    Mirage · 4v4
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- TAB 2: ГРАФИКИ -->
+    <!-- ============================================ -->
+    <div id="tab-charts" class="tab-content">
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
+            <div style="background:#1a212b; border-radius:8px; padding:16px;">
+                <div style="font-weight:700; margin-bottom:10px; color:#e8eff7;">📊 K/D</div>
+                <div id="kdChart"></div>
+            </div>
+            <div style="background:#1a212b; border-radius:8px; padding:16px;">
+                <div style="font-weight:700; margin-bottom:10px; color:#e8eff7;">📈 ADR</div>
+                <div id="adrChart"></div>
+            </div>
+            <div style="background:#1a212b; border-radius:8px; padding:16px;">
+                <div style="font-weight:700; margin-bottom:10px; color:#e8eff7;">📊 Разница (±)</div>
+                <div id="diffChart"></div>
+            </div>
+            <div style="background:#1a212b; border-radius:8px; padding:16px;">
+                <div style="font-weight:700; margin-bottom:10px; color:#e8eff7;">🏆 Рейтинг</div>
+                <div id="ratingChart"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- TAB 3: ДОСТИЖЕНИЯ -->
+    <!-- ============================================ -->
+    <div id="tab-achievements" class="tab-content">
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px;">
+            <div style="background:#1a212b; border-radius:8px; padding:16px; text-align:center; border:1px solid #2a3546;">
+                <div style="font-size:40px;">🥇</div>
+                <div style="font-weight:700; font-size:16px; color:#ffb347;">Лучший K/D</div>
+                <div style="font-size:13px;"><b>bomba69</b> — 1.57</div>
+            </div>
+            <div style="background:#1a212b; border-radius:8px; padding:16px; text-align:center; border:1px solid #2a3546;">
+                <div style="font-size:40px;">💥</div>
+                <div style="font-weight:700; font-size:16px; color:#7a9bcb;">Лучший ADR</div>
+                <div style="font-size:13px;"><b>bomba69</b> — 92</div>
+            </div>
+            <div style="background:#1a212b; border-radius:8px; padding:16px; text-align:center; border:1px solid #2a3546;">
+                <div style="font-size:40px;">📊</div>
+                <div style="font-weight:700; font-size:16px; color:#7ddfa0;">Лучший рейтинг</div>
+                <div style="font-size:13px;"><b>bomba69</b> — 1.39</div>
+            </div>
+            <div style="background:#1a212b; border-radius:8px; padding:16px; text-align:center; border:1px solid #2a3546;">
+                <div style="font-size:40px;">🔥</div>
+                <div style="font-weight:700; font-size:16px; color:#ffb347;">Самый результативный</div>
+                <div style="font-size:13px;"><b>bomba69</b> — 24-4</div>
+            </div>
+            <div style="background:#1a212b; border-radius:8px; padding:16px; text-align:center; border:1px solid #2a3546;">
+                <div style="font-size:40px;">💀</div>
+                <div style="font-weight:700; font-size:16px; color:#e07a7a;">Худший K/D</div>
+                <div style="font-size:13px;"><b style="color:#e07a7a;">baksyhanovvand...</b> — 0.39</div>
+            </div>
+            <div style="background:#1a212b; border-radius:8px; padding:16px; text-align:center; border:1px solid #2a3546;">
+                <div style="font-size:40px;">🏅</div>
+                <div style="font-weight:700; font-size:16px; color:#c9a85c;">Лучшая разница</div>
+                <div style="font-size:13px;"><b>uxaxaxaxa</b> — +94</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ===== FOOTER ===== -->
     <div class="footer">
-        MPL · Mega Professional League · <b>HLTV-style</b> · Данные за Май-Июль 2026
-        <br>Adjiare Gudju объединён с fort[чилл]
+        MPL · Mega Professional League · <b>HLTV-style</b> · Май-Июль 2026
     </div>
 
 </div>
 
 <script>
-    // Переключение деталей матча
+    // ===== ДАННЫЕ ИГРОКОВ =====
+    const playersData = [
+        { name: 'bomba69', matches: 4, k: 66, d: 42, a: 4, kd: 1.57, adr: 92, diff: 24, rating: 1.39, you: true },
+        { name: 'абдалбек', matches: 4, k: 58, d: 53, a: 7, kd: 1.09, adr: 85, diff: 5, rating: 1.22, you: false },
+        { name: 'simple', matches: 2, k: 28, d: 24, a: 6, kd: 1.17, adr: 100, diff: 4, rating: 1.35, you: false },
+        { name: 'Adjiare Gudju', matches: 3, k: 46, d: 54, a: 14, kd: 0.85, adr: 69, diff: -27, rating: 0.95, you: false },
+        { name: 'uxaxaxaxa', matches: 4, k: 49, d: 53, a: 8, kd: 0.92, adr: 74, diff: -4, rating: 0.98, you: false },
+        { name: 'Gonduras228', matches: 4, k: 42, d: 52, a: 15, kd: 0.81, adr: 70, diff: -10, rating: 0.92, you: false },
+        { name: 'wadsf', matches: 3, k: 34, d: 35, a: 5, kd: 0.97, adr: 57, diff: -1, rating: 0.90, you: false },
+        { name: 'Корнишон Истом...', matches: 2, k: 14, d: 20, a: 6, kd: 0.70, adr: 65, diff: -10, rating: 0.91, you: false },
+        { name: 'balchuqov_valera', matches: 1, k: 9, d: 17, a: 3, kd: 0.53, adr: 49, diff: -40, rating: 0.69, you: false },
+        { name: 'baksyhanovvand...', matches: 3, k: 24, d: 61, a: 7, kd: 0.39, adr: 46, diff: -37, rating: 0.38, you: false }
+    ];
+
+    const playerMatches = {
+        'bomba69': ['#0 BO3 (37-15)', '#1 (10-13)', '#2 (24-4)', '#4 (16-12)'],
+        'абдалбек': ['#0 BO3 (20-30)', '#1 (8-13)', '#2 (16-11)', '#4 (16-14)'],
+        'simple': ['#1 (14-9)', '#2 (14-15)'],
+        'Adjiare Gudju': ['#0 BO3 (24-28)', '#3 (11-13) как fort[чилл]', '#4 (11-13) как fort[чилл]'],
+        'uxaxaxaxa': ['#0 BO3 (34-16)', '#1 (17-5)', '#2 (10-10)', '#4 (11-14)'],
+        'Gonduras228': ['#0 BO3 (16-32)', '#1 (6-13)', '#2 (9-9)', '#4 (13-14)'],
+        'wadsf': ['#1 (13-6)', '#2 (10-14)', '#4 (11-15)'],
+        'Корнишон Истом...': ['#1 (8-5)', '#2 (6-15)'],
+        'balchuqov_valera': ['#4 (9-17)'],
+        'baksyhanovvand...': ['#0 BO3 (14-31)', '#2 (3-15)', '#4 (4-17)']
+    };
+
+    // ===== РЕНДЕР ТОП ИГРОКОВ =====
+    function renderPlayers() {
+        const container = document.getElementById('playerList');
+        const sorted = [...playersData].sort((a, b) => b.kd - a.kd);
+        const ranks = ['gold', 'silver', 'bronze', '', '', '', '', '', '', ''];
+
+        let html = '';
+        sorted.forEach((p, i) => {
+            const rankClass = ranks[i] || '';
+            const youClass = p.you ? 'you' : '';
+            const kdClass = i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : i === sorted.length - 1 ? 'red' : '';
+            const diffClass = p.diff > 0 ? 'best' : 'worst';
+
+            html += `
+                <div class="top-player-row" onclick="togglePlayerDetail(this)">
+                    <span class="rank ${rankClass}">#${i+1}</span>
+                    <span class="pname ${youClass}">${p.name}</span>
+                    <span class="badge-kd ${kdClass}">${p.kd.toFixed(2)}</span>
+                    <span class="pstats"><b class="${diffClass}">${p.diff > 0 ? '+' : ''}${p.diff}</b></span>
+                    <div class="player-detail">
+                        <div class="detail-title">${p.name} ${p.you ? '⭐' : ''}</div>
+                        <div class="detail-stats">
+                            <div class="detail-stat"><div class="num">${p.matches}</div><div class="label">Матчи</div></div>
+                            <div class="detail-stat"><div class="num ${p.kd > 1 ? 'good' : ''}">${p.k}</div><div class="label">Убийства</div></div>
+                            <div class="detail-stat"><div class="num">${p.d}</div><div class="label">Смерти</div></div>
+                            <div class="detail-stat"><div class="num ${p.kd > 1 ? 'good' : 'bad'}">${p.kd.toFixed(2)}</div><div class="label">K/D</div></div>
+                        </div>
+                        <div class="detail-matches">
+                            <b>Матчи:</b>
+                            ${(playerMatches[p.name] || []).map(m => `<span class="match-item">${m}</span>`).join('')}
+                            <br>ADR ${p.adr} · ± ${p.diff > 0 ? '+' : ''}${p.diff} · Рейтинг ${p.rating.toFixed(2)}
+                        </div>
+                    </div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    }
+
+    // ===== ПЕРЕКЛЮЧЕНИЕ ТЕМЫ =====
+    function toggleTheme() {
+        document.body.classList.toggle('light');
+        const btn = document.querySelector('.theme-toggle');
+        btn.textContent = document.body.classList.contains('light') ? '🌙 Тема' : '🌓 Тема';
+    }
+
+    // ===== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК =====
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(this.dataset.tab).classList.add('active');
+            if (this.dataset.tab === 'tab-charts') renderCharts();
+        });
+    });
+
+    // ===== ДЕТАЛИ МАТЧА =====
     function toggleMatchDetail(card) {
         const detail = card.querySelector('.match-detail');
         if (detail) {
             detail.classList.toggle('open');
             const hint = card.querySelector('.click-hint');
-            if (hint) {
-                hint.textContent = detail.classList.contains('open') ? '▼ скрыть' : '▶ нажмите';
-            }
+            if (hint) hint.textContent = detail.classList.contains('open') ? '▼' : '▶';
         }
     }
 
-    // Переключение деталей игрока
+    // ===== ДЕТАЛИ ИГРОКА =====
     function togglePlayerDetail(row) {
         const detail = row.querySelector('.player-detail');
         if (detail) {
-            // Закрываем все другие открытые детали игроков
             document.querySelectorAll('.player-detail.open').forEach(d => {
                 if (d !== detail) d.classList.remove('open');
             });
             detail.classList.toggle('open');
         }
     }
+
+    // ===== НОВОСТИ =====
+    let newsData = [
+        { id: 1, title: '🏆 Старт сезона MPL!', text: 'Дружеский турнир MPL начался! Следите за матчами и статистикой.', date: new Date('2026-05-09T10:00:00') },
+        { id: 2, title: '🔥 Bomba69 делает 24-4!', text: 'В матче #2 Bomba69 показал невероятный результат — 24 убийства при 4 смертях!', date: new Date('2026-05-09T15:30:00') },
+        { id: 3, title: '📊 Обновлена статистика', text: 'Добавлены графики, достижения и сравнение игроков. Сайт становится лучше!', date: new Date('2026-07-30T12:00:00') }
+    ];
+
+    function renderNews() {
+        const container = document.getElementById('newsList');
+        const sorted = [...newsData].sort((a, b) => b.date - a.date);
+        container.innerHTML = sorted.map(n => `
+            <div class="news-item">
+                <div class="news-header">
+                    <span class="news-title">${n.title}</span>
+                    <span class="news-date">${n.date.toLocaleString('ru-RU')}</span>
+                    <button class="news-delete" onclick="deleteNews(${n.id})">✕</button>
+                </div>
+                <div class="news-text">${n.text}</div>
+            </div>
+        `).join('');
+    }
+
+    function publishNews() {
+        const title = document.getElementById('newsTitle').value.trim();
+        const text = document.getElementById('newsText').value.trim();
+        if (!title || !text) { alert('Заполните заголовок и текст!'); return; }
+        newsData.push({ id: Date.now(), title, text, date: new Date() });
+        document.getElementById('newsTitle').value = '';
+        document.getElementById('newsText').value = '';
+        renderNews();
+    }
+
+    function deleteNews(id) {
+        newsData = newsData.filter(n => n.id !== id);
+        renderNews();
+    }
+
+    // ===== ГРАФИКИ =====
+    function renderCharts() {
+        const sortedByKd = [...playersData].sort((a, b) => b.kd - a.kd);
+        const sortedByAdr = [...playersData].sort((a, b) => b.adr - a.adr);
+        const sortedByDiff = [...playersData].sort((a, b) => b.diff - a.diff);
+        const sortedByRating = [...playersData].sort((a, b) => b.rating - a.rating);
+
+        const maxKd = sortedByKd[0].kd;
+        const maxAdr = sortedByAdr[0].adr;
+        const maxDiff = Math.max(...playersData.map(p => Math.abs(p.diff)));
+        const maxRating = sortedByRating[0].rating;
+
+        document.getElementById('kdChart').innerHTML = sortedByKd.map(p => `
+            <div class="chart-bar" style="display:flex;align-items:center;gap:6px;margin:2px 0;font-size:11px;">
+                <span style="min-width:80px;text-align:right;color:#8b9bb0;">${p.name}</span>
+                <div style="flex:1;height:14px;background:#1f2835;border-radius:3px;overflow:hidden;">
+                    <div style="height:100%;width:${(p.kd/maxKd*100)}%;background:linear-gradient(90deg,#ffb347,#ff8c00);border-radius:3px;"></div>
+                </div>
+                <span style="min-width:36px;font-weight:600;">${p.kd.toFixed(2)}</span>
+            </div>
+        `).join('');
+
+        document.getElementById('adrChart').innerHTML = sortedByAdr.map(p => `
+            <div style="display:flex;align-items:center;gap:6px;margin:2px 0;font-size:11px;">
+                <span style="min-width:80px;text-align:right;color:#8b9bb0;">${p.name}</span>
+                <div style="flex:1;height:14px;background:#1f2835;border-radius:3px;overflow:hidden;">
+                    <div style="height:100%;width:${(p.adr/maxAdr*100)}%;background:linear-gradient(90deg,#27ae60,#7ddfa0);border-radius:3px;"></div>
+                </div>
+                <span style="min-width:36px;font-weight:600;">${p.adr}</span>
+            </div>
+        `).join('');
+
+        document.getElementById('diffChart').innerHTML = sortedByDiff.map(p => `
+            <div style="display:flex;align-items:center;gap:6px;margin:2px 0;font-size:11px;">
+                <span style="min-width:80px;text-align:right;color:#8b9bb0;">${p.name}</span>
+                <div style="flex:1;height:14px;background:#1f2835;border-radius:3px;overflow:hidden;">
+                    <div style="height:100%;width:${Math.abs(p.diff)/maxDiff*100}%;background:${p.diff>=0?'linear-gradient(90deg,#27ae60,#7ddfa0)':'linear-gradient(90deg,#c0392b,#e67e6b)'};border-radius:3px;"></div>
+                </div>
+                <span style="min-width:36px;font-weight:600;">${p.diff > 0 ? '+' : ''}${p.diff}</span>
+            </div>
+        `).join('');
+
+        document.getElementById('ratingChart').innerHTML = sortedByRating.map(p => `
+            <div style="display:flex;align-items:center;gap:6px;margin:2px 0;font-size:11px;">
+                <span style="min-width:80px;text-align:right;color:#8b9bb0;">${p.name}</span>
+                <div style="flex:1;height:14px;background:#1f2835;border-radius:3px;overflow:hidden;">
+                    <div style="height:100%;width:${(p.rating/maxRating*100)}%;background:linear-gradient(90deg,#4b7bec,#7aa4f0);border-radius:3px;"></div>
+                </div>
+                <span style="min-width:36px;font-weight:600;">${p.rating.toFixed(2)}</span>
+            </div>
+        `).join('');
+    }
+
+    // ===== СТИЛИ ДЛЯ ГРАФИКОВ =====
+    const style = document.createElement('style');
+    style.textContent = `
+        .chart-bar { display:flex; align-items:center; gap:6px; margin:2px 0; font-size:11px; }
+        .chart-bar .c-label { min-width:80px; text-align:right; color:#8b9bb0; }
+        .chart-bar .c-bar-bg { flex:1; height:14px; background:#1f2835; border-radius:3px; overflow:hidden; }
+        .chart-bar .c-bar-fill { height:100%; border-radius:3px; }
+        .chart-bar .c-value { min-width:36px; font-weight:600; }
+    `;
+    document.head.appendChild(style);
+
+    // ===== ИНИЦИАЛИЗАЦИЯ =====
+    renderPlayers();
+    renderNews();
 </script>
 
 </body>
