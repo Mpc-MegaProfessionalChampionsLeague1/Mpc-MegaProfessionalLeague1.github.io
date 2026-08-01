@@ -274,7 +274,7 @@
             display: inline-block;
         }
 
-        /* ===== LOGIN BOX (только для вас) ===== */
+        /* ===== LOGIN BOX ===== */
         .login-box {
             display: flex;
             align-items: center;
@@ -337,7 +337,7 @@
             transform: scale(1.15);
         }
 
-        /* ===== TOKEN SETUP (только для вас) ===== */
+        /* ===== TOKEN SETUP ===== */
         .token-setup {
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.06);
@@ -1236,8 +1236,8 @@
             <span>📅 Май-Июль 2026</span>
             <span class="status">● LIVE</span>
 
-            <!-- ===== LOGIN (только для вас) ===== -->
-            <div class="login-box" id="loginBox">
+            <!-- ===== LOGIN BOX ===== -->
+            <div class="login-box">
                 <input type="password" id="loginPass" placeholder="Пароль..." onkeydown="if(event.key==='Enter') login()">
                 <button class="login-btn" onclick="login()">Войти</button>
                 <span class="login-status" id="loginStatus">🔒</span>
@@ -1257,7 +1257,7 @@
         <button class="nav-btn" data-tab="tab-achievements">🏅 Достижения</button>
     </div>
 
-    <!-- ===== TOKEN SETUP (только для вас после входа) ===== -->
+    <!-- ===== TOKEN SETUP ===== -->
     <div class="token-setup" id="tokenSetup">
         <div class="token-title">🔑 Настройка GitHub токена</div>
         <div class="token-desc">
@@ -1308,7 +1308,7 @@
             <!-- RIGHT: MATCHES -->
             <div class="right-panel">
                 <div class="panel-title" style="padding:0 4px 10px 4px;">📋 Матчи <span>всего 5</span></div>
-
+                <!-- Матчи (такие же как в предыдущей версии) -->
                 <div class="match-card" onclick="toggleMatchDetail(this)">
                     <div class="match-top">
                         <span class="title">🏆 Матч #0 — BO3</span>
@@ -1543,43 +1543,42 @@
     let githubToken = localStorage.getItem('mpl_github_token') || '';
 
     function login() {
-    const pass = document.getElementById('loginPass').value;
-    if (pass === ADMIN_PASSWORD) {
-        isAdmin = true;
-        document.getElementById('loginStatus').textContent = '✅ Админ';
-        document.getElementById('loginStatus').className = 'login-status admin';
-        document.getElementById('logoutBtn').style.display = 'inline';
-        document.getElementById('loginPass').value = '';
-        document.getElementById('loginPass').placeholder = 'Админ';
-        document.getElementById('publishBtn').classList.add('active');
-        document.getElementById('publishNotice').innerHTML = '✅ Вы вошли как <b>bomba69</b>. Можете публиковать новости!';
-        document.querySelectorAll('.news-delete').forEach(el => el.classList.add('active'));
+        const pass = document.getElementById('loginPass').value;
+        if (pass === ADMIN_PASSWORD) {
+            isAdmin = true;
+            document.getElementById('loginStatus').textContent = '✅ Админ';
+            document.getElementById('loginStatus').className = 'login-status admin';
+            document.getElementById('logoutBtn').style.display = 'inline';
+            document.getElementById('loginPass').value = '';
+            document.getElementById('loginPass').placeholder = 'Админ';
+            document.getElementById('publishBtn').classList.add('active');
+            document.getElementById('publishNotice').innerHTML = '✅ Вы вошли как <b>bomba69</b>. Можете публиковать новости!';
+            document.querySelectorAll('.news-delete').forEach(el => el.classList.add('active'));
 
-        // ✅ ПОКАЗЫВАЕМ ПОЛЕ ДЛЯ ТОКЕНА
-        document.getElementById('tokenSetup').style.display = 'block';
-        document.getElementById('tokenSetup').classList.add('show');
-        
-        // Проверяем, есть ли уже сохранённый токен
-        if (githubToken) {
-            document.getElementById('tokenInput').value = githubToken;
-            document.getElementById('tokenStatus').textContent = '✅ Токен уже сохранён';
-            document.getElementById('tokenStatus').className = 'token-status success';
-            document.getElementById('tokenSetup').style.display = 'none';
-            loadAvatarsFromGitHub();
-            loadNewsFromGitHub().then(data => {
-                newsData = data;
-                renderNews();
-            });
+            // ✅ ПОКАЗЫВАЕМ ПОЛЕ ДЛЯ ТОКЕНА
+            document.getElementById('tokenSetup').style.display = 'block';
+            document.getElementById('tokenSetup').classList.add('show');
+
+            if (githubToken) {
+                document.getElementById('tokenInput').value = githubToken;
+                document.getElementById('tokenStatus').textContent = '✅ Токен уже сохранён';
+                document.getElementById('tokenStatus').className = 'token-status success';
+                document.getElementById('tokenSetup').style.display = 'none';
+                loadAvatarsFromGitHub();
+                loadNewsFromGitHub().then(data => {
+                    newsData = data;
+                    renderNews();
+                });
+            } else {
+                document.getElementById('tokenStatus').textContent = '⏳ Введите GitHub токен для загрузки аватарок и новостей';
+                document.getElementById('tokenStatus').className = 'token-status';
+            }
         } else {
-            document.getElementById('tokenStatus').textContent = '⏳ Введите GitHub токен для загрузки аватарок и новостей';
-            document.getElementById('tokenStatus').className = 'token-status';
+            alert('❌ Неверный пароль!');
+            document.getElementById('loginPass').value = '';
         }
-    } else {
-        alert('❌ Неверный пароль!');
-        document.getElementById('loginPass').value = '';
     }
-}
-    
+
     function logout() {
         isAdmin = false;
         document.getElementById('loginStatus').textContent = '🔒';
@@ -1589,6 +1588,7 @@
         document.getElementById('publishBtn').classList.remove('active');
         document.getElementById('publishNotice').innerHTML = '🔒 <b>Только администратор</b> может публиковать новости. Войдите!';
         document.querySelectorAll('.news-delete').forEach(el => el.classList.remove('active'));
+        document.getElementById('tokenSetup').style.display = 'none';
         document.getElementById('tokenSetup').classList.remove('show');
     }
 
@@ -1605,7 +1605,7 @@
         githubToken = token;
         document.getElementById('tokenStatus').textContent = '✅ Токен сохранён, загрузка...';
         document.getElementById('tokenStatus').className = 'token-status success';
-        document.getElementById('tokenSetup').classList.remove('show');
+        document.getElementById('tokenSetup').style.display = 'none';
         loadAvatarsFromGitHub();
         loadNewsFromGitHub().then(data => {
             newsData = data;
@@ -1747,6 +1747,7 @@
     async function saveAvatarToGitHub(playerName, dataUrl) {
         if (!githubToken || githubToken === '') {
             alert('❌ Сначала сохраните GitHub токен!');
+            document.getElementById('tokenSetup').style.display = 'block';
             document.getElementById('tokenSetup').classList.add('show');
             return;
         }
@@ -2020,6 +2021,7 @@
         }
         if (!githubToken || githubToken === '') {
             alert('❌ Сначала сохраните GitHub токен!');
+            document.getElementById('tokenSetup').style.display = 'block';
             document.getElementById('tokenSetup').classList.add('show');
             return;
         }
@@ -2197,7 +2199,6 @@
     document.getElementById('profileOverlay').addEventListener('click', (e) => { if (e.target === this) closeProfile(); });
 
     // ===== ИНИЦИАЛИЗАЦИЯ =====
-    // Если токен уже сохранён — загружаем данные
     if (githubToken) {
         loadAvatarsFromGitHub();
         loadNewsFromGitHub().then(data => {
@@ -2205,7 +2206,6 @@
             renderNews();
         });
     } else {
-        // Загружаем новости без токена (только чтение)
         loadNewsFromGitHub().then(data => {
             newsData = data;
             renderNews();
