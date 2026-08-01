@@ -6,7 +6,7 @@
     <title>MPL — Mega Professional League</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* ===== ВЕСЬ СТИЛЬ ТАКОЙ ЖЕ, КАК В ПРЕДЫДУЩЕЙ ВЕРСИИ ===== */
+        /* ===== ВЕСЬ СТИЛЬ ===== */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
@@ -153,6 +153,18 @@
             background: #6c5ce7;
             color: #fff;
         }
+        body.light .token-setup {
+            background: rgba(255, 255, 255, 0.8);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+        body.light .token-setup input {
+            background: #e8ecf1;
+            color: #141a24;
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+        body.light .token-setup .token-status {
+            color: #4a5a6e;
+        }
         body.light .login-box {
             background: rgba(255, 255, 255, 0.8);
         }
@@ -262,6 +274,7 @@
             display: inline-block;
         }
 
+        /* ===== LOGIN BOX (только для вас) ===== */
         .login-box {
             display: flex;
             align-items: center;
@@ -270,6 +283,7 @@
             padding: 4px 12px;
             border-radius: 30px;
             border: 1px solid rgba(255, 255, 255, 0.06);
+            flex-wrap: wrap;
         }
         .login-box input {
             background: rgba(255, 255, 255, 0.04);
@@ -322,6 +336,69 @@
         .login-box .logout-btn:hover {
             transform: scale(1.15);
         }
+
+        /* ===== TOKEN SETUP (только для вас) ===== */
+        .token-setup {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 16px 20px;
+            margin-bottom: 16px;
+            display: none;
+        }
+        .token-setup.show { display: block; }
+        .token-setup .token-title {
+            font-weight: 600;
+            font-size: 14px;
+            color: #e8eff7;
+            margin-bottom: 8px;
+        }
+        .token-setup .token-desc {
+            font-size: 12px;
+            color: #6e7f94;
+            margin-bottom: 10px;
+        }
+        .token-setup .token-input-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .token-setup input {
+            flex: 1;
+            min-width: 200px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: #c7d5e0;
+            padding: 8px 14px;
+            border-radius: 8px;
+            font-size: 13px;
+            outline: none;
+            font-family: 'Inter', sans-serif;
+        }
+        .token-setup input:focus {
+            border-color: #6c5ce7;
+        }
+        .token-setup .token-btn {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            border: none;
+            color: #fff;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.25s;
+        }
+        .token-setup .token-btn:hover {
+            transform: scale(1.03);
+        }
+        .token-setup .token-status {
+            font-size: 12px;
+            margin-top: 8px;
+            color: #6e7f94;
+        }
+        .token-setup .token-status.success { color: #00b894; }
+        .token-setup .token-status.error { color: #e17055; }
 
         .nav {
             display: flex;
@@ -1159,7 +1236,8 @@
             <span>📅 Май-Июль 2026</span>
             <span class="status">● LIVE</span>
 
-            <div class="login-box">
+            <!-- ===== LOGIN (только для вас) ===== -->
+            <div class="login-box" id="loginBox">
                 <input type="password" id="loginPass" placeholder="Пароль..." onkeydown="if(event.key==='Enter') login()">
                 <button class="login-btn" onclick="login()">Войти</button>
                 <span class="login-status" id="loginStatus">🔒</span>
@@ -1177,6 +1255,20 @@
         <button class="nav-btn active" data-tab="tab-main">📊 Главная</button>
         <button class="nav-btn" data-tab="tab-charts">📈 Графики</button>
         <button class="nav-btn" data-tab="tab-achievements">🏅 Достижения</button>
+    </div>
+
+    <!-- ===== TOKEN SETUP (только для вас после входа) ===== -->
+    <div class="token-setup" id="tokenSetup">
+        <div class="token-title">🔑 Настройка GitHub токена</div>
+        <div class="token-desc">
+            Введите ваш GitHub Personal Access Token для загрузки аватарок и новостей.<br>
+            <b style="color:#a29bfe;">Нужны права: repo (все галочки)</b>
+        </div>
+        <div class="token-input-group">
+            <input type="password" id="tokenInput" placeholder="Вставьте ваш GitHub токен..." autocomplete="off">
+            <button class="token-btn" onclick="saveToken()">💾 Сохранить</button>
+        </div>
+        <div class="token-status" id="tokenStatus">⏳ Введите токен</div>
     </div>
 
     <!-- ===== TAB 1: MAIN ===== -->
@@ -1445,16 +1537,10 @@
 </div>
 
 <script>
-    // ===== ТОКЕН ЗАХАРДКОЖЕН =====
-    // ⚠️ ВНИМАНИЕ: Токен встроен в код. Не публикуйте этот код в открытых репозиториях!
-    const GITHUB_TOKEN = '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';
-    const GITHUB_USER = 'Mpc-MegaProfessionalChampionsLeague1';
-    const GITHUB_REPO = 'Mpc-MegaProfessionalLeague1.github.io';
-    const NEWS_FILE = 'news.json';
-
     // ===== АВТОРИЗАЦИЯ =====
     const ADMIN_PASSWORD = 'bomba69';
     let isAdmin = false;
+    let githubToken = localStorage.getItem('mpl_github_token') || '';
 
     function login() {
         const pass = document.getElementById('loginPass').value;
@@ -1468,6 +1554,23 @@
             document.getElementById('publishBtn').classList.add('active');
             document.getElementById('publishNotice').innerHTML = '✅ Вы вошли как <b>bomba69</b>. Можете публиковать новости!';
             document.querySelectorAll('.news-delete').forEach(el => el.classList.add('active'));
+
+            // Показываем поле для токена
+            if (githubToken) {
+                document.getElementById('tokenInput').value = githubToken;
+                document.getElementById('tokenStatus').textContent = '✅ Токен уже сохранён';
+                document.getElementById('tokenStatus').className = 'token-status success';
+                document.getElementById('tokenSetup').classList.remove('show');
+                loadAvatarsFromGitHub();
+                loadNewsFromGitHub().then(data => {
+                    newsData = data;
+                    renderNews();
+                });
+            } else {
+                document.getElementById('tokenSetup').classList.add('show');
+                document.getElementById('tokenStatus').textContent = '⏳ Введите токен';
+                document.getElementById('tokenStatus').className = 'token-status';
+            }
         } else {
             alert('❌ Неверный пароль!');
             document.getElementById('loginPass').value = '';
@@ -1483,6 +1586,28 @@
         document.getElementById('publishBtn').classList.remove('active');
         document.getElementById('publishNotice').innerHTML = '🔒 <b>Только администратор</b> может публиковать новости. Войдите!';
         document.querySelectorAll('.news-delete').forEach(el => el.classList.remove('active'));
+        document.getElementById('tokenSetup').classList.remove('show');
+    }
+
+    // ===== ТОКЕН =====
+    function saveToken() {
+        const input = document.getElementById('tokenInput');
+        const token = input.value.trim();
+        if (!token) {
+            document.getElementById('tokenStatus').textContent = '❌ Введите токен!';
+            document.getElementById('tokenStatus').className = 'token-status error';
+            return;
+        }
+        localStorage.setItem('mpl_github_token', token);
+        githubToken = token;
+        document.getElementById('tokenStatus').textContent = '✅ Токен сохранён, загрузка...';
+        document.getElementById('tokenStatus').className = 'token-status success';
+        document.getElementById('tokenSetup').classList.remove('show');
+        loadAvatarsFromGitHub();
+        loadNewsFromGitHub().then(data => {
+            newsData = data;
+            renderNews();
+        });
     }
 
     // ===== ДАННЫЕ ИГРОКОВ =====
@@ -1571,11 +1696,16 @@
 
     // ===== ЗАГРУЗКА АВАТАРОК =====
     async function loadAvatarsFromGitHub() {
+        if (!githubToken || githubToken === '') {
+            console.log('Токен не сохранён');
+            return;
+        }
+
         try {
-            const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/avatars`;
+            const url = `https://api.github.com/repos/Mpc-MegaProfessionalChampionsLeague1/Mpc-MegaProfessionalLeague1.github.io/contents/avatars`;
             const response = await fetch(url, {
                 headers: {
-                    'Authorization': `token ${GITHUB_TOKEN}`,
+                    'Authorization': `token ${githubToken}`,
                     'Accept': 'application/vnd.github.v3+json'
                 }
             });
@@ -1594,20 +1724,30 @@
                         }
                     }
                 });
-                console.log(`✅ Загружено ${loaded} аватарок`);
+                document.getElementById('tokenStatus').textContent = `✅ Загружено ${loaded} аватарок`;
+                document.getElementById('tokenStatus').className = 'token-status success';
             } else if (response.status === 404) {
-                console.warn('⚠️ Папка avatars не найдена');
+                document.getElementById('tokenStatus').textContent = '⚠️ Папка avatars не найдена';
+                document.getElementById('tokenStatus').className = 'token-status error';
             } else {
-                console.error(`❌ Ошибка ${response.status}`);
+                document.getElementById('tokenStatus').textContent = `❌ Ошибка ${response.status}`;
+                document.getElementById('tokenStatus').className = 'token-status error';
             }
         } catch(e) {
-            console.error('❌ Ошибка загрузки аватарок:', e);
+            document.getElementById('tokenStatus').textContent = '❌ Ошибка подключения';
+            document.getElementById('tokenStatus').className = 'token-status error';
         }
         renderPlayers();
     }
 
     // ===== СОХРАНЕНИЕ АВАТАРКИ =====
     async function saveAvatarToGitHub(playerName, dataUrl) {
+        if (!githubToken || githubToken === '') {
+            alert('❌ Сначала сохраните GitHub токен!');
+            document.getElementById('tokenSetup').classList.add('show');
+            return;
+        }
+
         try {
             const response = await fetch(dataUrl);
             const blob = await response.blob();
@@ -1616,13 +1756,13 @@
             reader.onloadend = async function() {
                 const base64 = reader.result.split(',')[1];
                 const fileName = `${playerName}.png`;
-                const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/avatars/${fileName}`;
+                const url = `https://api.github.com/repos/Mpc-MegaProfessionalChampionsLeague1/Mpc-MegaProfessionalLeague1.github.io/contents/avatars/${fileName}`;
 
                 let sha = '';
                 try {
                     const checkResponse = await fetch(url, {
                         headers: {
-                            'Authorization': `token ${GITHUB_TOKEN}`,
+                            'Authorization': `token ${githubToken}`,
                             'Accept': 'application/vnd.github.v3+json'
                         }
                     });
@@ -1642,7 +1782,7 @@
                 const uploadResponse = await fetch(url, {
                     method: 'PUT',
                     headers: {
-                        'Authorization': `token ${GITHUB_TOKEN}`,
+                        'Authorization': `token ${githubToken}`,
                         'Accept': 'application/vnd.github.v3+json',
                         'Content-Type': 'application/json'
                     },
@@ -1745,12 +1885,18 @@
     }
 
     // ===== НОВОСТИ =====
+    const GITHUB_USER = 'Mpc-MegaProfessionalChampionsLeague1';
+    const GITHUB_REPO = 'Mpc-MegaProfessionalLeague1.github.io';
+    const NEWS_FILE = 'news.json';
+
     async function loadNewsFromGitHub() {
         try {
             const url = `https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/${NEWS_FILE}`;
             const response = await fetch(url, {
-                headers: {
-                    'Authorization': `token ${GITHUB_TOKEN}`,
+                headers: githubToken ? {
+                    'Authorization': `token ${githubToken}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                } : {
                     'Accept': 'application/vnd.github.v3+json'
                 }
             });
@@ -1764,7 +1910,9 @@
                     { id: 1, title: '🏆 Старт сезона MPL!', text: 'Дружеский турнир MPL начался!', date: new Date('2026-05-09T10:00:00').toISOString(), comments: [{ author: 'bomba69', text: '🔥 Погнали!', time: Date.now() - 3600000 }] },
                     { id: 2, title: '🔥 Bomba69 делает 24-4!', text: 'В матче #2 Bomba69 показал невероятный результат!', date: new Date('2026-05-09T15:30:00').toISOString(), comments: [{ author: 'Хомяк с авт', text: 'Красава!', time: Date.now() - 1800000 }] }
                 ];
-                await saveNewsToGitHub(defaultNews);
+                if (githubToken) {
+                    await saveNewsToGitHub(defaultNews);
+                }
                 return defaultNews;
             } else {
                 console.error('Ошибка загрузки новостей:', response.status);
@@ -1793,7 +1941,7 @@
             try {
                 const checkResponse = await fetch(url, {
                     headers: {
-                        'Authorization': `token ${GITHUB_TOKEN}`,
+                        'Authorization': `token ${githubToken}`,
                         'Accept': 'application/vnd.github.v3+json'
                     }
                 });
@@ -1813,7 +1961,7 @@
             const response = await fetch(url, {
                 method: 'PUT',
                 headers: {
-                    'Authorization': `token ${GITHUB_TOKEN}`,
+                    'Authorization': `token ${githubToken}`,
                     'Accept': 'application/vnd.github.v3+json',
                     'Content-Type': 'application/json'
                 },
@@ -1867,6 +2015,11 @@
             alert('❌ Только администратор может публиковать новости!');
             return;
         }
+        if (!githubToken || githubToken === '') {
+            alert('❌ Сначала сохраните GitHub токен!');
+            document.getElementById('tokenSetup').classList.add('show');
+            return;
+        }
         const title = document.getElementById('newsTitleInput').value.trim();
         const text = document.getElementById('newsTextInput').value.trim();
         if (!title || !text) { alert('Заполните заголовок и текст!'); return; }
@@ -1877,7 +2030,7 @@
             document.getElementById('newsTextInput').value = '';
             renderNews();
         } catch(e) {
-            alert('❌ Ошибка сохранения новостей.');
+            alert('❌ Ошибка сохранения новостей. Проверьте токен.');
         }
     }
 
@@ -2041,14 +2194,25 @@
     document.getElementById('profileOverlay').addEventListener('click', (e) => { if (e.target === this) closeProfile(); });
 
     // ===== ИНИЦИАЛИЗАЦИЯ =====
-    loadAvatarsFromGitHub();
-    loadNewsFromGitHub().then(data => {
-        newsData = data;
-        renderNews();
-    }).catch(() => {
-        newsData = getDefaultNews();
-        renderNews();
-    });
+    // Если токен уже сохранён — загружаем данные
+    if (githubToken) {
+        loadAvatarsFromGitHub();
+        loadNewsFromGitHub().then(data => {
+            newsData = data;
+            renderNews();
+        });
+    } else {
+        // Загружаем новости без токена (только чтение)
+        loadNewsFromGitHub().then(data => {
+            newsData = data;
+            renderNews();
+        }).catch(() => {
+            newsData = getDefaultNews();
+            renderNews();
+        });
+    }
+
+    renderPlayers();
     renderCharts();
 </script>
 
