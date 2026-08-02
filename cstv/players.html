@@ -1,1 +1,223 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPL — Все игроки</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
 
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo">
+            <h1 onclick="location.href='index.html'">MPL <small>Mega Professional League</small></h1>
+        </div>
+        <div class="header-right">
+            <span id="headerDate">📅 Май-Июль 2026</span>
+            <span class="status">● LIVE</span>
+            <button class="lang-toggle" onclick="toggleLang()" id="langBtn">🇬🇧 EN</button>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        </div>
+    </div>
+
+    <!-- NAV -->
+    <nav class="nav">
+        <a href="index.html" class="nav-btn">📊 Главная</a>
+        <a href="matches.html" class="nav-btn">📋 Матчи</a>
+        <a href="players.html" class="nav-btn active">👥 Игроки</a>
+        <a href="stats.html" class="nav-btn">📈 Статистика</a>
+        <a href="about.html" class="nav-btn">ℹ️ О сайте</a>
+    </nav>
+
+    <!-- PAGE TITLE -->
+    <div class="page-title">👥 Все игроки</div>
+    <div class="page-subtitle">Всего 10 игроков · Кликните на игрока для профиля</div>
+
+    <!-- FILTERS -->
+    <div class="filter-section">
+        <input type="text" class="search-input" placeholder="🔍 Поиск по имени..." id="playerSearch" oninput="filterPlayers()">
+        <select id="sortFilter" onchange="filterPlayers()">
+            <option value="kd">По K/D</option>
+            <option value="rating">По рейтингу</option>
+            <option value="adr">По ADR</option>
+            <option value="matches">По матчам</option>
+        </select>
+        <select id="topFilter" onchange="filterPlayers()">
+            <option value="all">Все игроки</option>
+            <option value="5">Топ-5</option>
+            <option value="10">Топ-10</option>
+        </select>
+    </div>
+
+    <!-- PLAYERS LIST -->
+    <div id="playersList" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+        <!-- Рендерится через JS -->
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        MPL · Mega Professional League · <b>HLTV-style</b> · Май-Июль 2026
+    </div>
+
+</div>
+
+<!-- PROFILE OVERLAY -->
+<div class="profile-overlay" id="profileOverlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(12px);z-index:1000;justify-content:center;align-items:center;padding:20px;">
+    <div class="profile-panel" style="background:#141a24;border-radius:16px;padding:28px 32px;max-width:780px;width:100%;max-height:90vh;overflow-y:auto;position:relative;border:1px solid rgba(255,255,255,0.06);box-shadow:0 20px 60px rgba(0,0,0,0.6);">
+        <button class="profile-close" onclick="closeProfile()" style="position:absolute;top:12px;right:16px;font-size:24px;cursor:pointer;color:#6e7f94;background:none;border:none;">✕</button>
+        <div id="profileContent"></div>
+    </div>
+</div>
+
+<script src="js/data.js"></script>
+<script>
+    // ===== РЕНДЕР ИГРОКОВ =====
+    function renderPlayers(sort = 'kd', search = '', top = 'all') {
+        const container = document.getElementById('playersList');
+        let filtered = [...playersData];
+
+        if (search) {
+            const s = search.toLowerCase();
+            filtered = filtered.filter(p => p.name.toLowerCase().includes(s));
+        }
+        if (top === '5') filtered = filtered.slice(0, 5);
+        else if (top === '10') filtered = filtered.slice(0, 10);
+
+        filtered.sort((a, b) => {
+            if (sort === 'kd') return b.kd - a.kd;
+            if (sort === 'rating') return b.rating - a.rating;
+            if (sort === 'adr') return b.adr - a.adr;
+            return b.matches - a.matches;
+        });
+
+        const ranks = ['gold', 'silver', 'bronze', '', '', '', '', '', '', ''];
+        container.innerHTML = filtered.map((p, i) => `
+            <div class="glass-card" style="cursor:pointer;padding:12px 14px;" onclick="openProfile('${p.name}')">
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <span style="font-weight:700;font-size:13px;color:#6e7f94;min-width:22px;">#${i+1}</span>
+                    <div class="player-avatar-mini" style="width:36px;height:36px;font-size:14px;">
+                        ${p.avatar ? `<img src="${p.avatar}" style="width:100%;height:100%;object-fit:cover;">` : p.name.charAt(0).toUpperCase()}
+                    </div>
+                    <div style="flex:1;">
+                        <div style="font-weight:600;font-size:13px;color:#e8eff7;">${p.name} ${p.you ? '⭐' : ''}</div>
+                        <div style="font-size:10px;color:#6e7f94;">${p.matches} матчей · ${p.k} убийств · ${p.d} смертей</div>
+                    </div>
+                    <div style="text-align:right;">
+                        <div style="font-size:15px;font-weight:700;color:#ffb347;">${p.kd.toFixed(2)}</div>
+                        <div style="font-size:9px;color:#6e7f94;">K/D</div>
+                    </div>
+                    <div style="text-align:right;min-width:40px;">
+                        <div style="font-size:13px;font-weight:600;color:#7a9bcb;">${p.rating.toFixed(2)}</div>
+                        <div style="font-size:9px;color:#6e7f94;">Рейтинг</div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
+
+        if (filtered.length === 0) {
+            container.innerHTML = '<div style="text-align:center;color:#4a5a6e;padding:30px 0;font-size:13px;grid-column:1/-1;">Игроки не найдены</div>';
+        }
+    }
+
+    function filterPlayers() {
+        const search = document.getElementById('playerSearch').value;
+        const sort = document.getElementById('sortFilter').value;
+        const top = document.getElementById('topFilter').value;
+        renderPlayers(sort, search, top);
+    }
+
+    // ===== ПРОФИЛЬ =====
+    function openProfile(playerName) {
+        const player = playersData.find(p => p.name === playerName);
+        if (!player) return;
+        const history = playerMatchHistory[playerName] || [];
+        const achievements = getAchievements(player);
+        const content = document.getElementById('profileContent');
+        content.innerHTML = `
+            <div style="display:flex;align-items:center;gap:16px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid rgba(255,255,255,0.06);">
+                <div style="position:relative;width:72px;height:72px;flex-shrink:0;">
+                    <div style="width:72px;height:72px;border-radius:50%;background:linear-gradient(135deg,#2d3436,#636e72);display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;color:#dfe6e9;overflow:hidden;border:3px solid #2a475e;">
+                        ${player.avatar ? `<img src="${player.avatar}" style="width:100%;height:100%;object-fit:cover;">` : player.name.charAt(0).toUpperCase()}
+                    </div>
+                    <label style="position:absolute;bottom:-2px;right:-2px;background:#2a475e;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#fff;font-size:12px;border:2px solid #141a24;">
+                        📷
+                        <input type="file" accept="image/*" style="display:none;" onchange="uploadAvatar('${player.name}', this)">
+                    </label>
+                </div>
+                <div>
+                    <h2 style="font-size:20px;font-weight:700;color:#e8eff7;">${player.name} ${player.you ? '⭐' : ''}</h2>
+                    <div style="color:#6e7f94;font-size:12px;">${player.matches} матчей · ${player.k} убийств · ${player.d} смертей ${player.you ? '· <b style="color:#ffb347;">Это вы!</b>' : ''}</div>
+                </div>
+            </div>
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:14px;">
+                <div style="background:rgba(255,255,255,0.03);border-radius:6px;padding:6px 8px;text-align:center;">
+                    <div style="font-size:18px;font-weight:700;color:#ffb347;">${player.kd.toFixed(2)}</div>
+                    <div style="font-size:9px;color:#6e7f94;text-transform:uppercase;letter-spacing:0.3px;">K/D</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.03);border-radius:6px;padding:6px 8px;text-align:center;">
+                    <div style="font-size:18px;font-weight:700;color:#ffb347;">${player.adr}</div>
+                    <div style="font-size:9px;color:#6e7f94;text-transform:uppercase;letter-spacing:0.3px;">ADR</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.03);border-radius:6px;padding:6px 8px;text-align:center;">
+                    <div style="font-size:18px;font-weight:700;color:${player.diff > 0 ? '#7ddfa0' : '#e07a7a'};">${player.diff > 0 ? '+' : ''}${player.diff}</div>
+                    <div style="font-size:9px;color:#6e7f94;text-transform:uppercase;letter-spacing:0.3px;">Разница</div>
+                </div>
+                <div style="background:rgba(255,255,255,0.03);border-radius:6px;padding:6px 8px;text-align:center;">
+                    <div style="font-size:18px;font-weight:700;color:#ffb347;">${player.rating.toFixed(2)}</div>
+                    <div style="font-size:9px;color:#6e7f94;text-transform:uppercase;letter-spacing:0.3px;">Рейтинг</div>
+                </div>
+            </div>
+            ${achievements.length > 0 ? `<div style="display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px;padding:8px 10px;background:rgba(255,255,255,0.03);border-radius:6px;">${achievements.map(a => `<div style="background:rgba(255,255,255,0.04);border-radius:30px;padding:2px 10px;font-size:10px;display:flex;align-items:center;gap:4px;border:1px solid rgba(255,255,255,0.04);"><span style="font-size:13px;">${a.icon}</span><span style="color:#8b9bb0;">${a.name}</span></div>`).join('')}</div>` : `<div style="font-size:11px;color:#6e7f94;margin-bottom:10px;">Нет достижений</div>`}
+            <div style="font-weight:600;font-size:12px;color:#e8eff7;margin-bottom:6px;padding-bottom:4px;border-bottom:1px solid rgba(255,255,255,0.05);">📋 История матчей</div>
+            ${history.length > 0 ? history.map(m => `<div style="display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid rgba(255,255,255,0.03);font-size:11px;"><span style="color:#8b9bb0;">${m.match} — ${m.map}</span><span style="color:#c7d5e0;font-weight:500;">${m.k} - ${m.d} <span style="${m.diff > 0 ? 'color:#7ddfa0;' : 'color:#e07a7a;'}">${m.diff > 0 ? '+' : ''}${m.diff}</span></span></div>`).join('') : '<div style="font-size:11px;color:#6e7f94;">Нет данных о матчах</div>'}
+        `;
+        document.getElementById('profileOverlay').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeProfile() {
+        document.getElementById('profileOverlay').style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    function uploadAvatar(playerName, input) {
+        const file = input.files[0];
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            saveAvatar(playerName, e.target.result);
+            renderPlayers();
+            openProfile(playerName);
+        };
+        reader.readAsDataURL(file);
+    }
+
+    // ===== ТЕМА =====
+    function toggleTheme() {
+        document.body.classList.toggle('light');
+        document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '🌙' : '🌙';
+    }
+
+    function toggleLang() {
+        lang = lang === 'ru' ? 'en' : 'ru';
+        document.getElementById('langBtn').textContent = lang === 'ru' ? '🇬🇧 EN' : '🇷🇺 RU';
+    }
+
+    // ===== ЗАКРЫТИЕ =====
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeProfile();
+    });
+    document.getElementById('profileOverlay').addEventListener('click', function(e) {
+        if (e.target === this) closeProfile();
+    });
+
+    // ===== ИНИЦИАЛИЗАЦИЯ =====
+    renderPlayers();
+</script>
+
+</body>
+</html>
