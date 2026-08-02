@@ -9,65 +9,59 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #080c14;
-            color: #e8edf5;
+            background: #0e1217;
+            color: #c8d6e0;
             display: flex;
             justify-content: center;
             padding: 0;
             min-height: 100vh;
-            transition: background 0.4s ease;
+            transition: background 0.3s, color 0.3s;
         }
         body.light {
             background: #eef2f7;
-            color: #141a24;
+            color: #1a212b;
         }
         body.light .glass-card {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(20px);
-            border-color: rgba(255, 255, 255, 0.3);
-        }
-        body.light .glass-card:hover {
-            background: rgba(255, 255, 255, 0.9);
+            background: #ffffff;
+            border-color: #d0d7e0;
         }
         body.light .header {
-            background: rgba(255, 255, 255, 0.85);
-            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.95);
+            border-color: #d0d7e0;
         }
         body.light .nav {
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: #ffffff;
+            border-color: #d0d7e0;
         }
         body.light .nav-btn {
             color: #4a5a6e;
         }
         body.light .nav-btn:hover {
-            background: rgba(0, 0, 0, 0.05);
-            color: #141a24;
+            background: #e8ecf1;
+            color: #1a212b;
         }
         body.light .nav-btn.active {
-            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            background: #2a475e;
             color: #fff;
-            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.4);
         }
         body.light .top-player-row {
-            border-color: rgba(0, 0, 0, 0.06);
+            border-color: #e0e5ec;
         }
         body.light .top-player-row:hover {
-            background: rgba(108, 92, 231, 0.06);
+            background: #f0f3f8;
         }
         body.light .match-card {
-            background: rgba(255, 255, 255, 0.6);
-            backdrop-filter: blur(8px);
+            background: #ffffff;
+            border-color: #d0d7e0;
         }
         body.light .match-card:hover {
-            background: rgba(255, 255, 255, 0.85);
+            background: #f5f8fc;
         }
         body.light .match-overlay-panel {
             background: #ffffff;
         }
         body.light .match-overlay-panel .team-detail {
-            background: rgba(0, 0, 0, 0.04);
+            background: #f5f8fc;
         }
         body.light .match-overlay-panel .player-stat .pname {
             color: #1a212b;
@@ -76,121 +70,155 @@
             color: #4a5a6e;
         }
         body.light .match-overlay-panel .player-stat {
-            border-color: rgba(0, 0, 0, 0.06);
+            border-color: #e0e5ec;
         }
         body.light .match-overlay-panel .team-detail .td-title.win {
-            color: #00b894;
+            color: #2d7d46;
         }
         body.light .match-overlay-panel .team-detail .td-title.loss {
-            color: #e17055;
-        }
-        body.light .match-overlay-panel .detail-title {
-            color: #1a212b;
-        }
-        body.light .match-overlay-panel .detail-footer {
-            color: #6e7f94;
+            color: #c0392b;
         }
         body.light .badge-kd {
-            background: rgba(0, 0, 0, 0.06);
+            background: #e8ecf1;
         }
         body.light .badge-kd.gold {
-            background: linear-gradient(135deg, #f9ca24, #f0932b);
-            color: #fff;
+            background: #f5e6b8;
+            color: #8a6d1b;
         }
         body.light .badge-kd.silver {
-            background: linear-gradient(135deg, #bdc3c7, #95a5a6);
-            color: #fff;
+            background: #d5dce6;
+            color: #3a4a5e;
         }
         body.light .badge-kd.bronze {
-            background: linear-gradient(135deg, #e67e22, #d35400);
-            color: #fff;
+            background: #e8dcc8;
+            color: #6e5a2c;
         }
         body.light .badge-kd.red {
-            background: linear-gradient(135deg, #eb4d4b, #c0392b);
-            color: #fff;
+            background: #f0d0d0;
+            color: #b03030;
         }
         body.light .theme-toggle {
-            background: rgba(0, 0, 0, 0.06);
-            color: #141a24;
+            background: #e8ecf1;
+            color: #1a212b;
         }
         body.light .lang-toggle {
-            background: rgba(0, 0, 0, 0.06);
-            color: #141a24;
+            background: #e8ecf1;
+            color: #1a212b;
+        }
+        body.light .sub-nav-btn {
+            color: #4a5a6e;
+        }
+        body.light .sub-nav-btn:hover {
+            background: #e8ecf1;
+            color: #1a212b;
+        }
+        body.light .sub-nav-btn.active {
+            background: #2a475e;
+            color: #fff;
+        }
+        body.light .sub-nav {
+            background: #f5f8fc;
+            border-color: #d0d7e0;
+        }
+        body.light .news-item {
+            background: #f5f8fc;
+        }
+        body.light .news-item .news-title {
+            color: #1a212b;
+        }
+        body.light .news-item .news-text {
+            color: #2a3546;
+        }
+        body.light .profile-panel {
+            background: #ffffff;
+        }
+        body.light .profile-stat {
+            background: #f5f8fc;
+        }
+        body.light .profile-achievement {
+            background: #f5f8fc;
+        }
+        body.light .profile-achievement .ach-name {
+            color: #2a3546;
+        }
+        body.light .profile-avatar {
+            border-color: #2a475e;
+        }
+        body.light .profile-avatar-upload {
+            background: #2a475e;
+            color: #fff;
         }
         body.light .match-overlay-close {
             color: #1a212b;
         }
         body.light .match-overlay-close:hover {
-            background: rgba(0, 0, 0, 0.06);
+            background: #e8ecf1;
         }
 
         .container {
-            max-width: 1440px;
+            max-width: 1360px;
             width: 100%;
             padding: 0 16px;
         }
 
+        /* ===== HEADER ===== */
         .header {
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(8, 12, 20, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-            padding: 12px 20px;
+            background: rgba(14, 18, 23, 0.92);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 12px;
-            border-radius: 0 0 16px 16px;
+            gap: 10px;
+            border-radius: 0 0 12px 12px;
             margin: 0 -16px;
-            padding: 12px 24px;
+            padding: 10px 24px;
         }
         .logo h1 {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 800;
-            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #e8eff7;
             cursor: pointer;
             letter-spacing: -0.5px;
         }
         .logo h1:hover {
-            transform: scale(1.02);
-            transition: 0.2s;
+            color: #ffb347;
         }
         .logo small {
             font-size: 11px;
             color: #6e7f94;
             font-weight: 400;
             margin-left: 6px;
-            -webkit-text-fill-color: #6e7f94;
         }
         .header-right {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             font-size: 12px;
             color: #8b9bb0;
             flex-wrap: wrap;
         }
         .header-right .status {
-            background: linear-gradient(135deg, #00b894, #00cec9);
-            color: #fff;
-            padding: 3px 14px;
+            background: #1e8b4c;
+            color: #a2f0c0;
+            padding: 2px 12px;
             border-radius: 30px;
             font-weight: 600;
             font-size: 10px;
-            letter-spacing: 0.5px;
             text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
         .theme-toggle, .lang-toggle {
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid rgba(255, 255, 255, 0.08);
             color: #c7d5e0;
-            padding: 6px 14px;
+            padding: 5px 12px;
             border-radius: 30px;
             cursor: pointer;
             font-size: 12px;
@@ -198,18 +226,18 @@
             font-weight: 500;
         }
         .theme-toggle:hover, .lang-toggle:hover {
-            background: rgba(255, 255, 255, 0.12);
-            transform: scale(1.03);
+            background: rgba(255, 255, 255, 0.1);
         }
 
+        /* ===== NAV ===== */
         .nav {
             display: flex;
             gap: 4px;
-            margin: 18px 0 20px;
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 14px;
+            margin: 16px 0 18px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 10px;
             padding: 4px;
             flex-wrap: wrap;
             border: 1px solid rgba(255, 255, 255, 0.05);
@@ -218,8 +246,8 @@
             background: transparent;
             border: none;
             color: #8b9bb0;
-            padding: 10px 24px;
-            border-radius: 10px;
+            padding: 8px 20px;
+            border-radius: 8px;
             font-weight: 600;
             font-size: 13px;
             cursor: pointer;
@@ -228,45 +256,44 @@
         }
         .nav-btn:hover {
             color: #e8eff7;
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.05);
         }
         .nav-btn.active {
-            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            background: #2a475e;
             color: #fff;
-            box-shadow: 0 4px 20px rgba(108, 92, 231, 0.35);
+            box-shadow: 0 2px 12px rgba(42, 71, 94, 0.3);
         }
 
         .tab-content {
             display: none;
-            animation: fadeUp 0.4s ease;
+            animation: fadeUp 0.35s ease;
         }
         .tab-content.active {
             display: block;
         }
         @keyframes fadeUp {
-            from { opacity: 0; transform: translateY(16px); }
+            from { opacity: 0; transform: translateY(12px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .glass-card {
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 16px;
-            padding: 18px 20px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            padding: 16px 18px;
             transition: 0.3s;
         }
         .glass-card:hover {
-            background: rgba(255, 255, 255, 0.07);
-            border-color: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.04);
         }
 
         .main-grid {
             display: grid;
             grid-template-columns: 1fr 1.6fr 1fr;
-            gap: 18px;
-            margin-top: 6px;
+            gap: 16px;
+            margin-top: 4px;
         }
         @media (max-width: 1100px) {
             .main-grid {
@@ -281,104 +308,103 @@
 
         .left-panel { composes: glass-card; }
         .center-panel { composes: glass-card; }
-        .right-panel { display: flex; flex-direction: column; gap: 10px; }
+        .right-panel { display: flex; flex-direction: column; gap: 8px; }
 
         .panel-title {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 700;
             color: #e8eff7;
-            margin-bottom: 14px;
-            padding-bottom: 10px;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.06);
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
         }
         .panel-title span {
             color: #6e7f94;
             font-weight: 400;
-            font-size: 12px;
+            font-size: 11px;
         }
 
-        /* ===== SUB-NAV для топа игроков ===== */
+        /* ===== SUB-NAV ===== */
         .sub-nav {
             display: flex;
-            gap: 4px;
-            margin-bottom: 12px;
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 10px;
-            padding: 4px;
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            gap: 3px;
+            margin-bottom: 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 8px;
+            padding: 3px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
         .sub-nav-btn {
             background: transparent;
             border: none;
             color: #8b9bb0;
-            padding: 6px 16px;
-            border-radius: 8px;
+            padding: 5px 14px;
+            border-radius: 6px;
             font-weight: 500;
-            font-size: 12px;
+            font-size: 11px;
             cursor: pointer;
             transition: 0.25s;
             font-family: 'Inter', sans-serif;
         }
         .sub-nav-btn:hover {
             color: #e8eff7;
-            background: rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.05);
         }
         .sub-nav-btn.active {
-            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            background: #2a475e;
             color: #fff;
-            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
         }
 
         .top-list {
             display: none;
-            animation: fadeUp 0.3s ease;
+            animation: fadeUp 0.25s ease;
         }
         .top-list.active {
             display: block;
         }
 
+        /* ===== TOP PLAYER ROW ===== */
         .top-player-row {
             display: flex;
             align-items: center;
-            padding: 6px 8px;
-            border-radius: 10px;
-            transition: 0.2s;
+            padding: 5px 6px;
+            border-radius: 6px;
+            transition: 0.15s;
             cursor: pointer;
-            gap: 8px;
+            gap: 6px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.04);
             font-size: 12px;
         }
         .top-player-row:hover {
-            background: rgba(108, 92, 231, 0.10);
-            transform: translateX(4px);
+            background: rgba(255, 255, 255, 0.04);
         }
         .top-player-row .rank {
             font-weight: 700;
-            font-size: 13px;
-            min-width: 26px;
+            font-size: 12px;
+            min-width: 22px;
             color: #6e7f94;
         }
         .top-player-row .rank.gold { color: #f9ca24; }
         .top-player-row .rank.silver { color: #bdc3c7; }
         .top-player-row .rank.bronze { color: #e67e22; }
         .player-avatar-mini {
-            width: 30px;
-            height: 30px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
             background: linear-gradient(135deg, #2d3436, #636e72);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 700;
             color: #dfe6e9;
             flex-shrink: 0;
             overflow: hidden;
-            border: 2px solid rgba(108, 92, 231, 0.3);
+            border: 2px solid rgba(42, 71, 94, 0.3);
         }
         .player-avatar-mini img {
             width: 100%;
@@ -391,128 +417,129 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+            font-size: 12px;
         }
-        .top-player-row .pname.you { color: #a29bfe; }
+        .top-player-row .pname.you { color: #ffb347; }
         .top-player-row .pstats {
             display: flex;
-            gap: 8px;
-            font-size: 11px;
+            gap: 6px;
+            font-size: 10px;
             color: #8b9bb0;
         }
         .top-player-row .pstats b { color: #c7d5e0; }
-        .top-player-row .pstats .best { color: #00b894; }
+        .top-player-row .pstats .best { color: #7ddfa0; }
         .top-player-row .pstats .worst { color: #e17055; }
         .badge-kd {
-            background: rgba(255, 255, 255, 0.06);
-            padding: 2px 10px;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1px 8px;
             border-radius: 30px;
             font-size: 11px;
             font-weight: 600;
-            min-width: 40px;
+            min-width: 36px;
             text-align: center;
         }
         .badge-kd.gold {
-            background: linear-gradient(135deg, #f9ca24, #f0932b);
-            color: #2d3436;
+            background: #9e7a2e;
+            color: #ffdf8a;
         }
         .badge-kd.silver {
-            background: linear-gradient(135deg, #bdc3c7, #95a5a6);
-            color: #2d3436;
+            background: #3a4357;
+            color: #c8d6f0;
         }
         .badge-kd.bronze {
-            background: linear-gradient(135deg, #e67e22, #d35400);
-            color: #fff;
+            background: #5e4a2c;
+            color: #e3b87c;
         }
         .badge-kd.red {
-            background: linear-gradient(135deg, #eb4d4b, #c0392b);
-            color: #fff;
+            background: #4a2424;
+            color: #e07a7a;
         }
 
         .scroll-area {
-            max-height: 520px;
+            max-height: 500px;
             overflow-y: auto;
-            padding-right: 4px;
+            padding-right: 3px;
         }
         .scroll-area::-webkit-scrollbar {
-            width: 4px;
+            width: 3px;
         }
         .scroll-area::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.03);
             border-radius: 4px;
         }
         .scroll-area::-webkit-scrollbar-thumb {
-            background: rgba(108, 92, 231, 0.4);
+            background: rgba(42, 71, 94, 0.4);
             border-radius: 4px;
         }
 
+        /* ===== MATCH CARDS ===== */
         .match-card {
-            background: rgba(255, 255, 255, 0.04);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-            border-radius: 12px;
-            padding: 12px 16px;
-            border-left: 3px solid #6c5ce7;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: 8px;
+            padding: 10px 14px;
+            border-left: 3px solid #2a475e;
             cursor: pointer;
-            transition: 0.25s;
+            transition: 0.2s;
             user-select: none;
             border: 1px solid rgba(255, 255, 255, 0.04);
         }
         .match-card:hover {
-            background: rgba(255, 255, 255, 0.08);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateY(-1px);
         }
-        .match-card.loss { border-left-color: #e17055; }
+        .match-card.loss { border-left-color: #c0392b; }
         .match-card .match-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 4px 10px;
+            gap: 4px 8px;
         }
-        .match-card .match-top .title { font-weight: 600; font-size: 13px; }
+        .match-card .match-top .title { font-weight: 600; font-size: 12px; }
         .match-card .match-top .date { color: #6e7f94; font-size: 10px; }
         .match-card .match-teams {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 4px 10px;
+            gap: 4px 8px;
             font-size: 12px;
-            margin-top: 4px;
+            margin-top: 3px;
         }
         .match-card .match-teams .team {
             display: flex;
             align-items: center;
             gap: 6px;
         }
-        .match-card .match-teams .team .name { font-weight: 500; }
+        .match-card .match-teams .team .name { font-weight: 500; font-size: 12px; }
         .match-card .match-teams .team .score {
             font-weight: 700;
-            font-size: 15px;
-            min-width: 22px;
+            font-size: 14px;
+            min-width: 20px;
             text-align: center;
         }
-        .match-card .match-teams .team.win .score { color: #00b894; }
-        .match-card .match-teams .team.loss .score { color: #e17055; }
+        .match-card .match-teams .team.win .score { color: #7ddfa0; }
+        .match-card .match-teams .team.loss .score { color: #e07a7a; }
         .match-card .match-teams .vs {
             color: #4a5a6e;
             font-weight: 700;
-            font-size: 11px;
+            font-size: 10px;
         }
         .match-card .match-stats-row {
             display: flex;
             flex-wrap: wrap;
-            gap: 4px 14px;
-            margin-top: 6px;
-            padding-top: 6px;
+            gap: 4px 12px;
+            margin-top: 4px;
+            padding-top: 4px;
             border-top: 1px solid rgba(255, 255, 255, 0.04);
-            font-size: 11px;
+            font-size: 10px;
             color: #6e7f94;
         }
         .match-card .match-stats-row b { color: #c7d5e0; }
-        .match-card .match-stats-row .mvp { color: #a29bfe; }
-        .match-card .match-stats-row .bad { color: #e17055; }
+        .match-card .match-stats-row .mvp { color: #ffb347; }
+        .match-card .match-stats-row .bad { color: #e07a7a; }
         .match-card .click-hint {
             font-size: 9px;
             color: #4a5a6e;
@@ -522,28 +549,28 @@
         .news-list {
             display: flex;
             flex-direction: column;
-            gap: 10px;
-            max-height: 420px;
+            gap: 8px;
+            max-height: 400px;
             overflow-y: auto;
-            padding-right: 4px;
+            padding-right: 3px;
         }
         .news-list::-webkit-scrollbar {
-            width: 4px;
+            width: 3px;
         }
         .news-list::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.03);
             border-radius: 4px;
         }
         .news-list::-webkit-scrollbar-thumb {
-            background: rgba(108, 92, 231, 0.4);
+            background: rgba(42, 71, 94, 0.4);
             border-radius: 4px;
         }
 
         .news-item {
             background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
-            padding: 12px 14px;
-            border-left: 3px solid #6c5ce7;
+            border-radius: 8px;
+            padding: 10px 12px;
+            border-left: 3px solid #2a475e;
             animation: fadeUp 0.3s ease;
         }
         .news-item .news-header {
@@ -551,22 +578,22 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 4px;
+            gap: 4px;
+            margin-bottom: 3px;
         }
         .news-item .news-title {
             font-weight: 600;
-            font-size: 14px;
+            font-size: 13px;
             color: #e8eff7;
         }
         .news-item .news-date {
-            font-size: 10px;
+            font-size: 9px;
             color: #6e7f94;
         }
         .news-item .news-text {
-            font-size: 13px;
+            font-size: 12px;
             color: #b0c4de;
-            line-height: 1.5;
+            line-height: 1.4;
         }
 
         /* ===== MATCH OVERLAY ===== */
@@ -586,14 +613,12 @@
             padding: 20px;
             animation: fadeUp 0.3s ease;
         }
-        .match-overlay.open {
-            display: flex;
-        }
+        .match-overlay.open { display: flex; }
         .match-overlay-panel {
             background: #141a24;
-            border-radius: 20px;
-            padding: 30px 35px;
-            max-width: 800px;
+            border-radius: 16px;
+            padding: 28px 32px;
+            max-width: 780px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
@@ -603,22 +628,21 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
         }
         .match-overlay-panel::-webkit-scrollbar {
-            width: 4px;
+            width: 3px;
         }
         .match-overlay-panel::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.03);
             border-radius: 4px;
         }
         .match-overlay-panel::-webkit-scrollbar-thumb {
-            background: rgba(108, 92, 231, 0.4);
+            background: rgba(42, 71, 94, 0.4);
             border-radius: 4px;
         }
-
         .match-overlay-close {
             position: absolute;
-            top: 14px;
-            right: 20px;
-            font-size: 26px;
+            top: 12px;
+            right: 16px;
+            font-size: 24px;
             cursor: pointer;
             color: #6e7f94;
             transition: 0.25s;
@@ -626,7 +650,7 @@
             border: none;
         }
         .match-overlay-close:hover {
-            color: #e17055;
+            color: #e07a7a;
             transform: rotate(90deg);
         }
 
@@ -635,120 +659,94 @@
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 10px;
-            margin-bottom: 18px;
-            padding-bottom: 14px;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.06);
+            gap: 8px;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         }
         .match-overlay-panel .match-header .match-title {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             color: #e8eff7;
         }
         .match-overlay-panel .match-header .match-date {
-            font-size: 13px;
+            font-size: 12px;
             color: #6e7f94;
         }
         .match-overlay-panel .match-result {
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 20px;
-            margin-bottom: 18px;
-            padding: 12px;
+            gap: 16px;
+            margin-bottom: 14px;
+            padding: 10px;
             background: rgba(255, 255, 255, 0.03);
-            border-radius: 10px;
+            border-radius: 8px;
         }
         .match-overlay-panel .match-result .result-team {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 16px;
+            gap: 8px;
+            font-size: 14px;
             font-weight: 600;
         }
-        .match-overlay-panel .match-result .result-team.win {
-            color: #00b894;
-        }
-        .match-overlay-panel .match-result .result-team.loss {
-            color: #e17055;
-        }
+        .match-overlay-panel .match-result .result-team.win { color: #7ddfa0; }
+        .match-overlay-panel .match-result .result-team.loss { color: #e07a7a; }
         .match-overlay-panel .match-result .result-score {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 800;
             color: #e8eff7;
         }
 
         .match-overlay-panel .detail-title {
-            font-size: 13px;
+            font-size: 12px;
             font-weight: 600;
             color: #8b9bb0;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
             letter-spacing: 0.3px;
         }
         .match-overlay-panel .detail-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 14px;
+            gap: 10px;
+            margin-bottom: 10px;
         }
         @media (max-width: 600px) {
-            .match-overlay-panel .detail-grid {
-                grid-template-columns: 1fr;
-            }
+            .match-overlay-panel .detail-grid { grid-template-columns: 1fr; }
         }
         .match-overlay-panel .team-detail {
             background: rgba(255, 255, 255, 0.03);
-            border-radius: 10px;
-            padding: 12px 14px;
+            border-radius: 8px;
+            padding: 10px 12px;
         }
         .match-overlay-panel .team-detail .td-title {
             font-weight: 600;
-            font-size: 13px;
-            margin-bottom: 6px;
-            padding-bottom: 4px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            font-size: 12px;
+            margin-bottom: 4px;
+            padding-bottom: 3px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
-        .match-overlay-panel .team-detail .td-title.win {
-            color: #00b894;
-        }
-        .match-overlay-panel .team-detail .td-title.loss {
-            color: #e17055;
-        }
+        .match-overlay-panel .team-detail .td-title.win { color: #7ddfa0; }
+        .match-overlay-panel .team-detail .td-title.loss { color: #e07a7a; }
         .match-overlay-panel .player-stat {
             display: flex;
             justify-content: space-between;
-            padding: 3px 0;
-            font-size: 12px;
+            padding: 2px 0;
+            font-size: 11px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.03);
         }
-        .match-overlay-panel .player-stat:last-child {
-            border-bottom: none;
-        }
-        .match-overlay-panel .player-stat .pname {
-            color: #b0c4de;
-        }
-        .match-overlay-panel .player-stat .pstats {
-            color: #6e7f94;
-            font-size: 11px;
-        }
-        .match-overlay-panel .player-stat .pstats .kills {
-            color: #7ddfa0;
-        }
-        .match-overlay-panel .player-stat .pstats .deaths {
-            color: #e17055;
-        }
-        .match-overlay-panel .player-stat .highlight {
-            color: #a29bfe;
-            font-weight: 600;
-        }
-        .match-overlay-panel .player-stat .worst-text {
-            color: #e17055;
-        }
+        .match-overlay-panel .player-stat:last-child { border-bottom: none; }
+        .match-overlay-panel .player-stat .pname { color: #b0c4de; }
+        .match-overlay-panel .player-stat .pstats { color: #6e7f94; font-size: 10px; }
+        .match-overlay-panel .player-stat .pstats .kills { color: #7ddfa0; }
+        .match-overlay-panel .player-stat .pstats .deaths { color: #e07a7a; }
+        .match-overlay-panel .player-stat .highlight { color: #ffb347; font-weight: 600; }
+        .match-overlay-panel .player-stat .worst-text { color: #e07a7a; }
         .match-overlay-panel .detail-footer {
-            font-size: 12px;
+            font-size: 11px;
             color: #4a5a6e;
             text-align: center;
-            padding-top: 10px;
+            padding-top: 8px;
             border-top: 1px solid rgba(255, 255, 255, 0.04);
         }
 
@@ -760,7 +758,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.8);
+            background: rgba(0, 0, 0, 0.85);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             z-index: 1000;
@@ -769,13 +767,11 @@
             padding: 20px;
             animation: fadeUp 0.3s ease;
         }
-        .profile-overlay.open {
-            display: flex;
-        }
+        .profile-overlay.open { display: flex; }
         .profile-panel {
             background: #141a24;
-            border-radius: 20px;
-            padding: 30px 35px;
+            border-radius: 16px;
+            padding: 28px 32px;
             max-width: 780px;
             width: 100%;
             max-height: 90vh;
@@ -786,22 +782,21 @@
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
         }
         .profile-panel::-webkit-scrollbar {
-            width: 4px;
+            width: 3px;
         }
         .profile-panel::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.04);
+            background: rgba(255, 255, 255, 0.03);
             border-radius: 4px;
         }
         .profile-panel::-webkit-scrollbar-thumb {
-            background: rgba(108, 92, 231, 0.4);
+            background: rgba(42, 71, 94, 0.4);
             border-radius: 4px;
         }
-
         .profile-close {
             position: absolute;
-            top: 14px;
-            right: 20px;
-            font-size: 26px;
+            top: 12px;
+            right: 16px;
+            font-size: 24px;
             cursor: pointer;
             color: #6e7f94;
             transition: 0.25s;
@@ -809,37 +804,37 @@
             border: none;
         }
         .profile-close:hover {
-            color: #e17055;
+            color: #e07a7a;
             transform: rotate(90deg);
         }
 
         .profile-header {
             display: flex;
             align-items: center;
-            gap: 20px;
-            margin-bottom: 20px;
-            padding-bottom: 16px;
-            border-bottom: 2px solid rgba(255, 255, 255, 0.06);
+            gap: 16px;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
         }
         .profile-avatar-container {
             position: relative;
-            width: 80px;
-            height: 80px;
+            width: 72px;
+            height: 72px;
             flex-shrink: 0;
         }
         .profile-avatar {
-            width: 80px;
-            height: 80px;
+            width: 72px;
+            height: 72px;
             border-radius: 50%;
             background: linear-gradient(135deg, #2d3436, #636e72);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 32px;
+            font-size: 28px;
             font-weight: 700;
             color: #dfe6e9;
             overflow: hidden;
-            border: 3px solid #6c5ce7;
+            border: 3px solid #2a475e;
             transition: 0.3s;
         }
         .profile-avatar img {
@@ -851,34 +846,29 @@
             position: absolute;
             bottom: -2px;
             right: -2px;
-            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            background: #2a475e;
             border-radius: 50%;
-            width: 28px;
-            height: 28px;
+            width: 26px;
+            height: 26px;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
             color: #fff;
-            font-size: 13px;
+            font-size: 12px;
             border: 2px solid #141a24;
             transition: 0.25s;
         }
-        .profile-avatar-upload:hover {
-            transform: scale(1.12);
-        }
-        .profile-avatar-upload input {
-            display: none;
-        }
-
+        .profile-avatar-upload:hover { transform: scale(1.1); }
+        .profile-avatar-upload input { display: none; }
         .profile-header-info h2 {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
             color: #e8eff7;
         }
         .profile-header-info .sub {
             color: #6e7f94;
-            font-size: 13px;
+            font-size: 12px;
         }
         .profile-header-info .sub span {
             color: #c7d5e0;
@@ -888,27 +878,27 @@
         .profile-stats {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            margin-bottom: 16px;
+            gap: 6px;
+            margin-bottom: 14px;
         }
         @media (max-width: 600px) {
             .profile-stats { grid-template-columns: 1fr 1fr; }
         }
         .profile-stat {
-            background: rgba(255, 255, 255, 0.04);
-            border-radius: 8px;
-            padding: 8px 10px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 6px;
+            padding: 6px 8px;
             text-align: center;
         }
         .profile-stat .num {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
-            color: #a29bfe;
+            color: #ffb347;
         }
-        .profile-stat .num.good { color: #00b894; }
-        .profile-stat .num.bad { color: #e17055; }
+        .profile-stat .num.good { color: #7ddfa0; }
+        .profile-stat .num.bad { color: #e07a7a; }
         .profile-stat .label {
-            font-size: 10px;
+            font-size: 9px;
             color: #6e7f94;
             text-transform: uppercase;
             letter-spacing: 0.3px;
@@ -917,32 +907,32 @@
         .profile-achievements {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 14px;
-            padding: 10px 12px;
+            gap: 5px;
+            margin-bottom: 12px;
+            padding: 8px 10px;
             background: rgba(255, 255, 255, 0.03);
-            border-radius: 8px;
+            border-radius: 6px;
         }
         .profile-achievement {
             background: rgba(255, 255, 255, 0.04);
             border-radius: 30px;
-            padding: 2px 12px;
-            font-size: 11px;
+            padding: 2px 10px;
+            font-size: 10px;
             display: flex;
             align-items: center;
             gap: 4px;
             border: 1px solid rgba(255, 255, 255, 0.04);
         }
-        .profile-achievement .ach-icon { font-size: 14px; }
+        .profile-achievement .ach-icon { font-size: 13px; }
         .profile-achievement .ach-name { color: #8b9bb0; }
 
         .profile-matches-title {
             font-weight: 600;
-            font-size: 13px;
+            font-size: 12px;
             color: #e8eff7;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             padding-bottom: 4px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
         .profile-match-row {
             display: flex;
@@ -950,7 +940,7 @@
             align-items: center;
             padding: 3px 0;
             border-bottom: 1px solid rgba(255, 255, 255, 0.03);
-            font-size: 12px;
+            font-size: 11px;
         }
         .profile-match-row:last-child { border-bottom: none; }
         .profile-match-row .match-name { color: #8b9bb0; }
@@ -958,15 +948,15 @@
             color: #c7d5e0;
             font-weight: 500;
         }
-        .profile-match-row .match-stats .good { color: #00b894; }
-        .profile-match-row .match-stats .bad { color: #e17055; }
+        .profile-match-row .match-stats .good { color: #7ddfa0; }
+        .profile-match-row .match-stats .bad { color: #e07a7a; }
 
         .footer {
-            margin-top: 30px;
-            padding-top: 16px;
+            margin-top: 24px;
+            padding-top: 12px;
             border-top: 1px solid rgba(255, 255, 255, 0.04);
             text-align: center;
-            font-size: 12px;
+            font-size: 11px;
             color: #4a5a6e;
         }
         .footer b { color: #6e7f94; }
@@ -974,26 +964,26 @@
         .achievements-bar {
             display: flex;
             flex-wrap: wrap;
-            gap: 6px;
-            margin-bottom: 14px;
-            padding: 8px 14px;
+            gap: 5px;
+            margin-bottom: 12px;
+            padding: 6px 12px;
             background: rgba(255, 255, 255, 0.03);
-            border-radius: 12px;
+            border-radius: 8px;
             border: 1px solid rgba(255, 255, 255, 0.04);
         }
         .ach-item {
             background: rgba(255, 255, 255, 0.04);
             border-radius: 30px;
-            padding: 3px 14px;
-            font-size: 11px;
+            padding: 2px 12px;
+            font-size: 10px;
             display: flex;
             align-items: center;
             gap: 4px;
             border: 1px solid rgba(255, 255, 255, 0.04);
         }
-        .ach-item .ach-icon { font-size: 14px; }
+        .ach-item .ach-icon { font-size: 13px; }
         .ach-item .ach-name { color: #8b9bb0; }
-        .ach-item .ach-player { color: #a29bfe; font-weight: 600; }
+        .ach-item .ach-player { color: #ffb347; font-weight: 600; }
     </style>
 </head>
 <body>
@@ -1006,18 +996,18 @@
             <h1 onclick="closeProfile(); closeMatchOverlay()">MPL <small>Mega Professional League</small></h1>
         </div>
         <div class="header-right">
-            <span>📅 Май-Июль 2026</span>
-            <span class="status">● LIVE</span>
-            <button class="lang-toggle" onclick="toggleLang()">🇬🇧 EN</button>
-            <button class="theme-toggle" onclick="toggleTheme()">🌙</button>
+            <span id="headerDate">📅 Май-Июль 2026</span>
+            <span class="status" id="headerStatus">● LIVE</span>
+            <button class="lang-toggle" onclick="toggleLang()" id="langBtn">🇬🇧 EN</button>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
         </div>
     </div>
 
     <!-- ===== NAV ===== -->
     <div class="nav">
-        <button class="nav-btn active" data-tab="tab-main">📊 Главная</button>
-        <button class="nav-btn" data-tab="tab-charts">📈 Графики</button>
-        <button class="nav-btn" data-tab="tab-achievements">🏅 Достижения</button>
+        <button class="nav-btn active" data-tab="tab-main" id="navMain">📊 Главная</button>
+        <button class="nav-btn" data-tab="tab-charts" id="navCharts">📈 Графики</button>
+        <button class="nav-btn" data-tab="tab-achievements" id="navAch">🏅 Достижения</button>
     </div>
 
     <!-- ============================================ -->
@@ -1026,79 +1016,73 @@
     <div id="tab-main" class="tab-content active">
 
         <div class="achievements-bar">
-            <div class="ach-item"><span class="ach-icon">🥇</span><span class="ach-name">Лучший K/D:</span><span class="ach-player">bomba69</span></div>
-            <div class="ach-item"><span class="ach-icon">💥</span><span class="ach-name">Лучший ADR:</span><span class="ach-player">Хомяк с авт</span></div>
-            <div class="ach-item"><span class="ach-icon">📊</span><span class="ach-name">Лучший рейтинг:</span><span class="ach-player">Хомяк с авт</span></div>
-            <div class="ach-item"><span class="ach-icon">🔥</span><span class="ach-name">Самый результативный:</span><span class="ach-player">bomba69 (24-4)</span></div>
-            <div class="ach-item"><span class="ach-icon">💀</span><span class="ach-name">Худший K/D:</span><span class="ach-player" style="color:#e17055;">baksyhanovvand...</span></div>
+            <div class="ach-item"><span class="ach-icon">🥇</span><span class="ach-name" id="achBestKd">Лучший K/D:</span><span class="ach-player">bomba69</span></div>
+            <div class="ach-item"><span class="ach-icon">💥</span><span class="ach-name" id="achBestAdr">Лучший ADR:</span><span class="ach-player">Хомяк с авт</span></div>
+            <div class="ach-item"><span class="ach-icon">📊</span><span class="ach-name" id="achBestRating">Лучший рейтинг:</span><span class="ach-player">Хомяк с авт</span></div>
+            <div class="ach-item"><span class="ach-icon">🔥</span><span class="ach-name" id="achBestMatch">Самый результативный:</span><span class="ach-player">bomba69 (24-4)</span></div>
+            <div class="ach-item"><span class="ach-icon">💀</span><span class="ach-name" id="achWorstKd">Худший K/D:</span><span class="ach-player" style="color:#e07a7a;">baksyhanovvand...</span></div>
         </div>
 
         <div class="main-grid">
 
             <!-- ===== LEFT: TOP PLAYERS ===== -->
             <div class="left-panel">
-                <div class="panel-title">🏆 Топ игроков</div>
+                <div class="panel-title">🏆 <span id="topTitle">Топ игроков</span></div>
 
-                <!-- SUB-NAV -->
                 <div class="sub-nav">
-                    <button class="sub-nav-btn active" data-subtab="top-kd">📊 По K/D</button>
-                    <button class="sub-nav-btn" data-subtab="top-rating">📈 По рейтингу</button>
+                    <button class="sub-nav-btn active" data-subtab="top-kd" id="subKd">📊 По K/D</button>
+                    <button class="sub-nav-btn" data-subtab="top-rating" id="subRating">📈 По рейтингу</button>
                 </div>
 
-                <!-- ТОП ПО K/D -->
                 <div class="top-list active" id="top-kd">
                     <div class="scroll-area" id="playerListKd"></div>
                 </div>
-
-                <!-- ТОП ПО РЕЙТИНГУ -->
                 <div class="top-list" id="top-rating">
                     <div class="scroll-area" id="playerListRating"></div>
                 </div>
 
-                <div style="font-size:10px; color:#4a5a6e; margin-top:10px; text-align:center; border-top:1px solid rgba(255,255,255,0.04); padding-top:10px;">
-                    🟣 <b style="color:#a29bfe;">bomba69</b> — лидер по K/D · <b style="color:#a29bfe;">Хомяк с авт</b> — лидер по рейтингу
+                <div style="font-size:9px; color:#4a5a6e; margin-top:8px; text-align:center; border-top:1px solid rgba(255,255,255,0.04); padding-top:8px;">
+                    🟣 <b style="color:#ffb347;" id="topFooterKd">bomba69</b> — <span id="topFooterKdText">лидер по K/D</span> · <b style="color:#ffb347;" id="topFooterRating">Хомяк с авт</b> — <span id="topFooterRatingText">лидер по рейтингу</span>
                 </div>
             </div>
 
             <!-- ===== CENTER: НОВОСТИ ===== -->
             <div class="center-panel">
-                <div class="panel-title">📰 Новости <span>последние обновления</span></div>
+                <div class="panel-title">📰 <span id="newsTitle">Новости</span> <span id="newsSub">последние обновления</span></div>
                 <div class="news-list" id="newsList"></div>
-                <div style="font-size:11px; color:#4a5a6e; text-align:center; margin-top:10px; padding-top:10px; border-top:1px solid rgba(255,255,255,0.04);">
-                    ✏️ Все могут писать новости
+                <div style="font-size:10px; color:#4a5a6e; text-align:center; margin-top:8px; padding-top:8px; border-top:1px solid rgba(255,255,255,0.04);">
+                    ✏️ <span id="newsFooter">Все могут писать новости</span>
                 </div>
             </div>
 
             <!-- ===== RIGHT: MATCHES ===== -->
             <div class="right-panel">
-                <div class="panel-title" style="padding:0 4px 10px 4px;">
-                    📋 Матчи <span>всего 5</span>
+                <div class="panel-title" style="padding:0 4px 8px 4px;">
+                    📋 <span id="matchesTitle">Матчи</span> <span id="matchesCount">всего 5</span>
                 </div>
 
-                <!-- МАТЧ #0 — BO3 -->
                 <div class="match-card" onclick="openMatchOverlay('match0')">
                     <div class="match-top">
-                        <span class="title">🏆 Матч #0 — BO3</span>
+                        <span class="title" id="m0Title">🏆 Матч #0 — BO3</span>
                         <span class="date">30.07.2026 · 2:0</span>
-                        <span class="click-hint">▶ нажмите</span>
+                        <span class="click-hint">▶</span>
                     </div>
                     <div class="match-teams">
-                        <div class="team win"><span class="name">Team Fortress 2</span><span class="score">2</span></div>
+                        <div class="team win"><span class="name">TF2</span><span class="score">2</span></div>
                         <span class="vs">vs</span>
-                        <div class="team loss"><span class="score">0</span><span class="name">Team Magic</span></div>
+                        <div class="team loss"><span class="score">0</span><span class="name">Magic</span></div>
                     </div>
                     <div class="match-stats-row">
-                        <span>🏆 <b class="mvp">bomba69</b> (37-15, 2.47)</span>
-                        <span>💀 <b class="bad">baksyhanovvand...</b> (14-31, 0.45)</span>
+                        <span>🏆 <b class="mvp">bomba69</b> (37-15)</span>
+                        <span>💀 <b class="bad">baksyhanovvand...</b></span>
                     </div>
                 </div>
 
-                <!-- МАТЧ #1 -->
                 <div class="match-card" onclick="openMatchOverlay('match1')">
                     <div class="match-top">
-                        <span class="title">Матч #1</span>
-                        <span class="date">09.05.2026 · Mirage · 13:1</span>
-                        <span class="click-hint">▶ нажмите</span>
+                        <span class="title" id="m1Title">Матч #1</span>
+                        <span class="date">09.05.2026 · 13:1</span>
+                        <span class="click-hint">▶</span>
                     </div>
                     <div class="match-teams">
                         <div class="team win"><span class="name">Team 2</span><span class="score">13</span></div>
@@ -1106,17 +1090,16 @@
                         <div class="team loss"><span class="score">1</span><span class="name">Team 1</span></div>
                     </div>
                     <div class="match-stats-row">
-                        <span>🏆 <b class="mvp">baksyhanovvand...</b> (17-5, +76)</span>
-                        <span>💀 <b class="bad">uxaxaxaxa</b> (0-13, -74)</span>
+                        <span>🏆 <b class="mvp">baksyhanovvand...</b> (17-5)</span>
+                        <span>💀 <b class="bad">uxaxaxaxa</b> (0-13)</span>
                     </div>
                 </div>
 
-                <!-- МАТЧ #2 -->
                 <div class="match-card loss" onclick="openMatchOverlay('match2')">
                     <div class="match-top">
-                        <span class="title">Матч #2</span>
-                        <span class="date">09.05.2026 · Mirage · 3:13</span>
-                        <span class="click-hint">▶ нажмите</span>
+                        <span class="title" id="m2Title">Матч #2</span>
+                        <span class="date">09.05.2026 · 3:13</span>
+                        <span class="click-hint">▶</span>
                     </div>
                     <div class="match-teams">
                         <div class="team loss"><span class="name">Team 2</span><span class="score">3</span></div>
@@ -1124,17 +1107,16 @@
                         <div class="team win"><span class="score">13</span><span class="name">Team 1</span></div>
                     </div>
                     <div class="match-stats-row">
-                        <span>🏆 <b class="mvp">bomba69</b> (24-4, +80)</span>
-                        <span>💀 <b class="bad">baksyhanovvand...</b> (3-15, -66)</span>
+                        <span>🏆 <b class="mvp">bomba69</b> (24-4)</span>
+                        <span>💀 <b class="bad">baksyhanovvand...</b> (3-15)</span>
                     </div>
                 </div>
 
-                <!-- МАТЧ #3 -->
                 <div class="match-card loss" onclick="openMatchOverlay('match3')">
                     <div class="match-top">
-                        <span class="title">Матч #3</span>
-                        <span class="date">17.05.2026 · Mirage · 3:13</span>
-                        <span class="click-hint">▶ нажмите</span>
+                        <span class="title" id="m3Title">Матч #3</span>
+                        <span class="date">17.05.2026 · 3:13</span>
+                        <span class="click-hint">▶</span>
                     </div>
                     <div class="match-teams">
                         <div class="team loss"><span class="name">Team 2</span><span class="score">3</span></div>
@@ -1142,17 +1124,16 @@
                         <div class="team win"><span class="score">13</span><span class="name">Team 1</span></div>
                     </div>
                     <div class="match-stats-row">
-                        <span>🏆 <b class="mvp">wadsf</b> (17-9, +51)</span>
-                        <span>💀 <b class="bad">baksyhanovvand...</b> (1-14, -82)</span>
+                        <span>🏆 <b class="mvp">wadsf</b> (17-9)</span>
+                        <span>💀 <b class="bad">baksyhanovvand...</b> (1-14)</span>
                     </div>
                 </div>
 
-                <!-- МАТЧ #4 -->
                 <div class="match-card loss" onclick="openMatchOverlay('match4')">
                     <div class="match-top">
-                        <span class="title">Матч #4</span>
-                        <span class="date">17.05.2026 · Mirage · 8:13</span>
-                        <span class="click-hint">▶ нажмите</span>
+                        <span class="title" id="m4Title">Матч #4</span>
+                        <span class="date">17.05.2026 · 8:13</span>
+                        <span class="click-hint">▶</span>
                     </div>
                     <div class="match-teams">
                         <div class="team loss"><span class="name">Team 2</span><span class="score">8</span></div>
@@ -1160,13 +1141,13 @@
                         <div class="team win"><span class="score">13</span><span class="name">Team 1</span></div>
                     </div>
                     <div class="match-stats-row">
-                        <span>🏆 <b class="mvp">bomba69</b> (16-12, +31)</span>
-                        <span>💀 <b class="bad">baksyhanovvand...</b> (4-17, -66)</span>
+                        <span>🏆 <b class="mvp">bomba69</b> (16-12)</span>
+                        <span>💀 <b class="bad">baksyhanovvand...</b> (4-17)</span>
                     </div>
                 </div>
 
-                <div style="text-align:center; color:#4a5a6e; font-size:10px; margin-top:4px;">
-                    Все матчи · 4v4 · нажмите на матч для детальной статистики
+                <div style="text-align:center; color:#4a5a6e; font-size:9px; margin-top:4px;">
+                    <span id="matchesFooter">Все матчи · 4v4 · нажмите для деталей</span>
                 </div>
             </div>
 
@@ -1177,11 +1158,11 @@
     <!-- TAB 2: ГРАФИКИ -->
     <!-- ============================================ -->
     <div id="tab-charts" class="tab-content">
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:16px;">
-            <div class="glass-card"><div style="font-weight:700; margin-bottom:10px;">📊 K/D всех игроков</div><div id="kdChart"></div></div>
-            <div class="glass-card"><div style="font-weight:700; margin-bottom:10px;">📈 ADR всех игроков</div><div id="adrChart"></div></div>
-            <div class="glass-card"><div style="font-weight:700; margin-bottom:10px;">📊 Разница (±)</div><div id="diffChart"></div></div>
-            <div class="glass-card"><div style="font-weight:700; margin-bottom:10px;">🏆 Рейтинг</div><div id="ratingChart"></div></div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+            <div class="glass-card"><div style="font-weight:600; margin-bottom:8px; color:#e8eff7;" id="chartKd">📊 K/D всех игроков</div><div id="kdChart"></div></div>
+            <div class="glass-card"><div style="font-weight:600; margin-bottom:8px; color:#e8eff7;" id="chartAdr">📈 ADR всех игроков</div><div id="adrChart"></div></div>
+            <div class="glass-card"><div style="font-weight:600; margin-bottom:8px; color:#e8eff7;" id="chartDiff">📊 Разница (±)</div><div id="diffChart"></div></div>
+            <div class="glass-card"><div style="font-weight:600; margin-bottom:8px; color:#e8eff7;" id="chartRating">🏆 Рейтинг</div><div id="ratingChart"></div></div>
         </div>
     </div>
 
@@ -1189,20 +1170,44 @@
     <!-- TAB 3: ДОСТИЖЕНИЯ -->
     <!-- ============================================ -->
     <div id="tab-achievements" class="tab-content">
-        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:14px;">
-            <div class="glass-card" style="text-align:center;"><div style="font-size:40px;">🥇</div><div style="font-weight:700; font-size:16px; color:#a29bfe;">Лучший K/D</div><div style="font-size:13px;"><b>bomba69</b> — 1.59</div></div>
-            <div class="glass-card" style="text-align:center;"><div style="font-size:40px;">💥</div><div style="font-weight:700; font-size:16px; color:#00b894;">Лучший ADR</div><div style="font-size:13px;"><b>Хомяк с авт</b> — 100</div></div>
-            <div class="glass-card" style="text-align:center;"><div style="font-size:40px;">📊</div><div style="font-weight:700; font-size:16px; color:#6c5ce7;">Лучший рейтинг</div><div style="font-size:13px;"><b>Хомяк с авт</b> — 1.47</div></div>
-            <div class="glass-card" style="text-align:center;"><div style="font-size:40px;">🔥</div><div style="font-weight:700; font-size:16px; color:#f9ca24;">Самый результативный</div><div style="font-size:13px;"><b>bomba69</b> — 24-4</div></div>
-            <div class="glass-card" style="text-align:center;"><div style="font-size:40px;">💀</div><div style="font-weight:700; font-size:16px; color:#e17055;">Худший K/D</div><div style="font-size:13px;"><b style="color:#e17055;">baksyhanovvand...</b> — 0.33</div></div>
-            <div class="glass-card" style="text-align:center;"><div style="font-size:40px;">🏅</div><div style="font-weight:700; font-size:16px; color:#f0932b;">Лучшая разница</div><div style="font-size:13px;"><b>Хомяк с авт</b> — +116</div></div>
+        <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px;">
+            <div class="glass-card" style="text-align:center; padding:16px;">
+                <div style="font-size:36px;">🥇</div>
+                <div style="font-weight:700; font-size:15px; color:#ffb347;" id="ach1Title">Лучший K/D</div>
+                <div style="font-size:12px;"><b>bomba69</b> — 1.59</div>
+            </div>
+            <div class="glass-card" style="text-align:center; padding:16px;">
+                <div style="font-size:36px;">💥</div>
+                <div style="font-weight:700; font-size:15px; color:#7ddfa0;" id="ach2Title">Лучший ADR</div>
+                <div style="font-size:12px;"><b>Хомяк с авт</b> — 100</div>
+            </div>
+            <div class="glass-card" style="text-align:center; padding:16px;">
+                <div style="font-size:36px;">📊</div>
+                <div style="font-weight:700; font-size:15px; color:#7a9bcb;" id="ach3Title">Лучший рейтинг</div>
+                <div style="font-size:12px;"><b>Хомяк с авт</b> — 1.47</div>
+            </div>
+            <div class="glass-card" style="text-align:center; padding:16px;">
+                <div style="font-size:36px;">🔥</div>
+                <div style="font-weight:700; font-size:15px; color:#f9ca24;" id="ach4Title">Самый результативный</div>
+                <div style="font-size:12px;"><b>bomba69</b> — 24-4</div>
+            </div>
+            <div class="glass-card" style="text-align:center; padding:16px;">
+                <div style="font-size:36px;">💀</div>
+                <div style="font-weight:700; font-size:15px; color:#e07a7a;" id="ach5Title">Худший K/D</div>
+                <div style="font-size:12px;"><b style="color:#e07a7a;">baksyhanovvand...</b> — 0.33</div>
+            </div>
+            <div class="glass-card" style="text-align:center; padding:16px;">
+                <div style="font-size:36px;">🏅</div>
+                <div style="font-weight:700; font-size:15px; color:#e3b87c;" id="ach6Title">Лучшая разница</div>
+                <div style="font-size:12px;"><b>Хомяк с авт</b> — +116</div>
+            </div>
         </div>
     </div>
 
     <!-- ===== FOOTER ===== -->
     <div class="footer">
         MPL · Mega Professional League · <b>HLTV-style</b> · Май-Июль 2026
-        <br>👆 Кликните на матч для полной статистики
+        <br id="footerHint">👆 Кликните на матч для полной статистики
     </div>
 
 </div>
@@ -1224,6 +1229,139 @@
 </div>
 
 <script>
+    // ===== ПЕРЕВОДЫ =====
+    const translations = {
+        ru: {
+            headerDate: '📅 Май-Июль 2026',
+            headerStatus: '● LIVE',
+            navMain: '📊 Главная',
+            navCharts: '📈 Графики',
+            navAch: '🏅 Достижения',
+            topTitle: 'Топ игроков',
+            subKd: '📊 По K/D',
+            subRating: '📈 По рейтингу',
+            topFooterKdText: 'лидер по K/D',
+            topFooterRatingText: 'лидер по рейтингу',
+            newsTitle: 'Новости',
+            newsSub: 'последние обновления',
+            newsFooter: 'Все могут писать новости',
+            matchesTitle: 'Матчи',
+            matchesCount: 'всего 5',
+            matchesFooter: 'Все матчи · 4v4 · нажмите для деталей',
+            chartKd: '📊 K/D всех игроков',
+            chartAdr: '📈 ADR всех игроков',
+            chartDiff: '📊 Разница (±)',
+            chartRating: '🏆 Рейтинг',
+            ach1Title: 'Лучший K/D',
+            ach2Title: 'Лучший ADR',
+            ach3Title: 'Лучший рейтинг',
+            ach4Title: 'Самый результативный',
+            ach5Title: 'Худший K/D',
+            ach6Title: 'Лучшая разница',
+            achBestKd: 'Лучший K/D:',
+            achBestAdr: 'Лучший ADR:',
+            achBestRating: 'Лучший рейтинг:',
+            achBestMatch: 'Самый результативный:',
+            achWorstKd: 'Худший K/D:',
+            m0Title: '🏆 Матч #0 — BO3',
+            m1Title: 'Матч #1',
+            m2Title: 'Матч #2',
+            m3Title: 'Матч #3',
+            m4Title: 'Матч #4',
+            langBtn: '🇬🇧 EN',
+            footerHint: '👆 Кликните на матч для полной статистики'
+        },
+        en: {
+            headerDate: '📅 May-July 2026',
+            headerStatus: '● LIVE',
+            navMain: '📊 Main',
+            navCharts: '📈 Charts',
+            navAch: '🏅 Achievements',
+            topTitle: 'Top Players',
+            subKd: '📊 By K/D',
+            subRating: '📈 By Rating',
+            topFooterKdText: 'leader by K/D',
+            topFooterRatingText: 'leader by Rating',
+            newsTitle: 'News',
+            newsSub: 'latest updates',
+            newsFooter: 'Everyone can write news',
+            matchesTitle: 'Matches',
+            matchesCount: 'total 5',
+            matchesFooter: 'All matches · 4v4 · click for details',
+            chartKd: '📊 K/D of all players',
+            chartAdr: '📈 ADR of all players',
+            chartDiff: '📊 Difference (±)',
+            chartRating: '🏆 Rating',
+            ach1Title: 'Best K/D',
+            ach2Title: 'Best ADR',
+            ach3Title: 'Best Rating',
+            ach4Title: 'Most effective',
+            ach5Title: 'Worst K/D',
+            ach6Title: 'Best Difference',
+            achBestKd: 'Best K/D:',
+            achBestAdr: 'Best ADR:',
+            achBestRating: 'Best Rating:',
+            achBestMatch: 'Most effective:',
+            achWorstKd: 'Worst K/D:',
+            m0Title: '🏆 Match #0 — BO3',
+            m1Title: 'Match #1',
+            m2Title: 'Match #2',
+            m3Title: 'Match #3',
+            m4Title: 'Match #4',
+            langBtn: '🇷🇺 RU',
+            footerHint: '👆 Click on match for full stats'
+        }
+    };
+
+    let currentLang = 'ru';
+
+    function toggleLang() {
+        currentLang = currentLang === 'ru' ? 'en' : 'ru';
+        applyLanguage(currentLang);
+    }
+
+    function applyLanguage(lang) {
+        const t = translations[lang];
+        document.getElementById('headerDate').textContent = t.headerDate;
+        document.getElementById('headerStatus').textContent = t.headerStatus;
+        document.getElementById('navMain').textContent = t.navMain;
+        document.getElementById('navCharts').textContent = t.navCharts;
+        document.getElementById('navAch').textContent = t.navAch;
+        document.getElementById('topTitle').textContent = t.topTitle;
+        document.getElementById('subKd').textContent = t.subKd;
+        document.getElementById('subRating').textContent = t.subRating;
+        document.getElementById('topFooterKdText').textContent = t.topFooterKdText;
+        document.getElementById('topFooterRatingText').textContent = t.topFooterRatingText;
+        document.getElementById('newsTitle').textContent = t.newsTitle;
+        document.getElementById('newsSub').textContent = t.newsSub;
+        document.getElementById('newsFooter').textContent = t.newsFooter;
+        document.getElementById('matchesTitle').textContent = t.matchesTitle;
+        document.getElementById('matchesCount').textContent = t.matchesCount;
+        document.getElementById('matchesFooter').textContent = t.matchesFooter;
+        document.getElementById('chartKd').textContent = t.chartKd;
+        document.getElementById('chartAdr').textContent = t.chartAdr;
+        document.getElementById('chartDiff').textContent = t.chartDiff;
+        document.getElementById('chartRating').textContent = t.chartRating;
+        document.getElementById('ach1Title').textContent = t.ach1Title;
+        document.getElementById('ach2Title').textContent = t.ach2Title;
+        document.getElementById('ach3Title').textContent = t.ach3Title;
+        document.getElementById('ach4Title').textContent = t.ach4Title;
+        document.getElementById('ach5Title').textContent = t.ach5Title;
+        document.getElementById('ach6Title').textContent = t.ach6Title;
+        document.getElementById('achBestKd').textContent = t.achBestKd;
+        document.getElementById('achBestAdr').textContent = t.achBestAdr;
+        document.getElementById('achBestRating').textContent = t.achBestRating;
+        document.getElementById('achBestMatch').textContent = t.achBestMatch;
+        document.getElementById('achWorstKd').textContent = t.achWorstKd;
+        document.getElementById('m0Title').textContent = t.m0Title;
+        document.getElementById('m1Title').textContent = t.m1Title;
+        document.getElementById('m2Title').textContent = t.m2Title;
+        document.getElementById('m3Title').textContent = t.m3Title;
+        document.getElementById('m4Title').textContent = t.m4Title;
+        document.getElementById('langBtn').textContent = t.langBtn;
+        document.getElementById('footerHint').textContent = t.footerHint;
+    }
+
     // ===== ДАННЫЕ ИГРОКОВ =====
     const playersData = [
         { name: 'bomba69', matches: 5, k: 78, d: 49, a: 7, kd: 1.59, adr: 91, diff: 58, rating: 1.41, you: true, avatar: '' },
@@ -1700,7 +1838,7 @@
                     <h2>${playerName} ${player.you ? '⭐' : ''}</h2>
                     <div class="sub">
                         ${player.matches} матчей · ${player.k} убийств · ${player.d} смертей
-                        ${player.you ? ' · <b style="color:#a29bfe;">Это вы!</b>' : ''}
+                        ${player.you ? ' · <b style="color:#ffb347;">Это вы!</b>' : ''}
                     </div>
                 </div>
             </div>
@@ -1710,9 +1848,9 @@
                 <div class="profile-stat"><div class="num ${player.diff > 0 ? 'good' : 'bad'}">${player.diff > 0 ? '+' : ''}${player.diff}</div><div class="label">Разница</div></div>
                 <div class="profile-stat"><div class="num">${player.rating.toFixed(2)}</div><div class="label">Рейтинг</div></div>
             </div>
-            ${achievements.length > 0 ? `<div class="profile-achievements">${achievements.map(a => `<div class="profile-achievement"><span class="ach-icon">${a.icon}</span><span class="ach-name">${a.name}</span></div>`).join('')}</div>` : `<div style="font-size:12px; color:#6e7f94; margin-bottom:12px;">Нет достижений</div>`}
+            ${achievements.length > 0 ? `<div class="profile-achievements">${achievements.map(a => `<div class="profile-achievement"><span class="ach-icon">${a.icon}</span><span class="ach-name">${a.name}</span></div>`).join('')}</div>` : `<div style="font-size:11px; color:#6e7f94; margin-bottom:10px;">Нет достижений</div>`}
             <div class="profile-matches-title">📋 История матчей</div>
-            ${history.length > 0 ? history.map(m => `<div class="profile-match-row"><span class="match-name">${m.match} — ${m.map}</span><span class="match-stats">${m.k} - ${m.d} <span class="${m.diff > 0 ? 'good' : 'bad'}">${m.diff > 0 ? '+' : ''}${m.diff}</span></span></div>`).join('') : '<div style="font-size:12px; color:#6e7f94;">Нет данных о матчах</div>'}
+            ${history.length > 0 ? history.map(m => `<div class="profile-match-row"><span class="match-name">${m.match} — ${m.map}</span><span class="match-stats">${m.k} - ${m.d} <span class="${m.diff > 0 ? 'good' : 'bad'}">${m.diff > 0 ? '+' : ''}${m.diff}</span></span></div>`).join('') : '<div style="font-size:11px; color:#6e7f94;">Нет данных о матчах</div>'}
         `;
 
         document.getElementById('profileOverlay').classList.add('open');
@@ -1748,42 +1886,42 @@
         const maxRating = Math.max(...playersData.map(p => p.rating));
 
         document.getElementById('kdChart').innerHTML = [...playersData].sort((a,b) => b.kd - a.kd).map(p => `
-            <div style="display:flex;align-items:center;gap:6px;margin:2px 0;font-size:11px;">
-                <span style="min-width:80px;text-align:right;color:#8b9bb0;">${p.name}</span>
-                <div style="flex:1;height:14px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;">
-                    <div style="height:100%;width:${p.kd/maxKd*100}%;background:linear-gradient(90deg,#6c5ce7,#a29bfe);border-radius:3px;"></div>
+            <div style="display:flex;align-items:center;gap:5px;margin:2px 0;font-size:10px;">
+                <span style="min-width:70px;text-align:right;color:#8b9bb0;">${p.name}</span>
+                <div style="flex:1;height:12px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;">
+                    <div style="height:100%;width:${p.kd/maxKd*100}%;background:linear-gradient(90deg,#2a475e,#4a7a9e);border-radius:3px;"></div>
                 </div>
-                <span style="min-width:36px;font-weight:600;">${p.kd.toFixed(2)}</span>
+                <span style="min-width:32px;font-weight:600;">${p.kd.toFixed(2)}</span>
             </div>
         `).join('');
 
         document.getElementById('adrChart').innerHTML = [...playersData].sort((a,b) => b.adr - a.adr).map(p => `
-            <div style="display:flex;align-items:center;gap:6px;margin:2px 0;font-size:11px;">
-                <span style="min-width:80px;text-align:right;color:#8b9bb0;">${p.name}</span>
-                <div style="flex:1;height:14px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;">
-                    <div style="height:100%;width:${p.adr/maxAdr*100}%;background:linear-gradient(90deg,#00b894,#00cec9);border-radius:3px;"></div>
+            <div style="display:flex;align-items:center;gap:5px;margin:2px 0;font-size:10px;">
+                <span style="min-width:70px;text-align:right;color:#8b9bb0;">${p.name}</span>
+                <div style="flex:1;height:12px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;">
+                    <div style="height:100%;width:${p.adr/maxAdr*100}%;background:linear-gradient(90deg,#2d7d46,#5cb85c);border-radius:3px;"></div>
                 </div>
-                <span style="min-width:36px;font-weight:600;">${p.adr}</span>
+                <span style="min-width:32px;font-weight:600;">${p.adr}</span>
             </div>
         `).join('');
 
         document.getElementById('diffChart').innerHTML = [...playersData].sort((a,b) => b.diff - a.diff).map(p => `
-            <div style="display:flex;align-items:center;gap:6px;margin:2px 0;font-size:11px;">
-                <span style="min-width:80px;text-align:right;color:#8b9bb0;">${p.name}</span>
-                <div style="flex:1;height:14px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;">
-                    <div style="height:100%;width:${Math.abs(p.diff)/maxDiff*100}%;background:${p.diff>=0?'linear-gradient(90deg,#00b894,#00cec9)':'linear-gradient(90deg,#e17055,#d63031)'};border-radius:3px;"></div>
+            <div style="display:flex;align-items:center;gap:5px;margin:2px 0;font-size:10px;">
+                <span style="min-width:70px;text-align:right;color:#8b9bb0;">${p.name}</span>
+                <div style="flex:1;height:12px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;">
+                    <div style="height:100%;width:${Math.abs(p.diff)/maxDiff*100}%;background:${p.diff>=0?'linear-gradient(90deg,#2d7d46,#5cb85c)':'linear-gradient(90deg,#c0392b,#e74c3c)'};border-radius:3px;"></div>
                 </div>
-                <span style="min-width:36px;font-weight:600;">${p.diff > 0 ? '+' : ''}${p.diff}</span>
+                <span style="min-width:32px;font-weight:600;">${p.diff > 0 ? '+' : ''}${p.diff}</span>
             </div>
         `).join('');
 
         document.getElementById('ratingChart').innerHTML = [...playersData].sort((a,b) => b.rating - a.rating).map(p => `
-            <div style="display:flex;align-items:center;gap:6px;margin:2px 0;font-size:11px;">
-                <span style="min-width:80px;text-align:right;color:#8b9bb0;">${p.name}</span>
-                <div style="flex:1;height:14px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;">
-                    <div style="height:100%;width:${p.rating/maxRating*100}%;background:linear-gradient(90deg,#6c5ce7,#a29bfe);border-radius:3px;"></div>
+            <div style="display:flex;align-items:center;gap:5px;margin:2px 0;font-size:10px;">
+                <span style="min-width:70px;text-align:right;color:#8b9bb0;">${p.name}</span>
+                <div style="flex:1;height:12px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;">
+                    <div style="height:100%;width:${p.rating/maxRating*100}%;background:linear-gradient(90deg,#2a475e,#4a7a9e);border-radius:3px;"></div>
                 </div>
-                <span style="min-width:36px;font-weight:600;">${p.rating.toFixed(2)}</span>
+                <span style="min-width:32px;font-weight:600;">${p.rating.toFixed(2)}</span>
             </div>
         `).join('');
     }
@@ -1791,14 +1929,7 @@
     // ===== ТЕМА =====
     function toggleTheme() {
         document.body.classList.toggle('light');
-        document.querySelector('.theme-toggle').textContent = document.body.classList.contains('light') ? '🌙' : '🌙';
-    }
-
-    // ===== ЯЗЫК =====
-    let lang = 'ru';
-    function toggleLang() {
-        lang = lang === 'ru' ? 'en' : 'ru';
-        document.querySelector('.lang-toggle').textContent = lang === 'ru' ? '🇬🇧 EN' : '🇷🇺 RU';
+        document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '🌙' : '🌙';
     }
 
     // ===== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК =====
@@ -1842,6 +1973,9 @@
     renderTopRating();
     renderNews();
     renderCharts();
+
+    // Применяем язык по умолчанию
+    applyLanguage('ru');
 </script>
 
 </body>
