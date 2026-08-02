@@ -206,14 +206,26 @@
     // ===== ПЕРЕКЛЮЧЕНИЕ ТОПА =====
     let currentTop = 'rating';
 
-    function switchTop(type) {
-        currentTop = type;
-        document.getElementById('subKd').className = type === 'kd' ? 'sub-nav-btn active' : 'sub-nav-btn';
-        document.getElementById('subRating').className = type === 'rating' ? 'sub-nav-btn active' : 'sub-nav-btn';
-        renderTopPlayers(type);
-        document.getElementById('topFooterName').textContent = type === 'kd' ? 'bomba69' : 'Хомяк с авт';
-        document.getElementById('topFooterText').textContent = type === 'kd' ? 'лидер по K/D' : 'лидер по рейтингу';
+   function switchTop(type) {
+    currentTop = type;
+    // Меняем классы у кнопок
+    const kdBtn = document.getElementById('subKd');
+    const ratingBtn = document.getElementById('subRating');
+    
+    if (type === 'kd') {
+        kdBtn.className = 'sub-nav-btn active';
+        ratingBtn.className = 'sub-nav-btn';
+    } else {
+        kdBtn.className = 'sub-nav-btn';
+        ratingBtn.className = 'sub-nav-btn active';
     }
+    
+    renderTopPlayers(type);
+    
+    // Обновляем футер
+    document.getElementById('topFooterName').textContent = type === 'kd' ? 'bomba69' : 'Хомяк с авт';
+    document.getElementById('topFooterText').textContent = type === 'kd' ? 'лидер по K/D' : 'лидер по рейтингу';
+}
 
     function renderTopPlayers(type) {
         const container = document.getElementById('playerList');
