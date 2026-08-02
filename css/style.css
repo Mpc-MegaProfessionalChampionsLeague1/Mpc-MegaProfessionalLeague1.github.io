@@ -578,3 +578,11 @@ body.light .about-text b {
     font-size: 13px;
     margin-bottom: 16px;
 }
+
+.top-list {
+    display: none;
+    animation: fadeUp 0.3s ease;
+}
+.top-list.active {
+    display: block;
+}
