@@ -301,6 +301,46 @@
             font-size: 12px;
         }
 
+        /* ===== SUB-NAV для топа игроков ===== */
+        .sub-nav {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            border-radius: 10px;
+            padding: 4px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .sub-nav-btn {
+            background: transparent;
+            border: none;
+            color: #8b9bb0;
+            padding: 6px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            font-size: 12px;
+            cursor: pointer;
+            transition: 0.25s;
+            font-family: 'Inter', sans-serif;
+        }
+        .sub-nav-btn:hover {
+            color: #e8eff7;
+            background: rgba(255, 255, 255, 0.06);
+        }
+        .sub-nav-btn.active {
+            background: linear-gradient(135deg, #6c5ce7, #a29bfe);
+            color: #fff;
+            box-shadow: 0 4px 15px rgba(108, 92, 231, 0.3);
+        }
+
+        .top-list {
+            display: none;
+            animation: fadeUp 0.3s ease;
+        }
+        .top-list.active {
+            display: block;
+        }
+
         .top-player-row {
             display: flex;
             align-items: center;
@@ -997,10 +1037,26 @@
 
             <!-- ===== LEFT: TOP PLAYERS ===== -->
             <div class="left-panel">
-                <div class="panel-title">🏆 Топ игроков <span>кликните для профиля</span></div>
-                <div class="scroll-area" id="playerList"></div>
+                <div class="panel-title">🏆 Топ игроков</div>
+
+                <!-- SUB-NAV -->
+                <div class="sub-nav">
+                    <button class="sub-nav-btn active" data-subtab="top-kd">📊 По K/D</button>
+                    <button class="sub-nav-btn" data-subtab="top-rating">📈 По рейтингу</button>
+                </div>
+
+                <!-- ТОП ПО K/D -->
+                <div class="top-list active" id="top-kd">
+                    <div class="scroll-area" id="playerListKd"></div>
+                </div>
+
+                <!-- ТОП ПО РЕЙТИНГУ -->
+                <div class="top-list" id="top-rating">
+                    <div class="scroll-area" id="playerListRating"></div>
+                </div>
+
                 <div style="font-size:10px; color:#4a5a6e; margin-top:10px; text-align:center; border-top:1px solid rgba(255,255,255,0.04); padding-top:10px;">
-                    🟣 <b style="color:#a29bfe;">bomba69</b> — лидер по K/D
+                    🟣 <b style="color:#a29bfe;">bomba69</b> — лидер по K/D · <b style="color:#a29bfe;">Хомяк с авт</b> — лидер по рейтингу
                 </div>
             </div>
 
@@ -1073,7 +1129,7 @@
                     </div>
                 </div>
 
-                <!-- МАТЧ #3 — ИСПРАВЛЕННЫЙ -->
+                <!-- МАТЧ #3 -->
                 <div class="match-card loss" onclick="openMatchOverlay('match3')">
                     <div class="match-top">
                         <span class="title">Матч #3</span>
@@ -1168,9 +1224,161 @@
 </div>
 
 <script>
+    // ===== ДАННЫЕ ИГРОКОВ =====
+    const playersData = [
+        { name: 'bomba69', matches: 5, k: 78, d: 49, a: 7, kd: 1.59, adr: 91, diff: 58, rating: 1.41, you: true, avatar: '' },
+        { name: 'Хомяк с авт', matches: 3, k: 63, d: 43, a: 11, kd: 1.47, adr: 100, diff: 116, rating: 1.47, you: false, avatar: '' },
+        { name: 'abdalbek', matches: 5, k: 73, d: 66, a: 12, kd: 1.11, adr: 88, diff: 22, rating: 1.25, you: false, avatar: '' },
+        { name: 'uxaxaxaxa', matches: 5, k: 62, d: 62, a: 9, kd: 1.00, adr: 74, diff: 0, rating: 1.00, you: false, avatar: '' },
+        { name: 'Gonduras228', matches: 5, k: 56, d: 62, a: 18, kd: 0.90, adr: 72, diff: 11, rating: 0.94, you: false, avatar: '' },
+        { name: 'wadsf', matches: 4, k: 51, d: 44, a: 11, kd: 1.16, adr: 64, diff: 50, rating: 1.02, you: false, avatar: '' },
+        { name: 'Adjiare Gudju', matches: 4, k: 59, d: 69, a: 17, kd: 0.86, adr: 73, diff: -35, rating: 0.96, you: false, avatar: '' },
+        { name: 'AFKE', matches: 4, k: 22, d: 44, a: 18, kd: 0.50, adr: 59, diff: -22, rating: 0.71, you: false, avatar: '' },
+        { name: 'balchuqov_valera', matches: 2, k: 15, d: 31, a: 5, kd: 0.48, adr: 49, diff: -79, rating: 0.62, you: false, avatar: '' },
+        { name: 'baksyhanovvand...', matches: 4, k: 25, d: 75, a: 8, kd: 0.33, adr: 41, diff: -119, rating: 0.35, you: false, avatar: '' }
+    ];
+
+    // ===== МАТЧИ ИГРОКОВ =====
+    const playerMatchHistory = {
+        'bomba69': [
+            { match: '#0 BO3', k: 37, d: 15, diff: 22, map: 'Ancient + Anubis' },
+            { match: '#1', k: 10, d: 13, diff: -3, map: 'Mirage' },
+            { match: '#2', k: 24, d: 4, diff: 20, map: 'Mirage' },
+            { match: '#3', k: 12, d: 7, diff: 5, map: 'Mirage' },
+            { match: '#4', k: 16, d: 12, diff: 4, map: 'Mirage' }
+        ],
+        'Хомяк с авт': [
+            { match: '#0 BO3', k: 35, d: 19, diff: 16, map: 'Ancient + Anubis' },
+            { match: '#1', k: 14, d: 9, diff: 5, map: 'Mirage' },
+            { match: '#2', k: 14, d: 15, diff: -1, map: 'Mirage' }
+        ],
+        'abdalbek': [
+            { match: '#0 BO3', k: 20, d: 30, diff: -10, map: 'Ancient + Anubis' },
+            { match: '#1', k: 8, d: 13, diff: -5, map: 'Mirage' },
+            { match: '#2', k: 16, d: 11, diff: 5, map: 'Mirage' },
+            { match: '#3', k: 15, d: 13, diff: 2, map: 'Mirage' },
+            { match: '#4', k: 16, d: 14, diff: 2, map: 'Mirage' }
+        ],
+        'Adjiare Gudju': [
+            { match: '#0 BO3', k: 24, d: 28, diff: -4, map: 'Ancient + Anubis' },
+            { match: '#3', k: 13, d: 15, diff: -2, map: 'Mirage (как fort[чилл])' },
+            { match: '#4', k: 11, d: 13, diff: -2, map: 'Mirage (как fort[чилл])' }
+        ],
+        'uxaxaxaxa': [
+            { match: '#0 BO3', k: 34, d: 16, diff: 18, map: 'Ancient + Anubis' },
+            { match: '#1', k: 0, d: 13, diff: -13, map: 'Mirage' },
+            { match: '#2', k: 10, d: 10, diff: 0, map: 'Mirage' },
+            { match: '#3', k: 13, d: 9, diff: 4, map: 'Mirage' },
+            { match: '#4', k: 11, d: 14, diff: -3, map: 'Mirage' }
+        ],
+        'Gonduras228': [
+            { match: '#0 BO3', k: 16, d: 32, diff: -16, map: 'Ancient + Anubis' },
+            { match: '#1', k: 6, d: 13, diff: -7, map: 'Mirage' },
+            { match: '#2', k: 9, d: 9, diff: 0, map: 'Mirage' },
+            { match: '#3', k: 14, d: 10, diff: 4, map: 'Mirage' },
+            { match: '#4', k: 13, d: 14, diff: -1, map: 'Mirage' }
+        ],
+        'AFKE': [
+            { match: '#0 BO3', k: 14, d: 24, diff: -10, map: 'Ancient + Anubis' },
+            { match: '#1', k: 8, d: 5, diff: 3, map: 'Mirage' },
+            { match: '#2', k: 6, d: 15, diff: -9, map: 'Mirage' }
+        ],
+        'wadsf': [
+            { match: '#1', k: 13, d: 6, diff: 7, map: 'Mirage' },
+            { match: '#2', k: 10, d: 14, diff: -4, map: 'Mirage' },
+            { match: '#3', k: 17, d: 9, diff: 8, map: 'Mirage' },
+            { match: '#4', k: 11, d: 15, diff: -4, map: 'Mirage' }
+        ],
+        'balchuqov_valera': [
+            { match: '#3', k: 6, d: 14, diff: -8, map: 'Mirage' },
+            { match: '#4', k: 9, d: 17, diff: -8, map: 'Mirage' }
+        ],
+        'baksyhanovvand...': [
+            { match: '#0 BO3', k: 14, d: 31, diff: -17, map: 'Ancient + Anubis' },
+            { match: '#1', k: 17, d: 5, diff: 12, map: 'Mirage' },
+            { match: '#2', k: 3, d: 15, diff: -12, map: 'Mirage' },
+            { match: '#3', k: 1, d: 14, diff: -13, map: 'Mirage' },
+            { match: '#4', k: 4, d: 17, diff: -13, map: 'Mirage' }
+        ]
+    };
+
+    // ===== ДОСТИЖЕНИЯ =====
+    function getAchievements(player) {
+        const ach = [];
+        if (player.kd > 1.5) ach.push({ icon: '🥇', name: 'Элитный K/D' });
+        if (player.kd > 2.0) ach.push({ icon: '💎', name: 'Легендарный K/D' });
+        if (player.diff > 100) ach.push({ icon: '⚡', name: 'Доминатор' });
+        if (player.diff > 50 && player.diff <= 100) ach.push({ icon: '🔥', name: 'Кипящий' });
+        if (player.adr > 90) ach.push({ icon: '💥', name: 'Урон-машина' });
+        if (player.matches >= 4) ach.push({ icon: '🏅', name: 'Ветеран' });
+        if (player.name === 'bomba69') ach.push({ icon: '⭐', name: 'MVP турнира' });
+        if (player.name === 'Хомяк с авт' && player.diff === 116) ach.push({ icon: '🏆', name: 'Лучшая разница' });
+        return ach;
+    }
+
+    // ===== НОВОСТИ =====
+    let newsData = JSON.parse(localStorage.getItem('mpl_news')) || [
+        { id: 1, title: '🏆 Старт сезона MPL!', text: 'Дружеский турнир MPL начался! Следите за матчами и статистикой.', date: new Date('2026-05-09T10:00:00').toISOString() },
+        { id: 2, title: '🔥 Bomba69 делает 24-4!', text: 'В матче #2 Bomba69 показал невероятный результат — 24 убийства при 4 смертях!', date: new Date('2026-05-09T15:30:00').toISOString() },
+        { id: 3, title: '📊 Два топа игроков!', text: 'Теперь можно смотреть топ по K/D и по рейтингу.', date: new Date().toISOString() }
+    ];
+
+    function saveNews() {
+        localStorage.setItem('mpl_news', JSON.stringify(newsData));
+    }
+
+    function renderNews() {
+        const container = document.getElementById('newsList');
+        const sorted = [...newsData].sort((a, b) => new Date(b.date) - new Date(a.date));
+        container.innerHTML = sorted.map(n => `
+            <div class="news-item">
+                <div class="news-header">
+                    <span class="news-title">${n.title}</span>
+                    <span class="news-date">${new Date(n.date).toLocaleString('ru-RU')}</span>
+                </div>
+                <div class="news-text">${n.text}</div>
+            </div>
+        `).join('');
+    }
+
+    // ===== РЕНДЕР ТОП ПО K/D =====
+    function renderTopKd() {
+        const container = document.getElementById('playerListKd');
+        const sorted = [...playersData].sort((a, b) => b.kd - a.kd);
+        const ranks = ['gold', 'silver', 'bronze', '', '', '', '', '', '', ''];
+        container.innerHTML = sorted.map((p, i) => `
+            <div class="top-player-row" onclick="openProfile('${p.name}')">
+                <span class="rank ${ranks[i] || ''}">#${i+1}</span>
+                <div class="player-avatar-mini">
+                    ${p.avatar ? `<img src="${p.avatar}" alt="${p.name}">` : p.name.charAt(0).toUpperCase()}
+                </div>
+                <span class="pname ${p.you ? 'you' : ''}">${p.name}</span>
+                <span class="badge-kd ${i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : i === sorted.length - 1 ? 'red' : ''}">${p.kd.toFixed(2)}</span>
+                <span class="pstats"><b class="${p.diff > 0 ? 'best' : 'worst'}">${p.diff > 0 ? '+' : ''}${p.diff}</b></span>
+            </div>
+        `).join('');
+    }
+
+    // ===== РЕНДЕР ТОП ПО РЕЙТИНГУ =====
+    function renderTopRating() {
+        const container = document.getElementById('playerListRating');
+        const sorted = [...playersData].sort((a, b) => b.rating - a.rating);
+        const ranks = ['gold', 'silver', 'bronze', '', '', '', '', '', '', ''];
+        container.innerHTML = sorted.map((p, i) => `
+            <div class="top-player-row" onclick="openProfile('${p.name}')">
+                <span class="rank ${ranks[i] || ''}">#${i+1}</span>
+                <div class="player-avatar-mini">
+                    ${p.avatar ? `<img src="${p.avatar}" alt="${p.name}">` : p.name.charAt(0).toUpperCase()}
+                </div>
+                <span class="pname ${p.you ? 'you' : ''}">${p.name}</span>
+                <span class="badge-kd ${i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : i === sorted.length - 1 ? 'red' : ''}">${p.rating.toFixed(2)}</span>
+                <span class="pstats"><b class="${p.diff > 0 ? 'best' : 'worst'}">${p.diff > 0 ? '+' : ''}${p.diff}</b></span>
+            </div>
+        `).join('');
+    }
+
     // ===== ДАННЫЕ ДЛЯ МАТЧЕЙ =====
     const matchData = {
-        // ===== МАТЧ #0 — BO3 =====
         match0: {
             title: '🏆 Матч #0 — BO3',
             date: '30.07.2026',
@@ -1250,7 +1458,6 @@
                 }
             }
         },
-        // ===== МАТЧ #1 =====
         match1: {
             title: 'Матч #1',
             date: '09.05.2026',
@@ -1280,7 +1487,6 @@
                 }
             }
         },
-        // ===== МАТЧ #2 =====
         match2: {
             title: 'Матч #2',
             date: '09.05.2026',
@@ -1310,7 +1516,6 @@
                 }
             }
         },
-        // ===== МАТЧ #3 — ИСПРАВЛЕННЫЙ =====
         match3: {
             title: 'Матч #3',
             date: '17.05.2026',
@@ -1340,7 +1545,6 @@
                 }
             }
         },
-        // ===== МАТЧ #4 =====
         match4: {
             title: 'Матч #4',
             date: '17.05.2026',
@@ -1472,141 +1676,6 @@
         document.body.style.overflow = '';
     }
 
-    // ===== ДАННЫЕ ИГРОКОВ =====
-    const playersData = [
-        { name: 'bomba69', matches: 5, k: 78, d: 49, a: 7, kd: 1.59, adr: 91, diff: 58, rating: 1.41, you: true, avatar: '' },
-        { name: 'Хомяк с авт', matches: 3, k: 63, d: 43, a: 11, kd: 1.47, adr: 100, diff: 116, rating: 1.47, you: false, avatar: '' },
-        { name: 'abdalbek', matches: 5, k: 73, d: 66, a: 12, kd: 1.11, adr: 88, diff: 22, rating: 1.25, you: false, avatar: '' },
-        { name: 'uxaxaxaxa', matches: 5, k: 62, d: 62, a: 9, kd: 1.00, adr: 74, diff: 0, rating: 1.00, you: false, avatar: '' },
-        { name: 'Gonduras228', matches: 5, k: 56, d: 62, a: 18, kd: 0.90, adr: 72, diff: 11, rating: 0.94, you: false, avatar: '' },
-        { name: 'wadsf', matches: 4, k: 51, d: 44, a: 11, kd: 1.16, adr: 64, diff: 50, rating: 1.02, you: false, avatar: '' },
-        { name: 'Adjiare Gudju', matches: 4, k: 59, d: 69, a: 17, kd: 0.86, adr: 73, diff: -35, rating: 0.96, you: false, avatar: '' },
-        { name: 'AFKE', matches: 4, k: 22, d: 44, a: 18, kd: 0.50, adr: 59, diff: -22, rating: 0.71, you: false, avatar: '' },
-        { name: 'balchuqov_valera', matches: 2, k: 15, d: 31, a: 5, kd: 0.48, adr: 49, diff: -79, rating: 0.62, you: false, avatar: '' },
-        { name: 'baksyhanovvand...', matches: 4, k: 25, d: 75, a: 8, kd: 0.33, adr: 41, diff: -119, rating: 0.35, you: false, avatar: '' }
-    ];
-
-    // ===== МАТЧИ ИГРОКОВ =====
-    const playerMatchHistory = {
-        'bomba69': [
-            { match: '#0 BO3', k: 37, d: 15, diff: 22, map: 'Ancient + Anubis' },
-            { match: '#1', k: 10, d: 13, diff: -3, map: 'Mirage' },
-            { match: '#2', k: 24, d: 4, diff: 20, map: 'Mirage' },
-            { match: '#3', k: 12, d: 7, diff: 5, map: 'Mirage' },
-            { match: '#4', k: 16, d: 12, diff: 4, map: 'Mirage' }
-        ],
-        'Хомяк с авт': [
-            { match: '#0 BO3', k: 35, d: 19, diff: 16, map: 'Ancient + Anubis' },
-            { match: '#1', k: 14, d: 9, diff: 5, map: 'Mirage' },
-            { match: '#2', k: 14, d: 15, diff: -1, map: 'Mirage' }
-        ],
-        'abdalbek': [
-            { match: '#0 BO3', k: 20, d: 30, diff: -10, map: 'Ancient + Anubis' },
-            { match: '#1', k: 8, d: 13, diff: -5, map: 'Mirage' },
-            { match: '#2', k: 16, d: 11, diff: 5, map: 'Mirage' },
-            { match: '#3', k: 15, d: 13, diff: 2, map: 'Mirage' },
-            { match: '#4', k: 16, d: 14, diff: 2, map: 'Mirage' }
-        ],
-        'Adjiare Gudju': [
-            { match: '#0 BO3', k: 24, d: 28, diff: -4, map: 'Ancient + Anubis' },
-            { match: '#3', k: 13, d: 15, diff: -2, map: 'Mirage (как fort[чилл])' },
-            { match: '#4', k: 11, d: 13, diff: -2, map: 'Mirage (как fort[чилл])' }
-        ],
-        'uxaxaxaxa': [
-            { match: '#0 BO3', k: 34, d: 16, diff: 18, map: 'Ancient + Anubis' },
-            { match: '#1', k: 0, d: 13, diff: -13, map: 'Mirage' },
-            { match: '#2', k: 10, d: 10, diff: 0, map: 'Mirage' },
-            { match: '#3', k: 13, d: 9, diff: 4, map: 'Mirage' },
-            { match: '#4', k: 11, d: 14, diff: -3, map: 'Mirage' }
-        ],
-        'Gonduras228': [
-            { match: '#0 BO3', k: 16, d: 32, diff: -16, map: 'Ancient + Anubis' },
-            { match: '#1', k: 6, d: 13, diff: -7, map: 'Mirage' },
-            { match: '#2', k: 9, d: 9, diff: 0, map: 'Mirage' },
-            { match: '#3', k: 14, d: 10, diff: 4, map: 'Mirage' },
-            { match: '#4', k: 13, d: 14, diff: -1, map: 'Mirage' }
-        ],
-        'AFKE': [
-            { match: '#0 BO3', k: 14, d: 24, diff: -10, map: 'Ancient + Anubis' },
-            { match: '#1', k: 8, d: 5, diff: 3, map: 'Mirage' },
-            { match: '#2', k: 6, d: 15, diff: -9, map: 'Mirage' }
-        ],
-        'wadsf': [
-            { match: '#1', k: 13, d: 6, diff: 7, map: 'Mirage' },
-            { match: '#2', k: 10, d: 14, diff: -4, map: 'Mirage' },
-            { match: '#3', k: 17, d: 9, diff: 8, map: 'Mirage' },
-            { match: '#4', k: 11, d: 15, diff: -4, map: 'Mirage' }
-        ],
-        'balchuqov_valera': [
-            { match: '#3', k: 6, d: 14, diff: -8, map: 'Mirage' },
-            { match: '#4', k: 9, d: 17, diff: -8, map: 'Mirage' }
-        ],
-        'baksyhanovvand...': [
-            { match: '#0 BO3', k: 14, d: 31, diff: -17, map: 'Ancient + Anubis' },
-            { match: '#1', k: 17, d: 5, diff: 12, map: 'Mirage' },
-            { match: '#2', k: 3, d: 15, diff: -12, map: 'Mirage' },
-            { match: '#3', k: 1, d: 14, diff: -13, map: 'Mirage' },
-            { match: '#4', k: 4, d: 17, diff: -13, map: 'Mirage' }
-        ]
-    };
-
-    // ===== ДОСТИЖЕНИЯ =====
-    function getAchievements(player) {
-        const ach = [];
-        if (player.kd > 1.5) ach.push({ icon: '🥇', name: 'Элитный K/D' });
-        if (player.kd > 2.0) ach.push({ icon: '💎', name: 'Легендарный K/D' });
-        if (player.diff > 100) ach.push({ icon: '⚡', name: 'Доминатор' });
-        if (player.diff > 50 && player.diff <= 100) ach.push({ icon: '🔥', name: 'Кипящий' });
-        if (player.adr > 90) ach.push({ icon: '💥', name: 'Урон-машина' });
-        if (player.matches >= 4) ach.push({ icon: '🏅', name: 'Ветеран' });
-        if (player.name === 'bomba69') ach.push({ icon: '⭐', name: 'MVP турнира' });
-        if (player.name === 'Хомяк с авт' && player.diff === 116) ach.push({ icon: '🏆', name: 'Лучшая разница' });
-        return ach;
-    }
-
-    // ===== НОВОСТИ =====
-    let newsData = JSON.parse(localStorage.getItem('mpl_news')) || [
-        { id: 1, title: '🏆 Старт сезона MPL!', text: 'Дружеский турнир MPL начался! Следите за матчами и статистикой.', date: new Date('2026-05-09T10:00:00').toISOString() },
-        { id: 2, title: '🔥 Bomba69 делает 24-4!', text: 'В матче #2 Bomba69 показал невероятный результат — 24 убийства при 4 смертях!', date: new Date('2026-05-09T15:30:00').toISOString() },
-        { id: 3, title: '📊 Матч #3 исправлен!', text: 'Добавлены правильные данные из скриншота 444.', date: new Date().toISOString() }
-    ];
-
-    function saveNews() {
-        localStorage.setItem('mpl_news', JSON.stringify(newsData));
-    }
-
-    function renderNews() {
-        const container = document.getElementById('newsList');
-        const sorted = [...newsData].sort((a, b) => new Date(b.date) - new Date(a.date));
-        container.innerHTML = sorted.map(n => `
-            <div class="news-item">
-                <div class="news-header">
-                    <span class="news-title">${n.title}</span>
-                    <span class="news-date">${new Date(n.date).toLocaleString('ru-RU')}</span>
-                </div>
-                <div class="news-text">${n.text}</div>
-            </div>
-        `).join('');
-    }
-
-    // ===== РЕНДЕР ТОП ИГРОКОВ =====
-    function renderPlayers() {
-        const container = document.getElementById('playerList');
-        const sorted = [...playersData].sort((a, b) => b.kd - a.kd);
-        const ranks = ['gold', 'silver', 'bronze', '', '', '', '', '', '', ''];
-        container.innerHTML = sorted.map((p, i) => `
-            <div class="top-player-row" onclick="openProfile('${p.name}')">
-                <span class="rank ${ranks[i] || ''}">#${i+1}</span>
-                <div class="player-avatar-mini">
-                    ${p.avatar ? `<img src="${p.avatar}" alt="${p.name}">` : p.name.charAt(0).toUpperCase()}
-                </div>
-                <span class="pname ${p.you ? 'you' : ''}">${p.name}</span>
-                <span class="badge-kd ${i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : i === sorted.length - 1 ? 'red' : ''}">${p.kd.toFixed(2)}</span>
-                <span class="pstats"><b class="${p.diff > 0 ? 'best' : 'worst'}">${p.diff > 0 ? '+' : ''}${p.diff}</b></span>
-            </div>
-        `).join('');
-    }
-
     // ===== ПРОФИЛЬ =====
     function openProfile(playerName) {
         const player = playersData.find(p => p.name === playerName);
@@ -1658,7 +1727,8 @@
             const player = playersData.find(p => p.name === playerName);
             if (player) {
                 player.avatar = e.target.result;
-                renderPlayers();
+                renderTopKd();
+                renderTopRating();
                 openProfile(playerName);
             }
         };
@@ -1742,6 +1812,16 @@
         });
     });
 
+    // ===== ПЕРЕКЛЮЧЕНИЕ ПОДВКЛАДОК ТОПА =====
+    document.querySelectorAll('.sub-nav-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.sub-nav-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            document.querySelectorAll('.top-list').forEach(t => t.classList.remove('active'));
+            document.getElementById(this.dataset.subtab).classList.add('active');
+        });
+    });
+
     // ===== ЗАКРЫТИЕ ОВЕРЛЕЕВ =====
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
@@ -1758,7 +1838,8 @@
     });
 
     // ===== ИНИЦИАЛИЗАЦИЯ =====
-    renderPlayers();
+    renderTopKd();
+    renderTopRating();
     renderNews();
     renderCharts();
 </script>
