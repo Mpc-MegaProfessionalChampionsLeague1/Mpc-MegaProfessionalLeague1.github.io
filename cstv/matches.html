@@ -1,1 +1,256 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPL — Все матчи</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
 
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo">
+            <h1 onclick="location.href='index.html'">MPL <small>Mega Professional League</small></h1>
+        </div>
+        <div class="header-right">
+            <span id="headerDate">📅 Май-Июль 2026</span>
+            <span class="status">● LIVE</span>
+            <button class="lang-toggle" onclick="toggleLang()" id="langBtn">🇬🇧 EN</button>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        </div>
+    </div>
+
+    <!-- NAV -->
+    <nav class="nav">
+        <a href="index.html" class="nav-btn">📊 Главная</a>
+        <a href="matches.html" class="nav-btn active">📋 Матчи</a>
+        <a href="players.html" class="nav-btn">👥 Игроки</a>
+        <a href="stats.html" class="nav-btn">📈 Статистика</a>
+        <a href="about.html" class="nav-btn">ℹ️ О сайте</a>
+    </nav>
+
+    <!-- PAGE TITLE -->
+    <div class="page-title">📋 Все матчи</div>
+    <div class="page-subtitle">Всего 5 матчей · Нажмите на матч для детальной статистики</div>
+
+    <!-- FILTERS -->
+    <div class="filter-section">
+        <input type="text" class="search-input" placeholder="🔍 Поиск по карте или команде..." id="matchSearch" oninput="filterMatches()">
+        <select id="mapFilter" onchange="filterMatches()">
+            <option value="all">Все карты</option>
+            <option value="Mirage">Mirage</option>
+            <option value="Ancient">Ancient</option>
+            <option value="Anubis">Anubis</option>
+        </select>
+        <select id="resultFilter" onchange="filterMatches()">
+            <option value="all">Все результаты</option>
+            <option value="win">Победы</option>
+            <option value="loss">Поражения</option>
+        </select>
+    </div>
+
+    <!-- MATCHES LIST -->
+    <div id="matchesList" style="display:flex;flex-direction:column;gap:10px;">
+        <!-- Рендерится через JS -->
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        MPL · Mega Professional League · <b>HLTV-style</b> · Май-Июль 2026
+    </div>
+
+</div>
+
+<!-- MATCH OVERLAY -->
+<div class="match-overlay" id="matchOverlay" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.85);backdrop-filter:blur(12px);z-index:1000;justify-content:center;align-items:center;padding:20px;">
+    <div class="match-overlay-panel" style="background:#141a24;border-radius:16px;padding:28px 32px;max-width:780px;width:100%;max-height:90vh;overflow-y:auto;position:relative;border:1px solid rgba(255,255,255,0.06);box-shadow:0 20px 60px rgba(0,0,0,0.6);">
+        <button class="match-overlay-close" onclick="closeMatch()" style="position:absolute;top:12px;right:16px;font-size:24px;cursor:pointer;color:#6e7f94;background:none;border:none;">✕</button>
+        <div id="matchContent"></div>
+    </div>
+</div>
+
+<script src="js/data.js"></script>
+<script>
+    // ===== РЕНДЕР МАТЧЕЙ =====
+    function renderMatches(filterMap = 'all', filterResult = 'all', search = '') {
+        const container = document.getElementById('matchesList');
+        const keys = Object.keys(matchData);
+        let filtered = keys.map(key => ({ id: key, data: matchData[key] }));
+
+        if (filterMap !== 'all') {
+            filtered = filtered.filter(m => m.data.map.includes(filterMap));
+        }
+        if (filterResult !== 'all') {
+            filtered = filtered.filter(m => {
+                const isWin = m.data.winner.includes('Team 1') || m.data.winner.includes('Team Fortress 2');
+                return filterResult === 'win' ? isWin : !isWin;
+            });
+        }
+        if (search) {
+            const s = search.toLowerCase();
+            filtered = filtered.filter(m =>
+                m.data.map.toLowerCase().includes(s) ||
+                m.data.winner.toLowerCase().includes(s) ||
+                m.data.loser.toLowerCase().includes(s) ||
+                m.data.title.toLowerCase().includes(s)
+            );
+        }
+
+        container.innerHTML = filtered.map(({ id, data }) => {
+            const isLoss = data.loser.includes('Team 1') || data.loser.includes('Team Magic');
+            return `
+                <div class="match-card ${isLoss ? 'loss' : ''}" onclick="openMatch('${id}')">
+                    <div class="match-top">
+                        <span class="title">${data.title}</span>
+                        <span class="date">${data.date} · ${data.map}</span>
+                        <span class="click-hint">▶</span>
+                    </div>
+                    <div class="match-teams">
+                        <div class="team ${data.winner.includes('Team 1') || data.winner.includes('Team Fortress 2') ? 'win' : ''}">
+                            <span class="name">${data.winner}</span>
+                            <span class="score">${data.score.split(':')[0]}</span>
+                        </div>
+                        <span class="vs">vs</span>
+                        <div class="team ${data.loser.includes('Team 1') || data.loser.includes('Team Magic') ? 'loss' : ''}">
+                            <span class="score">${data.score.split(':')[1]}</span>
+                            <span class="name">${data.loser}</span>
+                        </div>
+                    </div>
+                    <div class="match-stats-row">
+                        <span>🏆 <b class="mvp">${data.teams ? data.teams.win.players.find(p => p.highlight)?.name || data.total?.teams.win.players.find(p => p.highlight)?.name || '—'}</b></span>
+                        <span>💀 <b class="bad">${data.teams ? data.teams.loss.players.find(p => p.worst)?.name || data.total?.teams.loss.players.find(p => p.worst)?.name || '—'}</b></span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        if (filtered.length === 0) {
+            container.innerHTML = '<div style="text-align:center;color:#4a5a6e;padding:30px 0;font-size:13px;">Матчи не найдены</div>';
+        }
+    }
+
+    function filterMatches() {
+        const search = document.getElementById('matchSearch').value;
+        const map = document.getElementById('mapFilter').value;
+        const result = document.getElementById('resultFilter').value;
+        renderMatches(map, result, search);
+    }
+
+    // ===== МАТЧ ОВЕРЛЕЙ =====
+    function openMatch(id) {
+        const data = matchData[id];
+        if (!data) return;
+        const content = document.getElementById('matchContent');
+
+        if (id === 'match0') {
+            content.innerHTML = `
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.06);">
+                    <span style="font-size:18px;font-weight:700;color:#e8eff7;">${data.title}</span>
+                    <span style="font-size:12px;color:#6e7f94;">${data.date} · ${data.map}</span>
+                </div>
+                <div style="display:flex;justify-content:center;align-items:center;gap:16px;margin-bottom:14px;padding:10px;background:rgba(255,255,255,0.03);border-radius:8px;">
+                    <span style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:#7ddfa0;">${data.winner}</span>
+                    <span style="font-size:22px;font-weight:800;color:#e8eff7;">${data.score}</span>
+                    <span style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:#e07a7a;">${data.loser}</span>
+                </div>
+                <div style="font-size:12px;font-weight:600;color:#8b9bb0;margin-bottom:8px;">📊 Карта 1: ${data.map1.name} (${data.map1.score})</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+                    <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 12px;">
+                        <div style="font-weight:600;font-size:12px;margin-bottom:4px;padding-bottom:3px;border-bottom:1px solid rgba(255,255,255,0.05);color:#7ddfa0;">✅ ${data.map1.teams.win.name}</div>
+                        ${data.map1.teams.win.players.map(p => `<div style="display:flex;justify-content:space-between;padding:2px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,0.03);"><span style="color:#b0c4de;">${p.name}</span><span style="color:#6e7f94;font-size:10px;">${p.k}-${p.d} · ADR ${p.adr}</span></div>`).join('')}
+                    </div>
+                    <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 12px;">
+                        <div style="font-weight:600;font-size:12px;margin-bottom:4px;padding-bottom:3px;border-bottom:1px solid rgba(255,255,255,0.05);color:#e07a7a;">❌ ${data.map1.teams.loss.name}</div>
+                        ${data.map1.teams.loss.players.map(p => `<div style="display:flex;justify-content:space-between;padding:2px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,0.03);"><span style="color:#b0c4de;">${p.name}</span><span style="color:#6e7f94;font-size:10px;">${p.k}-${p.d} · ADR ${p.adr}</span></div>`).join('')}
+                    </div>
+                </div>
+                <div style="font-size:12px;font-weight:600;color:#8b9bb0;margin-bottom:8px;">📊 Карта 2: ${data.map2.name} (${data.map2.score})</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
+                    <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 12px;">
+                        <div style="font-weight:600;font-size:12px;margin-bottom:4px;padding-bottom:3px;border-bottom:1px solid rgba(255,255,255,0.05);color:#7ddfa0;">✅ ${data.map2.teams.win.name}</div>
+                        ${data.map2.teams.win.players.map(p => `<div style="display:flex;justify-content:space-between;padding:2px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,0.03);"><span style="color:#b0c4de;">${p.name}</span><span style="color:#6e7f94;font-size:10px;">${p.k}-${p.d} · ADR ${p.adr}</span></div>`).join('')}
+                    </div>
+                    <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 12px;">
+                        <div style="font-weight:600;font-size:12px;margin-bottom:4px;padding-bottom:3px;border-bottom:1px solid rgba(255,255,255,0.05);color:#e07a7a;">❌ ${data.map2.teams.loss.name}</div>
+                        ${data.map2.teams.loss.players.map(p => `<div style="display:flex;justify-content:space-between;padding:2px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,0.03);"><span style="color:#b0c4de;">${p.name}</span><span style="color:#6e7f94;font-size:10px;">${p.k}-${p.d} · ADR ${p.adr}</span></div>`).join('')}
+                    </div>
+                </div>
+                <div style="font-size:12px;font-weight:600;color:#8b9bb0;margin-bottom:8px;border-top:2px solid rgba(255,255,255,0.1);padding-top:10px;">📊 ОБЩАЯ СТАТИСТИКА</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                    <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 12px;">
+                        <div style="font-weight:600;font-size:12px;margin-bottom:4px;padding-bottom:3px;border-bottom:1px solid rgba(255,255,255,0.05);color:#7ddfa0;">✅ ${data.total.teams.win.name}</div>
+                        ${data.total.teams.win.players.map(p => `<div style="display:flex;justify-content:space-between;padding:2px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,0.03);"><span style="color:#b0c4de;">${p.name}</span><span style="color:#6e7f94;font-size:10px;">${p.k}-${p.d} · ADR ${p.adr}</span></div>`).join('')}
+                    </div>
+                    <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 12px;">
+                        <div style="font-weight:600;font-size:12px;margin-bottom:4px;padding-bottom:3px;border-bottom:1px solid rgba(255,255,255,0.05);color:#e07a7a;">❌ ${data.total.teams.loss.name}</div>
+                        ${data.total.teams.loss.players.map(p => `<div style="display:flex;justify-content:space-between;padding:2px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,0.03);"><span style="color:#b0c4de;">${p.name}</span><span style="color:#6e7f94;font-size:10px;">${p.k}-${p.d} · ADR ${p.adr}</span></div>`).join('')}
+                    </div>
+                </div>
+                <div style="font-size:11px;color:#4a5a6e;text-align:center;padding-top:8px;border-top:1px solid rgba(255,255,255,0.04);margin-top:10px;">🎯 BO3 · Победа 2:0</div>
+            `;
+        } else {
+            content.innerHTML = `
+                <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:14px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,0.06);">
+                    <span style="font-size:18px;font-weight:700;color:#e8eff7;">${data.title}</span>
+                    <span style="font-size:12px;color:#6e7f94;">${data.date} · ${data.map}</span>
+                </div>
+                <div style="display:flex;justify-content:center;align-items:center;gap:16px;margin-bottom:14px;padding:10px;background:rgba(255,255,255,0.03);border-radius:8px;">
+                    <span style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:#7ddfa0;">${data.winner}</span>
+                    <span style="font-size:22px;font-weight:800;color:#e8eff7;">${data.score}</span>
+                    <span style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:#e07a7a;">${data.loser}</span>
+                </div>
+                <div style="font-size:12px;font-weight:600;color:#8b9bb0;margin-bottom:8px;">📊 Подробная статистика</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                    <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 12px;">
+                        <div style="font-weight:600;font-size:12px;margin-bottom:4px;padding-bottom:3px;border-bottom:1px solid rgba(255,255,255,0.05);color:#7ddfa0;">✅ ${data.teams.win.name}</div>
+                        ${data.teams.win.players.map(p => `<div style="display:flex;justify-content:space-between;padding:2px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,0.03);"><span style="color:#b0c4de;">${p.name}</span><span style="color:#6e7f94;font-size:10px;">${p.k}-${p.d} · ADR ${p.adr}</span></div>`).join('')}
+                    </div>
+                    <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 12px;">
+                        <div style="font-weight:600;font-size:12px;margin-bottom:4px;padding-bottom:3px;border-bottom:1px solid rgba(255,255,255,0.05);color:#e07a7a;">❌ ${data.teams.loss.name}</div>
+                        ${data.teams.loss.players.map(p => `<div style="display:flex;justify-content:space-between;padding:2px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,0.03);"><span style="color:#b0c4de;">${p.name}</span><span style="color:#6e7f94;font-size:10px;">${p.k}-${p.d} · ADR ${p.adr}</span></div>`).join('')}
+                    </div>
+                </div>
+                <div style="font-size:11px;color:#4a5a6e;text-align:center;padding-top:8px;border-top:1px solid rgba(255,255,255,0.04);margin-top:10px;">🎯 ${data.detail}</div>
+            `;
+        }
+        document.getElementById('matchOverlay').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeMatch() {
+        document.getElementById('matchOverlay').style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    // ===== ТЕМА =====
+    function toggleTheme() {
+        document.body.classList.toggle('light');
+        document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '🌙' : '🌙';
+    }
+
+    // ===== ЯЗЫК =====
+    let lang = 'ru';
+
+    function toggleLang() {
+        lang = lang === 'ru' ? 'en' : 'ru';
+        document.getElementById('langBtn').textContent = lang === 'ru' ? '🇬🇧 EN' : '🇷🇺 RU';
+    }
+
+    // ===== ЗАКРЫТИЕ =====
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') closeMatch();
+    });
+    document.getElementById('matchOverlay').addEventListener('click', function(e) {
+        if (e.target === this) closeMatch();
+    });
+
+    // ===== ИНИЦИАЛИЗАЦИЯ =====
+    renderMatches();
+</script>
+
+</body>
+</html>
