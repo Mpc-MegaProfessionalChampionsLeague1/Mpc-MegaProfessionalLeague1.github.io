@@ -6,6 +6,206 @@
     <title>MPL — Все матчи</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* ===== ВКЛАДКИ ===== */
+        .tabs-container {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 18px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 10px;
+            padding: 4px;
+            flex-wrap: wrap;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: #8b9bb0;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.25s;
+            font-family: 'Inter', sans-serif;
+        }
+        .tab-btn:hover {
+            color: #e8eff7;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .tab-btn.active {
+            background: #2a475e;
+            color: #fff;
+            box-shadow: 0 2px 12px rgba(42, 71, 94, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeUp 0.35s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        /* ===== СТАТИСТИКА МАТЧЕЙ ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 700px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 400px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .stats-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            padding: 14px 16px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .stats-card .num {
+            font-size: 28px;
+            font-weight: 800;
+            color: #ffb347;
+        }
+        .stats-card .num.good {
+            color: #7ddfa0;
+        }
+        .stats-card .num.bad {
+            color: #e07a7a;
+        }
+        .stats-card .label {
+            font-size: 11px;
+            color: #6e7f94;
+            margin-top: 2px;
+        }
+
+        /* ===== КАРТА МАТЧА ===== */
+        .match-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: 8px;
+            padding: 10px 14px;
+            border-left: 3px solid #2a475e;
+            cursor: pointer;
+            transition: 0.2s;
+            user-select: none;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .match-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateY(-1px);
+        }
+        .match-card.loss {
+            border-left-color: #c0392b;
+        }
+        .match-card .match-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px 8px;
+        }
+        .match-card .match-top .title {
+            font-weight: 600;
+            font-size: 12px;
+        }
+        .match-card .match-top .date {
+            color: #6e7f94;
+            font-size: 10px;
+        }
+        .match-card .match-teams {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px 8px;
+            font-size: 12px;
+            margin-top: 3px;
+        }
+        .match-card .match-teams .team {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .match-card .match-teams .team .name {
+            font-weight: 500;
+            font-size: 12px;
+        }
+        .match-card .match-teams .team .score {
+            font-weight: 700;
+            font-size: 14px;
+            min-width: 20px;
+            text-align: center;
+        }
+        .match-card .match-teams .team.win .score {
+            color: #7ddfa0;
+        }
+        .match-card .match-teams .team.loss .score {
+            color: #e07a7a;
+        }
+        .match-card .match-teams .vs {
+            color: #4a5a6e;
+            font-weight: 700;
+            font-size: 10px;
+        }
+        .match-card .match-stats-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 12px;
+            margin-top: 4px;
+            padding-top: 4px;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 10px;
+            color: #6e7f94;
+        }
+        .match-card .match-stats-row b {
+            color: #c7d5e0;
+        }
+        .match-card .match-stats-row .mvp {
+            color: #ffb347;
+        }
+        .match-card .match-stats-row .bad {
+            color: #e07a7a;
+        }
+        .match-card .click-hint {
+            font-size: 9px;
+            color: #4a5a6e;
+            transition: 0.2s;
+        }
+
+        .match-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 3px;
+        }
+        .match-list::-webkit-scrollbar {
+            width: 3px;
+        }
+        .match-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 4px;
+        }
+        .match-list::-webkit-scrollbar-thumb {
+            background: rgba(42, 71, 94, 0.4);
+            border-radius: 4px;
+        }
+    </style>
 </head>
 <body>
 
@@ -17,7 +217,7 @@
             <h1 onclick="location.href='index.html'">MPL <small>Mega Professional League</small></h1>
         </div>
         <div class="header-right">
-            <span id="headerDate">📅 Май-Июль 2026</span>
+            <span>📅 Май-Июль 2026</span>
             <span class="status">● LIVE</span>
             <button class="lang-toggle" onclick="toggleLang()" id="langBtn">🇬🇧 EN</button>
             <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
@@ -34,28 +234,67 @@
     </nav>
 
     <!-- PAGE TITLE -->
-    <div class="page-title">📋 Все матчи</div>
-    <div class="page-subtitle">Всего 5 матчей · Нажмите на матч для детальной статистики</div>
+    <div class="page-title">📋 Матчи</div>
+    <div class="page-subtitle">Все матчи турнира · Нажмите на матч для детальной статистики</div>
 
-    <!-- FILTERS -->
-    <div class="filter-section">
-        <input type="text" class="search-input" placeholder="🔍 Поиск по карте или команде..." id="matchSearch" oninput="filterMatches()">
-        <select id="mapFilter" onchange="filterMatches()">
-            <option value="all">Все карты</option>
-            <option value="Mirage">Mirage</option>
-            <option value="Ancient">Ancient</option>
-            <option value="Anubis">Anubis</option>
-        </select>
-        <select id="resultFilter" onchange="filterMatches()">
-            <option value="all">Все результаты</option>
-            <option value="win">Победы</option>
-            <option value="loss">Поражения</option>
-        </select>
+    <!-- ===== ВКЛАДКИ ===== -->
+    <div class="tabs-container">
+        <button class="tab-btn active" onclick="switchTab('list')" id="tabList">📋 Список матчей</button>
+        <button class="tab-btn" onclick="switchTab('stats')" id="tabStats">📊 Статистика матчей</button>
     </div>
 
-    <!-- MATCHES LIST -->
-    <div id="matchesList" style="display:flex;flex-direction:column;gap:10px;">
-        <!-- Рендерится через JS -->
+    <!-- ============================================ -->
+    <!-- TAB 1: СПИСОК МАТЧЕЙ -->
+    <!-- ============================================ -->
+    <div class="tab-content active" id="tab-list">
+
+        <!-- FILTERS -->
+        <div class="filter-section">
+            <input type="text" class="search-input" placeholder="🔍 Поиск по карте или команде..." id="matchSearch" oninput="filterMatches()">
+            <select id="mapFilter" onchange="filterMatches()">
+                <option value="all">Все карты</option>
+                <option value="Mirage">Mirage</option>
+                <option value="Ancient">Ancient</option>
+                <option value="Anubis">Anubis</option>
+            </select>
+            <select id="resultFilter" onchange="filterMatches()">
+                <option value="all">Все результаты</option>
+                <option value="win">Победы</option>
+                <option value="loss">Поражения</option>
+            </select>
+        </div>
+
+        <!-- MATCHES LIST -->
+        <div class="match-list" id="matchesList">
+            <!-- Рендерится через JS -->
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- TAB 2: СТАТИСТИКА МАТЧЕЙ -->
+    <!-- ============================================ -->
+    <div class="tab-content" id="tab-stats">
+
+        <!-- STATS OVERVIEW -->
+        <div class="stats-grid" id="statsGrid">
+            <!-- Рендерится через JS -->
+        </div>
+
+        <!-- TABLE: МАТЧИ ПО КАРТАМ -->
+        <div class="glass-card" style="margin-bottom:16px;">
+            <div style="font-weight:600;margin-bottom:10px;color:#e8eff7;">📊 Матчи по картам</div>
+            <div id="mapsChart" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <!-- Рендерится через JS -->
+            </div>
+        </div>
+
+        <!-- TABLE: ТОП MVP -->
+        <div class="glass-card">
+            <div style="font-weight:600;margin-bottom:10px;color:#e8eff7;">🏆 Топ MVP</div>
+            <div id="mvpList" style="display:flex;flex-direction:column;gap:6px;">
+                <!-- Рендерится через JS -->
+            </div>
+        </div>
     </div>
 
     <!-- FOOTER -->
@@ -75,7 +314,23 @@
 
 <script src="js/data.js"></script>
 <script>
-    // ===== РЕНДЕР МАТЧЕЙ =====
+    // ===== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК =====
+    function switchTab(tab) {
+        // Кнопки
+        document.getElementById('tabList').className = tab === 'list' ? 'tab-btn active' : 'tab-btn';
+        document.getElementById('tabStats').className = tab === 'stats' ? 'tab-btn active' : 'tab-btn';
+        // Контент
+        document.getElementById('tab-list').className = tab === 'list' ? 'tab-content active' : 'tab-content';
+        document.getElementById('tab-stats').className = tab === 'stats' ? 'tab-content active' : 'tab-content';
+        
+        if (tab === 'stats') {
+            renderStats();
+        }
+    }
+
+    // ============================================ -->
+    // TAB 1: СПИСОК МАТЧЕЙ -->
+    // ============================================ -->
     function renderMatches(filterMap = 'all', filterResult = 'all', search = '') {
         const container = document.getElementById('matchesList');
         const keys = Object.keys(matchData);
@@ -100,8 +355,34 @@
             );
         }
 
+        // Сортируем по дате (сначала новые)
+        filtered.sort((a, b) => new Date(b.data.date) - new Date(a.data.date));
+
         container.innerHTML = filtered.map(({ id, data }) => {
             const isLoss = data.loser.includes('Team 1') || data.loser.includes('Team Magic');
+            // Получаем MVP и худшего
+            let mvp = '—';
+            let worst = '—';
+            if (data.teams) {
+                const winPlayers = data.teams.win.players || [];
+                const lossPlayers = data.teams.loss.players || [];
+                const mvpPlayer = winPlayers.find(p => p.highlight);
+                const worstPlayer = lossPlayers.find(p => p.worst);
+                if (mvpPlayer) mvp = mvpPlayer.name + ` (${mvpPlayer.k}-${mvpPlayer.d})`;
+                else if (winPlayers.length > 0) mvp = winPlayers[0].name;
+                if (worstPlayer) worst = worstPlayer.name;
+                else if (lossPlayers.length > 0) worst = lossPlayers[0].name;
+            } else if (data.total) {
+                const winPlayers = data.total.teams.win.players || [];
+                const lossPlayers = data.total.teams.loss.players || [];
+                const mvpPlayer = winPlayers.find(p => p.highlight);
+                const worstPlayer = lossPlayers.find(p => p.worst);
+                if (mvpPlayer) mvp = mvpPlayer.name + ` (${mvpPlayer.k}-${mvpPlayer.d})`;
+                else if (winPlayers.length > 0) mvp = winPlayers[0].name;
+                if (worstPlayer) worst = worstPlayer.name;
+                else if (lossPlayers.length > 0) worst = lossPlayers[0].name;
+            }
+
             return `
                 <div class="match-card ${isLoss ? 'loss' : ''}" onclick="openMatch('${id}')">
                     <div class="match-top">
@@ -121,8 +402,8 @@
                         </div>
                     </div>
                     <div class="match-stats-row">
-                        <span>🏆 <b class="mvp">${data.teams ? data.teams.win.players.find(p => p.highlight)?.name || data.total?.teams.win.players.find(p => p.highlight)?.name || '—'}</b></span>
-                        <span>💀 <b class="bad">${data.teams ? data.teams.loss.players.find(p => p.worst)?.name || data.total?.teams.loss.players.find(p => p.worst)?.name || '—'}</b></span>
+                        <span>🏆 <b class="mvp">${mvp}</b></span>
+                        <span>💀 <b class="bad">${worst}</b></span>
                     </div>
                 </div>
             `;
@@ -140,11 +421,102 @@
         renderMatches(map, result, search);
     }
 
-    // ===== МАТЧ ОВЕРЛЕЙ =====
+    // ============================================ -->
+    // TAB 2: СТАТИСТИКА МАТЧЕЙ -->
+    // ============================================ -->
+    function renderStats() {
+        const keys = Object.keys(matchData);
+        const totalMatches = keys.length;
+        
+        // Считаем победы/поражения
+        let wins = 0, losses = 0;
+        const mapStats = {};
+        const mvpStats = {};
+
+        keys.forEach(key => {
+            const data = matchData[key];
+            // Победа Team 1 или Team Fortress 2
+            const isWin = data.winner.includes('Team 1') || data.winner.includes('Team Fortress 2');
+            if (isWin) wins++;
+            else losses++;
+
+            // Статистика по картам
+            const maps = data.map.split(' + ');
+            maps.forEach(m => {
+                if (!mapStats[m]) mapStats[m] = { wins: 0, losses: 0, total: 0 };
+                mapStats[m].total++;
+                if (isWin) mapStats[m].wins++;
+                else mapStats[m].losses++;
+            });
+
+            // Собираем MVP
+            let mvpName = '';
+            if (data.teams) {
+                const winPlayers = data.teams.win.players || [];
+                const mvpPlayer = winPlayers.find(p => p.highlight);
+                if (mvpPlayer) mvpName = mvpPlayer.name;
+                else if (winPlayers.length > 0) mvpName = winPlayers[0].name;
+            } else if (data.total) {
+                const winPlayers = data.total.teams.win.players || [];
+                const mvpPlayer = winPlayers.find(p => p.highlight);
+                if (mvpPlayer) mvpName = mvpPlayer.name;
+                else if (winPlayers.length > 0) mvpName = winPlayers[0].name;
+            }
+            if (mvpName) {
+                if (!mvpStats[mvpName]) mvpStats[mvpName] = 0;
+                mvpStats[mvpName]++;
+            }
+        });
+
+        // Общая статистика
+        const totalKills = playersData.reduce((sum, p) => sum + p.k, 0);
+        document.getElementById('statsGrid').innerHTML = `
+            <div class="stats-card"><div class="num">${totalMatches}</div><div class="label">Всего матчей</div></div>
+            <div class="stats-card"><div class="num good">${wins}</div><div class="label">Победы</div></div>
+            <div class="stats-card"><div class="num bad">${losses}</div><div class="label">Поражения</div></div>
+            <div class="stats-card"><div class="num">${totalKills}</div><div class="label">Всего убийств</div></div>
+        `;
+
+        // Статистика по картам
+        const mapKeys = Object.keys(mapStats);
+        document.getElementById('mapsChart').innerHTML = mapKeys.map(m => `
+            <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 14px;border:1px solid rgba(255,255,255,0.04);">
+                <div style="font-weight:600;color:#e8eff7;font-size:13px;">${m}</div>
+                <div style="display:flex;gap:16px;margin-top:4px;font-size:12px;">
+                    <span style="color:#7ddfa0;">✅ ${mapStats[m].wins} побед</span>
+                    <span style="color:#e07a7a;">❌ ${mapStats[m].losses} поражений</span>
+                    <span style="color:#6e7f94;">📊 ${mapStats[m].total} матчей</span>
+                </div>
+            </div>
+        `).join('');
+
+        // Топ MVP
+        const sortedMvp = Object.entries(mvpStats).sort((a, b) => b[1] - a[1]).slice(0, 5);
+        document.getElementById('mvpList').innerHTML = sortedMvp.length > 0 ? sortedMvp.map(([name, count], i) => `
+            <div style="display:flex;align-items:center;gap:10px;padding:6px 12px;background:rgba(255,255,255,0.03);border-radius:6px;border:1px solid rgba(255,255,255,0.04);">
+                <span style="font-weight:700;color:#6e7f94;min-width:28px;">#${i+1}</span>
+                <span style="font-weight:600;color:#e8eff7;">${name}</span>
+                <span style="color:#ffb347;font-weight:600;margin-left:auto;">${count} раз</span>
+            </div>
+        `).join('') : '<div style="color:#6e7f94;font-size:13px;">Нет данных о MVP</div>';
+    }
+
+    // ============================================ -->
+    // МАТЧ ОВЕРЛЕЙ -->
+    // ============================================ -->
     function openMatch(id) {
         const data = matchData[id];
         if (!data) return;
         const content = document.getElementById('matchContent');
+
+        function createTeamStats(teamData) {
+            return teamData.players.map(p => `
+                <div style="display:flex;justify-content:space-between;padding:2px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,0.03);">
+                    <span style="color:#b0c4de;">${p.name}</span>
+                    <span style="color:#6e7f94;font-size:10px;">${p.k}-${p.d} · ADR ${p.adr}</span>
+                </div>
+            `).join('');
+        }
 
         if (id === 'match0') {
             content.innerHTML = `
@@ -161,33 +533,33 @@
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
                     <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 12px;">
                         <div style="font-weight:600;font-size:12px;margin-bottom:4px;padding-bottom:3px;border-bottom:1px solid rgba(255,255,255,0.05);color:#7ddfa0;">✅ ${data.map1.teams.win.name}</div>
-                        ${data.map1.teams.win.players.map(p => `<div style="display:flex;justify-content:space-between;padding:2px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,0.03);"><span style="color:#b0c4de;">${p.name}</span><span style="color:#6e7f94;font-size:10px;">${p.k}-${p.d} · ADR ${p.adr}</span></div>`).join('')}
+                        ${createTeamStats(data.map1.teams.win)}
                     </div>
                     <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 12px;">
                         <div style="font-weight:600;font-size:12px;margin-bottom:4px;padding-bottom:3px;border-bottom:1px solid rgba(255,255,255,0.05);color:#e07a7a;">❌ ${data.map1.teams.loss.name}</div>
-                        ${data.map1.teams.loss.players.map(p => `<div style="display:flex;justify-content:space-between;padding:2px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,0.03);"><span style="color:#b0c4de;">${p.name}</span><span style="color:#6e7f94;font-size:10px;">${p.k}-${p.d} · ADR ${p.adr}</span></div>`).join('')}
+                        ${createTeamStats(data.map1.teams.loss)}
                     </div>
                 </div>
                 <div style="font-size:12px;font-weight:600;color:#8b9bb0;margin-bottom:8px;">📊 Карта 2: ${data.map2.name} (${data.map2.score})</div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;">
                     <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 12px;">
                         <div style="font-weight:600;font-size:12px;margin-bottom:4px;padding-bottom:3px;border-bottom:1px solid rgba(255,255,255,0.05);color:#7ddfa0;">✅ ${data.map2.teams.win.name}</div>
-                        ${data.map2.teams.win.players.map(p => `<div style="display:flex;justify-content:space-between;padding:2px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,0.03);"><span style="color:#b0c4de;">${p.name}</span><span style="color:#6e7f94;font-size:10px;">${p.k}-${p.d} · ADR ${p.adr}</span></div>`).join('')}
+                        ${createTeamStats(data.map2.teams.win)}
                     </div>
                     <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 12px;">
                         <div style="font-weight:600;font-size:12px;margin-bottom:4px;padding-bottom:3px;border-bottom:1px solid rgba(255,255,255,0.05);color:#e07a7a;">❌ ${data.map2.teams.loss.name}</div>
-                        ${data.map2.teams.loss.players.map(p => `<div style="display:flex;justify-content:space-between;padding:2px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,0.03);"><span style="color:#b0c4de;">${p.name}</span><span style="color:#6e7f94;font-size:10px;">${p.k}-${p.d} · ADR ${p.adr}</span></div>`).join('')}
+                        ${createTeamStats(data.map2.teams.loss)}
                     </div>
                 </div>
                 <div style="font-size:12px;font-weight:600;color:#8b9bb0;margin-bottom:8px;border-top:2px solid rgba(255,255,255,0.1);padding-top:10px;">📊 ОБЩАЯ СТАТИСТИКА</div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
                     <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 12px;">
                         <div style="font-weight:600;font-size:12px;margin-bottom:4px;padding-bottom:3px;border-bottom:1px solid rgba(255,255,255,0.05);color:#7ddfa0;">✅ ${data.total.teams.win.name}</div>
-                        ${data.total.teams.win.players.map(p => `<div style="display:flex;justify-content:space-between;padding:2px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,0.03);"><span style="color:#b0c4de;">${p.name}</span><span style="color:#6e7f94;font-size:10px;">${p.k}-${p.d} · ADR ${p.adr}</span></div>`).join('')}
+                        ${createTeamStats(data.total.teams.win)}
                     </div>
                     <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 12px;">
                         <div style="font-weight:600;font-size:12px;margin-bottom:4px;padding-bottom:3px;border-bottom:1px solid rgba(255,255,255,0.05);color:#e07a7a;">❌ ${data.total.teams.loss.name}</div>
-                        ${data.total.teams.loss.players.map(p => `<div style="display:flex;justify-content:space-between;padding:2px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,0.03);"><span style="color:#b0c4de;">${p.name}</span><span style="color:#6e7f94;font-size:10px;">${p.k}-${p.d} · ADR ${p.adr}</span></div>`).join('')}
+                        ${createTeamStats(data.total.teams.loss)}
                     </div>
                 </div>
                 <div style="font-size:11px;color:#4a5a6e;text-align:center;padding-top:8px;border-top:1px solid rgba(255,255,255,0.04);margin-top:10px;">🎯 BO3 · Победа 2:0</div>
@@ -207,11 +579,11 @@
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
                     <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 12px;">
                         <div style="font-weight:600;font-size:12px;margin-bottom:4px;padding-bottom:3px;border-bottom:1px solid rgba(255,255,255,0.05);color:#7ddfa0;">✅ ${data.teams.win.name}</div>
-                        ${data.teams.win.players.map(p => `<div style="display:flex;justify-content:space-between;padding:2px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,0.03);"><span style="color:#b0c4de;">${p.name}</span><span style="color:#6e7f94;font-size:10px;">${p.k}-${p.d} · ADR ${p.adr}</span></div>`).join('')}
+                        ${createTeamStats(data.teams.win)}
                     </div>
                     <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 12px;">
                         <div style="font-weight:600;font-size:12px;margin-bottom:4px;padding-bottom:3px;border-bottom:1px solid rgba(255,255,255,0.05);color:#e07a7a;">❌ ${data.teams.loss.name}</div>
-                        ${data.teams.loss.players.map(p => `<div style="display:flex;justify-content:space-between;padding:2px 0;font-size:11px;border-bottom:1px solid rgba(255,255,255,0.03);"><span style="color:#b0c4de;">${p.name}</span><span style="color:#6e7f94;font-size:10px;">${p.k}-${p.d} · ADR ${p.adr}</span></div>`).join('')}
+                        ${createTeamStats(data.teams.loss)}
                     </div>
                 </div>
                 <div style="font-size:11px;color:#4a5a6e;text-align:center;padding-top:8px;border-top:1px solid rgba(255,255,255,0.04);margin-top:10px;">🎯 ${data.detail}</div>
