@@ -39,7 +39,7 @@
             color: #fff;
         }
 
-        /* ===== ПЛАВАЮЩИЙ РЕКЛАМНЫЙ БАННЕР (как на HLTV) ===== */
+        /* ===== ПЛАВАЮЩИЙ БАННЕР ===== */
         .ad-float {
             position: fixed;
             bottom: 20px;
@@ -51,7 +51,7 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 10px;
             padding: 6px 8px;
-            max-width: 220px;
+            max-width: 200px;
             transition: 0.3s;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
         }
@@ -103,7 +103,6 @@
             border-color: #c0392b;
         }
 
-        /* Для тёмной темы */
         body.light .ad-float {
             background: rgba(255, 255, 255, 0.95);
             border-color: rgba(0, 0, 0, 0.1);
@@ -121,10 +120,9 @@
             color: #8b9bb0;
         }
 
-        /* Адаптив для телефонов */
         @media (max-width: 700px) {
             .ad-float {
-                max-width: 150px;
+                max-width: 140px;
                 bottom: 12px;
                 right: 12px;
                 padding: 4px 6px;
@@ -161,27 +159,11 @@
         <a href="about.html" class="nav-btn">ℹ️ О сайте</a>
     </nav>
 
-    <!-- ============================================ -->
-    <!-- ПЛАВАЮЩИЙ БАННЕР (в правом нижнем углу) -->
-    <!-- ============================================ -->
+    <!-- ПЛАВАЮЩИЙ БАННЕР -->
     <div class="ad-float" id="adBanner">
         <button class="ad-close" onclick="document.getElementById('adBanner').style.display='none'" title="Закрыть рекламу">✕</button>
-        <!-- 
-            ═══════════════════════════════════════════════════
-            🔧 НАСТРОЙКА БАННЕРА:
-            
-            1. ЗАМЕНИТЕ ССЫЛКУ НА КАРТИНКУ:
-               src="images/images (6)"
-            
-            2. ЗАМЕНИТЕ ССЫЛКУ ДЛЯ КЛИКА:
-               href="hhttps://upgrader.vip/ru"
-            
-            3. ИЗМЕНИТЕ ТЕКСТ (необязательно):
-               <div class="ad-text">ТЕКСТ</div>
-            ═══════════════════════════════════════════════════
-        -->
         <a class="ad-link" href="https://example.com" target="_blank">
-            <img src="https://via.placeholder.com/200x100/1a2a3a/ffb347?text=MPL" alt="Реклама">
+            <img src="https://via.placeholder.com/180x90/1a2a3a/ffb347?text=MPL" alt="Реклама">
             <div class="ad-text">📢 Реклама</div>
         </a>
     </div>
@@ -212,7 +194,6 @@
                 <span style="font-size:10px;color:#4a5a6e;margin-left:auto;cursor:pointer;" onclick="document.getElementById('adminPanel').style.display=document.getElementById('adminPanel').style.display==='none'?'block':'none';">⚙️</span>
             </div>
 
-            <!-- АДМИНКА -->
             <div id="adminPanel" style="display:none;background:rgba(255,255,255,0.04);border-radius:8px;padding:12px;margin-bottom:12px;border:1px solid rgba(255,255,255,0.06);">
                 <div style="font-size:12px;color:#8b9bb0;margin-bottom:6px;">✏️ Добавить новость</div>
                 <input type="text" id="newsTitleInput" placeholder="Заголовок..." style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);color:#c7d5e0;padding:6px 10px;border-radius:4px;font-size:12px;margin-bottom:6px;font-family:'Inter',sans-serif;">
@@ -222,9 +203,7 @@
                 <div style="font-size:9px;color:#4a5a6e;margin-top:6px;">⚠️ Новости сохраняются в коде</div>
             </div>
 
-            <div id="newsList" style="display:flex;flex-direction:column;gap:8px;max-height:400px;overflow-y:auto;padding-right:3px;">
-                <!-- Рендерится через JS -->
-            </div>
+            <div id="newsList" style="display:flex;flex-direction:column;gap:8px;max-height:400px;overflow-y:auto;padding-right:3px;"></div>
             <div style="font-size:10px;color:#4a5a6e;text-align:center;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.04);">
                 ✏️ <span>Новости видны всем</span>
             </div>
@@ -232,8 +211,6 @@
 
         <!-- ===== RIGHT: MATCHES ===== -->
         <div style="display:flex;flex-direction:column;gap:8px;">
-
-            <!-- MATCHES LIST -->
             <div class="panel-title" style="padding:0 4px 8px 4px;border-bottom:1px solid rgba(255,255,255,0.06);">
                 📋 <span>Матчи</span> <span style="color:#6e7f94;font-weight:400;font-size:11px;">всего 5</span>
             </div>
@@ -338,9 +315,26 @@
 
 </div>
 
-<script src="js/data.js"></script>
 <script>
-    // ===== НОВОСТИ (хранятся в коде — видны всем) =====
+    // ==========================================================
+    // ⚠️ ВНИМАНИЕ: ДАННЫЕ ИГРОКОВ ВСТРОЕНЫ ПРЯМО В КОД
+    // ==========================================================
+    const playersData = [
+        { name: 'bomba69', matches: 5, k: 78, d: 49, a: 7, kd: 1.59, adr: 91, diff: 58, rating: 1.41, you: true, avatar: '' },
+        { name: 'Хомяк с авт', matches: 3, k: 63, d: 43, a: 11, kd: 1.47, adr: 100, diff: 116, rating: 1.47, you: false, avatar: '' },
+        { name: 'abdalbek', matches: 5, k: 73, d: 66, a: 12, kd: 1.11, adr: 88, diff: 22, rating: 1.25, you: false, avatar: '' },
+        { name: 'uxaxaxaxa', matches: 5, k: 62, d: 62, a: 9, kd: 1.00, adr: 74, diff: 0, rating: 1.00, you: false, avatar: '' },
+        { name: 'Gonduras228', matches: 5, k: 56, d: 62, a: 18, kd: 0.90, adr: 72, diff: 11, rating: 0.94, you: false, avatar: '' },
+        { name: 'wadsf', matches: 4, k: 51, d: 44, a: 11, kd: 1.16, adr: 64, diff: 50, rating: 1.02, you: false, avatar: '' },
+        { name: 'Adjiare Gudju', matches: 4, k: 59, d: 69, a: 17, kd: 0.86, adr: 73, diff: -35, rating: 0.96, you: false, avatar: '' },
+        { name: 'AFKE', matches: 4, k: 22, d: 44, a: 18, kd: 0.50, adr: 59, diff: -22, rating: 0.71, you: false, avatar: '' },
+        { name: 'balchuqov_valera', matches: 2, k: 15, d: 31, a: 5, kd: 0.48, adr: 49, diff: -79, rating: 0.62, you: false, avatar: '' },
+        { name: 'baksyhanovvand...', matches: 4, k: 25, d: 75, a: 8, kd: 0.33, adr: 41, diff: -119, rating: 0.35, you: false, avatar: '' }
+    ];
+
+    // ==========================================================
+    // НОВОСТИ
+    // ==========================================================
     const newsData = [
         {
             id: 1,
@@ -362,7 +356,57 @@
         }
     ];
 
-    // ===== АДМИНКА =====
+    // ==========================================================
+    // ТОП ИГРОКОВ
+    // ==========================================================
+    let currentTop = 'rating';
+
+    function switchTop(type) {
+        currentTop = type;
+        const kdBtn = document.getElementById('subKd');
+        const ratingBtn = document.getElementById('subRating');
+
+        if (type === 'kd') {
+            kdBtn.className = 'sub-nav-btn active';
+            ratingBtn.className = 'sub-nav-btn';
+        } else {
+            kdBtn.className = 'sub-nav-btn';
+            ratingBtn.className = 'sub-nav-btn active';
+        }
+
+        renderTopPlayers(type);
+        document.getElementById('topFooterName').textContent = type === 'kd' ? 'bomba69' : 'Хомяк с авт';
+        document.getElementById('topFooterText').textContent = type === 'kd' ? 'лидер по K/D' : 'лидер по рейтингу';
+    }
+
+    function renderTopPlayers(type) {
+        const container = document.getElementById('playerList');
+        if (!playersData || !playersData.length) {
+            container.innerHTML = '<div style="text-align:center;color:#4a5a6e;padding:20px 0;">Нет данных</div>';
+            return;
+        }
+        const sorted = type === 'kd' ?
+            [...playersData].sort((a, b) => b.kd - a.kd) :
+            [...playersData].sort((a, b) => b.rating - a.rating);
+        const ranks = ['gold', 'silver', 'bronze', '', '', '', '', '', '', ''];
+        const val = type === 'kd' ? 'kd' : 'rating';
+
+        container.innerHTML = sorted.map((p, i) => `
+            <div class="player-row" onclick="location.href='player.html?name=${encodeURIComponent(p.name)}'">
+                <span class="rank ${ranks[i] || ''}">#${i+1}</span>
+                <div class="player-avatar-mini">
+                    ${p.avatar ? `<img src="${p.avatar}" alt="${p.name}">` : p.name.charAt(0).toUpperCase()}
+                </div>
+                <span class="pname ${p.you ? 'you' : ''}">${p.name}</span>
+                <span class="badge-kd ${i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : i === sorted.length - 1 ? 'red' : ''}">${p[val].toFixed(2)}</span>
+                <span class="pstats"><b class="${p.diff > 0 ? 'best' : 'worst'}">${p.diff > 0 ? '+' : ''}${p.diff}</b></span>
+            </div>
+        `).join('');
+    }
+
+    // ==========================================================
+    // НОВОСТИ
+    // ==========================================================
     function addNews() {
         const title = document.getElementById('newsTitleInput').value.trim();
         const text = document.getElementById('newsTextInput').value.trim();
@@ -401,7 +445,6 @@
         status.style.color = '#6e7f94';
     }
 
-    // ===== РЕНДЕР НОВОСТЕЙ =====
     function renderNews() {
         const container = document.getElementById('newsList');
         const sorted = [...newsData].sort((a, b) => new Date(b.date) - new Date(a.date));
@@ -423,54 +466,9 @@
         `).join('');
     }
 
-    // ===== ТОП ИГРОКОВ =====
-    let currentTop = 'rating';
-
-    function switchTop(type) {
-        currentTop = type;
-        const kdBtn = document.getElementById('subKd');
-        const ratingBtn = document.getElementById('subRating');
-
-        if (type === 'kd') {
-            kdBtn.className = 'sub-nav-btn active';
-            ratingBtn.className = 'sub-nav-btn';
-        } else {
-            kdBtn.className = 'sub-nav-btn';
-            ratingBtn.className = 'sub-nav-btn active';
-        }
-
-        renderTopPlayers(type);
-        document.getElementById('topFooterName').textContent = type === 'kd' ? 'bomba69' : 'Хомяк с авт';
-        document.getElementById('topFooterText').textContent = type === 'kd' ? 'лидер по K/D' : 'лидер по рейтингу';
-    }
-
-    function renderTopPlayers(type) {
-        const container = document.getElementById('playerList');
-        // Проверяем, что playersData существует
-        if (typeof playersData === 'undefined' || !playersData.length) {
-            container.innerHTML = '<div style="text-align:center;color:#4a5a6e;padding:20px 0;font-size:13px;">Загрузка данных...</div>';
-            return;
-        }
-        const sorted = type === 'kd' ?
-            [...playersData].sort((a, b) => b.kd - a.kd) :
-            [...playersData].sort((a, b) => b.rating - a.rating);
-        const ranks = ['gold', 'silver', 'bronze', '', '', '', '', '', '', ''];
-        const val = type === 'kd' ? 'kd' : 'rating';
-
-        container.innerHTML = sorted.map((p, i) => `
-            <div class="player-row" onclick="location.href='player.html?name=${encodeURIComponent(p.name)}'">
-                <span class="rank ${ranks[i] || ''}">#${i+1}</span>
-                <div class="player-avatar-mini">
-                    ${p.avatar ? `<img src="${p.avatar}" alt="${p.name}">` : p.name.charAt(0).toUpperCase()}
-                </div>
-                <span class="pname ${p.you ? 'you' : ''}">${p.name}</span>
-                <span class="badge-kd ${i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : i === sorted.length - 1 ? 'red' : ''}">${p[val].toFixed(2)}</span>
-                <span class="pstats"><b class="${p.diff > 0 ? 'best' : 'worst'}">${p.diff > 0 ? '+' : ''}${p.diff}</b></span>
-            </div>
-        `).join('');
-    }
-
-    // ===== ТЕМА =====
+    // ==========================================================
+    // ТЕМА / ЯЗЫК
+    // ==========================================================
     function toggleTheme() {
         document.body.classList.toggle('light');
         document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '🌙' : '🌙';
@@ -483,7 +481,9 @@
         document.getElementById('langBtn').textContent = lang === 'ru' ? '🇬🇧 EN' : '🇷🇺 RU';
     }
 
-    // ===== ИНИЦИАЛИЗАЦИЯ =====
+    // ==========================================================
+    // ИНИЦИАЛИЗАЦИЯ
+    // ==========================================================
     renderTopPlayers('rating');
     renderNews();
 </script>
