@@ -39,46 +39,49 @@
             color: #fff;
         }
 
-        /* ===== ПЛАВАЮЩИЙ БАННЕР ===== */
-        .ad-float {
+        /* ===== БОЛЬШОЙ ЛЕВЫЙ БАННЕР (BETBOM) ===== */
+        .ad-left {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
             z-index: 999;
             background: rgba(14, 18, 23, 0.92);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 10px;
-            padding: 6px 8px;
-            max-width: 200px;
+            border-radius: 12px;
+            padding: 8px 10px;
+            max-width: 180px;
             transition: 0.3s;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
         }
-        .ad-float:hover {
-            transform: scale(1.02);
+        .ad-left:hover {
+            transform: translateY(-50%) scale(1.02);
             border-color: rgba(255, 255, 255, 0.15);
         }
-        .ad-float img {
+        .ad-left img {
             max-width: 100%;
             height: auto;
-            border-radius: 6px;
+            border-radius: 8px;
             display: block;
         }
-        .ad-float .ad-text {
-            font-size: 8px;
+        .ad-left .ad-text {
+            font-size: 9px;
             color: #4a5a6e;
             text-align: center;
-            padding: 2px 0 0 0;
+            padding: 4px 0 2px 0;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            font-weight: 600;
         }
-        .ad-float .ad-link {
+        .ad-left .ad-link {
             display: block;
             text-decoration: none;
             color: inherit;
         }
-        .ad-float .ad-close {
+        .ad-left .ad-close {
             position: absolute;
             top: -8px;
             right: -8px;
@@ -86,9 +89,9 @@
             border: 1px solid rgba(255,255,255,0.1);
             color: #6e7f94;
             border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            font-size: 12px;
+            width: 22px;
+            height: 22px;
+            font-size: 13px;
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -97,38 +100,62 @@
             font-family: 'Inter', sans-serif;
             line-height: 1;
         }
-        .ad-float .ad-close:hover {
+        .ad-left .ad-close:hover {
             background: #c0392b;
             color: #fff;
             border-color: #c0392b;
         }
+        .ad-left .betbom-logo {
+            font-size: 24px;
+            font-weight: 900;
+            color: #ffb347;
+            letter-spacing: 2px;
+            padding: 8px 0;
+            text-shadow: 0 0 20px rgba(255, 179, 71, 0.2);
+        }
+        .ad-left .betbom-sub {
+            font-size: 10px;
+            color: #8b9bb0;
+            letter-spacing: 2px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding-top: 6px;
+            margin-top: 4px;
+        }
 
-        body.light .ad-float {
+        body.light .ad-left {
             background: rgba(255, 255, 255, 0.95);
             border-color: rgba(0, 0, 0, 0.1);
         }
-        body.light .ad-float .ad-close {
+        body.light .ad-left .ad-close {
             background: #e8ecf1;
             border-color: #d0d7e0;
             color: #4a5a6e;
         }
-        body.light .ad-float .ad-close:hover {
+        body.light .ad-left .ad-close:hover {
             background: #c0392b;
             color: #fff;
         }
-        body.light .ad-float .ad-text {
+        body.light .ad-left .ad-text {
             color: #8b9bb0;
         }
+        body.light .ad-left .betbom-sub {
+            border-color: rgba(0,0,0,0.06);
+        }
 
-        @media (max-width: 700px) {
-            .ad-float {
+        /* Адаптив */
+        @media (max-width: 1200px) {
+            .ad-left {
                 max-width: 140px;
-                bottom: 12px;
-                right: 12px;
-                padding: 4px 6px;
+                left: 10px;
+                padding: 6px 8px;
             }
-            .ad-float .ad-text {
-                font-size: 7px;
+            .ad-left .betbom-logo {
+                font-size: 18px;
+            }
+        }
+        @media (max-width: 900px) {
+            .ad-left {
+                display: none;
             }
         }
     </style>
@@ -150,6 +177,40 @@
         </div>
     </div>
 
+    <!-- ============================================ -->
+    <!-- БОЛЬШОЙ ЛЕВЫЙ БАННЕР — BETBOM -->
+    <!-- ============================================ -->
+    <div class="ad-left" id="adLeft">
+        <button class="ad-close" onclick="document.getElementById('adLeft').style.display='none'" title="Закрыть рекламу">✕</button>
+        <a class="ad-link" href="https://betbom.com" target="_blank">
+            <!-- 
+                ═══════════════════════════════════════════════════
+                🔧 НАСТРОЙКА БАННЕРА BETBOM:
+                
+                1. ЗАМЕНИТЕ КАРТИНКУ (если есть):
+                   <img src="images/images (7).jfif" alt="BETBOM">
+                   
+                2. ИЛИ ИСПОЛЬЗУЙТЕ ТЕКСТОВЫЙ ВАРИАНТ (уже настроен):
+                   <div class="betbom-logo">BETBOM</div>
+                
+                3. ЗАМЕНИТЕ ССЫЛКУ:
+                   href="https://betboom.ru/"
+                ═══════════════════════════════════════════════════
+            -->
+            
+            <!-- ТЕКСТОВЫЙ ВАРИАНТ (работает без картинки) -->
+            <div class="betbom-logo">🎰 BETBOM</div>
+            <div style="font-size:11px;color:#c7d5e0;padding:4px 0;line-height:1.3;">
+                Ставки на киберспорт
+            </div>
+            <div style="font-size:10px;color:#7ddfa0;font-weight:600;">
+                🔥 Бонус до 100%
+            </div>
+            <div class="betbom-sub">BETBOM.COM</div>
+            <div class="ad-text">📢 Реклама</div>
+        </a>
+    </div>
+
     <!-- NAV -->
     <nav class="nav">
         <a href="index.html" class="nav-btn active">📊 Главная</a>
@@ -158,15 +219,6 @@
         <a href="stats.html" class="nav-btn">📈 Статистика</a>
         <a href="about.html" class="nav-btn">ℹ️ О сайте</a>
     </nav>
-
-    <!-- ПЛАВАЮЩИЙ БАННЕР -->
-    <div class="ad-float" id="adBanner">
-        <button class="ad-close" onclick="document.getElementById('adBanner').style.display='none'" title="Закрыть рекламу">✕</button>
-        <a class="ad-link" href="https://upgrader.vip/ru" target="_blank">
-            <img src="images/images (6).jfif" alt="Реклама">
-            <div class="ad-text">📢 А слить свои скины ты можешь на Upgrader </div>
-        </a>
-    </div>
 
     <!-- MAIN GRID -->
     <div style="display:grid;grid-template-columns:1fr 1.6fr 1fr;gap:16px;margin-top:4px;">
@@ -178,9 +230,7 @@
                 <button class="sub-nav-btn" onclick="switchTop('kd')" id="subKd">📊 По K/D</button>
                 <button class="sub-nav-btn active" onclick="switchTop('rating')" id="subRating">📈 По рейтингу</button>
             </div>
-            <div class="scroll-area" id="playerList">
-                <!-- Рендерится через JS -->
-            </div>
+            <div class="scroll-area" id="playerList"></div>
             <div style="font-size:9px;color:#4a5a6e;margin-top:8px;text-align:center;border-top:1px solid rgba(255,255,255,0.04);padding-top:8px;">
                 🟣 <b style="color:#ffb347;" id="topFooterName">Хомяк с авт</b> — <span id="topFooterText">лидер по рейтингу</span>
             </div>
@@ -317,7 +367,7 @@
 
 <script>
     // ==========================================================
-    // ⚠️ ВНИМАНИЕ: ДАННЫЕ ИГРОКОВ ВСТРОЕНЫ ПРЯМО В КОД
+    // ДАННЫЕ ИГРОКОВ
     // ==========================================================
     const playersData = [
         { name: 'bomba69', matches: 5, k: 78, d: 49, a: 7, kd: 1.59, adr: 91, diff: 58, rating: 1.41, you: true, avatar: '' },
@@ -351,7 +401,7 @@
         {
             id: 3,
             title: '📊 Обновлён дизайн сайта!',
-            text: 'Теперь сайт выглядит как современный HLTV с плавающим рекламным баннером.',
+            text: 'Добавлен большой левый баннер для рекламы BETBOM.',
             date: new Date().toISOString()
         }
     ];
