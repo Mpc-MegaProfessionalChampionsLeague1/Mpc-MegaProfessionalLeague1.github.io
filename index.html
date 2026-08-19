@@ -39,7 +39,7 @@
             color: #fff;
         }
 
-        /* ===== БОЛЬШОЙ ЛЕВЫЙ БАННЕР (BETBOM) ===== */
+        /* ===== ЛЕВЫЙ БАННЕР (BETBOM) ===== */
         .ad-left {
             position: fixed;
             left: 20px;
@@ -52,7 +52,7 @@
             border: 1px solid rgba(255, 255, 255, 0.08);
             border-radius: 12px;
             padding: 8px 10px;
-            max-width: 180px;
+            max-width: 170px;
             transition: 0.3s;
             box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
             text-align: center;
@@ -68,7 +68,7 @@
             display: block;
         }
         .ad-left .ad-text {
-            font-size: 9px;
+            font-size: 8px;
             color: #4a5a6e;
             text-align: center;
             padding: 4px 0 2px 0;
@@ -106,15 +106,15 @@
             border-color: #c0392b;
         }
         .ad-left .betbom-logo {
-            font-size: 24px;
+            font-size: 22px;
             font-weight: 900;
             color: #ffb347;
             letter-spacing: 2px;
-            padding: 8px 0;
+            padding: 6px 0;
             text-shadow: 0 0 20px rgba(255, 179, 71, 0.2);
         }
         .ad-left .betbom-sub {
-            font-size: 10px;
+            font-size: 9px;
             color: #8b9bb0;
             letter-spacing: 2px;
             border-top: 1px solid rgba(255,255,255,0.06);
@@ -122,39 +122,126 @@
             margin-top: 4px;
         }
 
-        body.light .ad-left {
+        /* ===== ПРАВЫЙ БАННЕР (UPGRADER) ===== */
+        .ad-right {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 999;
+            background: rgba(14, 18, 23, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 8px 10px;
+            max-width: 170px;
+            transition: 0.3s;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+        .ad-right:hover {
+            transform: translateY(-50%) scale(1.02);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        .ad-right img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+        }
+        .ad-right .ad-text {
+            font-size: 8px;
+            color: #4a5a6e;
+            text-align: center;
+            padding: 4px 0 2px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        .ad-right .ad-link {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+        .ad-right .ad-close {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #1a2a3a;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #6e7f94;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            font-family: 'Inter', sans-serif;
+            line-height: 1;
+        }
+        .ad-right .ad-close:hover {
+            background: #c0392b;
+            color: #fff;
+            border-color: #c0392b;
+        }
+        .ad-right .upgrader-logo {
+            font-size: 20px;
+            font-weight: 900;
+            color: #7ddfa0;
+            letter-spacing: 1px;
+            padding: 6px 0;
+            text-shadow: 0 0 20px rgba(125, 223, 160, 0.2);
+        }
+        .ad-right .upgrader-sub {
+            font-size: 9px;
+            color: #8b9bb0;
+            letter-spacing: 1px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding-top: 6px;
+            margin-top: 4px;
+        }
+
+        /* Светлая тема */
+        body.light .ad-left,
+        body.light .ad-right {
             background: rgba(255, 255, 255, 0.95);
             border-color: rgba(0, 0, 0, 0.1);
         }
-        body.light .ad-left .ad-close {
+        body.light .ad-left .ad-close,
+        body.light .ad-right .ad-close {
             background: #e8ecf1;
             border-color: #d0d7e0;
             color: #4a5a6e;
         }
-        body.light .ad-left .ad-close:hover {
+        body.light .ad-left .ad-close:hover,
+        body.light .ad-right .ad-close:hover {
             background: #c0392b;
             color: #fff;
         }
-        body.light .ad-left .ad-text {
+        body.light .ad-left .ad-text,
+        body.light .ad-right .ad-text {
             color: #8b9bb0;
         }
-        body.light .ad-left .betbom-sub {
+        body.light .ad-left .betbom-sub,
+        body.light .ad-right .upgrader-sub {
             border-color: rgba(0,0,0,0.06);
         }
 
         /* Адаптив */
         @media (max-width: 1200px) {
-            .ad-left {
-                max-width: 140px;
-                left: 10px;
+            .ad-left, .ad-right {
+                max-width: 130px;
                 padding: 6px 8px;
             }
-            .ad-left .betbom-logo {
-                font-size: 18px;
-            }
+            .ad-left .betbom-logo { font-size: 16px; }
+            .ad-right .upgrader-logo { font-size: 15px; }
         }
         @media (max-width: 900px) {
-            .ad-left {
+            .ad-left, .ad-right {
                 display: none;
             }
         }
@@ -178,25 +265,38 @@
     </div>
 
     <!-- ============================================ -->
-    <!-- БОЛЬШОЙ ЛЕВЫЙ БАННЕР — BETBOM -->
+    <!-- ЛЕВЫЙ БАННЕР — BETBOM -->
     <!-- ============================================ -->
     <div class="ad-left" id="adLeft">
         <button class="ad-close" onclick="document.getElementById('adLeft').style.display='none'" title="Закрыть рекламу">✕</button>
         <a class="ad-link" href="https://betbom.com" target="_blank">
-            <!-- 
-                ═══════════════════════════════════════════════════
-                🔧 НАСТРОЙКА БАННЕРА BETBOM:
-                
-                1. ЗАМЕНИТЕ КАРТИНКУ (если есть):
-                   <img src="images/images (7).jfif" alt="BETBOM">
-                
-                3. ЗАМЕНИТЕ ССЫЛКУ:
-                   href="https://betboom.ru/"
-                ═══════════════════════════════════════════════════
-            -->
-            
-            <!-- ТЕКСТОВЫЙ ВАРИАНТ (работает без картинки) -->
-        
+            <div class="betbom-logo">🎰 BETBOM</div>
+            <div style="font-size:11px;color:#c7d5e0;padding:4px 0;line-height:1.3;">
+                Ставки на киберспорт
+            </div>
+            <div style="font-size:10px;color:#7ddfa0;font-weight:600;">
+                🔥 Бонус до 100%
+            </div>
+            <div class="betbom-sub">BETBOM.COM</div>
+            <div class="ad-text">📢 Реклама</div>
+        </a>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- ПРАВЫЙ БАННЕР — UPGRADER -->
+    <!-- ============================================ -->
+    <div class="ad-right" id="adRight">
+        <button class="ad-close" onclick="document.getElementById('adRight').style.display='none'" title="Закрыть рекламу">✕</button>
+        <a class="ad-link" href="https://upgrader.com" target="_blank">
+            <div class="upgrader-logo">⚡ UPGRADER</div>
+            <div style="font-size:11px;color:#c7d5e0;padding:4px 0;line-height:1.3;">
+                Улучшай свой скин
+            </div>
+            <div style="font-size:10px;color:#ffb347;font-weight:600;">
+                🎯 До +50% цены
+            </div>
+            <div class="upgrader-sub">UPGRADER.COM</div>
+            <div class="ad-text">📢 Реклама</div>
         </a>
     </div>
 
@@ -390,7 +490,7 @@
         {
             id: 3,
             title: '📊 Обновлён дизайн сайта!',
-            text: 'Добавлен большой левый баннер для рекламы BETBOM.',
+            text: 'Добавлены два рекламных баннера: BETBOM слева и UPGRADER справа.',
             date: new Date().toISOString()
         }
     ];
