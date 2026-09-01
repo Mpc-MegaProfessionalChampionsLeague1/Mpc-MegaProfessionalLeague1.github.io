@@ -39,7 +39,6 @@
             color: #fff;
         }
 
-        /* ===== ЛЕВЫЙ БАННЕР (BETBOM) ===== */
         .ad-left {
             position: fixed;
             left: 20px;
@@ -122,7 +121,6 @@
             margin-top: 4px;
         }
 
-        /* ===== ПРАВЫЙ БАННЕР (UPGRADER) ===== */
         .ad-right {
             position: fixed;
             right: 20px;
@@ -205,7 +203,6 @@
             margin-top: 4px;
         }
 
-        /* Светлая тема */
         body.light .ad-left,
         body.light .ad-right {
             background: rgba(255, 255, 255, 0.95);
@@ -231,7 +228,6 @@
             border-color: rgba(0,0,0,0.06);
         }
 
-        /* Адаптив */
         @media (max-width: 1200px) {
             .ad-left, .ad-right {
                 max-width: 130px;
@@ -257,44 +253,31 @@
             <h1 onclick="location.href='index.html'">MPL <small>Mega Professional League</small></h1>
         </div>
         <div class="header-right">
-            <span>📅 Май-Июль 2026</span>
+            <span>📅 Май-Сентябрь 2026</span>
             <span class="status">● LIVE</span>
             <button class="lang-toggle" onclick="toggleLang()" id="langBtn">🇬🇧 EN</button>
             <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
         </div>
     </div>
 
-    <!-- ============================================ -->
-    <!-- ЛЕВЫЙ БАННЕР — BETBOM -->
-    <!-- ============================================ -->
+    <!-- БАННЕРЫ -->
     <div class="ad-left" id="adLeft">
         <button class="ad-close" onclick="document.getElementById('adLeft').style.display='none'" title="Закрыть рекламу">✕</button>
         <a class="ad-link" href="https://betbom.com" target="_blank">
             <div class="betbom-logo">🎰 BETBOM</div>
-            <div style="font-size:11px;color:#c7d5e0;padding:4px 0;line-height:1.3;">
-                Ставки на киберспорт
-            </div>
-            <div style="font-size:10px;color:#7ddfa0;font-weight:600;">
-                🔥 Бонус до 100%
-            </div>
+            <div style="font-size:11px;color:#c7d5e0;padding:4px 0;line-height:1.3;">Ставки на киберспорт</div>
+            <div style="font-size:10px;color:#7ddfa0;font-weight:600;">🔥 Бонус до 100%</div>
             <div class="betbom-sub">BETBOM.COM</div>
             <div class="ad-text">📢 Реклама</div>
         </a>
     </div>
 
-    <!-- ============================================ -->
-    <!-- ПРАВЫЙ БАННЕР — UPGRADER -->
-    <!-- ============================================ -->
     <div class="ad-right" id="adRight">
         <button class="ad-close" onclick="document.getElementById('adRight').style.display='none'" title="Закрыть рекламу">✕</button>
         <a class="ad-link" href="https://upgrader.com" target="_blank">
             <div class="upgrader-logo">⚡ UPGRADER</div>
-            <div style="font-size:11px;color:#c7d5e0;padding:4px 0;line-height:1.3;">
-                Улучшай свой скин
-            </div>
-            <div style="font-size:10px;color:#ffb347;font-weight:600;">
-                🎯 До +50% цены
-            </div>
+            <div style="font-size:11px;color:#c7d5e0;padding:4px 0;line-height:1.3;">Улучшай свой скин</div>
+            <div style="font-size:10px;color:#ffb347;font-weight:600;">🎯 До +50% цены</div>
             <div class="upgrader-sub">UPGRADER.COM</div>
             <div class="ad-text">📢 Реклама</div>
         </a>
@@ -312,7 +295,7 @@
     <!-- MAIN GRID -->
     <div style="display:grid;grid-template-columns:1fr 1.6fr 1fr;gap:16px;margin-top:4px;">
 
-        <!-- ===== LEFT: TOP PLAYERS ===== -->
+        <!-- LEFT: TOP PLAYERS -->
         <div class="glass-card">
             <div class="panel-title">🏆 <span>Топ игроков</span></div>
             <div style="display:flex;gap:3px;margin-bottom:10px;background:rgba(255,255,255,0.03);border-radius:8px;padding:3px;border:1px solid rgba(255,255,255,0.05);">
@@ -321,11 +304,11 @@
             </div>
             <div class="scroll-area" id="playerList"></div>
             <div style="font-size:9px;color:#4a5a6e;margin-top:8px;text-align:center;border-top:1px solid rgba(255,255,255,0.04);padding-top:8px;">
-                🟣 <b style="color:#ffb347;" id="topFooterName">Хомяк с авт</b> — <span id="topFooterText">лидер по рейтингу</span>
+                🟣 <b style="color:#ffb347;" id="topFooterName">bomba69</b> — <span id="topFooterText">лидер по рейтингу</span>
             </div>
         </div>
 
-        <!-- ===== CENTER: НОВОСТИ ===== -->
+        <!-- CENTER: NEWS -->
         <div class="glass-card">
             <div class="panel-title">
                 📰 <span>Новости</span>
@@ -348,10 +331,10 @@
             </div>
         </div>
 
-        <!-- ===== RIGHT: MATCHES ===== -->
+        <!-- RIGHT: MATCHES -->
         <div style="display:flex;flex-direction:column;gap:8px;">
             <div class="panel-title" style="padding:0 4px 8px 4px;border-bottom:1px solid rgba(255,255,255,0.06);">
-                📋 <span>Матчи</span> <span style="color:#6e7f94;font-weight:400;font-size:11px;">всего 5</span>
+                📋 <span>Матчи</span> <span style="color:#6e7f94;font-weight:400;font-size:11px;">всего 6</span>
             </div>
 
             <div class="match-card" onclick="location.href='match.html?id=match0'">
@@ -439,6 +422,24 @@
                 </div>
             </div>
 
+            <!-- МАТЧ #5 — НОВЫЙ -->
+            <div class="match-card loss" onclick="location.href='match.html?id=match5'">
+                <div class="match-top">
+                    <span class="title">Матч #5</span>
+                    <span class="date">01.09.2026 · 5:13</span>
+                    <span class="click-hint">▶</span>
+                </div>
+                <div class="match-teams">
+                    <div class="team loss"><span class="name">Team 2</span><span class="score">5</span></div>
+                    <span class="vs">vs</span>
+                    <div class="team win"><span class="score">13</span><span class="name">Team 1</span></div>
+                </div>
+                <div class="match-stats-row">
+                    <span>🏆 <b class="mvp">bomba69</b> (26-11)</span>
+                    <span>💀 <b class="bad">Хомяк с авт</b> (6-17)</span>
+                </div>
+            </div>
+
             <div style="text-align:center;color:#4a5a6e;font-size:9px;margin-top:4px;">
                 Все матчи · 4v4 · нажмите для деталей
             </div>
@@ -448,7 +449,7 @@
 
     <!-- FOOTER -->
     <div class="footer">
-        MPL · Mega Professional League · <b>HLTV-style</b> · Май-Июль 2026
+        MPL · Mega Professional League · <b>HLTV-style</b> · Май-Сентябрь 2026
         <br>👆 Кликните на матч для полной статистики
     </div>
 
@@ -456,19 +457,21 @@
 
 <script>
     // ==========================================================
-    // ДАННЫЕ ИГРОКОВ
+    // ДАННЫЕ ИГРОКОВ (ОБНОВЛЁННЫЕ)
     // ==========================================================
     const playersData = [
-        { name: 'bomba69', matches: 5, k: 78, d: 49, a: 7, kd: 1.59, adr: 91, diff: 58, rating: 1.41, you: true, avatar: '' },
-        { name: 'Хомяк с авт', matches: 3, k: 63, d: 43, a: 11, kd: 1.47, adr: 100, diff: 116, rating: 1.47, you: false, avatar: '' },
-        { name: 'abdalbek', matches: 5, k: 73, d: 66, a: 12, kd: 1.11, adr: 88, diff: 22, rating: 1.25, you: false, avatar: '' },
-        { name: 'uxaxaxaxa', matches: 5, k: 62, d: 62, a: 9, kd: 1.00, adr: 74, diff: 0, rating: 1.00, you: false, avatar: '' },
-        { name: 'Gonduras228', matches: 5, k: 56, d: 62, a: 18, kd: 0.90, adr: 72, diff: 11, rating: 0.94, you: false, avatar: '' },
-        { name: 'wadsf', matches: 4, k: 51, d: 44, a: 11, kd: 1.16, adr: 64, diff: 50, rating: 1.02, you: false, avatar: '' },
+        { name: 'bomba69', matches: 6, k: 104, d: 60, a: 12, kd: 1.73, adr: 97, diff: 133, rating: 1.53, you: true, avatar: '' },
+        { name: 'Хомяк с авт', matches: 4, k: 69, d: 60, a: 17, kd: 1.15, adr: 89, diff: 81, rating: 1.18, you: false, avatar: '' },
+        { name: 'uxaxaxaxa', matches: 6, k: 85, d: 69, a: 11, kd: 1.23, adr: 84, diff: 66, rating: 1.24, you: false, avatar: '' },
+        { name: 'Gonduras228', matches: 6, k: 74, d: 75, a: 24, kd: 0.99, adr: 77, diff: 35, rating: 1.05, you: false, avatar: '' },
+        { name: 'abdalbek', matches: 6, k: 86, d: 97, a: 21, kd: 0.89, adr: 84, diff: -30, rating: 0.89, you: false, avatar: '' },
+        { name: 'wadsf', matches: 5, k: 58, d: 61, a: 14, kd: 0.95, adr: 68, diff: -60, rating: 0.90, you: false, avatar: '' },
+        { name: 'AFKE', matches: 5, k: 33, d: 53, a: 21, kd: 0.62, adr: 61, diff: -15, rating: 0.83, you: false, avatar: '' },
         { name: 'Adjiare Gudju', matches: 4, k: 59, d: 69, a: 17, kd: 0.86, adr: 73, diff: -35, rating: 0.96, you: false, avatar: '' },
-        { name: 'AFKE', matches: 4, k: 22, d: 44, a: 18, kd: 0.50, adr: 59, diff: -22, rating: 0.71, you: false, avatar: '' },
         { name: 'balchuqov_valera', matches: 2, k: 15, d: 31, a: 5, kd: 0.48, adr: 49, diff: -79, rating: 0.62, you: false, avatar: '' },
-        { name: 'baksyhanovvand...', matches: 4, k: 25, d: 75, a: 8, kd: 0.33, adr: 41, diff: -119, rating: 0.35, you: false, avatar: '' }
+        { name: 'baksyhanovvand...', matches: 4, k: 25, d: 75, a: 8, kd: 0.33, adr: 41, diff: -119, rating: 0.35, you: false, avatar: '' },
+        { name: 'andrejlybisin3', matches: 1, k: 7, d: 12, a: 1, kd: 0.58, adr: 38, diff: -38, rating: -0.61, you: false, avatar: '' },
+        { name: 'RUS_ENZO', matches: 1, k: 8, d: 16, a: 2, kd: 0.50, adr: 66, diff: -28, rating: -0.58, you: false, avatar: '' }
     ];
 
     // ==========================================================
@@ -483,14 +486,14 @@
         },
         {
             id: 2,
-            title: '🔥 Bomba69 делает 24-4!',
-            text: 'В матче #2 Bomba69 показал невероятный результат — 24 убийства при 4 смертях!',
-            date: '2026-05-09T15:30:00.000Z'
+            title: '🔥 Bomba69 делает 26-11!',
+            text: 'В матче #5 Bomba69 показал невероятный результат — 26 убийств при 11 смертях!',
+            date: new Date().toISOString()
         },
         {
             id: 3,
-            title: '📊 Обновлён дизайн сайта!',
-            text: 'Добавлены два рекламных баннера: BETBOM слева и UPGRADER справа.',
+            title: '📊 Добавлен матч #5!',
+            text: 'Новый матч против Team 2. Итог: 13:5 в нашу пользу!',
             date: new Date().toISOString()
         }
     ];
@@ -514,7 +517,7 @@
         }
 
         renderTopPlayers(type);
-        document.getElementById('topFooterName').textContent = type === 'kd' ? 'bomba69' : 'Хомяк с авт';
+        document.getElementById('topFooterName').textContent = type === 'kd' ? 'bomba69' : 'bomba69';
         document.getElementById('topFooterText').textContent = type === 'kd' ? 'лидер по K/D' : 'лидер по рейтингу';
     }
 
