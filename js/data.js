@@ -1,15 +1,17 @@
 // ===== ДАННЫЕ ИГРОКОВ =====
 const playersData = [
-    { name: 'bomba69', matches: 5, k: 78, d: 49, a: 7, kd: 1.59, adr: 91, diff: 58, rating: 1.41, you: true, avatar: '' },
-    { name: 'Хомяк с авт', matches: 3, k: 63, d: 43, a: 11, kd: 1.47, adr: 100, diff: 116, rating: 1.47, you: false, avatar: '' },
-    { name: 'abdalbek', matches: 5, k: 73, d: 66, a: 12, kd: 1.11, adr: 88, diff: 22, rating: 1.25, you: false, avatar: '' },
-    { name: 'uxaxaxaxa', matches: 5, k: 62, d: 62, a: 9, kd: 1.00, adr: 74, diff: 0, rating: 1.00, you: false, avatar: '' },
-    { name: 'Gonduras228', matches: 5, k: 56, d: 62, a: 18, kd: 0.90, adr: 72, diff: 11, rating: 0.94, you: false, avatar: '' },
-    { name: 'wadsf', matches: 4, k: 51, d: 44, a: 11, kd: 1.16, adr: 64, diff: 50, rating: 1.02, you: false, avatar: '' },
+    { name: 'bomba69', matches: 6, k: 104, d: 60, a: 12, kd: 1.73, adr: 97, diff: 133, rating: 1.53, you: true, avatar: '' },
+    { name: 'Хомяк с авт', matches: 4, k: 69, d: 60, a: 17, kd: 1.15, adr: 89, diff: 81, rating: 1.18, you: false, avatar: '' },
+    { name: 'uxaxaxaxa', matches: 6, k: 85, d: 69, a: 11, kd: 1.23, adr: 84, diff: 66, rating: 1.24, you: false, avatar: '' },
+    { name: 'Gonduras228', matches: 6, k: 74, d: 75, a: 24, kd: 0.99, adr: 77, diff: 35, rating: 1.05, you: false, avatar: '' },
+    { name: 'abdalbek', matches: 6, k: 86, d: 97, a: 21, kd: 0.89, adr: 84, diff: -30, rating: 0.89, you: false, avatar: '' },
+    { name: 'wadsf', matches: 5, k: 58, d: 61, a: 14, kd: 0.95, adr: 68, diff: -60, rating: 0.90, you: false, avatar: '' },
+    { name: 'AFKE', matches: 5, k: 33, d: 53, a: 21, kd: 0.62, adr: 61, diff: -15, rating: 0.83, you: false, avatar: '' },
     { name: 'Adjiare Gudju', matches: 4, k: 59, d: 69, a: 17, kd: 0.86, adr: 73, diff: -35, rating: 0.96, you: false, avatar: '' },
-    { name: 'AFKE', matches: 4, k: 22, d: 44, a: 18, kd: 0.50, adr: 59, diff: -22, rating: 0.71, you: false, avatar: '' },
     { name: 'balchuqov_valera', matches: 2, k: 15, d: 31, a: 5, kd: 0.48, adr: 49, diff: -79, rating: 0.62, you: false, avatar: '' },
-    { name: 'baksyhanovvand...', matches: 4, k: 25, d: 75, a: 8, kd: 0.33, adr: 41, diff: -119, rating: 0.35, you: false, avatar: '' }
+    { name: 'baksyhanovvand...', matches: 4, k: 25, d: 75, a: 8, kd: 0.33, adr: 41, diff: -119, rating: 0.35, you: false, avatar: '' },
+    { name: 'andrejlybisin3', matches: 1, k: 7, d: 12, a: 1, kd: 0.58, adr: 38, diff: -38, rating: -0.61, you: false, avatar: '' },
+    { name: 'RUS_ENZO', matches: 1, k: 8, d: 16, a: 2, kd: 0.50, adr: 66, diff: -28, rating: -0.58, you: false, avatar: '' }
 ];
 
 // ===== МАТЧИ ИГРОКОВ =====
@@ -19,49 +21,56 @@ const playerMatchHistory = {
         { match: '#1', k: 10, d: 13, diff: -3, map: 'Mirage' },
         { match: '#2', k: 24, d: 4, diff: 20, map: 'Mirage' },
         { match: '#3', k: 12, d: 7, diff: 5, map: 'Mirage' },
-        { match: '#4', k: 16, d: 12, diff: 4, map: 'Mirage' }
+        { match: '#4', k: 16, d: 12, diff: 4, map: 'Mirage' },
+        { match: '#5', k: 26, d: 11, diff: 15, map: 'Mirage' }
     ],
     'Хомяк с авт': [
         { match: '#0 BO3', k: 35, d: 19, diff: 16, map: 'Ancient + Anubis' },
         { match: '#1', k: 14, d: 9, diff: 5, map: 'Mirage' },
-        { match: '#2', k: 14, d: 15, diff: -1, map: 'Mirage' }
+        { match: '#2', k: 14, d: 15, diff: -1, map: 'Mirage' },
+        { match: '#5', k: 6, d: 17, diff: -11, map: 'Mirage' }
     ],
     'abdalbek': [
         { match: '#0 BO3', k: 20, d: 30, diff: -10, map: 'Ancient + Anubis' },
         { match: '#1', k: 8, d: 13, diff: -5, map: 'Mirage' },
         { match: '#2', k: 16, d: 11, diff: 5, map: 'Mirage' },
         { match: '#3', k: 15, d: 13, diff: 2, map: 'Mirage' },
-        { match: '#4', k: 16, d: 14, diff: 2, map: 'Mirage' }
+        { match: '#4', k: 16, d: 14, diff: 2, map: 'Mirage' },
+        { match: '#5', k: 11, d: 16, diff: -5, map: 'Mirage' }
     ],
     'uxaxaxaxa': [
         { match: '#0 BO3', k: 34, d: 16, diff: 18, map: 'Ancient + Anubis' },
         { match: '#1', k: 17, d: 5, diff: 12, map: 'Mirage' },
         { match: '#2', k: 10, d: 10, diff: 0, map: 'Mirage' },
         { match: '#3', k: 13, d: 9, diff: 4, map: 'Mirage' },
-        { match: '#4', k: 11, d: 14, diff: -3, map: 'Mirage' }
-    ],
-    'Adjiare Gudju': [
-        { match: '#0 BO3', k: 24, d: 28, diff: -4, map: 'Ancient + Anubis' },
-        { match: '#3', k: 13, d: 15, diff: -2, map: 'Mirage (как fort[чилл])' },
-        { match: '#4', k: 11, d: 13, diff: -2, map: 'Mirage (как fort[чилл])' }
+        { match: '#4', k: 11, d: 14, diff: -3, map: 'Mirage' },
+        { match: '#5', k: 23, d: 7, diff: 16, map: 'Mirage' }
     ],
     'Gonduras228': [
         { match: '#0 BO3', k: 16, d: 32, diff: -16, map: 'Ancient + Anubis' },
         { match: '#1', k: 6, d: 13, diff: -7, map: 'Mirage' },
         { match: '#2', k: 9, d: 9, diff: 0, map: 'Mirage' },
         { match: '#3', k: 14, d: 10, diff: 4, map: 'Mirage' },
-        { match: '#4', k: 13, d: 14, diff: -1, map: 'Mirage' }
+        { match: '#4', k: 13, d: 14, diff: -1, map: 'Mirage' },
+        { match: '#5', k: 18, d: 13, diff: 5, map: 'Mirage' }
     ],
     'AFKE': [
         { match: '#0 BO3', k: 14, d: 24, diff: -10, map: 'Ancient + Anubis' },
         { match: '#1', k: 8, d: 5, diff: 3, map: 'Mirage' },
-        { match: '#2', k: 6, d: 15, diff: -9, map: 'Mirage' }
+        { match: '#2', k: 6, d: 15, diff: -9, map: 'Mirage' },
+        { match: '#5', k: 11, d: 9, diff: 2, map: 'Mirage' }
     ],
     'wadsf': [
         { match: '#1', k: 13, d: 6, diff: 7, map: 'Mirage' },
         { match: '#2', k: 10, d: 14, diff: -4, map: 'Mirage' },
         { match: '#3', k: 17, d: 9, diff: 8, map: 'Mirage' },
-        { match: '#4', k: 11, d: 15, diff: -4, map: 'Mirage' }
+        { match: '#4', k: 11, d: 15, diff: -4, map: 'Mirage' },
+        { match: '#5', k: 7, d: 17, diff: -10, map: 'Mirage' }
+    ],
+    'Adjiare Gudju': [
+        { match: '#0 BO3', k: 24, d: 28, diff: -4, map: 'Ancient + Anubis' },
+        { match: '#3', k: 13, d: 15, diff: -2, map: 'Mirage (как fort[чилл])' },
+        { match: '#4', k: 11, d: 13, diff: -2, map: 'Mirage (как fort[чилл])' }
     ],
     'balchuqov_valera': [
         { match: '#3', k: 6, d: 14, diff: -8, map: 'Mirage' },
@@ -73,6 +82,12 @@ const playerMatchHistory = {
         { match: '#2', k: 3, d: 15, diff: -12, map: 'Mirage' },
         { match: '#3', k: 1, d: 14, diff: -13, map: 'Mirage' },
         { match: '#4', k: 4, d: 17, diff: -13, map: 'Mirage' }
+    ],
+    'andrejlybisin3': [
+        { match: '#5', k: 7, d: 12, diff: -5, map: 'Mirage' }
+    ],
+    'RUS_ENZO': [
+        { match: '#5', k: 8, d: 16, diff: -8, map: 'Mirage' }
     ]
 };
 
@@ -272,6 +287,37 @@ const matchData = {
                 ]
             }
         }
+    },
+    // ===== НОВЫЙ МАТЧ #5 =====
+    match5: {
+        title: 'Матч #5',
+        date: '01.09.2026',
+        map: 'Mirage',
+        score: '5:13',
+        winner: 'Team 1',
+        loser: 'Team 2',
+        detail: 'Карта: Mirage',
+        teams: {
+            win: {
+                name: 'Team 1 — WIN',
+                players: [
+                    { name: 'bomba69', k: 26, d: 11, a: 5, adr: 153, diff: 75, highlight: true },
+                    { name: 'uxaxaxaxa', k: 23, d: 7, a: 2, adr: 127, diff: 66 },
+                    { name: 'Gonduras228', k: 18, d: 13, a: 6, adr: 103, diff: 24 },
+                    { name: 'AFKE', k: 11, d: 9, a: 3, adr: 67, diff: 7 }
+                ]
+            },
+            loss: {
+                name: 'Team 2 — LOSS',
+                players: [
+                    { name: 'abdalbek', k: 11, d: 16, a: 2, adr: 58, diff: -33 },
+                    { name: 'andrejlybisin3', k: 7, d: 12, a: 1, adr: 38, diff: -38 },
+                    { name: 'RUS_ENZO', k: 8, d: 16, a: 2, adr: 66, diff: -28 },
+                    { name: 'wadsf', k: 7, d: 17, a: 3, adr: 55, diff: -40 },
+                    { name: 'Хомяк с авт', k: 6, d: 17, a: 6, adr: 56, diff: -35, worst: true }
+                ]
+            }
+        }
     }
 };
 
@@ -313,9 +359,9 @@ function saveAvatar(playerName, dataUrl) {
 
 // ===== НОВОСТИ =====
 let newsData = JSON.parse(localStorage.getItem('mpl_news')) || [
-    { id: 1, title: '🏆 Старт сезона MPL!', text: 'Дружеский турнир MPL начался! Следите за матчами и статистикой.', date: new Date('2026-05-09T10:00:00').toISOString() },
-    { id: 2, title: '🔥 Bomba69 делает 24-4!', text: 'В матче #2 Bomba69 показал невероятный результат — 24 убийства при 4 смертях!', date: new Date('2026-05-09T15:30:00').toISOString() },
-    { id: 3, title: '📊 Сайт обновлён!', text: 'Теперь это полноценный многостраничный сайт как HLTV.', date: new Date().toISOString() }
+    { id: 1, title: '🏆 Старт сезона MPL!', text: 'Дружеский турнир MPL начался!', date: new Date('2026-05-09T10:00:00').toISOString() },
+    { id: 2, title: '🔥 Bomba69 делает 26-11!', text: 'В матче #5 Bomba69 показал невероятный результат!', date: new Date().toISOString() },
+    { id: 3, title: '📊 Добавлен матч #5!', text: 'Новый матч против Team 2. Итог: 13:5 в нашу пользу!', date: new Date().toISOString() }
 ];
 
 function saveNews() {
