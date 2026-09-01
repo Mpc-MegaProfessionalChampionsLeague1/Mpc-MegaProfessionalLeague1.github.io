@@ -39,7 +39,6 @@
             color: #fff;
         }
 
-        /* Фильтр по месяцам */
         .month-filter {
             display: flex;
             gap: 4px;
@@ -66,6 +65,14 @@
             background: #1a2a3a;
             color: #fff;
             border-color: #1a2a3a;
+        }
+        .month-btn .count {
+            font-size: 8px;
+            color: #4a5a6e;
+            margin-left: 2px;
+        }
+        .month-btn.active .count {
+            color: #8b9bb0;
         }
 
         .ad-left {
@@ -328,14 +335,9 @@
         <div class="glass-card">
             <div class="panel-title">🏆 <span>Топ игроков</span></div>
 
-            <!-- Фильтр по месяцам -->
-            <div class="month-filter">
-                <button class="month-btn active" onclick="setMonth('all')" data-month="all">📅 Всё время</button>
-                <button class="month-btn" onclick="setMonth('5')" data-month="5">Май</button>
-                <button class="month-btn" onclick="setMonth('6')" data-month="6">Июнь</button>
-                <button class="month-btn" onclick="setMonth('7')" data-month="7">Июль</button>
-                <button class="month-btn" onclick="setMonth('8')" data-month="8">Август</button>
-                <button class="month-btn" onclick="setMonth('9')" data-month="9">Сентябрь</button>
+            <!-- Фильтр по месяцам (автоматически из матчей) -->
+            <div class="month-filter" id="monthFilter">
+                <!-- Рендерится через JS -->
             </div>
 
             <div style="display:flex;gap:3px;margin-bottom:10px;background:rgba(255,255,255,0.03);border-radius:8px;padding:3px;border:1px solid rgba(255,255,255,0.05);">
@@ -516,22 +518,64 @@
     ];
 
     // ==========================================================
-    // ДАТЫ МАТЧЕЙ ДЛЯ ФИЛЬТРАЦИИ
+    // АВТОМАТИЧЕСКОЕ ОПРЕДЕЛЕНИЕ МЕСЯЦЕВ ИЗ МАТЧЕЙ
     // ==========================================================
-    const matchMonths = {
-        'match0': 7, // Июль
-        'match1': 5, // Май
-        'match2': 5, // Май
-        'match3': 5, // Май
-        'match4': 5, // Май
-        'match5': 9  // Сентябрь
-    };
+    function getAvailableMonths() {
+        const months = {};
+        const monthNames = {
+            '5': 'Май',
+            '6': 'Июнь',
+            '7': 'Июль',
+            '8': 'Август',
+            '9': 'Сентябрь'
+        };
+
+        Object.keys(matchData).forEach(key => {
+            const match = matchData[key];
+            if (!match || !match.date) return;
+            
+            // Парсим дату из строки "30.07.2026" или "01.09.2026"
+            const dateParts = match.date.split('.');
+            if (dateParts.length === 3) {
+                const month = parseInt(dateParts[1]);
+                if (!months[month]) {
+                    months[month] = { count: 0, name: monthNames[month] || month };
+                }
+                months[month].count++;
+            }
+        });
+
+        return months;
+    }
 
     // ==========================================================
     // ТОП ИГРОКОВ С ФИЛЬТРОМ ПО МЕСЯЦАМ
     // ==========================================================
     let currentTop = 'rating';
     let currentMonth = 'all';
+
+    function renderMonthFilter() {
+        const container = document.getElementById('monthFilter');
+        const months = getAvailableMonths();
+        const sortedMonths = Object.keys(months).sort((a, b) => parseInt(a) - parseInt(b));
+
+        let html = `
+            <button class="month-btn active" onclick="setMonth('all')" data-month="all">
+                📅 Всё время
+            </button>
+        `;
+
+        sortedMonths.forEach(month => {
+            const data = months[month];
+            html += `
+                <button class="month-btn" onclick="setMonth('${month}')" data-month="${month}">
+                    ${data.name} <span class="count">(${data.count})</span>
+                </button>
+            `;
+        });
+
+        container.innerHTML = html;
+    }
 
     function setMonth(month) {
         currentMonth = month;
@@ -555,19 +599,27 @@
     function getPlayersForMonth(month) {
         if (month === 'all') return playersData;
 
-        // Фильтруем матчи по месяцу
-        const matchKeys = Object.keys(matchMonths).filter(key => matchMonths[key] == month);
+        // Находим матчи за указанный месяц
+        const matchKeys = [];
+        Object.keys(matchData).forEach(key => {
+            const match = matchData[key];
+            if (!match || !match.date) return;
+            const dateParts = match.date.split('.');
+            if (dateParts.length === 3 && parseInt(dateParts[1]) === parseInt(month)) {
+                matchKeys.push(key);
+            }
+        });
+
+        if (matchKeys.length === 0) return [];
 
         // Собираем статистику игроков только по этим матчам
         const filteredPlayers = playersData.map(p => {
-            // Копируем игрока
             const copy = { ...p, k: 0, d: 0, a: 0, matches: 0, kd: 0, adr: 0, diff: 0, rating: 0 };
 
             matchKeys.forEach(matchKey => {
                 const match = matchData[matchKey];
                 if (!match) return;
 
-                // Ищем игрока в обеих командах
                 ['win', 'loss'].forEach(side => {
                     const team = match.teams?.[side];
                     if (!team) return;
@@ -579,14 +631,13 @@
                         copy.diff += player.diff || 0;
                         copy.matches++;
                         copy.adr += player.adr || 0;
-                        // Рейтинг берём из общих данных или считаем средний
                         copy.rating += player.rating || p.rating || 0;
                     }
                 });
             });
 
             if (copy.matches > 0) {
-                copy.kd = copy.k / copy.d || 0;
+                copy.kd = copy.k / (copy.d || 1) || 0;
                 copy.adr = Math.round(copy.adr / copy.matches);
                 copy.rating = parseFloat((copy.rating / copy.matches).toFixed(2));
             } else {
@@ -598,7 +649,6 @@
             return copy;
         });
 
-        // Убираем игроков с 0 матчей
         return filteredPlayers.filter(p => p.matches > 0);
     }
 
@@ -679,7 +729,7 @@
         {
             id: 3,
             title: '📊 Добавлен фильтр по месяцам!',
-            text: 'Теперь можно смотреть топ игроков за конкретный месяц.',
+            text: 'Теперь можно смотреть топ игроков за конкретный месяц. Фильтр автоматически определяется из матчей.',
             date: new Date().toISOString()
         }
     ];
@@ -761,6 +811,7 @@
     // ==========================================================
     // ИНИЦИАЛИЗАЦИЯ
     // ==========================================================
+    renderMonthFilter();
     renderTopPlayers('rating');
     renderNews();
 </script>
