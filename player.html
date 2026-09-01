@@ -27,7 +27,7 @@
             font-weight: 700;
             color: #dfe6e9;
             overflow: hidden;
-            border: 4px solid #2a475e;
+            border: 4px solid #1a2a3a;
             flex-shrink: 0;
         }
         .player-page-avatar img {
@@ -136,12 +136,18 @@
             font-size: 13px;
             border-radius: 6px;
             transition: 0.15s;
+            cursor: pointer;
         }
         .player-match-row:hover {
-            background: rgba(255,255,255,0.03);
+            background: rgba(255,255,255,0.05);
+            transform: translateX(4px);
         }
         .player-match-row .match-name {
             color: #8b9bb0;
+            transition: 0.2s;
+        }
+        .player-match-row:hover .match-name {
+            color: #ffb347;
         }
         .player-match-row .match-stats {
             color: #c7d5e0;
@@ -153,6 +159,15 @@
         .player-match-row .match-stats .bad {
             color: #e07a7a;
         }
+        .player-match-row .match-arrow {
+            color: #4a5a6e;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+        .player-match-row:hover .match-arrow {
+            color: #ffb347;
+            transform: translateX(3px);
+        }
 
         .back-btn {
             display: inline-block;
@@ -163,6 +178,22 @@
             transition: 0.2s;
         }
         .back-btn:hover {
+            color: #ffb347;
+        }
+
+        body.light .player-match-row:hover {
+            background: #f0f3f8;
+        }
+        body.light .player-match-row .match-name {
+            color: #4a5a6e;
+        }
+        body.light .player-match-row:hover .match-name {
+            color: #ffb347;
+        }
+        body.light .player-match-row .match-arrow {
+            color: #b0c4de;
+        }
+        body.light .player-match-row:hover .match-arrow {
             color: #ffb347;
         }
     </style>
@@ -177,7 +208,7 @@
             <h1 onclick="location.href='index.html'">MPL <small>Mega Professional League</small></h1>
         </div>
         <div class="header-right">
-            <span>📅 Май-Июль 2026</span>
+            <span>📅 Май-Сентябрь 2026</span>
             <span class="status">● LIVE</span>
             <button class="lang-toggle" onclick="toggleLang()" id="langBtn">🇬🇧 EN</button>
             <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
@@ -200,7 +231,7 @@
 
     <!-- FOOTER -->
     <div class="footer">
-        MPL · Mega Professional League · <b>HLTV-style</b> · Май-Июль 2026
+        MPL · Mega Professional League · <b>HLTV-style</b> · Май-Сентябрь 2026
     </div>
 
 </div>
@@ -210,6 +241,19 @@
     // ===== ПОЛУЧАЕМ ИМЯ ИГРОКА ИЗ URL =====
     const urlParams = new URLSearchParams(window.location.search);
     const playerName = urlParams.get('name');
+
+    // ===== ФУНКЦИЯ ДЛЯ ПОЛУЧЕНИЯ ID МАТЧА ПО НОМЕРУ =====
+    function getMatchId(matchNumber) {
+        // matchNumber может быть "#0 BO3", "#1", "#2" и т.д.
+        const num = matchNumber.replace(/\D/g, '');
+        if (num === '0') return 'match0';
+        if (num === '1') return 'match1';
+        if (num === '2') return 'match2';
+        if (num === '3') return 'match3';
+        if (num === '4') return 'match4';
+        if (num === '5') return 'match5';
+        return 'match0';
+    }
 
     // ===== РЕНДЕР СТРАНИЦЫ ИГРОКА =====
     function renderPlayerPage(name) {
@@ -255,7 +299,7 @@
                     </div>
                     <div class="player-page-sub">
                         ${player.matches} матчей · ${player.k} убийств · ${player.d} смертей · ${player.a} ассистов
-                        ${player.you ? ' · <b style="color:#ffb347;">Это вы!</b>' : ''}
+                        ${player.you ? ' · <b style="color:#ffb347;">Это вы</b>' : ''}
                     </div>
                 </div>
             </div>
@@ -292,13 +336,14 @@
                 <div style="font-size:13px;color:#6e7f94;margin-bottom:16px;">Нет достижений</div>
             `}
 
-            <div class="player-matches-title">📋 История матчей</div>
+            <div class="player-matches-title">📋 История матчей <span style="font-size:12px;color:#6e7f94;font-weight:400;">(кликните для перехода)</span></div>
             ${history.length > 0 ? history.map(m => `
-                <div class="player-match-row">
+                <div class="player-match-row" onclick="location.href='match.html?id=${getMatchId(m.match)}'">
                     <span class="match-name">${m.match} — ${m.map}</span>
                     <span class="match-stats">
                         ${m.k} - ${m.d}
                         <span class="${m.diff > 0 ? 'good' : 'bad'}">${m.diff > 0 ? '+' : ''}${m.diff}</span>
+                        <span class="match-arrow">→</span>
                     </span>
                 </div>
             `).join('') : `
@@ -307,7 +352,9 @@
         `;
     }
 
-    // ===== ТЕМА =====
+    // ==========================================================
+    // ТЕМА / ЯЗЫК
+    // ==========================================================
     function toggleTheme() {
         document.body.classList.toggle('light');
         document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '🌙' : '🌙';
@@ -320,7 +367,9 @@
         document.getElementById('langBtn').textContent = lang === 'ru' ? '🇬🇧 EN' : '🇷🇺 RU';
     }
 
-    // ===== ИНИЦИАЛИЗАЦИЯ =====
+    // ==========================================================
+    // ИНИЦИАЛИЗАЦИЯ
+    // ==========================================================
     renderPlayerPage(playerName);
 </script>
 
