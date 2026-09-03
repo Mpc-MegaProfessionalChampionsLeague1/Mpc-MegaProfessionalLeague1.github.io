@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPL — Админ-панель (GitHub)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #0e1217;
+            color: #e8eff7;
+            padding: 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.08);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 16px;
+        }
+        h1, h2 { color: #ffb347; margin-bottom: 12px; }
+        input, textarea, select {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.1);
+            background: rgba(255,255,255,0.05);
+            color: #e8eff7;
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-family: inherit;
+        }
+        button {
+            background: #ffb347;
+            color: #0e1217;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+        button:hover { background: #ff9f1a; }
+        button.danger { background: #c0392b; color: #fff; }
+        button.danger:hover { background: #e74c3c; }
+        button.success { background: #27ae60; color: #fff; }
+        button.success:hover { background: #2ecc71; }
+        .hidden { display: none; }
+        .item {
+            background: rgba(255,255,255,0.03);
+            padding: 10px 14px;
+            border-radius: 6px;
+            margin-bottom: 6px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 3px solid #ffb347;
+        }
+        .status {
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-top: 8px;
+            font-size: 13px;
+        }
+        .status.success { background: rgba(46, 204, 113, 0.2); color: #7ddfa0; }
+        .status.error { background: rgba(231, 76, 60, 0.2); color: #e07a7a; }
+        .status.loading { background: rgba(255, 179, 71, 0.2); color: #ffb347; }
+        .tabs { display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap; }
+        .tabs button {
+            background: rgba(255,255,255,0.05);
+            color: #8b9bb0;
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .tabs button.active {
+            background: #ffb347;
+            color: #0e1217;
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .repo-info {
+            background: rgba(255,255,255,0.03);
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #6e7f94;
+            margin-bottom: 12px;
+        }
+        .repo-info span { color: #ffb347; }
+        .sync-status {
+            padding: 8px 12px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            background: rgba(255,179,71,0.1);
+            color: #ffb347;
+        }
+        .sync-status.success { background: rgba(46,204,113,0.1); color: #7ddfa0; }
+        .token-input {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid #ffb347;
+        }
+        .token-input::placeholder { color: #4a5a6e; }
+    </style>
+</head>
+<body>
+
+<div id="loginPanel" class="card" style="text-align:center;padding:40px;">
+    <h1>🔐 MPL Админ-панель</h1>
+    <p style="color:#8b9bb0;margin-bottom:16px;">Введите пароль и GitHub токен для управления сайтом</p>
+    <input type="password" id="passwordInput" placeholder="Пароль..." style="max-width:300px;margin:0 auto 10px;">
+    <input type="password" id="tokenInput" placeholder="GitHub Token..." style="max-width:300px;margin:0 auto 10px;" class="token-input">
+    <button onclick="login()">Войти</button>
+    <div id="loginStatus" style="margin-top:10px;color:#e07a7a;font-size:13px;"></div>
+</div>
+
+<div id="adminPanel" class="hidden">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+        <h1>⚙️ Управление MPL</h1>
+        <button onclick="logout()" class="danger" style="padding:6px 14px;font-size:12px;">Выйти</button>
+    </div>
+
+    <div class="repo-info">
+        📦 Данные сохраняются в GitHub: <span>Mpc-MegaProfessionalChampionsLeague1/Mpc-MegaProfessionalLeague1.github.io</span>
+        <br>🌍 Изменения видны ВСЕМ посетителям сайта!
+    </div>
+
+    <div id="syncStatus" class="sync-status">✅ Данные загружены из GitHub</div>
+
+    <div class="tabs">
+        <button class="active" onclick="switchTab('players')">👥 Игроки</button>
+        <button onclick="switchTab('matches')">📋 Матчи</button>
+        <button onclick="switchTab('news')">📰 Новости</button>
+    </div>
+
+    <!-- ИГРОКИ -->
+    <div id="playersTab" class="tab-content active">
+        <div class="card">
+            <h2>➕ Добавить игрока</h2>
+            <input type="text" id="playerName" placeholder="Имя игрока">
+            <input type="number" id="playerK" placeholder="Убийств">
+            <input type="number" id="playerD" placeholder="Смертей">
+            <button onclick="addPlayer()">Добавить</button>
+            <div id="playerStatus"></div>
+        </div>
+        <div class="card">
+            <h2>📋 Список игроков</h2>
+            <div id="playersList"></div>
+            <button onclick="saveToGitHub('players')" class="success" style="margin-top:10px;">💾 Сохранить в GitHub</button>
+        </div>
+    </div>
+
+    <!-- МАТЧИ -->
+    <div id="matchesTab" class="tab-content">
+        <div class="card">
+            <h2>➕ Добавить матч</h2>
+            <input type="text" id="matchTitle" placeholder="Название">
+            <input type="text" id="matchDate" placeholder="Дата (ДД.ММ.ГГГГ)">
+            <input type="text" id="matchScore" placeholder="Счёт (например, 13:5)">
+            <input type="text" id="matchWinner" placeholder="Команда-победитель">
+            <input type="text" id="matchLoser" placeholder="Команда-проигравший">
+            <button onclick="addMatch()">Добавить</button>
+            <div id="matchStatus"></div>
+        </div>
+        <div class="card">
+            <h2>📋 Список матчей</h2>
+            <div id="matchesList"></div>
+            <button onclick="saveToGitHub('matches')" class="success" style="margin-top:10px;">💾 Сохранить в GitHub</button>
+        </div>
+    </div>
+
+    <!-- НОВОСТИ -->
+    <div id="newsTab" class="tab-content">
+        <div class="card">
+            <h2>➕ Добавить новость</h2>
+            <input type="text" id="newsTitle" placeholder="Заголовок">
+            <textarea id="newsText" placeholder="Текст новости" rows="3"></textarea>
+            <button onclick="addNews()">Добавить</button>
+            <div id="newsStatus"></div>
+        </div>
+        <div class="card">
+            <h2>📰 Список новостей</h2>
+            <div id="newsList"></div>
+            <button onclick="saveToGitHub('news')" class="success" style="margin-top:10px;">💾 Сохранить в GitHub</button>
+        </div>
+    </div>
+</div>
+
+<script>
+// ============================================================
+// НАСТРОЙКИ
+// ============================================================
+const ADMIN_PASSWORD = 'mpl2026';
+const REPO_OWNER = 'Mpc-MegaProfessionalChampionsLeague1';
+const REPO_NAME = 'Mpc-MegaProfessionalLeague1.github.io';
+const BRANCH = 'main';
+
+let GITHUB_TOKEN = '';
+let players = [];
+let matches = [];
+let news = [];
+
+// ============================================================
+// ЗАГРУЗКА ДАННЫХ ИЗ GITHUB
+// ============================================================
+async function loadFromGitHub(filePath) {
+    try {
+        const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filePath}`;
+        const response = await fetch(url, {
+            headers: {
+                'Authorization': `token ${GITHUB_TOKEN}`,
+                'Accept': 'application/vnd.github.v3+json'
+            }
+        });
+        
+        if (response.status === 404) {
+            return null; // Файл не найден
+        }
+        
+        if (!response.ok) {
+            throw new Error(`Ошибка загрузки: ${response.status}`);
+        }
+        
+        const data = await response.json();
+        const content = atob(data.content);
+        return JSON.parse(content);
+    } catch (error) {
+        console.error('Ошибка загрузки:', error);
+        return null;
+    }
+}
+
+async function saveToGitHub(filePath, data, message) {
+    try {
+        // Сначала получаем текущий файл (чтобы получить SHA)
+        const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filePath}`;
+        let sha = null;
+        
+        try {
+            const response = await fetch(url, {
+                headers: {
+                    'Authorization': `token ${GITHUB_TOKEN}`,
+                    'Accept': 'application/vnd.github.v3+json'
+                }
+            });
+            if (response.ok) {
+                const fileData = await response.json();
+                sha = fileData.sha;
+            }
+        } catch (e) {}
+        
+        const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
+        
+        const body = {
+            message: message || `Обновление ${filePath}`,
+            content: content,
+            branch: BRANCH
+        };
+        
+        if (sha) {
+            body.sha = sha;
+        }
+        
+        const response = await fetch(url, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `token ${GITHUB_TOKEN}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/vnd.github.v3+json'
+            },
+            body: JSON.stringify(body)
+        });
+        
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'Ошибка сохранения');
+        }
+        
+        return await response.json();
+    } catch (error) {
+        console.error('Ошибка сохранения:', error);
+        throw error;
+    }
+}
+
+// ============================================================
+// ЗАГРУЗКА ВСЕХ ДАННЫХ
+// ============================================================
+async function loadAllData() {
+    const status = document.getElementById('syncStatus');
+    status.textContent = '⏳ Загрузка данных из GitHub...';
+    status.className = 'sync-status';
+    
+    try {
+        // Загружаем игроков
+        const playersData = await loadFromGitHub('data/players.json');
+        if (playersData) {
+            players = playersData;
+        } else {
+            // Данных нет, используем пустой массив
+            players = [];
+        }
+        
+        // Загружаем матчи
+        const matchesData = await loadFromGitHub('data/matches.json');
+        if (matchesData) {
+            matches = matchesData;
+        } else {
+            matches = [];
+        }
+        
+        // Загружаем новости
+        const newsData = await loadFromGitHub('data/news.json');
+        if (newsData) {
+            news = newsData;
+        } else {
+            news = [];
+        }
+        
+        status.textContent = '✅ Данные загружены из GitHub!';
+        status.className = 'sync-status success';
+        renderAll();
+    } catch (error) {
+        status.textContent = '❌ Ошибка загрузки: ' + error.message;
+        status.className = 'sync-status';
+    }
+}
+
+// ============================================================
+// СОХРАНЕНИЕ В GITHUB
+// ============================================================
+async function saveToGitHub(type) {
+    const status = document.getElementById('syncStatus');
+    status.textContent = `⏳ Сохранение ${type} в GitHub...`;
+    status.className = 'sync-status';
+    
+    try {
+        let data, filePath, message;
+        
+        if (type === 'players') {
+            data = players;
+            filePath = 'data/players.json';
+            message = 'Обновление списка игроков';
+        } else if (type === 'matches') {
+            data = matches;
+            filePath = 'data/matches.json';
+            message = 'Обновление списка матчей';
+        } else if (type === 'news') {
+            data = news;
+            filePath = 'data/news.json';
+            message = 'Обновление списка новостей';
+        }
+        
+        await saveToGitHub(filePath, data, message);
+        
+        status.textContent = `✅ ${type} сохранены в GitHub!`;
+        status.className = 'sync-status success';
+        
+        // Обновляем статус в конкретной вкладке
+        if (type === 'players') {
+            document.getElementById('playerStatus').textContent = '✅ Сохранено в GitHub!';
+            document.getElementById('playerStatus').className = 'status success';
+        } else if (type === 'matches') {
+            document.getElementById('matchStatus').textContent = '✅ Сохранено в GitHub!';
+            document.getElementById('matchStatus').className = 'status success';
+        } else if (type === 'news') {
+            document.getElementById('newsStatus').textContent = '✅ Сохранено в GitHub!';
+            document.getElementById('newsStatus').className = 'status success';
+        }
+        
+        // Подтверждение
+        setTimeout(() => {
+            if (confirm('✅ Данные сохранены!\n\nХотите обновить страницу, чтобы увидеть изменения?')) {
+                location.reload();
+            }
+        }, 500);
+        
+    } catch (error) {
+        status.textContent = `❌ Ошибка сохранения: ${error.message}`;
+        status.className = 'sync-status';
+    }
+}
+
+// ============================================================
+// ВХОД / ВЫХОД
+// ============================================================
+function login() {
+    const pass = document.getElementById('passwordInput').value;
+    const token = document.getElementById('tokenInput').value.trim();
+    
+    if (pass === ADMIN_PASSWORD && token) {
+        GITHUB_TOKEN = token;
+        document.getElementById('loginPanel').classList.add('hidden');
+        document.getElementById('adminPanel').classList.remove('hidden');
+        document.getElementById('loginStatus').textContent = '';
+        loadAllData();
+    } else if (pass !== ADMIN_PASSWORD) {
+        document.getElementById('loginStatus').textContent = '❌ Неверный пароль!';
+    } else {
+        document.getElementById('loginStatus').textContent = '❌ Введите GitHub токен!';
+    }
+}
+
+function logout() {
+    document.getElementById('loginPanel').classList.remove('hidden');
+    document.getElementById('adminPanel').classList.add('hidden');
+    document.getElementById('passwordInput').value = '';
+    document.getElementById('tokenInput').value = '';
+    GITHUB_TOKEN = '';
+}
+
+// ============================================================
+// ВКЛАДКИ
+// ============================================================
+function switchTab(tab) {
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tabs button').forEach(el => el.classList.remove('active'));
+    
+    if (tab === 'players') {
+        document.getElementById('playersTab').classList.add('active');
+        document.querySelector('.tabs button:nth-child(1)').classList.add('active');
+    } else if (tab === 'matches') {
+        document.getElementById('matchesTab').classList.add('active');
+        document.querySelector('.tabs button:nth-child(2)').classList.add('active');
+    } else if (tab === 'news') {
+        document.getElementById('newsTab').classList.add('active');
+        document.querySelector('.tabs button:nth-child(3)').classList.add('active');
+    }
+}
+
+// ============================================================
+// ИГРОКИ
+// ============================================================
+function addPlayer() {
+    const name = document.getElementById('playerName').value.trim();
+    const k = parseInt(document.getElementById('playerK').value) || 0;
+    const d = parseInt(document.getElementById('playerD').value) || 0;
+    
+    if (!name) {
+        document.getElementById('playerStatus').className = 'status error';
+        document.getElementById('playerStatus').textContent = '❌ Введите имя!';
+        return;
+    }
+    
+    players.push({ name, k, d, matches: 1, kd: (d > 0 ? (k/d) : 0), rating: (d > 0 ? (k/d) * 0.8 : 0) });
+    document.getElementById('playerName').value = '';
+    document.getElementById('playerK').value = '';
+    document.getElementById('playerD').value = '';
+    document.getElementById('playerStatus').className = 'status success';
+    document.getElementById('playerStatus').textContent = '✅ Игрок добавлен! Нажмите "Сохранить в GitHub"';
+    renderPlayers();
+}
+
+function deletePlayer(index) {
+    if (confirm('Удалить игрока?')) {
+        players.splice(index, 1);
+        renderPlayers();
+    }
+}
+
+function renderPlayers() {
+    const container = document.getElementById('playersList');
+    if (players.length === 0) {
+        container.innerHTML = '<div style="color:#4a5a6e;padding:10px 0;">Нет игроков</div>';
+        return;
+    }
+    container.innerHTML = players.map((p, i) => `
+        <div class="item">
+            <span><b>${p.name}</b> — ${p.k} убийств, ${p.d} смертей, K/D: ${(p.d > 0 ? (p.k/p.d).toFixed(2) : '0')}</span>
+            <button class="del danger" onclick="deletePlayer(${i})" style="padding:4px 12px;font-size:12px;">✕</button>
+        </div>
+    `).join('');
+}
+
+// ============================================================
+// МАТЧИ
+// ============================================================
+function addMatch() {
+    const title = document.getElementById('matchTitle').value.trim();
+    const date = document.getElementById('matchDate').value.trim();
+    const score = document.getElementById('matchScore').value.trim();
+    const winner = document.getElementById('matchWinner').value.trim();
+    const loser = document.getElementById('matchLoser').value.trim();
+    
+    if (!title || !date || !score) {
+        document.getElementById('matchStatus').className = 'status error';
+        document.getElementById('matchStatus').textContent = '❌ Заполните название, дату и счёт!';
+        return;
+    }
+    
+    matches.push({ id: 'match' + Date.now(), title, date, score, winner, loser });
+    document.getElementById('matchTitle').value = '';
+    document.getElementById('matchDate').value = '';
+    document.getElementById('matchScore').value = '';
+    document.getElementById('matchWinner').value = '';
+    document.getElementById('matchLoser').value = '';
+    document.getElementById('matchStatus').className = 'status success';
+    document.getElementById('matchStatus').textContent = '✅ Матч добавлен! Нажмите "Сохранить в GitHub"';
+    renderMatches();
+}
+
+function deleteMatch(index) {
+    if (confirm('Удалить матч?')) {
+        matches.splice(index, 1);
+        renderMatches();
+    }
+}
+
+function renderMatches() {
+    const container = document.getElementById('matchesList');
+    if (matches.length === 0) {
+        container.innerHTML = '<div style="color:#4a5a6e;padding:10px 0;">Нет матчей</div>';
+        return;
+    }
+    container.innerHTML = matches.map((m, i) => `
+        <div class="item">
+            <span><b>${m.title}</b> — ${m.date} · ${m.score} | ${m.winner} vs ${m.loser}</span>
+            <button class="del danger" onclick="deleteMatch(${i})" style="padding:4px 12px;font-size:12px;">✕</button>
+        </div>
+    `).join('');
+}
+
+// ============================================================
+// НОВОСТИ
+// ============================================================
+function addNews() {
+    const title = document.getElementById('newsTitle').value.trim();
+    const text = document.getElementById('newsText').value.trim();
+    
+    if (!title || !text) {
+        document.getElementById('newsStatus').className = 'status error';
+        document.getElementById('newsStatus').textContent = '❌ Заполните заголовок и текст!';
+        return;
+    }
+    
+    news.push({ id: Date.now(), title, text, date: new Date().toLocaleString() });
+    document.getElementById('newsTitle').value = '';
+    document.getElementById('newsText').value = '';
+    document.getElementById('newsStatus').className = 'status success';
+    document.getElementById('newsStatus').textContent = '✅ Новость добавлена! Нажмите "Сохранить в GitHub"';
+    renderNews();
+}
+
+function deleteNews(index) {
+    if (confirm('Удалить новость?')) {
+        news.splice(index, 1);
+        renderNews();
+    }
+}
+
+function renderNews() {
+    const container = document.getElementById('newsList');
+    if (news.length === 0) {
+        container.innerHTML = '<div style="color:#4a5a6e;padding:10px 0;">Нет новостей</div>';
+        return;
+    }
+    container.innerHTML = news.map((n, i) => `
+        <div class="item">
+            <span><b>${n.title}</b> — ${n.date}</span>
+            <button class="del danger" onclick="deleteNews(${i})" style="padding:4px 12px;font-size:12px;">✕</button>
+        </div>
+    `).join('');
+}
+
+// ============================================================
+// РЕНДЕР ВСЕГО
+// ============================================================
+function renderAll() {
+    renderPlayers();
+    renderMatches();
+    renderNews();
+}
+</script>
+
+</body>
+</html>
