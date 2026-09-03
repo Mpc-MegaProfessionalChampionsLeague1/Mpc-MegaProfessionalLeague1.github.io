@@ -1,24 +1,12 @@
- 
-# ============================================================
-# ОСНОВНЫЕ НАСТРОЙКИ
-# ============================================================
 backend:
   name: github
-  repo: https://github.com/Mpc-MegaProfessionalChampionsLeague1/Mpc-MegaProfessionalLeague1.github.io.git  # например: bomba69/mpl-site
-  branch: main  # или master
+  repo: Mpc-MegaProfessionalChampionsLeague1/Mpc-MegaProfessionalLeague1.github.io
+  branch: main
 
-# ============================================================
-# НАСТРОЙКИ МЕДИА-ФАЙЛОВ (аватарки)
-# ============================================================
 media_folder: "assets/images/players"
 public_folder: "/assets/images/players"
 
-# ============================================================
-# КОЛЛЕКЦИИ ДАННЫХ
-# ============================================================
 collections:
-
-  # -------- ИГРОКИ --------
   - name: "players"
     label: "👥 Игроки"
     label_singular: "Игрок"
@@ -39,22 +27,24 @@ collections:
       - { name: "rating", label: "Рейтинг", widget: "number", step: 0.01, default: 0 }
       - { name: "you", label: "Это вы?", widget: "boolean", default: false }
       - { name: "avatar", label: "Аватар", widget: "image", default: "", required: false }
-      - { name: "matchHistory", label: "История матчей", widget: "list", summary: "{{fields.match}}", fields:
+      - name: "matchHistory"
+        label: "История матчей"
+        widget: "list"
+        summary: "{{fields.match}}"
+        fields:
           - { name: "match", label: "Название матча", widget: "string" }
           - { name: "k", label: "Убийств", widget: "number", default: 0 }
           - { name: "d", label: "Смертей", widget: "number", default: 0 }
           - { name: "diff", label: "Разница", widget: "number", default: 0 }
           - { name: "map", label: "Карта", widget: "string" }
-        }
     summary: "{{fields.name}} ({{fields.matches}} матчей, K/D: {{fields.kd}})"
 
-  # -------- МАТЧИ --------
   - name: "matches"
     label: "📋 Матчи"
     label_singular: "Матч"
     folder: "data/matches"
     create: true
-    slug: "match-{{slug}}"
+    slug: "{{slug}}"
     extension: "json"
     format: "json"
     fields:
@@ -66,8 +56,6 @@ collections:
       - { name: "winner", label: "Команда победитель", widget: "string" }
       - { name: "loser", label: "Команда проигравший", widget: "string" }
       - { name: "detail", label: "Детали", widget: "text", required: false, default: "" }
-      
-      # Составы команд
       - name: "teams"
         label: "Составы команд"
         widget: "object"
@@ -106,10 +94,8 @@ collections:
                   - { name: "adr", label: "ADR", widget: "number", default: 0 }
                   - { name: "highlight", label: "MVP?", widget: "boolean", default: false }
                   - { name: "worst", label: "Худший?", widget: "boolean", default: false }
-
     summary: "{{fields.title}} ({{fields.date}})"
 
-  # -------- НОВОСТИ --------
   - name: "news"
     label: "📰 Новости"
     label_singular: "Новость"
