@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MPL — Админ-панель</title>
+    <!-- Загружаем Decap CMS -->
+    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
+    <style>
+        body {
+            background: #0e1217;
+            font-family: system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 20px;
+            color: #e8eff7;
+        }
+        #root {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .loading {
+            text-align: center;
+            padding: 60px 20px;
+            color: #8b9bb0;
+        }
+        .loading h2 {
+            color: #ffb347;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Decap CMS будет встроен сюда -->
+    <div id="root">
+        <div class="loading">
+            <h2>⏳ MPL Админ-панель</h2>
+            <p>Загрузка Decap CMS...</p>
+        </div>
+    </div>
+
+    <script>
+        // Ждём, пока CMS загрузится
+        function initCMS() {
+            if (typeof window.CMS !== 'undefined' && window.CMS.init) {
+                console.log('✅ Decap CMS загружен, инициализация...');
+                
+                try {
+                    window.CMS.init({
+                        config: {
+                            backend: {
+                                name: 'github',
+                                repo: 'Mpc-MegaProfessionalChampionsLeague1/Mpc-MegaProfessionalLeague1.github.io',
+                                branch: 'main'
+                            },
+                            load_config_file: false,
+                            collections: [
+                                {
+                                    name: 'players',
+                                    label: '👥 Игроки',
+                                    folder: 'data/players',
+                                    create: true,
+                                    slug: '{{slug}}',
+                                    fields: [
+                                        { name: 'name', label: 'Имя', widget: 'string' },
+                                        { name: 'matches', label: 'Матчи', widget: 'number', default: 0 },
+                                        { name: 'k', label: 'Убийств', widget: 'number', default: 0 },
+                                        { name: 'd', label: 'Смертей', widget: 'number', default: 0 },
+                                        { name: 'kd', label: 'K/D', widget: 'number', step: 0.01, default: 0 },
+                                        { name: 'rating', label: 'Рейтинг', widget: 'number', step: 0.01, default: 0 }
+                                    ]
+                                },
+                                {
+                                    name: 'matches',
+                                    label: '📋 Матчи',
+                                    folder: 'data/matches',
+                                    create: true,
+                                    slug: '{{slug}}',
+                                    fields: [
+                                        { name: 'title', label: 'Название', widget: 'string' },
+                                        { name: 'date', label: 'Дата', widget: 'string' },
+                                        { name: 'score', label: 'Счёт', widget: 'string' },
+                                        { name: 'winner', label: 'Победитель', widget: 'string' },
+                                        { name: 'loser', label: 'Проигравший', widget: 'string' }
+                                    ]
+                                },
+                                {
+                                    name: 'news',
+                                    label: '📰 Новости',
+                                    folder: 'data/news',
+                                    create: true,
+                                    slug: 'news-{{slug}}',
+                                    fields: [
+                                        { name: 'title', label: 'Заголовок', widget: 'string' },
+                                        { name: 'text', label: 'Текст', widget: 'text' }
+                                    ]
+                                }
+                            ]
+                        }
+                    });
+                    console.log('✅ CMS инициализирован успешно!');
+                } catch (e) {
+                    console.error('❌ Ошибка инициализации:', e);
+                }
+            } else {
+                console.log('⏳ Ожидаем загрузку Decap CMS...');
+                setTimeout(initCMS, 500);
+            }
+        }
+
+        // Запускаем инициализацию после загрузки DOM
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initCMS);
+        } else {
+            initCMS();
+        }
+
+        // Резервный запуск через 3 секунды
+        setTimeout(initCMS, 3000);
+    </script>
+</body>
+</html>
