@@ -1,56 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>MPL — Админ-панель</title>
-    <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
-    <style>
-        /* Простые стили для загрузки */
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            background: #0e1217;
-            color: #e8eff7;
-        }
-        .loading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            font-size: 18px;
-            color: #8b9bb0;
-        }
-        .loading::after {
-            content: "⏳ Загрузка админ-панели...";
-            animation: pulse 1.5s ease-in-out infinite;
-        }
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.4; }
-        }
-    </style>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MPL — Админ-панель</title>
+  <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 </head>
 <body>
-    <div class="loading"></div>
-    
-    <script>
-        // Ждём загрузки DOM и инициализируем CMS
-        document.addEventListener('DOMContentLoaded', function() {
-            console.log('Decap CMS загружается...');
-            
-            // Проверяем, что CMS доступен
-            if (typeof window.CMS !== 'undefined') {
-                console.log('CMS найден, инициализация...');
-            } else {
-                console.log('Ожидаем загрузку CMS...');
-                // Если CMS ещё не загружен, ждём
-                window.addEventListener('load', function() {
-                    console.log('Страница полностью загружена');
-                });
-            }
-        });
-    </script>
+  <!-- Decap CMS автоматически создаст интерфейс в этом элементе -->
+  <div id="root"></div>
+
+  <script>
+    // Ждём загрузки CMS
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('Decap CMS загружается...');
+      
+      // Функция для проверки готовности CMS
+      function checkCMS() {
+        if (typeof window.CMS !== 'undefined' && window.CMS.init) {
+          console.log('CMS готов к инициализации');
+          // CMS инициализируется автоматически через config.yml
+        } else {
+          console.log('Ожидаем загрузку CMS...');
+          setTimeout(checkCMS, 500);
+        }
+      }
+      
+      checkCMS();
+    });
+  </script>
 </body>
 </html>
