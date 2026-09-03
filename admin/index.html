@@ -4,68 +4,81 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>MPL — Админ-панель</title>
-    <!-- Netlify CMS (стабильная версия) -->
+    <!-- 1. Загружаем Netlify CMS -->
     <script src="https://unpkg.com/netlify-cms@^2.10.0/dist/netlify-cms.js"></script>
 </head>
 <body>
     <script>
-        // Конфигурация Netlify CMS
-        CMS.init({
-            config: {
-                backend: {
-                    name: 'github',
-                    repo: 'Mpc-MegaProfessionalChampionsLeague1/Mpc-MegaProfessionalLeague1.github.io',
-                    branch: 'main',
-                    // Netlify Identity для входа
-                    auth_endpoint: 'https://mpc-megaprofessionalchampionsleague1.netlify.app/.netlify/identity',
-                },
-                collections: [
-                    {
-                        name: 'players',
-                        label: '👥 Игроки',
-                        folder: 'data/players',
-                        create: true,
-                        slug: '{{slug}}',
-                        fields: [
-                            { name: 'name', label: 'Имя', widget: 'string' },
-                            { name: 'matches', label: 'Матчи', widget: 'number', default: 0 },
-                            { name: 'k', label: 'Убийств', widget: 'number', default: 0 },
-                            { name: 'd', label: 'Смертей', widget: 'number', default: 0 },
-                            { name: 'kd', label: 'K/D', widget: 'number', step: 0.01, default: 0 },
-                            { name: 'rating', label: 'Рейтинг', widget: 'number', step: 0.01, default: 0 },
-                            { name: 'you', label: 'Это вы?', widget: 'boolean', default: false }
-                        ]
-                    },
-                    {
-                        name: 'matches',
-                        label: '📋 Матчи',
-                        folder: 'data/matches',
-                        create: true,
-                        slug: '{{slug}}',
-                        fields: [
-                            { name: 'title', label: 'Название', widget: 'string' },
-                            { name: 'date', label: 'Дата', widget: 'string' },
-                            { name: 'map', label: 'Карта', widget: 'string' },
-                            { name: 'score', label: 'Счёт', widget: 'string' },
-                            { name: 'winner', label: 'Победитель', widget: 'string' },
-                            { name: 'loser', label: 'Проигравший', widget: 'string' }
-                        ]
-                    },
-                    {
-                        name: 'news',
-                        label: '📰 Новости',
-                        folder: 'data/news',
-                        create: true,
-                        slug: 'news-{{slug}}',
-                        fields: [
-                            { name: 'title', label: 'Заголовок', widget: 'string' },
-                            { name: 'text', label: 'Текст', widget: 'text' },
-                            { name: 'date', label: 'Дата', widget: 'datetime' }
+        // 2. Ждём, пока CMS загрузится, и только потом инициализируем
+        function initCMS() {
+            if (typeof CMS !== 'undefined') {
+                console.log('✅ CMS загружен, инициализация...');
+                CMS.init({
+                    config: {
+                        backend: {
+                            name: 'github',
+                            repo: 'Mpc-MegaProfessionalChampionsLeague1/Mpc-MegaProfessionalLeague1.github.io',
+                            branch: 'main'
+                        },
+                        collections: [
+                            {
+                                name: 'players',
+                                label: '👥 Игроки',
+                                folder: 'data/players',
+                                create: true,
+                                slug: '{{slug}}',
+                                fields: [
+                                    { name: 'name', label: 'Имя', widget: 'string' },
+                                    { name: 'matches', label: 'Матчи', widget: 'number', default: 0 },
+                                    { name: 'k', label: 'Убийств', widget: 'number', default: 0 },
+                                    { name: 'd', label: 'Смертей', widget: 'number', default: 0 },
+                                    { name: 'kd', label: 'K/D', widget: 'number', step: 0.01, default: 0 },
+                                    { name: 'rating', label: 'Рейтинг', widget: 'number', step: 0.01, default: 0 },
+                                    { name: 'you', label: 'Это вы?', widget: 'boolean', default: false }
+                                ]
+                            },
+                            {
+                                name: 'matches',
+                                label: '📋 Матчи',
+                                folder: 'data/matches',
+                                create: true,
+                                slug: '{{slug}}',
+                                fields: [
+                                    { name: 'title', label: 'Название', widget: 'string' },
+                                    { name: 'date', label: 'Дата', widget: 'string' },
+                                    { name: 'map', label: 'Карта', widget: 'string' },
+                                    { name: 'score', label: 'Счёт', widget: 'string' },
+                                    { name: 'winner', label: 'Победитель', widget: 'string' },
+                                    { name: 'loser', label: 'Проигравший', widget: 'string' }
+                                ]
+                            },
+                            {
+                                name: 'news',
+                                label: '📰 Новости',
+                                folder: 'data/news',
+                                create: true,
+                                slug: 'news-{{slug}}',
+                                fields: [
+                                    { name: 'title', label: 'Заголовок', widget: 'string' },
+                                    { name: 'text', label: 'Текст', widget: 'text' },
+                                    { name: 'date', label: 'Дата', widget: 'datetime' }
+                                ]
+                            }
                         ]
                     }
-                ]
+                });
+            } else {
+                console.log('⏳ Ожидаем загрузку CMS...');
+                setTimeout(initCMS, 300);
             }
-        });
+        }
+
+        // Запускаем проверку после загрузки страницы
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initCMS);
+        } else {
+            initCMS();
+        }
     </script>
 </body>
 </html>
