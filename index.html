@@ -498,106 +498,22 @@
 
 </div>
 
+<!-- ========================================================== -->
+<!-- ЗАГРУЗКА ДАННЫХ ИЗ JSON-ФАЙЛОВ -->
+<!-- ========================================================== -->
+<script src="script-loader.js"></script>
+
 <script>
     // ==========================================================
-    // ДАННЫЕ МАТЧЕЙ (matchData)
+    // ВСЯ ЛОГИКА РАБОТЫ
     // ==========================================================
-    const matchData = {
-        match0: {
-            title: '🏆 Матч #0 — BO3',
-            date: '30.07.2026',
-            map: 'Ancient + Anubis',
-            score: '2:0',
-            winner: 'Team Fortress 2',
-            loser: 'Team Magic',
-            teams: {
-                win: { players: [{ name: 'bomba69' }, { name: 'uxaxaxaxa' }, { name: 'Хомяк с авт' }, { name: 'AFKE' }] },
-                loss: { players: [{ name: 'Adjiare Gudju' }, { name: 'abdalbek' }, { name: 'Gonduras228' }, { name: 'baksyhanovvand...' }] }
-            }
-        },
-        match1: {
-            title: 'Матч #1',
-            date: '09.05.2026',
-            map: 'Mirage',
-            score: '13:1',
-            winner: 'Team 2',
-            loser: 'Team 1',
-            teams: {
-                win: { players: [{ name: 'uxaxaxaxa' }, { name: 'Хомяк с авт' }, { name: 'wadsf' }, { name: 'AFKE' }] },
-                loss: { players: [{ name: 'abdalbek' }, { name: 'bomba69' }, { name: 'Gonduras228' }, { name: 'baksyhanovvand...' }] }
-            }
-        },
-        match2: {
-            title: 'Матч #2',
-            date: '09.05.2026',
-            map: 'Mirage',
-            score: '3:13',
-            winner: 'Team 1',
-            loser: 'Team 2',
-            teams: {
-                win: { players: [{ name: 'bomba69' }, { name: 'abdalbek' }, { name: 'Gonduras228' }, { name: 'uxaxaxaxa' }] },
-                loss: { players: [{ name: 'Хомяк с авт' }, { name: 'wadsf' }, { name: 'AFKE' }, { name: 'baksyhanovvand...' }] }
-            }
-        },
-        match3: {
-            title: 'Матч #3',
-            date: '17.05.2026',
-            map: 'Mirage',
-            score: '3:13',
-            winner: 'Team 1',
-            loser: 'Team 2',
-            teams: {
-                win: { players: [{ name: 'wadsf' }, { name: 'Gonduras228' }, { name: 'bomba69' }, { name: 'uxaxaxaxa' }] },
-                loss: { players: [{ name: 'abdalbek' }, { name: 'fort[чилл]' }, { name: 'balchuqov_valera' }, { name: 'baksyhanovvand...' }] }
-            }
-        },
-        match4: {
-            title: 'Матч #4',
-            date: '17.05.2026',
-            map: 'Mirage',
-            score: '8:13',
-            winner: 'Team 1',
-            loser: 'Team 2',
-            teams: {
-                win: { players: [{ name: 'bomba69' }, { name: 'abdalbek' }, { name: 'Adjiare Gudju' }, { name: 'uxaxaxaxa' }] },
-                loss: { players: [{ name: 'Gonduras228' }, { name: 'balchuqov_valera' }, { name: 'wadsf' }, { name: 'baksyhanovvand...' }] }
-            }
-        },
-        match5: {
-            title: 'Матч #5',
-            date: '01.09.2026',
-            map: 'Mirage',
-            score: '5:13',
-            winner: 'Team 1',
-            loser: 'Team 2',
-            teams: {
-                win: { players: [{ name: 'bomba69' }, { name: 'uxaxaxaxa' }, { name: 'Gonduras228' }, { name: 'AFKE' }] },
-                loss: { players: [{ name: 'abdalbek' }, { name: 'andrejlybisin3' }, { name: 'RUS_ENZO' }, { name: 'wadsf' }, { name: 'Хомяк с авт' }] }
-            }
-        }
-    };
 
-    // ==========================================================
-    // ДАННЫЕ ИГРОКОВ
-    // ==========================================================
-    const playersData = [
-        { name: 'bomba69', matches: 6, k: 104, d: 60, a: 12, kd: 1.73, adr: 97, diff: 133, rating: 1.53, you: true, avatar: '' },
-        { name: 'Хомяк с авт', matches: 4, k: 69, d: 60, a: 17, kd: 1.15, adr: 89, diff: 81, rating: 1.18, you: false, avatar: '' },
-        { name: 'uxaxaxaxa', matches: 6, k: 85, d: 69, a: 11, kd: 1.23, adr: 84, diff: 66, rating: 1.24, you: false, avatar: '' },
-        { name: 'Gonduras228', matches: 6, k: 74, d: 75, a: 24, kd: 0.99, adr: 77, diff: 35, rating: 1.05, you: false, avatar: '' },
-        { name: 'abdalbek', matches: 6, k: 86, d: 97, a: 21, kd: 0.89, adr: 84, diff: -30, rating: 0.89, you: false, avatar: '' },
-        { name: 'wadsf', matches: 5, k: 58, d: 61, a: 14, kd: 0.95, adr: 68, diff: -60, rating: 0.90, you: false, avatar: '' },
-        { name: 'AFKE', matches: 5, k: 33, d: 53, a: 21, kd: 0.62, adr: 61, diff: -15, rating: 0.83, you: false, avatar: '' },
-        { name: 'Adjiare Gudju', matches: 4, k: 59, d: 69, a: 17, kd: 0.86, adr: 73, diff: -35, rating: 0.96, you: false, avatar: '' },
-        { name: 'balchuqov_valera', matches: 2, k: 15, d: 31, a: 5, kd: 0.48, adr: 49, diff: -79, rating: 0.62, you: false, avatar: '' },
-        { name: 'baksyhanovvand...', matches: 4, k: 25, d: 75, a: 8, kd: 0.33, adr: 41, diff: -119, rating: 0.35, you: false, avatar: '' },
-        { name: 'andrejlybisin3', matches: 1, k: 7, d: 12, a: 1, kd: 0.58, adr: 38, diff: -38, rating: -0.61, you: false, avatar: '' },
-        { name: 'RUS_ENZO', matches: 1, k: 8, d: 16, a: 2, kd: 0.50, adr: 66, diff: -28, rating: -0.58, you: false, avatar: '' }
-    ];
+    // Переменные для данных (будут заполнены из script-loader.js)
+    let playersData = [];
+    let matchData = {};
+    let newsData = [];
 
-    // ==========================================================
-    // АВТОМАТИЧЕСКОЕ ОПРЕДЕЛЕНИЕ МЕСЯЦЕВ ИЗ МАТЧЕЙ
-    // ==========================================================
+    // Функция для получения списка месяцев из матчей
     function getAvailableMonths() {
         const months = {};
         const monthNames = {
@@ -625,9 +541,7 @@
         return months;
     }
 
-    // ==========================================================
-    // ТОП ИГРОКОВ С ФИЛЬТРОМ ПО МЕСЯЦАМ
-    // ==========================================================
+    // Фильтр по месяцам
     let currentTop = 'rating';
     let currentMonth = 'all';
 
@@ -784,27 +698,6 @@
     // ==========================================================
     // НОВОСТИ
     // ==========================================================
-    const newsData = [
-        {
-            id: 1,
-            title: '🏆 Старт сезона MPL!',
-            text: 'Дружеский турнир MPL начался! Следите за матчами и статистикой.',
-            date: '2026-05-09T10:00:00.000Z'
-        },
-        {
-            id: 2,
-            title: '🔥 Bomba69 делает 26-11!',
-            text: 'В матче #5 Bomba69 показал невероятный результат — 26 убийств при 11 смертях!',
-            date: new Date().toISOString()
-        },
-        {
-            id: 3,
-            title: '📊 Добавлен фильтр по месяцам!',
-            text: 'Теперь можно смотреть топ игроков за конкретный месяц. Фильтр автоматически определяется из матчей.',
-            date: new Date().toISOString()
-        }
-    ];
-
     function addNews() {
         const title = document.getElementById('newsTitleInput').value.trim();
         const text = document.getElementById('newsTextInput').value.trim();
@@ -814,7 +707,8 @@
             return;
         }
 
-        newsData.push({
+        if (!window.newsData) window.newsData = [];
+        window.newsData.push({
             id: Date.now(),
             title: title,
             text: text,
@@ -827,25 +721,18 @@
         document.getElementById('newsStatus').style.color = '#7ddfa0';
 
         renderNews();
-        showNewsCode();
-    }
-
-    function showNewsCode() {
-        const code = JSON.stringify(newsData, null, 8);
-        const status = document.getElementById('newsStatus');
-        status.innerHTML = `
-            ✅ Новость добавлена!<br>
-            <span style="font-size:9px;color:#4a5a6e;">
-                Чтобы сохранить навсегда, скопируйте этот код в index.html:<br>
-                <textarea style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);color:#c7d5e0;padding:4px 8px;border-radius:4px;font-size:10px;font-family:monospace;height:80px;margin-top:4px;" readonly>const newsData = ${code};</textarea>
-            </span>
-        `;
-        status.style.color = '#6e7f94';
     }
 
     function renderNews() {
         const container = document.getElementById('newsList');
-        const sorted = [...newsData].sort((a, b) => new Date(b.date) - new Date(a.date));
+        const data = window.newsData || [];
+        const sorted = [...data].sort((a, b) => new Date(b.date) - new Date(a.date));
+        
+        if (sorted.length === 0) {
+            container.innerHTML = '<div style="text-align:center;color:#4a5a6e;padding:20px 0;">Нет новостей</div>';
+            return;
+        }
+
         container.innerHTML = sorted.map(n => `
             <div class="news-item">
                 <div class="news-header">
@@ -880,11 +767,39 @@
     }
 
     // ==========================================================
-    // ИНИЦИАЛИЗАЦИЯ
+    // ИНИЦИАЛИЗАЦИЯ — ЖДЁМ ЗАГРУЗКИ ДАННЫХ
     // ==========================================================
-    renderMonthFilter();
-    renderTopPlayers('rating');
-    renderNews();
+    function initPage() {
+        // Получаем данные из глобальных переменных, загруженных script-loader.js
+        playersData = window.playersData || [];
+        matchData = window.matchData || {};
+        newsData = window.newsData || [];
+
+        renderMonthFilter();
+        renderTopPlayers('rating');
+        renderNews();
+    }
+
+    // Если данные уже загружены — инициализируем сразу
+    if (window.playersData && window.playersData.length > 0) {
+        initPage();
+    } else {
+        // Иначе ждём загрузки
+        document.addEventListener('dataLoaded', initPage);
+        // Резерв: проверяем каждые 500 мс
+        let attempts = 0;
+        const checkData = setInterval(() => {
+            attempts++;
+            if (window.playersData && window.playersData.length > 0) {
+                clearInterval(checkData);
+                initPage();
+            } else if (attempts > 20) {
+                clearInterval(checkData);
+                console.warn('⚠️ Данные не загружены, используем пустые');
+                initPage();
+            }
+        }, 500);
+    }
 </script>
 
 </body>
