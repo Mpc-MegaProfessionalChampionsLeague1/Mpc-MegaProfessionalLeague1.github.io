@@ -4,18 +4,18 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MPL — Админ-панель</title>
-  <!-- Подключаем Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 </head>
 <body>
   <script>
-    // Простая инициализация CMS
     CMS.init({
       config: {
         backend: {
           name: 'github',
           repo: 'Mpc-MegaProfessionalChampionsLeague1/Mpc-MegaProfessionalLeague1.github.io',
           branch: 'main',
+          // ВАЖНО: вставьте ваш Client ID из GitHub OAuth App
+          client_id: 'ваш_client_id_здесь',
         },
         collections: [
           {
