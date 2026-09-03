@@ -1,32 +1,65 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>MPL — Админ-панель</title>
+  <!-- Подключаем Decap CMS -->
   <script src="https://unpkg.com/decap-cms@^3.0.0/dist/decap-cms.js"></script>
 </head>
 <body>
-  <!-- Decap CMS автоматически создаст интерфейс в этом элементе -->
-  <div id="root"></div>
-
   <script>
-    // Ждём загрузки CMS
-    document.addEventListener('DOMContentLoaded', function() {
-      console.log('Decap CMS загружается...');
-      
-      // Функция для проверки готовности CMS
-      function checkCMS() {
-        if (typeof window.CMS !== 'undefined' && window.CMS.init) {
-          console.log('CMS готов к инициализации');
-          // CMS инициализируется автоматически через config.yml
-        } else {
-          console.log('Ожидаем загрузку CMS...');
-          setTimeout(checkCMS, 500);
-        }
+    // Простая инициализация CMS
+    CMS.init({
+      config: {
+        backend: {
+          name: 'github',
+          repo: 'Mpc-MegaProfessionalChampionsLeague1/Mpc-MegaProfessionalLeague1.github.io',
+          branch: 'main',
+        },
+        collections: [
+          {
+            name: 'players',
+            label: '👥 Игроки',
+            folder: 'data/players',
+            create: true,
+            slug: '{{slug}}',
+            fields: [
+              { name: 'name', label: 'Имя', widget: 'string' },
+              { name: 'matches', label: 'Матчи', widget: 'number', default: 0 },
+              { name: 'k', label: 'Убийств', widget: 'number', default: 0 },
+              { name: 'd', label: 'Смертей', widget: 'number', default: 0 },
+              { name: 'kd', label: 'K/D', widget: 'number', step: 0.01, default: 0 },
+              { name: 'rating', label: 'Рейтинг', widget: 'number', step: 0.01, default: 0 },
+            ]
+          },
+          {
+            name: 'matches',
+            label: '📋 Матчи',
+            folder: 'data/matches',
+            create: true,
+            slug: '{{slug}}',
+            fields: [
+              { name: 'title', label: 'Название', widget: 'string' },
+              { name: 'date', label: 'Дата', widget: 'string' },
+              { name: 'score', label: 'Счёт', widget: 'string' },
+              { name: 'winner', label: 'Победитель', widget: 'string' },
+              { name: 'loser', label: 'Проигравший', widget: 'string' },
+            ]
+          },
+          {
+            name: 'news',
+            label: '📰 Новости',
+            folder: 'data/news',
+            create: true,
+            slug: 'news-{{slug}}',
+            fields: [
+              { name: 'title', label: 'Заголовок', widget: 'string' },
+              { name: 'text', label: 'Текст', widget: 'text' },
+            ]
+          }
+        ]
       }
-      
-      checkCMS();
     });
   </script>
 </body>
