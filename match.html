@@ -138,8 +138,6 @@
         .back-btn:hover {
             color: #ffb347;
         }
-
-        /* Для BO3 с тремя секциями */
         .bo3-section {
             margin-bottom: 16px;
         }
@@ -182,9 +180,7 @@
     </nav>
 
     <!-- MATCH CONTENT -->
-    <div id="matchContent">
-        <!-- Рендерится через JS -->
-    </div>
+    <div id="matchContent"></div>
 
     <!-- FOOTER -->
     <div class="footer">
@@ -193,37 +189,48 @@
 
 </div>
 
-<script src="js/data.js"></script>
+<script src="script-loader.js"></script>
+
 <script>
-    // ===== ПОЛУЧАЕМ ID МАТЧА ИЗ URL =====
+    // ==========================================================
+    // ПОЛУЧАЕМ ID МАТЧА ИЗ URL
+    // ==========================================================
     const urlParams = new URLSearchParams(window.location.search);
     const matchId = urlParams.get('id');
 
-    // ===== ФУНКЦИЯ ДЛЯ СОЗДАНИЯ СТАТИСТИКИ КОМАНДЫ =====
+    // ==========================================================
+    // РЕНДЕР КОМАНДЫ
+    // ==========================================================
     function renderTeamStats(players, isWin) {
+        if (!players || players.length === 0) {
+            return '<div style="color:#4a5a6e;padding:4px 0;">Нет данных</div>';
+        }
         return players.map(p => {
             let nameClass = 'pname';
             if (p.highlight) nameClass += ' highlight';
             if (p.worst) nameClass += ' worst';
             let stats = '';
             if (p.k !== undefined && p.d !== undefined) {
-                stats = `<span class="kills">${p.k}</span> - <span class="deaths">${p.d}</span> · ADR ${p.adr}`;
+                stats = `<span class="kills">${p.k}</span> - <span class="deaths">${p.d}</span> · ADR ${p.adr || 0}`;
                 if (p.a !== undefined) stats += ` · A: ${p.a}`;
             } else if (p.rating !== undefined) {
-                stats = `рейтинг ${p.rating.toFixed(2)}`;
+                stats = `рейтинг ${(p.rating || 0).toFixed(2)}`;
             }
             return `
                 <div class="match-page-player">
-                    <span class="${nameClass}">${p.name}</span>
+                    <span class="${nameClass}">${p.name || 'Unknown'}</span>
                     <span class="pstats">${stats}</span>
                 </div>
             `;
         }).join('');
     }
 
-    // ===== РЕНДЕР СТРАНИЦЫ МАТЧА =====
+    // ==========================================================
+    // РЕНДЕР СТРАНИЦЫ МАТЧА
+    // ==========================================================
     function renderMatchPage(id) {
         const container = document.getElementById('matchContent');
+        const matchData = window.matchData || {};
         
         if (!id) {
             container.innerHTML = `
@@ -242,121 +249,4 @@
                 <div style="text-align:center;padding:40px 0;">
                     <div style="font-size:48px;margin-bottom:16px;">❌</div>
                     <div style="font-size:20px;font-weight:700;color:#e8eff7;">Матч не найден</div>
-                    <div style="color:#6e7f94;margin-top:8px;">Вернитесь на страницу <a href="matches.html" style="color:#ffb347;">списка матчей</a></div>
-                </div>
-            `;
-            return;
-        }
-
-        // Проверяем, BO3 это или BO1
-        const isBo3 = id === 'match0';
-
-        let html = `
-            <a href="matches.html" class="back-btn">← Назад к списку матчей</a>
-
-            <div class="match-page-header">
-                <span class="match-page-title">${data.title}</span>
-                <span class="match-page-date">${data.date} · ${data.map}</span>
-            </div>
-
-            <div class="match-page-result">
-                <span class="result-team win">${data.winner}</span>
-                <span class="result-score">${data.score}</span>
-                <span class="result-team loss">${data.loser}</span>
-            </div>
-        `;
-
-        if (isBo3) {
-            // === BO3 ===
-            // Карта 1: Ancient
-            html += `
-                <div class="bo3-section">
-                    <div class="section-label">📊 Карта 1: ${data.map1.name} <span class="map-score">(${data.map1.score})</span></div>
-                    <div class="match-page-grid">
-                        <div class="match-page-team">
-                            <div class="team-title win">✅ ${data.map1.teams.win.name}</div>
-                            ${renderTeamStats(data.map1.teams.win.players, true)}
-                        </div>
-                        <div class="match-page-team">
-                            <div class="team-title loss">❌ ${data.map1.teams.loss.name}</div>
-                            ${renderTeamStats(data.map1.teams.loss.players, false)}
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            // Карта 2: Anubis
-            html += `
-                <div class="bo3-section">
-                    <div class="section-label">📊 Карта 2: ${data.map2.name} <span class="map-score">(${data.map2.score})</span></div>
-                    <div class="match-page-grid">
-                        <div class="match-page-team">
-                            <div class="team-title win">✅ ${data.map2.teams.win.name}</div>
-                            ${renderTeamStats(data.map2.teams.win.players, true)}
-                        </div>
-                        <div class="match-page-team">
-                            <div class="team-title loss">❌ ${data.map2.teams.loss.name}</div>
-                            ${renderTeamStats(data.map2.teams.loss.players, false)}
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            // Общая статистика
-            html += `
-                <div class="match-page-section-title" style="border-top:2px solid rgba(255,255,255,0.1);padding-top:14px;margin-top:4px;">📊 ОБЩАЯ СТАТИСТИКА (Ancient + Anubis)</div>
-                <div class="match-page-grid">
-                    <div class="match-page-team">
-                        <div class="team-title win">✅ ${data.total.teams.win.name}</div>
-                        ${renderTeamStats(data.total.teams.win.players, true)}
-                    </div>
-                    <div class="match-page-team">
-                        <div class="team-title loss">❌ ${data.total.teams.loss.name}</div>
-                        ${renderTeamStats(data.total.teams.loss.players, false)}
-                    </div>
-                </div>
-                <div class="match-page-footer">🎯 BO3 · Победа 2:0</div>
-            `;
-        } else {
-            // === BO1 ===
-            // Проверяем, есть ли данные с рейтингом или с K/D
-            const hasKd = data.teams.win.players[0] && data.teams.win.players[0].k !== undefined;
-
-            html += `
-                <div class="match-page-section-title">📊 Подробная статистика</div>
-                <div class="match-page-grid">
-                    <div class="match-page-team">
-                        <div class="team-title win">✅ ${data.teams.win.name}</div>
-                        ${renderTeamStats(data.teams.win.players, true)}
-                    </div>
-                    <div class="match-page-team">
-                        <div class="team-title loss">❌ ${data.teams.loss.name}</div>
-                        ${renderTeamStats(data.teams.loss.players, false)}
-                    </div>
-                </div>
-                <div class="match-page-footer">🎯 ${data.detail}</div>
-            `;
-        }
-
-        container.innerHTML = html;
-    }
-
-    // ===== ТЕМА =====
-    function toggleTheme() {
-        document.body.classList.toggle('light');
-        document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '🌙' : '🌙';
-    }
-
-    let lang = 'ru';
-
-    function toggleLang() {
-        lang = lang === 'ru' ? 'en' : 'ru';
-        document.getElementById('langBtn').textContent = lang === 'ru' ? '🇬🇧 EN' : '🇷🇺 RU';
-    }
-
-    // ===== ИНИЦИАЛИЗАЦИЯ =====
-    renderMatchPage(matchId);
-</script>
-
-</body>
-</html>
+                    <div style="color:#6e7f94;margin-top:8px;">Вернитесь на страницу <a href="matches.html" style="color:#ffb347;">списка матчей</
