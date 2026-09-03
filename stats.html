@@ -76,63 +76,84 @@
 
 </div>
 
-<script src="js/data.js"></script>
+<script src="script-loader.js"></script>
+
 <script>
-    // ===== СТАТИСТИКА =====
-    document.getElementById('totalPlayers').textContent = playersData.length;
+    // ==========================================================
+    // ЖДЁМ ЗАГРУЗКИ ДАННЫХ
+    // ==========================================================
+    function initStats() {
+        const playersData = window.playersData || [];
+        const matchData = window.matchData || {};
 
-    const totalKills = playersData.reduce((sum, p) => sum + p.k, 0);
-    document.getElementById('totalKills').textContent = totalKills;
+        // Обновляем общую статистику
+        document.getElementById('totalPlayers').textContent = playersData.length;
+        document.getElementById('totalMatches').textContent = Object.keys(matchData).length;
 
-    // ===== ГРАФИКИ =====
-    function renderCharts() {
-        const maxKd = Math.max(...playersData.map(p => p.kd));
-        const maxAdr = Math.max(...playersData.map(p => p.adr));
-        const maxDiff = Math.max(...playersData.map(p => Math.abs(p.diff)));
-        const maxRating = Math.max(...playersData.map(p => p.rating));
+        const totalKills = playersData.reduce((sum, p) => sum + (p.k || 0), 0);
+        document.getElementById('totalKills').textContent = totalKills || '0';
 
-        document.getElementById('kdChart').innerHTML = [...playersData].sort((a, b) => b.kd - a.kd).map(p => `
+        // Рендерим графики
+        renderCharts(playersData);
+    }
+
+    function renderCharts(playersData) {
+        if (!playersData || playersData.length === 0) {
+            ['kdChart', 'ratingChart', 'adrChart', 'diffChart'].forEach(id => {
+                document.getElementById(id).innerHTML = '<div style="text-align:center;color:#4a5a6e;padding:20px;">Нет данных</div>';
+            });
+            return;
+        }
+
+        const maxKd = Math.max(...playersData.map(p => p.kd || 0));
+        const maxAdr = Math.max(...playersData.map(p => p.adr || 0));
+        const maxDiff = Math.max(...playersData.map(p => Math.abs(p.diff || 0)));
+        const maxRating = Math.max(...playersData.map(p => p.rating || 0));
+
+        document.getElementById('kdChart').innerHTML = [...playersData].sort((a, b) => (b.kd || 0) - (a.kd || 0)).map(p => `
             <div style="display:flex;align-items:center;gap:5px;margin:2px 0;font-size:10px;">
                 <span style="min-width:70px;text-align:right;color:#8b9bb0;">${p.name}</span>
                 <div style="flex:1;height:12px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;">
-                    <div style="height:100%;width:${p.kd/maxKd*100}%;background:linear-gradient(90deg,#2a475e,#4a7a9e);border-radius:3px;"></div>
+                    <div style="height:100%;width:${maxKd > 0 ? (p.kd || 0)/maxKd*100 : 0}%;background:linear-gradient(90deg,#2a475e,#4a7a9e);border-radius:3px;"></div>
                 </div>
-                <span style="min-width:32px;font-weight:600;">${p.kd.toFixed(2)}</span>
+                <span style="min-width:32px;font-weight:600;">${(p.kd || 0).toFixed(2)}</span>
             </div>
         `).join('');
 
-        document.getElementById('ratingChart').innerHTML = [...playersData].sort((a, b) => b.rating - a.rating).map(p => `
+        document.getElementById('ratingChart').innerHTML = [...playersData].sort((a, b) => (b.rating || 0) - (a.rating || 0)).map(p => `
             <div style="display:flex;align-items:center;gap:5px;margin:2px 0;font-size:10px;">
                 <span style="min-width:70px;text-align:right;color:#8b9bb0;">${p.name}</span>
                 <div style="flex:1;height:12px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;">
-                    <div style="height:100%;width:${p.rating/maxRating*100}%;background:linear-gradient(90deg,#2a475e,#4a7a9e);border-radius:3px;"></div>
+                    <div style="height:100%;width:${maxRating > 0 ? (p.rating || 0)/maxRating*100 : 0}%;background:linear-gradient(90deg,#2a475e,#4a7a9e);border-radius:3px;"></div>
                 </div>
-                <span style="min-width:32px;font-weight:600;">${p.rating.toFixed(2)}</span>
+                <span style="min-width:32px;font-weight:600;">${(p.rating || 0).toFixed(2)}</span>
             </div>
         `).join('');
 
-        document.getElementById('adrChart').innerHTML = [...playersData].sort((a, b) => b.adr - a.adr).map(p => `
+        document.getElementById('adrChart').innerHTML = [...playersData].sort((a, b) => (b.adr || 0) - (a.adr || 0)).map(p => `
             <div style="display:flex;align-items:center;gap:5px;margin:2px 0;font-size:10px;">
                 <span style="min-width:70px;text-align:right;color:#8b9bb0;">${p.name}</span>
                 <div style="flex:1;height:12px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;">
-                    <div style="height:100%;width:${p.adr/maxAdr*100}%;background:linear-gradient(90deg,#2d7d46,#5cb85c);border-radius:3px;"></div>
+                    <div style="height:100%;width:${maxAdr > 0 ? (p.adr || 0)/maxAdr*100 : 0}%;background:linear-gradient(90deg,#2d7d46,#5cb85c);border-radius:3px;"></div>
                 </div>
-                <span style="min-width:32px;font-weight:600;">${p.adr}</span>
+                <span style="min-width:32px;font-weight:600;">${p.adr || 0}</span>
             </div>
         `).join('');
 
-        document.getElementById('diffChart').innerHTML = [...playersData].sort((a, b) => b.diff - a.diff).map(p => `
+        document.getElementById('diffChart').innerHTML = [...playersData].sort((a, b) => (b.diff || 0) - (a.diff || 0)).map(p => `
             <div style="display:flex;align-items:center;gap:5px;margin:2px 0;font-size:10px;">
                 <span style="min-width:70px;text-align:right;color:#8b9bb0;">${p.name}</span>
                 <div style="flex:1;height:12px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;">
-                    <div style="height:100%;width:${Math.abs(p.diff)/maxDiff*100}%;background:${p.diff>=0?'linear-gradient(90deg,#2d7d46,#5cb85c)':'linear-gradient(90deg,#c0392b,#e74c3c)'};border-radius:3px;"></div>
+                    <div style="height:100%;width:${maxDiff > 0 ? Math.abs(p.diff || 0)/maxDiff*100 : 0}%;background:${(p.diff || 0) >= 0 ? 'linear-gradient(90deg,#2d7d46,#5cb85c)' : 'linear-gradient(90deg,#c0392b,#e74c3c)'};border-radius:3px;"></div>
                 </div>
-                <span style="min-width:32px;font-weight:600;">${p.diff > 0 ? '+' : ''}${p.diff}</span>
+                <span style="min-width:32px;font-weight:600;">${(p.diff || 0) > 0 ? '+' : ''}${p.diff || 0}</span>
             </div>
         `).join('');
     }
 
-    // ===== ТЕМА =====
+    // ==========================================================
+    // ТЕМА / ЯЗЫК
+    // ==========================================================
     function toggleTheme() {
         document.body.classList.toggle('light');
         document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '🌙' : '🌙';
@@ -145,8 +166,33 @@
         document.getElementById('langBtn').textContent = lang === 'ru' ? '🇬🇧 EN' : '🇷🇺 RU';
     }
 
-    // ===== ИНИЦИАЛИЗАЦИЯ =====
-    renderCharts();
+    // ==========================================================
+    // ИНИЦИАЛИЗАЦИЯ
+    // ==========================================================
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initStats);
+    } else {
+        initStats();
+    }
+
+    // Если данные загружаются через script-loader.js
+    document.addEventListener('dataLoaded', function() {
+        initStats();
+    });
+
+    // Резерв: проверяем наличие данных
+    let attempts = 0;
+    const checkData = setInterval(() => {
+        attempts++;
+        if (window.playersData && window.playersData.length > 0) {
+            clearInterval(checkData);
+            initStats();
+        } else if (attempts > 20) {
+            clearInterval(checkData);
+            console.warn('⚠️ Данные не загружены');
+            initStats();
+        }
+    }, 500);
 </script>
 
 </body>
