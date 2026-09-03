@@ -54,7 +54,6 @@
             color: #c7d5e0;
             font-weight: 500;
         }
-
         .player-stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -91,7 +90,6 @@
             letter-spacing: 0.3px;
             margin-top: 2px;
         }
-
         .player-achievements {
             display: flex;
             flex-wrap: wrap;
@@ -118,7 +116,6 @@
         .player-achievement .ach-name {
             color: #8b9bb0;
         }
-
         .player-matches-title {
             font-weight: 600;
             font-size: 16px;
@@ -168,7 +165,6 @@
             color: #ffb347;
             transform: translateX(3px);
         }
-
         .back-btn {
             display: inline-block;
             color: #6e7f94;
@@ -180,7 +176,6 @@
         .back-btn:hover {
             color: #ffb347;
         }
-
         body.light .player-match-row:hover {
             background: #f0f3f8;
         }
@@ -225,9 +220,7 @@
     </nav>
 
     <!-- PLAYER CONTENT -->
-    <div id="playerContent">
-        <!-- Рендерится через JS -->
-    </div>
+    <div id="playerContent"></div>
 
     <!-- FOOTER -->
     <div class="footer">
@@ -236,28 +229,45 @@
 
 </div>
 
-<script src="js/data.js"></script>
+<script src="script-loader.js"></script>
+
 <script>
-    // ===== ПОЛУЧАЕМ ИМЯ ИГРОКА ИЗ URL =====
+    // ==========================================================
+    // ПОЛУЧАЕМ ИМЯ ИГРОКА ИЗ URL
+    // ==========================================================
     const urlParams = new URLSearchParams(window.location.search);
     const playerName = urlParams.get('name');
 
-    // ===== ФУНКЦИЯ ДЛЯ ПОЛУЧЕНИЯ ID МАТЧА ПО НОМЕРУ =====
+    // ==========================================================
+    // ФУНКЦИЯ ДЛЯ ПОЛУЧЕНИЯ ID МАТЧА
+    // ==========================================================
     function getMatchId(matchNumber) {
-        // matchNumber может быть "#0 BO3", "#1", "#2" и т.д.
         const num = matchNumber.replace(/\D/g, '');
-        if (num === '0') return 'match0';
-        if (num === '1') return 'match1';
-        if (num === '2') return 'match2';
-        if (num === '3') return 'match3';
-        if (num === '4') return 'match4';
-        if (num === '5') return 'match5';
-        return 'match0';
+        return 'match' + num;
     }
 
-    // ===== РЕНДЕР СТРАНИЦЫ ИГРОКА =====
+    // ==========================================================
+    // ДОСТИЖЕНИЯ
+    // ==========================================================
+    function getAchievements(player) {
+        const ach = [];
+        if (player.kd > 1.5) ach.push({ icon: '🥇', name: 'Элитный K/D' });
+        if (player.kd > 2.0) ach.push({ icon: '💎', name: 'Легендарный K/D' });
+        if (player.diff > 100) ach.push({ icon: '⚡', name: 'Доминатор' });
+        if (player.diff > 50 && player.diff <= 100) ach.push({ icon: '🔥', name: 'Кипящий' });
+        if (player.adr > 90) ach.push({ icon: '💥', name: 'Урон-машина' });
+        if (player.matches >= 4) ach.push({ icon: '🏅', name: 'Ветеран' });
+        if (player.name === 'bomba69') ach.push({ icon: '⭐', name: 'MVP турнира' });
+        return ach;
+    }
+
+    // ==========================================================
+    // РЕНДЕР СТРАНИЦЫ ИГРОКА
+    // ==========================================================
     function renderPlayerPage(name) {
         const container = document.getElementById('playerContent');
+        const playersData = window.playersData || [];
+        const matchData = window.matchData || {};
         
         if (!name) {
             container.innerHTML = `
@@ -282,7 +292,29 @@
             return;
         }
 
-        const history = playerMatchHistory[player.name] || [];
+        // Собираем историю матчей из matchData
+        const history = [];
+        Object.keys(matchData).forEach(key => {
+            const match = matchData[key];
+            if (!match || !match.teams) return;
+            
+            ['win', 'loss'].forEach(side => {
+                const team = match.teams[side];
+                if (!team || !team.players) return;
+                const p = team.players.find(p2 => p2.name === player.name);
+                if (p) {
+                    history.push({
+                        match: match.title || key,
+                        k: p.k || 0,
+                        d: p.d || 0,
+                        diff: (p.k || 0) - (p.d || 0),
+                        map: match.map || '',
+                        id: key
+                    });
+                }
+            });
+        });
+
         const achievements = getAchievements(player);
 
         container.innerHTML = `
@@ -290,15 +322,15 @@
 
             <div class="player-page-header">
                 <div class="player-page-avatar">
-                    ${player.avatar ? `<img src="${player.avatar}" alt="${player.name}">` : player.name.charAt(0).toUpperCase()}
+                    ${player.avatar ? `<img src="${player.avatar}" alt="${player.name}">` : (player.name ? player.name.charAt(0).toUpperCase() : '?')}
                 </div>
                 <div>
                     <div class="player-page-name">
-                        ${player.name}
+                        ${player.name || 'Unknown'}
                         ${player.you ? '<span class="you-badge">⭐</span>' : ''}
                     </div>
                     <div class="player-page-sub">
-                        ${player.matches} матчей · ${player.k} убийств · ${player.d} смертей · ${player.a} ассистов
+                        ${player.matches || 0} матчей · ${player.k || 0} убийств · ${player.d || 0} смертей · ${player.a || 0} ассистов
                         ${player.you ? ' · <b style="color:#ffb347;">Это вы</b>' : ''}
                     </div>
                 </div>
@@ -306,19 +338,19 @@
 
             <div class="player-stats-grid">
                 <div class="player-stat-card">
-                    <div class="num">${player.kd.toFixed(2)}</div>
+                    <div class="num">${(player.kd || 0).toFixed(2)}</div>
                     <div class="label">K/D</div>
                 </div>
                 <div class="player-stat-card">
-                    <div class="num">${player.adr}</div>
+                    <div class="num">${player.adr || 0}</div>
                     <div class="label">ADR</div>
                 </div>
                 <div class="player-stat-card">
-                    <div class="num ${player.diff > 0 ? 'good' : 'bad'}">${player.diff > 0 ? '+' : ''}${player.diff}</div>
+                    <div class="num ${(player.diff || 0) > 0 ? 'good' : 'bad'}">${(player.diff || 0) > 0 ? '+' : ''}${player.diff || 0}</div>
                     <div class="label">Разница</div>
                 </div>
                 <div class="player-stat-card">
-                    <div class="num">${player.rating.toFixed(2)}</div>
+                    <div class="num">${(player.rating || 0).toFixed(2)}</div>
                     <div class="label">Рейтинг</div>
                 </div>
             </div>
@@ -338,7 +370,7 @@
 
             <div class="player-matches-title">📋 История матчей <span style="font-size:12px;color:#6e7f94;font-weight:400;">(кликните для перехода)</span></div>
             ${history.length > 0 ? history.map(m => `
-                <div class="player-match-row" onclick="location.href='match.html?id=${getMatchId(m.match)}'">
+                <div class="player-match-row" onclick="location.href='match.html?id=${m.id}'">
                     <span class="match-name">${m.match} — ${m.map}</span>
                     <span class="match-stats">
                         ${m.k} - ${m.d}
@@ -370,7 +402,28 @@
     // ==========================================================
     // ИНИЦИАЛИЗАЦИЯ
     // ==========================================================
-    renderPlayerPage(playerName);
+    function initPlayer() {
+        renderPlayerPage(playerName);
+    }
+
+    document.addEventListener('dataLoaded', initPlayer);
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initPlayer);
+    } else {
+        setTimeout(initPlayer, 500);
+    }
+
+    let attempts = 0;
+    const checkData = setInterval(() => {
+        attempts++;
+        if (window.playersData && window.playersData.length > 0) {
+            clearInterval(checkData);
+            initPlayer();
+        } else if (attempts > 20) {
+            clearInterval(checkData);
+            initPlayer();
+        }
+    }, 500);
 </script>
 
 </body>
