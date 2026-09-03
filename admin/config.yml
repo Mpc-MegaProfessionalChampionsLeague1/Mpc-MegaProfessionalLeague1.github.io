@@ -1,0 +1,125 @@
+# ============================================================
+# ОСНОВНЫЕ НАСТРОЙКИ
+# ============================================================
+backend:
+  name: github
+  repo: ВАШ_ЛОГИН/НАЗВАНИЕ_РЕПОЗИТОРИЯ  # например: bomba69/mpl-site
+  branch: main  # или master
+
+# ============================================================
+# НАСТРОЙКИ МЕДИА-ФАЙЛОВ (аватарки)
+# ============================================================
+media_folder: "assets/images/players"
+public_folder: "/assets/images/players"
+
+# ============================================================
+# КОЛЛЕКЦИИ ДАННЫХ
+# ============================================================
+collections:
+
+  # -------- ИГРОКИ --------
+  - name: "players"
+    label: "👥 Игроки"
+    label_singular: "Игрок"
+    folder: "data/players"
+    create: true
+    slug: "{{slug}}"
+    extension: "json"
+    format: "json"
+    fields:
+      - { name: "name", label: "Имя игрока", widget: "string" }
+      - { name: "matches", label: "Количество матчей", widget: "number", default: 0 }
+      - { name: "k", label: "Убийств (всего)", widget: "number", default: 0 }
+      - { name: "d", label: "Смертей (всего)", widget: "number", default: 0 }
+      - { name: "a", label: "Ассистов (всего)", widget: "number", default: 0 }
+      - { name: "kd", label: "K/D", widget: "number", step: 0.01, default: 0 }
+      - { name: "adr", label: "ADR", widget: "number", default: 0 }
+      - { name: "diff", label: "Разница", widget: "number", default: 0 }
+      - { name: "rating", label: "Рейтинг", widget: "number", step: 0.01, default: 0 }
+      - { name: "you", label: "Это вы?", widget: "boolean", default: false }
+      - { name: "avatar", label: "Аватар", widget: "image", default: "", required: false }
+      - { name: "matchHistory", label: "История матчей", widget: "list", summary: "{{fields.match}}", fields:
+          - { name: "match", label: "Название матча", widget: "string" }
+          - { name: "k", label: "Убийств", widget: "number", default: 0 }
+          - { name: "d", label: "Смертей", widget: "number", default: 0 }
+          - { name: "diff", label: "Разница", widget: "number", default: 0 }
+          - { name: "map", label: "Карта", widget: "string" }
+        }
+    summary: "{{fields.name}} ({{fields.matches}} матчей, K/D: {{fields.kd}})"
+
+  # -------- МАТЧИ --------
+  - name: "matches"
+    label: "📋 Матчи"
+    label_singular: "Матч"
+    folder: "data/matches"
+    create: true
+    slug: "match-{{slug}}"
+    extension: "json"
+    format: "json"
+    fields:
+      - { name: "id", label: "ID матча", widget: "string", default: "match-new" }
+      - { name: "title", label: "Название матча", widget: "string" }
+      - { name: "date", label: "Дата", widget: "datetime", default: "", format: "DD.MM.YYYY" }
+      - { name: "map", label: "Карта(ы)", widget: "string" }
+      - { name: "score", label: "Счёт", widget: "string", default: "0:0" }
+      - { name: "winner", label: "Команда победитель", widget: "string" }
+      - { name: "loser", label: "Команда проигравший", widget: "string" }
+      - { name: "detail", label: "Детали", widget: "text", required: false, default: "" }
+      
+      # Составы команд
+      - name: "teams"
+        label: "Составы команд"
+        widget: "object"
+        fields:
+          - name: "win"
+            label: "Команда победитель"
+            widget: "object"
+            fields:
+              - { name: "name", label: "Название команды", widget: "string" }
+              - name: "players"
+                label: "Игроки"
+                widget: "list"
+                summary: "{{fields.name}}"
+                fields:
+                  - { name: "name", label: "Имя игрока", widget: "string" }
+                  - { name: "k", label: "Убийств", widget: "number", default: 0 }
+                  - { name: "d", label: "Смертей", widget: "number", default: 0 }
+                  - { name: "a", label: "Ассистов", widget: "number", default: 0 }
+                  - { name: "adr", label: "ADR", widget: "number", default: 0 }
+                  - { name: "highlight", label: "MVP?", widget: "boolean", default: false }
+                  - { name: "worst", label: "Худший?", widget: "boolean", default: false }
+          - name: "loss"
+            label: "Команда проигравший"
+            widget: "object"
+            fields:
+              - { name: "name", label: "Название команды", widget: "string" }
+              - name: "players"
+                label: "Игроки"
+                widget: "list"
+                summary: "{{fields.name}}"
+                fields:
+                  - { name: "name", label: "Имя игрока", widget: "string" }
+                  - { name: "k", label: "Убийств", widget: "number", default: 0 }
+                  - { name: "d", label: "Смертей", widget: "number", default: 0 }
+                  - { name: "a", label: "Ассистов", widget: "number", default: 0 }
+                  - { name: "adr", label: "ADR", widget: "number", default: 0 }
+                  - { name: "highlight", label: "MVP?", widget: "boolean", default: false }
+                  - { name: "worst", label: "Худший?", widget: "boolean", default: false }
+
+    summary: "{{fields.title}} ({{fields.date}})"
+
+  # -------- НОВОСТИ --------
+  - name: "news"
+    label: "📰 Новости"
+    label_singular: "Новость"
+    folder: "data/news"
+    create: true
+    slug: "news-{{slug}}"
+    extension: "json"
+    format: "json"
+    fields:
+      - { name: "id", label: "ID", widget: "number", default: 0 }
+      - { name: "title", label: "Заголовок", widget: "string" }
+      - { name: "text", label: "Текст", widget: "text" }
+      - { name: "date", label: "Дата", widget: "datetime", default: "" }
+    summary: "{{fields.title}}"
