@@ -1,0 +1,57 @@
+{
+  "name": "abdalbek",
+  "matches": 6,
+  "k": 86,
+  "d": 97,
+  "a": 21,
+  "kd": 0.89,
+  "adr": 84,
+  "diff": -30,
+  "rating": 0.89,
+  "you": false,
+  "avatar": "",
+  "matchHistory": [
+    {
+      "match": "#0 BO3",
+      "k": 20,
+      "d": 30,
+      "diff": -10,
+      "map": "Ancient + Anubis"
+    },
+    {
+      "match": "#1",
+      "k": 8,
+      "d": 13,
+      "diff": -5,
+      "map": "Mirage"
+    },
+    {
+      "match": "#2",
+      "k": 16,
+      "d": 11,
+      "diff": 5,
+      "map": "Mirage"
+    },
+    {
+      "match": "#3",
+      "k": 15,
+      "d": 13,
+      "diff": 2,
+      "map": "Mirage"
+    },
+    {
+      "match": "#4",
+      "k": 16,
+      "d": 14,
+      "diff": 2,
+      "map": "Mirage"
+    },
+    {
+      "match": "#5",
+      "k": 11,
+      "d": 16,
+      "diff": -5,
+      "map": "Mirage"
+    }
+  ]
+}

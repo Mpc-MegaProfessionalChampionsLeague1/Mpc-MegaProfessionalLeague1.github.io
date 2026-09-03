@@ -1,0 +1,57 @@
+{
+  "name": "bomba69",
+  "matches": 6,
+  "k": 104,
+  "d": 60,
+  "a": 12,
+  "kd": 1.73,
+  "adr": 97,
+  "diff": 133,
+  "rating": 1.53,
+  "you": true,
+  "avatar": "",
+  "matchHistory": [
+    {
+      "match": "#0 BO3",
+      "k": 37,
+      "d": 15,
+      "diff": 22,
+      "map": "Ancient + Anubis"
+    },
+    {
+      "match": "#1",
+      "k": 10,
+      "d": 13,
+      "diff": -3,
+      "map": "Mirage"
+    },
+    {
+      "match": "#2",
+      "k": 24,
+      "d": 4,
+      "diff": 20,
+      "map": "Mirage"
+    },
+    {
+      "match": "#3",
+      "k": 12,
+      "d": 7,
+      "diff": 5,
+      "map": "Mirage"
+    },
+    {
+      "match": "#4",
+      "k": 16,
+      "d": 12,
+      "diff": 4,
+      "map": "Mirage"
+    },
+    {
+      "match": "#5",
+      "k": 26,
+      "d": 11,
+      "diff": 15,
+      "map": "Mirage"
+    }
+  ]
+}

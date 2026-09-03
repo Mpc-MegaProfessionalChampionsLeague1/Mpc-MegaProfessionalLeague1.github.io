@@ -1,0 +1,50 @@
+{
+  "name": "wadsf",
+  "matches": 5,
+  "k": 58,
+  "d": 61,
+  "a": 14,
+  "kd": 0.95,
+  "adr": 68,
+  "diff": -60,
+  "rating": 0.9,
+  "you": false,
+  "avatar": "",
+  "matchHistory": [
+    {
+      "match": "#1",
+      "k": 13,
+      "d": 6,
+      "diff": 7,
+      "map": "Mirage"
+    },
+    {
+      "match": "#2",
+      "k": 10,
+      "d": 14,
+      "diff": -4,
+      "map": "Mirage"
+    },
+    {
+      "match": "#3",
+      "k": 17,
+      "d": 9,
+      "diff": 8,
+      "map": "Mirage"
+    },
+    {
+      "match": "#4",
+      "k": 11,
+      "d": 15,
+      "diff": -4,
+      "map": "Mirage"
+    },
+    {
+      "match": "#5",
+      "k": 7,
+      "d": 17,
+      "diff": -10,
+      "map": "Mirage"
+    }
+  ]
+}

@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPL — Главная</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .top-list {
+            display: none;
+            animation: fadeUp 0.3s ease;
+        }
+        .top-list.active {
+            display: block;
+        }
+        .sub-nav-btn {
+            background: transparent;
+            border: none;
+            color: #8b9bb0;
+            padding: 5px 14px;
+            border-radius: 6px;
+            font-weight: 500;
+            font-size: 11px;
+            cursor: pointer;
+            transition: 0.25s;
+            font-family: 'Inter', sans-serif;
+        }
+        .sub-nav-btn:hover {
+            color: #e8eff7;
+            background: rgba(255,255,255,0.05);
+        }
+        .sub-nav-btn.active {
+            background: #1a2a3a;
+            color: #fff;
+        }
+
+        .month-filter {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+        .month-btn {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.06);
+            color: #8b9bb0;
+            padding: 3px 12px;
+            border-radius: 30px;
+            font-size: 10px;
+            cursor: pointer;
+            transition: 0.25s;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+        }
+        .month-btn:hover {
+            background: rgba(255,255,255,0.05);
+            color: #e8eff7;
+        }
+        .month-btn.active {
+            background: #1a2a3a;
+            color: #fff;
+            border-color: #1a2a3a;
+        }
+        .month-btn .count {
+            font-size: 8px;
+            color: #4a5a6e;
+            margin-left: 2px;
+        }
+        .month-btn.active .count {
+            color: #8b9bb0;
+        }
+
+        .ad-left {
+            position: fixed;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 999;
+            background: rgba(14, 18, 23, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 8px 10px;
+            max-width: 170px;
+            transition: 0.3s;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+        .ad-left:hover {
+            transform: translateY(-50%) scale(1.02);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        .ad-left img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+        }
+        .ad-left .ad-text {
+            font-size: 8px;
+            color: #4a5a6e;
+            text-align: center;
+            padding: 4px 0 2px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        .ad-left .ad-link {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+        .ad-left .ad-close {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #1a2a3a;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #6e7f94;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            font-family: 'Inter', sans-serif;
+            line-height: 1;
+        }
+        .ad-left .ad-close:hover {
+            background: #c0392b;
+            color: #fff;
+            border-color: #c0392b;
+        }
+        .ad-left .betbom-logo {
+            font-size: 22px;
+            font-weight: 900;
+            color: #ffb347;
+            letter-spacing: 2px;
+            padding: 6px 0;
+            text-shadow: 0 0 20px rgba(255, 179, 71, 0.2);
+        }
+        .ad-left .betbom-sub {
+            font-size: 9px;
+            color: #8b9bb0;
+            letter-spacing: 2px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding-top: 6px;
+            margin-top: 4px;
+        }
+
+        .ad-right {
+            position: fixed;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 999;
+            background: rgba(14, 18, 23, 0.92);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 8px 10px;
+            max-width: 170px;
+            transition: 0.3s;
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+            text-align: center;
+        }
+        .ad-right:hover {
+            transform: translateY(-50%) scale(1.02);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+        .ad-right img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+            display: block;
+        }
+        .ad-right .ad-text {
+            font-size: 8px;
+            color: #4a5a6e;
+            text-align: center;
+            padding: 4px 0 2px 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+        .ad-right .ad-link {
+            display: block;
+            text-decoration: none;
+            color: inherit;
+        }
+        .ad-right .ad-close {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #1a2a3a;
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #6e7f94;
+            border-radius: 50%;
+            width: 22px;
+            height: 22px;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            font-family: 'Inter', sans-serif;
+            line-height: 1;
+        }
+        .ad-right .ad-close:hover {
+            background: #c0392b;
+            color: #fff;
+            border-color: #c0392b;
+        }
+        .ad-right .upgrader-logo {
+            font-size: 20px;
+            font-weight: 900;
+            color: #7ddfa0;
+            letter-spacing: 1px;
+            padding: 6px 0;
+            text-shadow: 0 0 20px rgba(125, 223, 160, 0.2);
+        }
+        .ad-right .upgrader-sub {
+            font-size: 9px;
+            color: #8b9bb0;
+            letter-spacing: 1px;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            padding-top: 6px;
+            margin-top: 4px;
+        }
+
+        body.light .ad-left,
+        body.light .ad-right {
+            background: rgba(255, 255, 255, 0.95);
+            border-color: rgba(0, 0, 0, 0.1);
+        }
+        body.light .ad-left .ad-close,
+        body.light .ad-right .ad-close {
+            background: #e8ecf1;
+            border-color: #d0d7e0;
+            color: #4a5a6e;
+        }
+        body.light .ad-left .ad-close:hover,
+        body.light .ad-right .ad-close:hover {
+            background: #c0392b;
+            color: #fff;
+        }
+        body.light .ad-left .ad-text,
+        body.light .ad-right .ad-text {
+            color: #8b9bb0;
+        }
+        body.light .ad-left .betbom-sub,
+        body.light .ad-right .upgrader-sub {
+            border-color: rgba(0,0,0,0.06);
+        }
+
+        @media (max-width: 1200px) {
+            .ad-left, .ad-right {
+                max-width: 130px;
+                padding: 6px 8px;
+            }
+            .ad-left .betbom-logo { font-size: 16px; }
+            .ad-right .upgrader-logo { font-size: 15px; }
+        }
+        @media (max-width: 900px) {
+            .ad-left, .ad-right {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo">
+            <h1 onclick="location.href='index.html'">MPL <small>Mega Professional League</small></h1>
+        </div>
+        <div class="header-right">
+            <span>📅 Май-Сентябрь 2026</span>
+            <span class="status">● LIVE</span>
+            <button class="lang-toggle" onclick="toggleLang()" id="langBtn">🇬🇧 EN</button>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        </div>
+    </div>
+
+    <!-- БАННЕРЫ -->
+    <div class="ad-left" id="adLeft">
+        <button class="ad-close" onclick="document.getElementById('adLeft').style.display='none'" title="Закрыть рекламу">✕</button>
+        <a class="ad-link" href="https://betbom.com" target="_blank">
+            <div class="betbom-logo">🎰 BETBOM</div>
+            <div style="font-size:11px;color:#c7d5e0;padding:4px 0;line-height:1.3;">Ставки на киберспорт</div>
+            <div style="font-size:10px;color:#7ddfa0;font-weight:600;">🔥 Бонус до 100%</div>
+            <div class="betbom-sub">BETBOM.COM</div>
+            <div class="ad-text">📢 Реклама</div>
+        </a>
+    </div>
+
+    <div class="ad-right" id="adRight">
+        <button class="ad-close" onclick="document.getElementById('adRight').style.display='none'" title="Закрыть рекламу">✕</button>
+        <a class="ad-link" href="https://upgrader.com" target="_blank">
+            <div class="upgrader-logo">⚡ UPGRADER</div>
+            <div style="font-size:11px;color:#c7d5e0;padding:4px 0;line-height:1.3;">Улучшай свой скин</div>
+            <div style="font-size:10px;color:#ffb347;font-weight:600;">🎯 До +50% цены</div>
+            <div class="upgrader-sub">UPGRADER.COM</div>
+            <div class="ad-text">📢 Реклама</div>
+        </a>
+    </div>
+
+    <!-- NAV -->
+    <nav class="nav">
+        <a href="index.html" class="nav-btn active">📊 Главная</a>
+        <a href="matches.html" class="nav-btn">📋 Матчи</a>
+        <a href="players.html" class="nav-btn">👥 Игроки</a>
+        <a href="stats.html" class="nav-btn">📈 Статистика</a>
+        <a href="about.html" class="nav-btn">ℹ️ О сайте</a>
+    </nav>
+
+    <!-- MAIN GRID -->
+    <div style="display:grid;grid-template-columns:1fr 1.6fr 1fr;gap:16px;margin-top:4px;">
+
+        <!-- LEFT: TOP PLAYERS -->
+        <div class="glass-card">
+            <div class="panel-title">🏆 <span>Топ игроков</span></div>
+
+            <!-- Фильтр по месяцам -->
+            <div class="month-filter" id="monthFilter">
+                <!-- Рендерится через JS -->
+            </div>
+
+            <div style="display:flex;gap:3px;margin-bottom:10px;background:rgba(255,255,255,0.03);border-radius:8px;padding:3px;border:1px solid rgba(255,255,255,0.05);">
+                <button class="sub-nav-btn" onclick="switchTop('kd')" id="subKd">📊 По K/D</button>
+                <button class="sub-nav-btn active" onclick="switchTop('rating')" id="subRating">📈 По рейтингу</button>
+            </div>
+
+            <div class="scroll-area" id="playerList"></div>
+            <div style="font-size:9px;color:#4a5a6e;margin-top:8px;text-align:center;border-top:1px solid rgba(255,255,255,0.04);padding-top:8px;">
+                🟣 <b style="color:#ffb347;" id="topFooterName">bomba69</b> — <span id="topFooterText">лидер по рейтингу</span>
+                <span id="monthInfo" style="display:block;color:#4a5a6e;font-size:8px;margin-top:2px;">за всё время</span>
+            </div>
+        </div>
+
+        <!-- CENTER: NEWS -->
+        <div class="glass-card">
+            <div class="panel-title">
+                📰 <span>Новости</span>
+                <span style="color:#6e7f94;font-weight:400;font-size:11px;">последние обновления</span>
+                <span style="font-size:10px;color:#4a5a6e;margin-left:auto;cursor:pointer;" onclick="document.getElementById('adminPanel').style.display=document.getElementById('adminPanel').style.display==='none'?'block':'none';">⚙️</span>
+            </div>
+
+            <div id="adminPanel" style="display:none;background:rgba(255,255,255,0.04);border-radius:8px;padding:12px;margin-bottom:12px;border:1px solid rgba(255,255,255,0.06);">
+                <div style="font-size:12px;color:#8b9bb0;margin-bottom:6px;">✏️ Добавить новость</div>
+                <input type="text" id="newsTitleInput" placeholder="Заголовок..." style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);color:#c7d5e0;padding:6px 10px;border-radius:4px;font-size:12px;margin-bottom:6px;font-family:'Inter',sans-serif;">
+                <textarea id="newsTextInput" placeholder="Текст новости..." style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);color:#c7d5e0;padding:6px 10px;border-radius:4px;font-size:12px;min-height:50px;resize:vertical;font-family:'Inter',sans-serif;margin-bottom:6px;"></textarea>
+                <button onclick="addNews()" style="background:#1a2a3a;border:none;color:#fff;padding:4px 16px;border-radius:4px;font-weight:600;font-size:12px;cursor:pointer;font-family:'Inter',sans-serif;">➕ Добавить</button>
+                <span id="newsStatus" style="font-size:10px;color:#6e7f94;margin-left:8px;"></span>
+                <div style="font-size:9px;color:#4a5a6e;margin-top:6px;">⚠️ Новости сохраняются в коде</div>
+            </div>
+
+            <div id="newsList" style="display:flex;flex-direction:column;gap:8px;max-height:400px;overflow-y:auto;padding-right:3px;"></div>
+            <div style="font-size:10px;color:#4a5a6e;text-align:center;margin-top:8px;padding-top:8px;border-top:1px solid rgba(255,255,255,0.04);">
+                ✏️ <span>Новости видны всем</span>
+            </div>
+        </div>
+
+        <!-- RIGHT: MATCHES -->
+        <div style="display:flex;flex-direction:column;gap:8px;">
+            <div class="panel-title" style="padding:0 4px 8px 4px;border-bottom:1px solid rgba(255,255,255,0.06);">
+                📋 <span>Матчи</span> <span style="color:#6e7f94;font-weight:400;font-size:11px;">всего 6</span>
+            </div>
+
+            <div class="match-card" onclick="location.href='match.html?id=match0'">
+                <div class="match-top">
+                    <span class="title">🏆 Матч #0 — BO3</span>
+                    <span class="date">30.07.2026 · 2:0</span>
+                    <span class="click-hint">▶</span>
+                </div>
+                <div class="match-teams">
+                    <div class="team win"><span class="name">TF2</span><span class="score">2</span></div>
+                    <span class="vs">vs</span>
+                    <div class="team loss"><span class="score">0</span><span class="name">Magic</span></div>
+                </div>
+                <div class="match-stats-row">
+                    <span>🏆 <b class="mvp">bomba69</b> (37-15)</span>
+                    <span>💀 <b class="bad">baksyhanovvand...</b></span>
+                </div>
+            </div>
+
+            <div class="match-card" onclick="location.href='match.html?id=match1'">
+                <div class="match-top">
+                    <span class="title">Матч #1</span>
+                    <span class="date">09.05.2026 · 13:1</span>
+                    <span class="click-hint">▶</span>
+                </div>
+                <div class="match-teams">
+                    <div class="team win"><span class="name">Team 2</span><span class="score">13</span></div>
+                    <span class="vs">vs</span>
+                    <div class="team loss"><span class="score">1</span><span class="name">Team 1</span></div>
+                </div>
+                <div class="match-stats-row">
+                    <span>🏆 <b class="mvp">uxaxaxaxa</b> (17-5)</span>
+                    <span>💀 <b class="bad">baksyhanovvand...</b> (0-13)</span>
+                </div>
+            </div>
+
+            <div class="match-card loss" onclick="location.href='match.html?id=match2'">
+                <div class="match-top">
+                    <span class="title">Матч #2</span>
+                    <span class="date">09.05.2026 · 3:13</span>
+                    <span class="click-hint">▶</span>
+                </div>
+                <div class="match-teams">
+                    <div class="team loss"><span class="name">Team 2</span><span class="score">3</span></div>
+                    <span class="vs">vs</span>
+                    <div class="team win"><span class="score">13</span><span class="name">Team 1</span></div>
+                </div>
+                <div class="match-stats-row">
+                    <span>🏆 <b class="mvp">bomba69</b> (24-4)</span>
+                    <span>💀 <b class="bad">baksyhanovvand...</b> (3-15)</span>
+                </div>
+            </div>
+
+            <div class="match-card loss" onclick="location.href='match.html?id=match3'">
+                <div class="match-top">
+                    <span class="title">Матч #3</span>
+                    <span class="date">17.05.2026 · 3:13</span>
+                    <span class="click-hint">▶</span>
+                </div>
+                <div class="match-teams">
+                    <div class="team loss"><span class="name">Team 2</span><span class="score">3</span></div>
+                    <span class="vs">vs</span>
+                    <div class="team win"><span class="score">13</span><span class="name">Team 1</span></div>
+                </div>
+                <div class="match-stats-row">
+                    <span>🏆 <b class="mvp">wadsf</b> (17-9)</span>
+                    <span>💀 <b class="bad">baksyhanovvand...</b> (1-14)</span>
+                </div>
+            </div>
+
+            <div class="match-card loss" onclick="location.href='match.html?id=match4'">
+                <div class="match-top">
+                    <span class="title">Матч #4</span>
+                    <span class="date">17.05.2026 · 8:13</span>
+                    <span class="click-hint">▶</span>
+                </div>
+                <div class="match-teams">
+                    <div class="team loss"><span class="name">Team 2</span><span class="score">8</span></div>
+                    <span class="vs">vs</span>
+                    <div class="team win"><span class="score">13</span><span class="name">Team 1</span></div>
+                </div>
+                <div class="match-stats-row">
+                    <span>🏆 <b class="mvp">bomba69</b> (16-12)</span>
+                    <span>💀 <b class="bad">baksyhanovvand...</b> (4-17)</span>
+                </div>
+            </div>
+
+            <div class="match-card loss" onclick="location.href='match.html?id=match5'">
+                <div class="match-top">
+                    <span class="title">Матч #5</span>
+                    <span class="date">01.09.2026 · 5:13</span>
+                    <span class="click-hint">▶</span>
+                </div>
+                <div class="match-teams">
+                    <div class="team loss"><span class="name">Team 2</span><span class="score">5</span></div>
+                    <span class="vs">vs</span>
+                    <div class="team win"><span class="score">13</span><span class="name">Team 1</span></div>
+                </div>
+                <div class="match-stats-row">
+                    <span>🏆 <b class="mvp">bomba69</b> (26-11)</span>
+                    <span>💀 <b class="bad">Хомяк с авт</b> (6-17)</span>
+                </div>
+            </div>
+
+            <div style="text-align:center;color:#4a5a6e;font-size:9px;margin-top:4px;">
+                Все матчи · 4v4 · нажмите для деталей
+            </div>
+        </div>
+
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        MPL · Mega Professional League · <b>HLTV-style</b> · Май-Сентябрь 2026
+        <br>👆 Кликните на матч для полной статистики
+    </div>
+
+</div>
+
+<script>
+    // ==========================================================
+    // ДАННЫЕ МАТЧЕЙ (matchData)
+    // ==========================================================
+    const matchData = {
+        match0: {
+            title: '🏆 Матч #0 — BO3',
+            date: '30.07.2026',
+            map: 'Ancient + Anubis',
+            score: '2:0',
+            winner: 'Team Fortress 2',
+            loser: 'Team Magic',
+            teams: {
+                win: { players: [{ name: 'bomba69' }, { name: 'uxaxaxaxa' }, { name: 'Хомяк с авт' }, { name: 'AFKE' }] },
+                loss: { players: [{ name: 'Adjiare Gudju' }, { name: 'abdalbek' }, { name: 'Gonduras228' }, { name: 'baksyhanovvand...' }] }
+            }
+        },
+        match1: {
+            title: 'Матч #1',
+            date: '09.05.2026',
+            map: 'Mirage',
+            score: '13:1',
+            winner: 'Team 2',
+            loser: 'Team 1',
+            teams: {
+                win: { players: [{ name: 'uxaxaxaxa' }, { name: 'Хомяк с авт' }, { name: 'wadsf' }, { name: 'AFKE' }] },
+                loss: { players: [{ name: 'abdalbek' }, { name: 'bomba69' }, { name: 'Gonduras228' }, { name: 'baksyhanovvand...' }] }
+            }
+        },
+        match2: {
+            title: 'Матч #2',
+            date: '09.05.2026',
+            map: 'Mirage',
+            score: '3:13',
+            winner: 'Team 1',
+            loser: 'Team 2',
+            teams: {
+                win: { players: [{ name: 'bomba69' }, { name: 'abdalbek' }, { name: 'Gonduras228' }, { name: 'uxaxaxaxa' }] },
+                loss: { players: [{ name: 'Хомяк с авт' }, { name: 'wadsf' }, { name: 'AFKE' }, { name: 'baksyhanovvand...' }] }
+            }
+        },
+        match3: {
+            title: 'Матч #3',
+            date: '17.05.2026',
+            map: 'Mirage',
+            score: '3:13',
+            winner: 'Team 1',
+            loser: 'Team 2',
+            teams: {
+                win: { players: [{ name: 'wadsf' }, { name: 'Gonduras228' }, { name: 'bomba69' }, { name: 'uxaxaxaxa' }] },
+                loss: { players: [{ name: 'abdalbek' }, { name: 'fort[чилл]' }, { name: 'balchuqov_valera' }, { name: 'baksyhanovvand...' }] }
+            }
+        },
+        match4: {
+            title: 'Матч #4',
+            date: '17.05.2026',
+            map: 'Mirage',
+            score: '8:13',
+            winner: 'Team 1',
+            loser: 'Team 2',
+            teams: {
+                win: { players: [{ name: 'bomba69' }, { name: 'abdalbek' }, { name: 'Adjiare Gudju' }, { name: 'uxaxaxaxa' }] },
+                loss: { players: [{ name: 'Gonduras228' }, { name: 'balchuqov_valera' }, { name: 'wadsf' }, { name: 'baksyhanovvand...' }] }
+            }
+        },
+        match5: {
+            title: 'Матч #5',
+            date: '01.09.2026',
+            map: 'Mirage',
+            score: '5:13',
+            winner: 'Team 1',
+            loser: 'Team 2',
+            teams: {
+                win: { players: [{ name: 'bomba69' }, { name: 'uxaxaxaxa' }, { name: 'Gonduras228' }, { name: 'AFKE' }] },
+                loss: { players: [{ name: 'abdalbek' }, { name: 'andrejlybisin3' }, { name: 'RUS_ENZO' }, { name: 'wadsf' }, { name: 'Хомяк с авт' }] }
+            }
+        }
+    };
+
+    // ==========================================================
+    // ДАННЫЕ ИГРОКОВ
+    // ==========================================================
+    const playersData = [
+        { name: 'bomba69', matches: 6, k: 104, d: 60, a: 12, kd: 1.73, adr: 97, diff: 133, rating: 1.53, you: true, avatar: '' },
+        { name: 'Хомяк с авт', matches: 4, k: 69, d: 60, a: 17, kd: 1.15, adr: 89, diff: 81, rating: 1.18, you: false, avatar: '' },
+        { name: 'uxaxaxaxa', matches: 6, k: 85, d: 69, a: 11, kd: 1.23, adr: 84, diff: 66, rating: 1.24, you: false, avatar: '' },
+        { name: 'Gonduras228', matches: 6, k: 74, d: 75, a: 24, kd: 0.99, adr: 77, diff: 35, rating: 1.05, you: false, avatar: '' },
+        { name: 'abdalbek', matches: 6, k: 86, d: 97, a: 21, kd: 0.89, adr: 84, diff: -30, rating: 0.89, you: false, avatar: '' },
+        { name: 'wadsf', matches: 5, k: 58, d: 61, a: 14, kd: 0.95, adr: 68, diff: -60, rating: 0.90, you: false, avatar: '' },
+        { name: 'AFKE', matches: 5, k: 33, d: 53, a: 21, kd: 0.62, adr: 61, diff: -15, rating: 0.83, you: false, avatar: '' },
+        { name: 'Adjiare Gudju', matches: 4, k: 59, d: 69, a: 17, kd: 0.86, adr: 73, diff: -35, rating: 0.96, you: false, avatar: '' },
+        { name: 'balchuqov_valera', matches: 2, k: 15, d: 31, a: 5, kd: 0.48, adr: 49, diff: -79, rating: 0.62, you: false, avatar: '' },
+        { name: 'baksyhanovvand...', matches: 4, k: 25, d: 75, a: 8, kd: 0.33, adr: 41, diff: -119, rating: 0.35, you: false, avatar: '' },
+        { name: 'andrejlybisin3', matches: 1, k: 7, d: 12, a: 1, kd: 0.58, adr: 38, diff: -38, rating: -0.61, you: false, avatar: '' },
+        { name: 'RUS_ENZO', matches: 1, k: 8, d: 16, a: 2, kd: 0.50, adr: 66, diff: -28, rating: -0.58, you: false, avatar: '' }
+    ];
+
+    // ==========================================================
+    // АВТОМАТИЧЕСКОЕ ОПРЕДЕЛЕНИЕ МЕСЯЦЕВ ИЗ МАТЧЕЙ
+    // ==========================================================
+    function getAvailableMonths() {
+        const months = {};
+        const monthNames = {
+            '5': 'Май',
+            '6': 'Июнь',
+            '7': 'Июль',
+            '8': 'Август',
+            '9': 'Сентябрь'
+        };
+
+        Object.keys(matchData).forEach(key => {
+            const match = matchData[key];
+            if (!match || !match.date) return;
+
+            const dateParts = match.date.split('.');
+            if (dateParts.length === 3) {
+                const month = parseInt(dateParts[1]);
+                if (!months[month]) {
+                    months[month] = { count: 0, name: monthNames[month] || month };
+                }
+                months[month].count++;
+            }
+        });
+
+        return months;
+    }
+
+    // ==========================================================
+    // ТОП ИГРОКОВ С ФИЛЬТРОМ ПО МЕСЯЦАМ
+    // ==========================================================
+    let currentTop = 'rating';
+    let currentMonth = 'all';
+
+    function renderMonthFilter() {
+        const container = document.getElementById('monthFilter');
+        const months = getAvailableMonths();
+        const sortedMonths = Object.keys(months).sort((a, b) => parseInt(a) - parseInt(b));
+
+        let html = `
+            <button class="month-btn active" onclick="setMonth('all')" data-month="all">
+                📅 Всё время
+            </button>
+        `;
+
+        sortedMonths.forEach(month => {
+            const data = months[month];
+            html += `
+                <button class="month-btn" onclick="setMonth('${month}')" data-month="${month}">
+                    ${data.name} <span class="count">(${data.count})</span>
+                </button>
+            `;
+        });
+
+        container.innerHTML = html;
+    }
+
+    function setMonth(month) {
+        currentMonth = month;
+        document.querySelectorAll('.month-btn').forEach(btn => {
+            btn.classList.toggle('active', btn.dataset.month === month);
+        });
+
+        const monthNames = {
+            'all': 'всё время',
+            '5': 'май',
+            '6': 'июнь',
+            '7': 'июль',
+            '8': 'август',
+            '9': 'сентябрь'
+        };
+        document.getElementById('monthInfo').textContent = `за ${monthNames[month] || 'всё время'}`;
+
+        renderTopPlayers(currentTop);
+    }
+
+    function getPlayersForMonth(month) {
+        if (month === 'all') return playersData;
+
+        const matchKeys = [];
+        Object.keys(matchData).forEach(key => {
+            const match = matchData[key];
+            if (!match || !match.date) return;
+            const dateParts = match.date.split('.');
+            if (dateParts.length === 3 && parseInt(dateParts[1]) === parseInt(month)) {
+                matchKeys.push(key);
+            }
+        });
+
+        if (matchKeys.length === 0) return [];
+
+        const filteredPlayers = playersData.map(p => {
+            const copy = { ...p, k: 0, d: 0, a: 0, matches: 0, kd: 0, adr: 0, diff: 0, rating: 0 };
+
+            matchKeys.forEach(matchKey => {
+                const match = matchData[matchKey];
+                if (!match) return;
+
+                ['win', 'loss'].forEach(side => {
+                    const team = match.teams?.[side];
+                    if (!team) return;
+                    const player = team.players.find(p2 => p2.name === p.name);
+                    if (player) {
+                        copy.k += player.k || 0;
+                        copy.d += player.d || 0;
+                        copy.a += player.a || 0;
+                        copy.diff += player.diff || 0;
+                        copy.matches++;
+                        copy.adr += player.adr || 0;
+                        copy.rating += player.rating || p.rating || 0;
+                    }
+                });
+            });
+
+            if (copy.matches > 0) {
+                copy.kd = copy.k / (copy.d || 1) || 0;
+                copy.adr = Math.round(copy.adr / copy.matches);
+                copy.rating = parseFloat((copy.rating / copy.matches).toFixed(2));
+            }
+
+            return copy;
+        });
+
+        return filteredPlayers.filter(p => p.matches > 0);
+    }
+
+    function switchTop(type) {
+        currentTop = type;
+        const kdBtn = document.getElementById('subKd');
+        const ratingBtn = document.getElementById('subRating');
+
+        if (type === 'kd') {
+            kdBtn.className = 'sub-nav-btn active';
+            ratingBtn.className = 'sub-nav-btn';
+        } else {
+            kdBtn.className = 'sub-nav-btn';
+            ratingBtn.className = 'sub-nav-btn active';
+        }
+
+        renderTopPlayers(type);
+    }
+
+    function renderTopPlayers(type) {
+        const container = document.getElementById('playerList');
+        const data = getPlayersForMonth(currentMonth);
+
+        if (!data || !data.length) {
+            container.innerHTML = '<div style="text-align:center;color:#4a5a6e;padding:20px 0;">Нет данных за этот период</div>';
+            return;
+        }
+
+        const sorted = type === 'kd' ?
+            [...data].filter(p => p.kd > 0).sort((a, b) => b.kd - a.kd) :
+            [...data].filter(p => p.rating > 0).sort((a, b) => b.rating - a.rating);
+
+        const ranks = ['gold', 'silver', 'bronze', '', '', '', '', '', '', ''];
+        const val = type === 'kd' ? 'kd' : 'rating';
+
+        if (sorted.length === 0) {
+            container.innerHTML = '<div style="text-align:center;color:#4a5a6e;padding:20px 0;">Нет данных за этот период</div>';
+            return;
+        }
+
+        container.innerHTML = sorted.map((p, i) => {
+            const displayVal = type === 'kd' ? p.kd : p.rating;
+            const diff = p.diff || 0;
+            return `
+            <div class="player-row" onclick="location.href='player.html?name=${encodeURIComponent(p.name)}'">
+                <span class="rank ${ranks[i] || ''}">#${i+1}</span>
+                <div class="player-avatar-mini">
+                    ${p.avatar ? `<img src="${p.avatar}" alt="${p.name}">` : p.name.charAt(0).toUpperCase()}
+                </div>
+                <span class="pname ${p.you ? 'you' : ''}">${p.name}</span>
+                <span class="badge-kd ${i === 0 ? 'gold' : i === 1 ? 'silver' : i === 2 ? 'bronze' : i === sorted.length - 1 ? 'red' : ''}">${displayVal.toFixed(2)}</span>
+                <span class="pstats"><b class="${diff > 0 ? 'best' : 'worst'}">${diff > 0 ? '+' : ''}${diff}</b></span>
+                <span style="font-size:8px;color:#4a5a6e;margin-left:4px;">${p.matches} м.</span>
+            </div>
+        `}).join('');
+
+        const topName = sorted[0]?.name || '—';
+        document.getElementById('topFooterName').textContent = topName;
+        document.getElementById('topFooterText').textContent = type === 'kd' ? 'лидер по K/D' : 'лидер по рейтингу';
+    }
+
+    // ==========================================================
+    // НОВОСТИ
+    // ==========================================================
+    const newsData = [
+        {
+            id: 1,
+            title: '🏆 Старт сезона MPL!',
+            text: 'Дружеский турнир MPL начался! Следите за матчами и статистикой.',
+            date: '2026-05-09T10:00:00.000Z'
+        },
+        {
+            id: 2,
+            title: '🔥 Bomba69 делает 26-11!',
+            text: 'В матче #5 Bomba69 показал невероятный результат — 26 убийств при 11 смертях!',
+            date: new Date().toISOString()
+        },
+        {
+            id: 3,
+            title: '📊 Добавлен фильтр по месяцам!',
+            text: 'Теперь можно смотреть топ игроков за конкретный месяц. Фильтр автоматически определяется из матчей.',
+            date: new Date().toISOString()
+        }
+    ];
+
+    function addNews() {
+        const title = document.getElementById('newsTitleInput').value.trim();
+        const text = document.getElementById('newsTextInput').value.trim();
+        if (!title || !text) {
+            document.getElementById('newsStatus').textContent = '❌ Заполните поля!';
+            document.getElementById('newsStatus').style.color = '#e07a7a';
+            return;
+        }
+
+        newsData.push({
+            id: Date.now(),
+            title: title,
+            text: text,
+            date: new Date().toISOString()
+        });
+
+        document.getElementById('newsTitleInput').value = '';
+        document.getElementById('newsTextInput').value = '';
+        document.getElementById('newsStatus').textContent = '✅ Новость добавлена!';
+        document.getElementById('newsStatus').style.color = '#7ddfa0';
+
+        renderNews();
+        showNewsCode();
+    }
+
+    function showNewsCode() {
+        const code = JSON.stringify(newsData, null, 8);
+        const status = document.getElementById('newsStatus');
+        status.innerHTML = `
+            ✅ Новость добавлена!<br>
+            <span style="font-size:9px;color:#4a5a6e;">
+                Чтобы сохранить навсегда, скопируйте этот код в index.html:<br>
+                <textarea style="width:100%;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);color:#c7d5e0;padding:4px 8px;border-radius:4px;font-size:10px;font-family:monospace;height:80px;margin-top:4px;" readonly>const newsData = ${code};</textarea>
+            </span>
+        `;
+        status.style.color = '#6e7f94';
+    }
+
+    function renderNews() {
+        const container = document.getElementById('newsList');
+        const sorted = [...newsData].sort((a, b) => new Date(b.date) - new Date(a.date));
+        container.innerHTML = sorted.map(n => `
+            <div class="news-item">
+                <div class="news-header">
+                    <span class="news-title">${n.title}</span>
+                    <div class="news-meta">
+                        <span class="author">✏️ MPL</span>
+                        <span>${new Date(n.date).toLocaleString('ru-RU')}</span>
+                    </div>
+                </div>
+                <div class="news-text">${n.text}</div>
+                <div class="news-tags">
+                    <span class="tag">#обновление</span>
+                    <span class="tag">#турнир</span>
+                </div>
+            </div>
+        `).join('');
+    }
+
+    // ==========================================================
+    // ТЕМА / ЯЗЫК
+    // ==========================================================
+    function toggleTheme() {
+        document.body.classList.toggle('light');
+        document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '🌙' : '🌙';
+    }
+
+    let lang = 'ru';
+
+    function toggleLang() {
+        lang = lang === 'ru' ? 'en' : 'ru';
+        document.getElementById('langBtn').textContent = lang === 'ru' ? '🇬🇧 EN' : '🇷🇺 RU';
+    }
+
+    // ==========================================================
+    // ИНИЦИАЛИЗАЦИЯ
+    // ==========================================================
+    renderMonthFilter();
+    renderTopPlayers('rating');
+    renderNews();
+</script>
+
+</body>
+</html>

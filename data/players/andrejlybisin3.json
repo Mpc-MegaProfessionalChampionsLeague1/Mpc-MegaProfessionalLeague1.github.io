@@ -1,0 +1,22 @@
+{
+  "name": "andrejlybisin3",
+  "matches": 1,
+  "k": 7,
+  "d": 12,
+  "a": 1,
+  "kd": 0.58,
+  "adr": 38,
+  "diff": -38,
+  "rating": -0.61,
+  "you": false,
+  "avatar": "",
+  "matchHistory": [
+    {
+      "match": "#5",
+      "k": 7,
+      "d": 12,
+      "diff": -5,
+      "map": "Mirage"
+    }
+  ]
+}

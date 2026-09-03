@@ -1,0 +1,57 @@
+{
+  "name": "Gonduras228",
+  "matches": 6,
+  "k": 74,
+  "d": 75,
+  "a": 24,
+  "kd": 0.99,
+  "adr": 77,
+  "diff": 35,
+  "rating": 1.05,
+  "you": false,
+  "avatar": "",
+  "matchHistory": [
+    {
+      "match": "#0 BO3",
+      "k": 16,
+      "d": 32,
+      "diff": -16,
+      "map": "Ancient + Anubis"
+    },
+    {
+      "match": "#1",
+      "k": 6,
+      "d": 13,
+      "diff": -7,
+      "map": "Mirage"
+    },
+    {
+      "match": "#2",
+      "k": 9,
+      "d": 9,
+      "diff": 0,
+      "map": "Mirage"
+    },
+    {
+      "match": "#3",
+      "k": 14,
+      "d": 10,
+      "diff": 4,
+      "map": "Mirage"
+    },
+    {
+      "match": "#4",
+      "k": 13,
+      "d": 14,
+      "diff": -1,
+      "map": "Mirage"
+    },
+    {
+      "match": "#5",
+      "k": 18,
+      "d": 13,
+      "diff": 5,
+      "map": "Mirage"
+    }
+  ]
+}

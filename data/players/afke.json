@@ -1,0 +1,43 @@
+{
+  "name": "AFKE",
+  "matches": 5,
+  "k": 33,
+  "d": 53,
+  "a": 21,
+  "kd": 0.62,
+  "adr": 61,
+  "diff": -15,
+  "rating": 0.83,
+  "you": false,
+  "avatar": "",
+  "matchHistory": [
+    {
+      "match": "#0 BO3",
+      "k": 14,
+      "d": 24,
+      "diff": -10,
+      "map": "Ancient + Anubis"
+    },
+    {
+      "match": "#1",
+      "k": 8,
+      "d": 5,
+      "diff": 3,
+      "map": "Mirage"
+    },
+    {
+      "match": "#2",
+      "k": 6,
+      "d": 15,
+      "diff": -9,
+      "map": "Mirage"
+    },
+    {
+      "match": "#5",
+      "k": 11,
+      "d": 9,
+      "diff": 2,
+      "map": "Mirage"
+    }
+  ]
+}

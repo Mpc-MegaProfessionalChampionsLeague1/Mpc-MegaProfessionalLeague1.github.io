@@ -1,0 +1,80 @@
+{
+  "id": "match0",
+  "title": "🏆 Матч #0 — BO3",
+  "date": "30.07.2026",
+  "map": "Ancient + Anubis",
+  "score": "2:0",
+  "winner": "Team Fortress 2",
+  "loser": "Team Magic",
+  "detail": "BO3 · 2 карты",
+  "teams": {
+    "win": {
+      "name": "Team Fortress 2",
+      "players": [
+        {
+          "name": "Хомяк с авт",
+          "k": 35,
+          "d": 19,
+          "a": 5,
+          "adr": 101,
+          "highlight": true
+        },
+        {
+          "name": "uxaxaxaxa",
+          "k": 34,
+          "d": 16,
+          "a": 9,
+          "adr": 103
+        },
+        {
+          "name": "bomba69",
+          "k": 37,
+          "d": 15,
+          "a": 3,
+          "adr": 97
+        },
+        {
+          "name": "AFKE",
+          "k": 14,
+          "d": 24,
+          "a": 12,
+          "adr": 53
+        }
+      ]
+    },
+    "loss": {
+      "name": "Team Magic",
+      "players": [
+        {
+          "name": "Adjiare Gudju",
+          "k": 24,
+          "d": 28,
+          "a": 4,
+          "adr": 66
+        },
+        {
+          "name": "abdalbek",
+          "k": 20,
+          "d": 30,
+          "a": 8,
+          "adr": 70
+        },
+        {
+          "name": "Gonduras228",
+          "k": 16,
+          "d": 32,
+          "a": 8,
+          "adr": 58
+        },
+        {
+          "name": "baksyhanovvand...",
+          "k": 14,
+          "d": 31,
+          "a": 5,
+          "adr": 49,
+          "worst": true
+        }
+      ]
+    }
+  }
+}

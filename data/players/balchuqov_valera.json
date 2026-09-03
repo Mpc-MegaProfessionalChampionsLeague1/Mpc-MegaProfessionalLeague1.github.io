@@ -1,0 +1,29 @@
+{
+  "name": "balchuqov_valera",
+  "matches": 2,
+  "k": 15,
+  "d": 31,
+  "a": 5,
+  "kd": 0.48,
+  "adr": 49,
+  "diff": -79,
+  "rating": 0.62,
+  "you": false,
+  "avatar": "",
+  "matchHistory": [
+    {
+      "match": "#3",
+      "k": 6,
+      "d": 14,
+      "diff": -8,
+      "map": "Mirage"
+    },
+    {
+      "match": "#4",
+      "k": 9,
+      "d": 17,
+      "diff": -8,
+      "map": "Mirage"
+    }
+  ]
+}

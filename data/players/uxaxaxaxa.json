@@ -1,0 +1,57 @@
+{
+  "name": "uxaxaxaxa",
+  "matches": 6,
+  "k": 85,
+  "d": 69,
+  "a": 11,
+  "kd": 1.23,
+  "adr": 84,
+  "diff": 66,
+  "rating": 1.24,
+  "you": false,
+  "avatar": "",
+  "matchHistory": [
+    {
+      "match": "#0 BO3",
+      "k": 34,
+      "d": 16,
+      "diff": 18,
+      "map": "Ancient + Anubis"
+    },
+    {
+      "match": "#1",
+      "k": 17,
+      "d": 5,
+      "diff": 12,
+      "map": "Mirage"
+    },
+    {
+      "match": "#2",
+      "k": 10,
+      "d": 10,
+      "diff": 0,
+      "map": "Mirage"
+    },
+    {
+      "match": "#3",
+      "k": 13,
+      "d": 9,
+      "diff": 4,
+      "map": "Mirage"
+    },
+    {
+      "match": "#4",
+      "k": 11,
+      "d": 14,
+      "diff": -3,
+      "map": "Mirage"
+    },
+    {
+      "match": "#5",
+      "k": 23,
+      "d": 7,
+      "diff": 16,
+      "map": "Mirage"
+    }
+  ]
+}

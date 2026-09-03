@@ -1,0 +1,22 @@
+{
+  "name": "RUS_ENZO",
+  "matches": 1,
+  "k": 8,
+  "d": 16,
+  "a": 2,
+  "kd": 0.5,
+  "adr": 66,
+  "diff": -28,
+  "rating": -0.58,
+  "you": false,
+  "avatar": "",
+  "matchHistory": [
+    {
+      "match": "#5",
+      "k": 8,
+      "d": 16,
+      "diff": -8,
+      "map": "Mirage"
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "id": "match2",
+  "title": "Матч #2",
+  "date": "09.05.2026",
+  "map": "Mirage",
+  "score": "3:13",
+  "winner": "Team 1",
+  "loser": "Team 2",
+  "detail": "Карта: Mirage",
+  "teams": {
+    "win": {
+      "name": "Team 1 — WIN",
+      "players": [
+        {
+          "name": "bomba69",
+          "k": 24,
+          "d": 4,
+          "a": 0,
+          "adr": 117,
+          "highlight": true
+        },
+        {
+          "name": "abdalbek",
+          "k": 16,
+          "d": 11,
+          "a": 4,
+          "adr": 112
+        },
+        {
+          "name": "Gonduras228",
+          "k": 9,
+          "d": 9,
+          "a": 5,
+          "adr": 79
+        },
+        {
+          "name": "uxaxaxaxa",
+          "k": 10,
+          "d": 10,
+          "a": 1,
+          "adr": 64
+        }
+      ]
+    },
+    "loss": {
+      "name": "Team 2 — LOSS",
+      "players": [
+        {
+          "name": "Хомяк с авт",
+          "k": 14,
+          "d": 15,
+          "a": 2,
+          "adr": 94
+        },
+        {
+          "name": "wadsf",
+          "k": 10,
+          "d": 14,
+          "a": 1,
+          "adr": 50
+        },
+        {
+          "name": "AFKE",
+          "k": 6,
+          "d": 15,
+          "a": 2,
+          "adr": 65
+        },
+        {
+          "name": "baksyhanovvand...",
+          "k": 3,
+          "d": 15,
+          "a": 2,
+          "adr": 28,
+          "worst": true
+        }
+      ]
+    }
+  }
+}

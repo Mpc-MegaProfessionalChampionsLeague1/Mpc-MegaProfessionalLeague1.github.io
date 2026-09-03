@@ -1,0 +1,50 @@
+{
+  "name": "baksyhanovvand...",
+  "matches": 4,
+  "k": 25,
+  "d": 75,
+  "a": 8,
+  "kd": 0.33,
+  "adr": 41,
+  "diff": -119,
+  "rating": 0.35,
+  "you": false,
+  "avatar": "",
+  "matchHistory": [
+    {
+      "match": "#0 BO3",
+      "k": 14,
+      "d": 31,
+      "diff": -17,
+      "map": "Ancient + Anubis"
+    },
+    {
+      "match": "#1",
+      "k": 0,
+      "d": 13,
+      "diff": -13,
+      "map": "Mirage"
+    },
+    {
+      "match": "#2",
+      "k": 3,
+      "d": 15,
+      "diff": -12,
+      "map": "Mirage"
+    },
+    {
+      "match": "#3",
+      "k": 1,
+      "d": 14,
+      "diff": -13,
+      "map": "Mirage"
+    },
+    {
+      "match": "#4",
+      "k": 4,
+      "d": 17,
+      "diff": -13,
+      "map": "Mirage"
+    }
+  ]
+}
