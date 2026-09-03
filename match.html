@@ -249,4 +249,137 @@
                 <div style="text-align:center;padding:40px 0;">
                     <div style="font-size:48px;margin-bottom:16px;">❌</div>
                     <div style="font-size:20px;font-weight:700;color:#e8eff7;">Матч не найден</div>
-                    <div style="color:#6e7f94;margin-top:8px;">Вернитесь на страницу <a href="matches.html" style="color:#ffb347;">списка матчей</
+                    <div style="color:#6e7f94;margin-top:8px;">Вернитесь на страницу <a href="matches.html" style="color:#ffb347;">списка матчей</a></div>
+                </div>
+            `;
+            return;
+        }
+
+        const isBo3 = id === 'match0';
+
+        let html = `
+            <a href="matches.html" class="back-btn">← Назад к списку матчей</a>
+
+            <div class="match-page-header">
+                <span class="match-page-title">${data.title || 'Матч'}</span>
+                <span class="match-page-date">${data.date || ''} · ${data.map || ''}</span>
+            </div>
+
+            <div class="match-page-result">
+                <span class="result-team win">${data.winner || 'Team 1'}</span>
+                <span class="result-score">${data.score || '0:0'}</span>
+                <span class="result-team loss">${data.loser || 'Team 2'}</span>
+            </div>
+        `;
+
+        if (isBo3 && data.map1 && data.map2 && data.total) {
+            // BO3
+            html += `
+                <div class="bo3-section">
+                    <div class="section-label">📊 Карта 1: ${data.map1.name} <span class="map-score">(${data.map1.score})</span></div>
+                    <div class="match-page-grid">
+                        <div class="match-page-team">
+                            <div class="team-title win">✅ ${data.map1.teams.win.name}</div>
+                            ${renderTeamStats(data.map1.teams.win.players, true)}
+                        </div>
+                        <div class="match-page-team">
+                            <div class="team-title loss">❌ ${data.map1.teams.loss.name}</div>
+                            ${renderTeamStats(data.map1.teams.loss.players, false)}
+                        </div>
+                    </div>
+                </div>
+                <div class="bo3-section">
+                    <div class="section-label">📊 Карта 2: ${data.map2.name} <span class="map-score">(${data.map2.score})</span></div>
+                    <div class="match-page-grid">
+                        <div class="match-page-team">
+                            <div class="team-title win">✅ ${data.map2.teams.win.name}</div>
+                            ${renderTeamStats(data.map2.teams.win.players, true)}
+                        </div>
+                        <div class="match-page-team">
+                            <div class="team-title loss">❌ ${data.map2.teams.loss.name}</div>
+                            ${renderTeamStats(data.map2.teams.loss.players, false)}
+                        </div>
+                    </div>
+                </div>
+                <div class="match-page-section-title" style="border-top:2px solid rgba(255,255,255,0.1);padding-top:14px;margin-top:4px;">📊 ОБЩАЯ СТАТИСТИКА</div>
+                <div class="match-page-grid">
+                    <div class="match-page-team">
+                        <div class="team-title win">✅ ${data.total.teams.win.name}</div>
+                        ${renderTeamStats(data.total.teams.win.players, true)}
+                    </div>
+                    <div class="match-page-team">
+                        <div class="team-title loss">❌ ${data.total.teams.loss.name}</div>
+                        ${renderTeamStats(data.total.teams.loss.players, false)}
+                    </div>
+                </div>
+                <div class="match-page-footer">🎯 BO3 · Победа ${data.score || '2:0'}</div>
+            `;
+        } else if (data.teams) {
+            // BO1
+            html += `
+                <div class="match-page-section-title">📊 Подробная статистика</div>
+                <div class="match-page-grid">
+                    <div class="match-page-team">
+                        <div class="team-title win">✅ ${data.teams.win.name}</div>
+                        ${renderTeamStats(data.teams.win.players, true)}
+                    </div>
+                    <div class="match-page-team">
+                        <div class="team-title loss">❌ ${data.teams.loss.name}</div>
+                        ${renderTeamStats(data.teams.loss.players, false)}
+                    </div>
+                </div>
+                <div class="match-page-footer">🎯 ${data.detail || 'Карта: ' + data.map}</div>
+            `;
+        } else {
+            html += `
+                <div style="text-align:center;color:#4a5a6e;padding:20px;">Нет данных о составе команд</div>
+            `;
+        }
+
+        container.innerHTML = html;
+    }
+
+    // ==========================================================
+    // ТЕМА / ЯЗЫК
+    // ==========================================================
+    function toggleTheme() {
+        document.body.classList.toggle('light');
+        document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '🌙' : '🌙';
+    }
+
+    let lang = 'ru';
+
+    function toggleLang() {
+        lang = lang === 'ru' ? 'en' : 'ru';
+        document.getElementById('langBtn').textContent = lang === 'ru' ? '🇬🇧 EN' : '🇷🇺 RU';
+    }
+
+    // ==========================================================
+    // ИНИЦИАЛИЗАЦИЯ
+    // ==========================================================
+    function initMatch() {
+        renderMatchPage(matchId);
+    }
+
+    document.addEventListener('dataLoaded', initMatch);
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', initMatch);
+    } else {
+        setTimeout(initMatch, 500);
+    }
+
+    let attempts = 0;
+    const checkData = setInterval(() => {
+        attempts++;
+        if (window.matchData && Object.keys(window.matchData).length > 0) {
+            clearInterval(checkData);
+            initMatch();
+        } else if (attempts > 20) {
+            clearInterval(checkData);
+            initMatch();
+        }
+    }, 500);
+</script>
+
+</body>
+</html>
