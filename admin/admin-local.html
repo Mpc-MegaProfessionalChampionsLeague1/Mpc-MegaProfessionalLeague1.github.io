@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MPL — Управление</title>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: #0e1217;
+      color: #e8eff7;
+      padding: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+    .card {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    h1, h2 { color: #ffb347; margin-bottom: 12px; }
+    input, textarea {
+      width: 100%;
+      padding: 10px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.05);
+      color: #e8eff7;
+      font-size: 14px;
+      margin-bottom: 10px;
+      font-family: inherit;
+    }
+    button {
+      background: #ffb347;
+      color: #0e1217;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 6px;
+      font-weight: 600;
+      cursor: pointer;
+      font-size: 14px;
+      transition: 0.2s;
+    }
+    button:hover { background: #ff9f1a; }
+    .login { text-align: center; padding: 40px; }
+    .login input { max-width: 300px; margin: 10px auto; }
+    .hidden { display: none; }
+    .item {
+      background: rgba(255,255,255,0.03);
+      padding: 10px 14px;
+      border-radius: 6px;
+      margin-bottom: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-left: 3px solid #ffb347;
+    }
+    .item .del {
+      background: #c0392b;
+      color: #fff;
+      border: none;
+      padding: 4px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .item .del:hover { background: #e74c3c; }
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .tabs button {
+      background: rgba(255,255,255,0.05);
+      color: #8b9bb0;
+      padding: 8px 16px;
+      border-radius: 6px;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .tabs button.active {
+      background: #ffb347;
+      color: #0e1217;
+    }
+    .status {
+      padding: 10px;
+      border-radius: 6px;
+      margin-top: 10px;
+      font-size: 13px;
+    }
+    .status.success { background: rgba(46, 204, 113, 0.2); color: #7ddfa0; }
+    .status.error { background: rgba(231, 76, 60, 0.2); color: #e07a7a; }
+  </style>
+</head>
+<body>
+
+<div id="loginPanel" class="card login">
+  <h1>🔐 MPL Админ-панель</h1>
+  <p style="color:#8b9bb0;margin-bottom:16px;">Введите пароль для управления сайтом</p>
+  <input type="password" id="passwordInput" placeholder="Введите пароль...">
+  <button onclick="login()">Войти</button>
+  <div id="loginStatus" style="margin-top:10px;color:#e07a7a;font-size:13px;"></div>
+</div>
+
+<div id="adminPanel" class="hidden">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;">
+    <h1>⚙️ Управление MPL</h1>
+    <button onclick="logout()" style="background:#c0392b;color:#fff;padding:6px 14px;font-size:12px;">Выйти</button>
+  </div>
+
+  <div class="tabs">
+    <button class="active" onclick="switchTab('players')">👥 Игроки</button>
+    <button onclick="switchTab('matches')">📋 Матчи</button>
+    <button onclick="switchTab('news')">📰 Новости</button>
+  </div>
+
+  <div id="playersTab" class="tab-content">
+    <div class="card">
+      <h2>➕ Добавить игрока</h2>
+      <input type="text" id="playerName" placeholder="Имя">
+      <input type="number" id="playerK" placeholder="Убийств">
+      <input type="number" id="playerD" placeholder="Смертей">
+      <button onclick="addPlayer()">Добавить</button>
+      <div id="playerStatus"></div>
+    </div>
+    <div class="card">
+      <h2>📋 Список игроков</h2>
+      <div id="playersList"></div>
+    </div>
+  </div>
+
+  <div id="matchesTab" class="tab-content hidden">
+    <div class="card">
+      <h2>➕ Добавить матч</h2>
+      <input type="text" id="matchTitle" placeholder="Название">
+      <input type="text" id="matchDate" placeholder="Дата (ДД.ММ.ГГГГ)">
+      <input type="text" id="matchScore" placeholder="Счёт (например, 13:5)">
+      <input type="text" id="matchWinner" placeholder="Команда-победитель">
+      <input type="text" id="matchLoser" placeholder="Команда-проигравший">
+      <button onclick="addMatch()">Добавить</button>
+      <div id="matchStatus"></div>
+    </div>
+    <div class="card">
+      <h2>📋 Список матчей</h2>
+      <div id="matchesList"></div>
+    </div>
+  </div>
+
+  <div id="newsTab" class="tab-content hidden">
+    <div class="card">
+      <h2>➕ Добавить новость</h2>
+      <input type="text" id="newsTitle" placeholder="Заголовок">
+      <textarea id="newsText" placeholder="Текст новости" rows="3"></textarea>
+      <button onclick="addNews()">Добавить</button>
+      <div id="newsStatus"></div>
+    </div>
+    <div class="card">
+      <h2>📰 Список новостей</h2>
+      <div id="newsList"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// ПАРОЛЬ (измените на свой!)
+// ============================================================
+const ADMIN_PASSWORD = 'mpl2026';
+
+// ============================================================
+// ЗАГРУЗКА ДАННЫХ ИЗ LOCALSTORAGE
+// ============================================================
+function loadData(key, defaultData) {
+  try {
+    const data = localStorage.getItem('mpl_' + key);
+    if (data) return JSON.parse(data);
+  } catch(e) {}
+  return defaultData;
+}
+
+function saveData(key, data) {
+  localStorage.setItem('mpl_' + key, JSON.stringify(data));
+}
+
+// ============================================================
+// ДАННЫЕ
+// ============================================================
+let players = loadData('players', []);
+let matches = loadData('matches', []);
+let news = loadData('news', []);
+
+// ============================================================
+// ВХОД / ВЫХОД
+// ============================================================
+function login() {
+  const pass = document.getElementById('passwordInput').value;
+  if (pass === ADMIN_PASSWORD) {
+    document.getElementById('loginPanel').classList.add('hidden');
+    document.getElementById('adminPanel').classList.remove('hidden');
+    document.getElementById('loginStatus').textContent = '';
+    renderAll();
+  } else {
+    document.getElementById('loginStatus').textContent = '❌ Неверный пароль!';
+  }
+}
+
+function logout() {
+  document.getElementById('loginPanel').classList.remove('hidden');
+  document.getElementById('adminPanel').classList.add('hidden');
+  document.getElementById('passwordInput').value = '';
+}
+
+// ============================================================
+// ВКЛАДКИ
+// ============================================================
+function switchTab(tab) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+  document.querySelectorAll('.tabs button').forEach(el => el.classList.remove('active'));
+  
+  if (tab === 'players') {
+    document.getElementById('playersTab').classList.remove('hidden');
+    document.querySelector('.tabs button:nth-child(1)').classList.add('active');
+  } else if (tab === 'matches') {
+    document.getElementById('matchesTab').classList.remove('hidden');
+    document.querySelector('.tabs button:nth-child(2)').classList.add('active');
+  } else if (tab === 'news') {
+    document.getElementById('newsTab').classList.remove('hidden');
+    document.querySelector('.tabs button:nth-child(3)').classList.add('active');
+  }
+  renderAll();
+}
+
+// ============================================================
+// ИГРОКИ
+// ============================================================
+function addPlayer() {
+  const name = document.getElementById('playerName').value.trim();
+  const k = parseInt(document.getElementById('playerK').value) || 0;
+  const d = parseInt(document.getElementById('playerD').value) || 0;
+  
+  if (!name) {
+    document.getElementById('playerStatus').textContent = '❌ Введите имя!';
+    document.getElementById('playerStatus').className = 'status error';
+    return;
+  }
+  
+  players.push({ name, k, d, matches: 1, kd: k/d || 0, rating: (k/d || 0) * 0.8 });
+  saveData('players', players);
+  document.getElementById('playerName').value = '';
+  document.getElementById('playerK').value = '';
+  document.getElementById('playerD').value = '';
+  document.getElementById('playerStatus').textContent = '✅ Игрок добавлен!';
+  document.getElementById('playerStatus').className = 'status success';
+  renderPlayers();
+}
+
+function deletePlayer(index) {
+  players.splice(index, 1);
+  saveData('players', players);
+  renderPlayers();
+}
+
+function renderPlayers() {
+  const container = document.getElementById('playersList');
+  if (players.length === 0) {
+    container.innerHTML = '<div style="color:#4a5a6e;">Нет игроков</div>';
+    return;
+  }
+  container.innerHTML = players.map((p, i) => `
+    <div class="item">
+      <span><b>${p.name}</b> — ${p.k} убийств, ${p.d} смертей, K/D: ${(p.k/p.d || 0).toFixed(2)}</span>
+      <button class="del" onclick="deletePlayer(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+// ============================================================
+// МАТЧИ
+// ============================================================
+function addMatch() {
+  const title = document.getElementById('matchTitle').value.trim();
+  const date = document.getElementById('matchDate').value.trim();
+  const score = document.getElementById('matchScore').value.trim();
+  const winner = document.getElementById('matchWinner').value.trim();
+  const loser = document.getElementById('matchLoser').value.trim();
+  
+  if (!title || !date || !score) {
+    document.getElementById('matchStatus').textContent = '❌ Заполните название, дату и счёт!';
+    document.getElementById('matchStatus').className = 'status error';
+    return;
+  }
+  
+  matches.push({ id: 'match' + Date.now(), title, date, score, winner, loser });
+  saveData('matches', matches);
+  document.getElementById('matchTitle').value = '';
+  document.getElementById('matchDate').value = '';
+  document.getElementById('matchScore').value = '';
+  document.getElementById('matchWinner').value = '';
+  document.getElementById('matchLoser').value = '';
+  document.getElementById('matchStatus').textContent = '✅ Матч добавлен!';
+  document.getElementById('matchStatus').className = 'status success';
+  renderMatches();
+}
+
+function deleteMatch(index) {
+  matches.splice(index, 1);
+  saveData('matches', matches);
+  renderMatches();
+}
+
+function renderMatches() {
+  const container = document.getElementById('matchesList');
+  if (matches.length === 0) {
+    container.innerHTML = '<div style="color:#4a5a6e;">Нет матчей</div>';
+    return;
+  }
+  container.innerHTML = matches.map((m, i) => `
+    <div class="item">
+      <span><b>${m.title}</b> — ${m.date} · ${m.score}</span>
+      <button class="del" onclick="deleteMatch(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+// ============================================================
+// НОВОСТИ
+// ============================================================
+function addNews() {
+  const title = document.getElementById('newsTitle').value.trim();
+  const text = document.getElementById('newsText').value.trim();
+  
+  if (!title || !text) {
+    document.getElementById('newsStatus').textContent = '❌ Заполните заголовок и текст!';
+    document.getElementById('newsStatus').className = 'status error';
+    return;
+  }
+  
+  news.push({ id: Date.now(), title, text, date: new Date().toLocaleString() });
+  saveData('news', news);
+  document.getElementById('newsTitle').value = '';
+  document.getElementById('newsText').value = '';
+  document.getElementById('newsStatus').textContent = '✅ Новость добавлена!';
+  document.getElementById('newsStatus').className = 'status success';
+  renderNews();
+}
+
+function deleteNews(index) {
+  news.splice(index, 1);
+  saveData('news', news);
+  renderNews();
+}
+
+function renderNews() {
+  const container = document.getElementById('newsList');
+  if (news.length === 0) {
+    container.innerHTML = '<div style="color:#4a5a6e;">Нет новостей</div>';
+    return;
+  }
+  container.innerHTML = news.map((n, i) => `
+    <div class="item">
+      <span><b>${n.title}</b> — ${n.date}</span>
+      <button class="del" onclick="deleteNews(${i})">✕</button>
+    </div>
+  `).join('');
+}
+
+// ============================================================
+// РЕНДЕР ВСЕГО
+// ============================================================
+function renderAll() {
+  renderPlayers();
+  renderMatches();
+  renderNews();
+}
+
+// ============================================================
+// АВТО-ВХОД ЕСЛИ УЖЕ ВОШЛИ
+// ============================================================
+if (localStorage.getItem('mpl_logged') === 'true') {
+  document.getElementById('passwordInput').value = ADMIN_PASSWORD;
+  login();
+}
+
+// Сохраняем состояние входа
+document.addEventListener('DOMContentLoaded', function() {
+  // Если уже вошли, показываем панель
+  if (document.getElementById('adminPanel').classList.contains('hidden') === false) {
+    localStorage.setItem('mpl_logged', 'true');
+  }
+});
+</script>
+
+</body>
+</html>
