@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Тест доступа к GitHub</title>
+    <style>
+        body { font-family: sans-serif; background: #0e1217; color: #e8eff7; padding: 20px; max-width: 600px; margin: 0 auto; }
+        input, button { display: block; width: 100%; padding: 10px; margin: 10px 0; border-radius: 6px; border: 1px solid #444; background: #1a1f2b; color: #fff; }
+        button { background: #ffb347; color: #000; font-weight: bold; cursor: pointer; }
+        .success { color: #7ddfa0; }
+        .error { color: #e07a7a; }
+        #log { background: #1a1f2b; padding: 10px; border-radius: 6px; max-height: 300px; overflow-y: auto; font-size: 12px; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <h1>🔑 Тест доступа к GitHub</h1>
+    <p>Вставьте ваш токен и нажмите "Проверить доступ".</p>
+    <input type="password" id="tokenInput" placeholder="Введите GitHub токен">
+    <button onclick="testAccess()">🚀 Проверить доступ</button>
+    <div id="log">Ожидание...</div>
+
+    <script>
+        const REPO_OWNER = 'Mpc-MegaProfessionalChampionsLeague1';
+        const REPO_NAME = 'Mpc-MegaProfessionalLeague1.github.io';
+        const BRANCH = 'main';
+
+        async function testAccess() {
+            const token = document.getElementById('tokenInput').value.trim();
+            const logDiv = document.getElementById('log');
+            logDiv.innerHTML = '⏳ Проверка...';
+
+            if (!token) {
+                logDiv.innerHTML = '❌ Введите токен!';
+                return;
+            }
+
+            try {
+                // 1. Проверяем, читается ли репозиторий
+                logDiv.innerHTML = '🔍 Проверка чтения репозитория...';
+                const testUrl = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}`;
+                const readResponse = await fetch(testUrl, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+
+                if (!readResponse.ok) {
+                    logDiv.innerHTML = `❌ Ошибка чтения: ${readResponse.status}. Токен недействителен или нет доступа.`;
+                    return;
+                }
+                logDiv.innerHTML = '✅ Чтение работает. Проверяем запись...';
+
+                // 2. Пытаемся создать временный файл
+                const testFilePath = 'data/test_write_access.txt';
+                const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${testFilePath}`;
+                const content = btoa('Тестовая запись ' + new Date().toISOString());
+
+                const body = {
+                    message: 'Тест записи через админ-панель',
+                    content: content,
+                    branch: BRANCH
+                };
+
+                logDiv.innerHTML = '📤 Пытаемся создать тестовый файл...';
+
+                const writeResponse = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body)
+                });
+
+                if (writeResponse.ok) {
+                    logDiv.innerHTML = '✅ УСПЕХ! Токен имеет права на запись. Файл создан. Теперь удаляем его...';
+
+                    // 3. Удаляем тестовый файл (чтобы не засорять)
+                    const fileData = await writeResponse.json();
+                    const deleteBody = {
+                        message: 'Удаление тестового файла',
+                        sha: fileData.content.sha,
+                        branch: BRANCH
+                    };
+                    await fetch(url, {
+                        method: 'DELETE',
+                        headers: {
+                            'Authorization': `token ${token}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(deleteBody)
+                    });
+                    logDiv.innerHTML = '✅ Тест пройден! Токен работает. Файл создан и удалён.';
+                } else {
+                    const error = await writeResponse.json();
+                    logDiv.innerHTML = `❌ Ошибка записи: ${writeResponse.status}. Токен не имеет прав на запись.\n\nОшибка: ${JSON.stringify(error, null, 2)}`;
+                }
+
+            } catch (e) {
+                logDiv.innerHTML = `❌ Ошибка: ${e.message}`;
+            }
+        }
+    </script>
+</body>
+</html>
