@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тестовая админ-панель</title>
+    <style>
+        body { font-family: sans-serif; background: #0e1217; color: #e8eff7; padding: 20px; max-width: 600px; margin: 0 auto; }
+        input, button { display: block; width: 100%; padding: 10px; margin: 10px 0; border-radius: 6px; border: 1px solid #444; background: #1a1f2b; color: #fff; }
+        button { background: #ffb347; color: #000; font-weight: bold; cursor: pointer; }
+        .success { color: #7ddfa0; }
+        .error { color: #e07a7a; }
+        #log { background: #1a1f2b; padding: 10px; border-radius: 6px; max-height: 300px; overflow-y: auto; font-size: 12px; white-space: pre-wrap; word-break: break-all; }
+    </style>
+</head>
+<body>
+
+    <h1>🧪 Тестовая Админ-панель</h1>
+    <p>Пароль: <b>mpl2026</b></p>
+
+    <input type="password" id="tokenInput" placeholder="Введите GitHub токен">
+    <button onclick="login()">Войти и загрузить данные</button>
+
+    <div id="loginStatus" class="error"></div>
+
+    <div id="adminPanel" style="display: none;">
+        <hr>
+        <h2>👥 Добавить игрока</h2>
+        <input type="text" id="playerName" placeholder="Имя игрока">
+        <button onclick="addPlayer()">➕ Добавить в список</button>
+        <button onclick="saveToGitHub()" style="background: #27ae60;">💾 СОХРАНИТЬ В GITHUB</button>
+        <div id="playerStatus"></div>
+
+        <hr>
+        <h2>📋 Текущий список игроков</h2>
+        <div id="playersList"></div>
+
+        <hr>
+        <h2>📋 Лог операций</h2>
+        <div id="log">Ожидание действий...</div>
+    </div>
+
+    <script>
+        // === НАСТРОЙКИ ===
+        const ADMIN_PASSWORD = 'mpl2026';
+        const REPO_OWNER = 'Mpc-MegaProfessionalChampionsLeague1';
+        const REPO_NAME = 'Mpc-MegaProfessionalLeague1.github.io';
+        const BRANCH = 'main';
+        let GITHUB_TOKEN = '';
+        let players = [];
+
+        // === ЛОГГЕР ===
+        function addLog(message, isError = false) {
+            const logDiv = document.getElementById('log');
+            const time = new Date().toLocaleTimeString();
+            const prefix = isError ? '❌' : '✅';
+            logDiv.innerHTML += `[${time}] ${prefix} ${message}\n`;
+            logDiv.scrollTop = logDiv.scrollHeight;
+            console.log(message);
+        }
+
+        // === ВХОД ===
+        function login() {
+            const token = document.getElementById('tokenInput').value.trim();
+            if (token) {
+                GITHUB_TOKEN = token;
+                document.getElementById('loginStatus').textContent = '';
+                document.getElementById('adminPanel').style.display = 'block';
+                addLog('🔑 Вход выполнен, токен установлен.');
+                loadFromGitHub();
+            } else {
+                document.getElementById('loginStatus').textContent = '❌ Введите токен!';
+            }
+        }
+
+        // === ЗАГРУЗКА ДАННЫХ ===
+        async function loadFromGitHub() {
+            addLog('⏳ Загрузка players.json...');
+            try {
+                const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/data/players.json`;
+                const response = await fetch(url, {
+                    headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+                });
+
+                if (response.status === 404) {
+                    addLog('⚠️ Файл players.json не найден, начнём с пустого списка.');
+                    players = [];
+                } else if (response.ok) {
+                    const data = await response.json();
+                    const content = atob(data.content);
+                    players = JSON.parse(content);
+                    addLog(`✅ Загружено ${players.length} игроков.`);
+                } else {
+                    addLog(`❌ Ошибка загрузки: ${response.status}`, true);
+                }
+            } catch (e) {
+                addLog(`❌ Ошибка: ${e.message}`, true);
+            }
+            renderPlayers();
+        }
+
+        // === ДОБАВЛЕНИЕ ИГРОКА ===
+        function addPlayer() {
+            const name = document.getElementById('playerName').value.trim();
+            if (!name) {
+                document.getElementById('playerStatus').textContent = '❌ Введите имя!';
+                return;
+            }
+            players.push({ name, matches: 0, k: 0, d: 0, kd: 0, rating: 0 });
+            document.getElementById('playerName').value = '';
+            document.getElementById('playerStatus').textContent = `✅ Игрок "${name}" добавлен в список (всего: ${players.length})`;
+            addLog(`➕ Добавлен игрок: ${name}`);
+            renderPlayers();
+        }
+
+        // === ОТОБРАЖЕНИЕ СПИСКА ===
+        function renderPlayers() {
+            const container = document.getElementById('playersList');
+            if (players.length === 0) {
+                container.innerHTML = '<p>Список пуст</p>';
+                return;
+            }
+            container.innerHTML = players.map((p, i) => `<p>${i+1}. ${p.name}</p>`).join('');
+        }
+
+        // === СОХРАНЕНИЕ В GITHUB ===
+        async function saveToGitHub() {
+            if (players.length === 0) {
+                alert('❌ Нет игроков для сохранения!');
+                return;
+            }
+
+            addLog('⏳ Начинаем сохранение в GitHub...');
+            const statusDiv = document.getElementById('playerStatus');
+            statusDiv.textContent = '⏳ Сохранение...';
+
+            try {
+                const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/data/players.json`;
+                let sha = null;
+
+                // 1. Проверяем, есть ли файл
+                addLog('🔍 Проверка существования файла...');
+                const checkResponse = await fetch(url, {
+                    headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
+                });
+
+                if (checkResponse.ok) {
+                    const fileData = await checkResponse.json();
+                    sha = fileData.sha;
+                    addLog(`📄 Файл существует, SHA получен.`);
+                } else if (checkResponse.status === 404) {
+                    addLog(`📄 Файл не найден, будет создан новый.`);
+                } else {
+                    addLog(`❌ Ошибка проверки: ${checkResponse.status}`, true);
+                    statusDiv.textContent = '❌ Ошибка проверки файла!';
+                    return;
+                }
+
+                // 2. Подготавливаем данные
+                const content = btoa(unescape(encodeURIComponent(JSON.stringify(players, null, 2))));
+                const body = {
+                    message: `Обновление players.json (${players.length} игроков)`,
+                    content: content,
+                    branch: BRANCH
+                };
+                if (sha) body.sha = sha;
+
+                addLog(`📤 Отправка ${players.length} игроков в GitHub...`);
+
+                // 3. Сохраняем
+                const saveResponse = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${GITHUB_TOKEN}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body)
+                });
+
+                if (saveResponse.ok) {
+                    addLog(`✅ УСПЕШНО СОХРАНЕНО! ${players.length} игроков.`);
+                    statusDiv.textContent = `✅ Сохранено! ${players.length} игроков в GitHub.`;
+                    alert(`✅ Готово! ${players.length} игроков сохранены. Проверьте сайт через минуту.`);
+                } else {
+                    const errorData = await saveResponse.json();
+                    addLog(`❌ Ошибка сохранения: ${saveResponse.status} - ${JSON.stringify(errorData)}`, true);
+                    statusDiv.textContent = `❌ Ошибка: ${saveResponse.status}`;
+                }
+            } catch (e) {
+                addLog(`❌ Критическая ошибка: ${e.message}`, true);
+                statusDiv.textContent = `❌ Ошибка: ${e.message}`;
+            }
+        }
+
+        // === СТАРТ ===
+        console.log('✅ Тестовая админ-панель загружена!');
+        document.getElementById('log').textContent = '✅ Готов к работе. Введите токен и нажмите "Войти".';
+    </script>
+</body>
+</html>
