@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPL — Админ-панель (UTF-8)</title>
+    <style>
+        body { font-family: sans-serif; background: #0e1217; color: #e8eff7; padding: 20px; max-width: 600px; margin: 0 auto; }
+        input, button { display: block; width: 100%; padding: 10px; margin: 10px 0; border-radius: 6px; border: 1px solid #444; background: #1a1f2b; color: #fff; font-size: 16px; }
+        button { background: #ffb347; color: #000; font-weight: bold; cursor: pointer; }
+        button.save { background: #27ae60; color: #fff; }
+        .success { color: #7ddfa0; }
+        .error { color: #e07a7a; }
+        #log { background: #1a1f2b; padding: 10px; border-radius: 6px; max-height: 300px; overflow-y: auto; font-size: 12px; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+    <h1>🔧 Админ-панель (UTF-8)</h1>
+    <p>Пароль: <b>mpl2026</b></p>
+    <input type="password" id="tokenInput" placeholder="Введите GitHub токен">
+    <button onclick="login()">Войти</button>
+
+    <div id="panel" style="display:none;">
+        <input type="text" id="nameInput" placeholder="Имя игрока (можно на русском)">
+        <button onclick="addPlayer()">➕ Добавить</button>
+        <button onclick="saveToGitHub()" class="save">💾 Сохранить в GitHub</button>
+        <div id="status"></div>
+        <hr>
+        <div id="log">Готов к работе</div>
+    </div>
+
+    <script>
+        const REPO = 'Mpc-MegaProfessionalChampionsLeague1/Mpc-MegaProfessionalLeague1.github.io';
+        let token = '';
+        let players = [];
+
+        function login() {
+            token = document.getElementById('tokenInput').value.trim();
+            if (!token) return alert('Введите токен!');
+            document.getElementById('panel').style.display = 'block';
+            document.getElementById('log').textContent = '✅ Токен установлен.';
+            loadData();
+        }
+
+        async function loadData() {
+            try {
+                const res = await fetch(`https://api.github.com/repos/${REPO}/contents/data/players.json`, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+                if (res.ok) {
+                    const data = await res.json();
+                    const content = atob(data.content);
+                    players = JSON.parse(content);
+                    document.getElementById('log').textContent = `✅ Загружено ${players.length} игроков.`;
+                } else {
+                    document.getElementById('log').textContent = '⚠️ Файл не найден, начнём с пустого списка.';
+                }
+            } catch (e) {
+                document.getElementById('log').textContent = '❌ Ошибка загрузки: ' + e.message;
+            }
+        }
+
+        function addPlayer() {
+            const name = document.getElementById('nameInput').value.trim();
+            if (!name) return alert('Введите имя!');
+            players.push({ name, matches: 0, k: 0, d: 0, kd: 0, rating: 0 });
+            document.getElementById('nameInput').value = '';
+            document.getElementById('status').textContent = `✅ Добавлен: ${name} (всего ${players.length})`;
+            document.getElementById('status').className = 'success';
+            document.getElementById('log').textContent = `➕ Игрок "${name}" добавлен. Нажмите "Сохранить".`;
+        }
+
+        async function saveToGitHub() {
+            if (players.length === 0) return alert('Нет игроков для сохранения!');
+            document.getElementById('log').textContent = '⏳ Сохранение...';
+            document.getElementById('status').textContent = '⏳ Сохранение...';
+
+            try {
+                // ПРАВИЛЬНОЕ КОДИРОВАНИЕ UTF-8
+                const json = JSON.stringify(players, null, 2);
+                const encoder = new TextEncoder();
+                const data = encoder.encode(json);
+                let binary = '';
+                for (let i = 0; i < data.length; i++) {
+                    binary += String.fromCharCode(data[i]);
+                }
+                const content = btoa(binary);
+
+                const url = `https://api.github.com/repos/${REPO}/contents/data/players.json`;
+                
+                let sha = null;
+                const checkRes = await fetch(url, {
+                    headers: { 'Authorization': `token ${token}` }
+                });
+                if (checkRes.ok) {
+                    const fileData = await checkRes.json();
+                    sha = fileData.sha;
+                }
+
+                const body = {
+                    message: `Обновление players.json (${players.length} игроков)`,
+                    content: content,
+                    branch: 'main'
+                };
+                if (sha) body.sha = sha;
+
+                const saveRes = await fetch(url, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `token ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(body)
+                });
+
+                if (saveRes.ok) {
+                    document.getElementById('log').textContent = `✅ УСПЕШНО! Сохранено ${players.length} игроков.`;
+                    document.getElementById('status').textContent = `✅ Сохранено! ${players.length} игроков.`;
+                    document.getElementById('status').className = 'success';
+                    alert(`✅ Успешно! ${players.length} игроков сохранены.`);
+                } else {
+                    const err = await saveRes.json();
+                    document.getElementById('log').textContent = `❌ Ошибка: ${saveRes.status} - ${JSON.stringify(err)}`;
+                    document.getElementById('status').textContent = `❌ Ошибка: ${saveRes.status}`;
+                    document.getElementById('status').className = 'error';
+                }
+            } catch (e) {
+                document.getElementById('log').textContent = `❌ Ошибка: ${e.message}`;
+                document.getElementById('status').textContent = `❌ Ошибка: ${e.message}`;
+                document.getElementById('status').className = 'error';
+            }
+        }
+    </script>
+</body>
+</html>
