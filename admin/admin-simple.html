@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPL — Админка</title>
+    <style>
+        body { font-family: system-ui; background: #0e1217; color: #e8eff7; padding: 20px; max-width: 800px; margin: 0 auto; }
+        input, textarea { display: block; width: 100%; padding: 8px; margin: 4px 0; border-radius: 6px; border: 1px solid #444; background: #1a1f2b; color: #fff; font-size: 14px; }
+        button { padding: 8px 16px; margin: 4px; border: none; border-radius: 6px; background: #ffb347; color: #000; font-weight: bold; cursor: pointer; font-size: 14px; }
+        button:hover { opacity: 0.8; }
+        .save { background: #27ae60; color: #fff; }
+        .del { background: #c0392b; color: #fff; }
+        .card { background: rgba(255,255,255,0.05); padding: 16px; border-radius: 10px; margin: 10px 0; }
+        .item { display: flex; justify-content: space-between; align-items: center; padding: 6px 10px; background: rgba(255,255,255,0.03); margin: 4px 0; border-radius: 4px; }
+        .tabs { display: flex; gap: 6px; margin-bottom: 10px; flex-wrap: wrap; }
+        .tabs button { background: #1a1f2b; color: #8b9bb0; border: 1px solid #2a2f3b; }
+        .tabs button.active { background: #ffb347; color: #000; }
+        .tab { display: none; }
+        .tab.active { display: block; }
+        #log { background: #1a1f2b; padding: 8px; border-radius: 6px; font-size: 11px; max-height: 200px; overflow-y: auto; white-space: pre-wrap; font-family: monospace; margin-top: 10px; }
+        .status { padding: 6px 12px; border-radius: 6px; margin: 6px 0; }
+        .ok { background: rgba(46,204,113,0.2); color: #7ddfa0; }
+        .err { background: rgba(231,76,60,0.2); color: #e07a7a; }
+        .flex { display: flex; gap: 8px; flex-wrap: wrap; }
+        .flex input { flex: 1; min-width: 80px; }
+    </style>
+</head>
+<body>
+
+<h1>⚙️ MPL Админ-панель</h1>
+<p>Пароль: <b>mpl2026</b></p>
+
+<input type="password" id="tokenInput" placeholder="GitHub токен">
+<button onclick="login()">🔑 Войти</button>
+<div id="loginStatus" class="status"></div>
+
+<div id="panel" style="display:none;">
+    <div class="tabs">
+        <button class="active" onclick="switchTab('players')">👥 Игроки</button>
+        <button onclick="switchTab('matches')">📋 Матчи</button>
+        <button onclick="switchTab('news')">📰 Новости</button>
+    </div>
+
+    <!-- ========== ИГРОКИ ========== -->
+    <div id="tab-players" class="tab active">
+        <div class="card">
+            <h3>➕ Добавить игрока</h3>
+            <div class="flex">
+                <input type="text" id="pName" placeholder="Имя (русский поддерживается)">
+                <input type="number" id="pK" placeholder="Убийств" style="max-width:120px;">
+                <input type="number" id="pD" placeholder="Смертей" style="max-width:120px;">
+                <input type="number" id="pMatches" placeholder="Матчей" style="max-width:100px;" value="1">
+            </div>
+            <button onclick="addPlayer()">➕ Добавить</button>
+            <button onclick="saveData('players')" class="save">💾 Сохранить игроков</button>
+            <div id="pStatus" class="status"></div>
+            <div id="pList"></div>
+        </div>
+    </div>
+
+    <!-- ========== МАТЧИ ========== -->
+    <div id="tab-matches" class="tab">
+        <div class="card">
+            <h3>➕ Добавить матч</h3>
+            <input type="text" id="mTitle" placeholder="Название (например, Матч #6)">
+            <input type="text" id="mDate" placeholder="Дата (ДД.ММ.ГГГГ)">
+            <input type="text" id="mScore" placeholder="Счёт (например, 13:5)">
+            <input type="text" id="mWinner" placeholder="Команда-победитель">
+            <input type="text" id="mLoser" placeholder="Команда-проигравший">
+            <button onclick="addMatch()">➕ Добавить</button>
+            <button onclick="saveData('matches')" class="save">💾 Сохранить матчи</button>
+            <div id="mStatus" class="status"></div>
+            <div id="mList"></div>
+        </div>
+    </div>
+
+    <!-- ========== НОВОСТИ ========== -->
+    <div id="tab-news" class="tab">
+        <div class="card">
+            <h3>➕ Добавить новость</h3>
+            <input type="text" id="nTitle" placeholder="Заголовок">
+            <textarea id="nText" placeholder="Текст новости" rows="3"></textarea>
+            <button onclick="addNews()">➕ Добавить</button>
+            <button onclick="saveData('news')" class="save">💾 Сохранить новости</button>
+            <div id="nStatus" class="status"></div>
+            <div id="nList"></div>
+        </div>
+    </div>
+
+    <div id="log">✅ Готов к работе. Введите токен и нажмите "Войти".</div>
+</div>
+
+<script>
+    // ============================================================
+    // НАСТРОЙКИ
+    // ============================================================
+    const ADMIN_PASSWORD = 'mpl2026';
+    const REPO = 'Mpc-MegaProfessionalChampionsLeague1/Mpc-MegaProfessionalLeague1.github.io';
+    const BRANCH = 'main';
+    let token = '';
+
+    let players = [];
+    let matches = [];
+    let news = [];
+
+    // ============================================================
+    // ЛОГГЕР
+    // ============================================================
+    function addLog(msg) {
+        const log = document.getElementById('log');
+        const time = new Date().toLocaleTimeString();
+        log.innerHTML += `[${time}] ${msg}\n`;
+        log.scrollTop = log.scrollHeight;
+        console.log(msg);
+    }
+
+    // ============================================================
+    // ВХОД
+    // ============================================================
+    function login() {
+        const t = document.getElementById('tokenInput').value.trim();
+        if (!t) {
+            document.getElementById('loginStatus').textContent = '❌ Введите токен!';
+            document.getElementById('loginStatus').className = 'status err';
+            return;
+        }
+        token = t;
+        document.getElementById('loginStatus').textContent = '✅ Вход выполнен!';
+        document.getElementById('loginStatus').className = 'status ok';
+        document.getElementById('panel').style.display = 'block';
+        addLog('🔑 Вход выполнен, токен установлен.');
+        loadAllData();
+    }
+
+    // ============================================================
+    // ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК
+    // ============================================================
+    function switchTab(tab) {
+        document.querySelectorAll('.tab').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tabs button').forEach(el => el.classList.remove('active'));
+        document.getElementById('tab-' + tab).classList.add('active');
+        document.querySelector(`.tabs button[onclick="switchTab('${tab}')"]`).classList.add('active');
+    }
+
+    // ============================================================
+    // ЗАГРУЗКА ДАННЫХ
+    // ============================================================
+    async function loadJSON(filename) {
+        try {
+            const url = `https://api.github.com/repos/${REPO}/contents/data/${filename}`;
+            const res = await fetch(url, {
+                headers: { 'Authorization': `token ${token}` }
+            });
+            if (res.status === 404) {
+                addLog(`⚠️ Файл data/${filename} не найден, создадим новый.`);
+                return [];
+            }
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+            const content = atob(data.content);
+            return JSON.parse(content);
+        } catch (e) {
+            addLog(`⚠️ Ошибка загрузки ${filename}: ${e.message}`);
+            return [];
+        }
+    }
+
+    async function loadAllData() {
+        addLog('⏳ Загрузка данных...');
+        players = await loadJSON('players.json');
+        matches = await loadJSON('matches.json');
+        news = await loadJSON('news.json');
+        addLog(`✅ Загружено: ${players.length} игроков, ${matches.length} матчей, ${news.length} новостей.`);
+        renderAll();
+    }
+
+    // ============================================================
+    // СОХРАНЕНИЕ В GITHUB (UTF-8)
+    // ============================================================
+    async function saveData(type) {
+        let data, filename, label, statusEl;
+        if (type === 'players') {
+            data = players;
+            filename = 'players.json';
+            label = 'игроков';
+            statusEl = document.getElementById('pStatus');
+        } else if (type === 'matches') {
+            data = matches;
+            filename = 'matches.json';
+            label = 'матчей';
+            statusEl = document.getElementById('mStatus');
+        } else if (type === 'news') {
+            data = news;
+            filename = 'news.json';
+            label = 'новостей';
+            statusEl = document.getElementById('nStatus');
+        }
+
+        if (!data || data.length === 0) {
+            statusEl.textContent = `⚠️ Нет ${label} для сохранения!`;
+            statusEl.className = 'status err';
+            return;
+        }
+
+        statusEl.textContent = `⏳ Сохранение ${data.length} ${label}...`;
+        statusEl.className = 'status';
+        addLog(`⏳ Сохранение data/${filename} (${data.length} записей)...`);
+
+        try {
+            // === ПРАВИЛЬНОЕ КОДИРОВАНИЕ UTF-8 ===
+            const json = JSON.stringify(data, null, 2);
+            const encoder = new TextEncoder();
+            const encoded = encoder.encode(json);
+            let binary = '';
+            for (let i = 0; i < encoded.length; i++) {
+                binary += String.fromCharCode(encoded[i]);
+            }
+            const content = btoa(binary);
+
+            const url = `https://api.github.com/repos/${REPO}/contents/data/${filename}`;
+            let sha = null;
+
+            // Проверяем, существует ли файл
+            const checkRes = await fetch(url, {
+                headers: { 'Authorization': `token ${token}` }
+            });
+            if (checkRes.ok) {
+                const fileData = await checkRes.json();
+                sha = fileData.sha;
+            }
+
+            const body = {
+                message: `Обновление ${filename} (${data.length} записей)`,
+                content: content,
+                branch: BRANCH
+            };
+            if (sha) body.sha = sha;
+
+            const saveRes = await fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Authorization': `token ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(body)
+            });
+
+            if (saveRes.ok) {
+                statusEl.textContent = `✅ Сохранено! ${data.length} ${label} в GitHub.`;
+                statusEl.className = 'status ok';
+                addLog(`✅ Сохранено ${data.length} ${label} в data/${filename}`);
+                alert(`✅ Готово! ${data.length} ${label} сохранены. Обновите сайт через 1-2 минуты.`);
+            } else {
+                const err = await saveRes.json();
+                statusEl.textContent = `❌ Ошибка: ${saveRes.status}`;
+                statusEl.className = 'status err';
+                addLog(`❌ Ошибка сохранения ${filename}: ${saveRes.status} - ${JSON.stringify(err)}`);
+            }
+        } catch (e) {
+            statusEl.textContent = `❌ Ошибка: ${e.message}`;
+            statusEl.className = 'status err';
+            addLog(`❌ Критическая ошибка: ${e.message}`);
+        }
+    }
+
+    // ============================================================
+    // ИГРОКИ
+    // ============================================================
+    function addPlayer() {
+        const name = document.getElementById('pName').value.trim();
+        const k = parseInt(document.getElementById('pK').value) || 0;
+        const d = parseInt(document.getElementById('pD').value) || 0;
+        const matchesCount = parseInt(document.getElementById('pMatches').value) || 1;
+
+        if (!name) {
+            document.getElementById('pStatus').textContent = '❌ Введите имя!';
+            document.getElementById('pStatus').className = 'status err';
+            return;
+        }
+
+        const kd = d > 0 ? parseFloat((k / d).toFixed(2)) : 0;
+        const rating = d > 0 ? parseFloat(((k / d) * 0.8).toFixed(2)) : 0;
+
+        players.push({
+            name: name,
+            matches: matchesCount,
+            k: k,
+            d: d,
+            a: 0,
+            kd: kd,
+            adr: 0,
+            diff: k - d,
+            rating: rating,
+            you: false,
+            avatar: ''
+        });
+
+        document.getElementById('pName').value = '';
+        document.getElementById('pK').value = '';
+        document.getElementById('pD').value = '';
+        document.getElementById('pMatches').value = '1';
+
+        document.getElementById('pStatus').textContent = `✅ Игрок "${name}" добавлен! (всего: ${players.length})`;
+        document.getElementById('pStatus').className = 'status ok';
+        addLog(`➕ Добавлен игрок: ${name}`);
+        renderPlayers();
+    }
+
+    function deletePlayer(index) {
+        if (confirm(`Удалить "${players[index].name}"?`)) {
+            players.splice(index, 1);
+            renderPlayers();
+            addLog(`🗑️ Удалён игрок`);
+        }
+    }
+
+    function renderPlayers() {
+        const container = document.getElementById('pList');
+        if (!players || players.length === 0) {
+            container.innerHTML = '<div style="color:#4a5a6e;">Нет игроков. Добавьте первого!</div>';
+            return;
+        }
+        container.innerHTML = players.map((p, i) => `
+            <div class="item">
+                <span><b>${p.name}</b> — ${p.matches} матчей, ${p.k} убийств, ${p.d} смертей, K/D: ${(p.kd || 0).toFixed(2)}</span>
+                <button class="del" onclick="deletePlayer(${i})">✕</button>
+            </div>
+        `).join('');
+    }
+
+    // ============================================================
+    // МАТЧИ
+    // ============================================================
+    function addMatch() {
+        const title = document.getElementById('mTitle').value.trim();
+        const date = document.getElementById('mDate').value.trim();
+        const score = document.getElementById('mScore').value.trim();
+        const winner = document.getElementById('mWinner').value.trim();
+        const loser = document.getElementById('mLoser').value.trim();
+
+        if (!title || !date || !score) {
+            document.getElementById('mStatus').textContent = '❌ Заполните название, дату и счёт!';
+            document.getElementById('mStatus').className = 'status err';
+            return;
+        }
+
+        matches.push({
+            id: 'match' + (matches.length + 1),
+            title: title,
+            date: date,
+            score: score,
+            winner: winner || 'Team 1',
+            loser: loser || 'Team 2',
+            detail: '',
+            teams: {
+                win: { name: winner || 'Team 1', players: [] },
+                loss: { name: loser || 'Team 2', players: [] }
+            }
+        });
+
+        document.getElementById('mTitle').value = '';
+        document.getElementById('mDate').value = '';
+        document.getElementById('mScore').value = '';
+        document.getElementById('mWinner').value = '';
+        document.getElementById('mLoser').value = '';
+
+        document.getElementById('mStatus').textContent = `✅ Матч добавлен! (всего: ${matches.length})`;
+        document.getElementById('mStatus').className = 'status ok';
+        addLog(`➕ Добавлен матч: ${title}`);
+        renderMatches();
+    }
+
+    function deleteMatch(index) {
+        if (confirm(`Удалить "${matches[index].title}"?`)) {
+            matches.splice(index, 1);
+            renderMatches();
+        }
+    }
+
+    function renderMatches() {
+        const container = document.getElementById('mList');
+        if (!matches || matches.length === 0) {
+            container.innerHTML = '<div style="color:#4a5a6e;">Нет матчей</div>';
+            return;
+        }
+        container.innerHTML = matches.map((m, i) => `
+            <div class="item">
+                <span><b>${m.title}</b> — ${m.date} · ${m.score}</span>
+                <button class="del" onclick="deleteMatch(${i})">✕</button>
+            </div>
+        `).join('');
+    }
+
+    // ============================================================
+    // НОВОСТИ
+    // ============================================================
+    function addNews() {
+        const title = document.getElementById('nTitle').value.trim();
+        const text = document.getElementById('nText').value.trim();
+
+        if (!title || !text) {
+            document.getElementById('nStatus').textContent = '❌ Заполните заголовок и текст!';
+            document.getElementById('nStatus').className = 'status err';
+            return;
+        }
+
+        news.push({
+            id: Date.now(),
+            title: title,
+            text: text,
+            date: new Date().toISOString()
+        });
+
+        document.getElementById('nTitle').value = '';
+        document.getElementById('nText').value = '';
+
+        document.getElementById('nStatus').textContent = `✅ Новость добавлена! (всего: ${news.length})`;
+        document.getElementById('nStatus').className = 'status ok';
+        addLog(`➕ Добавлена новость: ${title}`);
+        renderNews();
+    }
+
+    function deleteNews(index) {
+        if (confirm(`Удалить "${news[index].title}"?`)) {
+            news.splice(index, 1);
+            renderNews();
+        }
+    }
+
+    function renderNews() {
+        const container = document.getElementById('nList');
+        if (!news || news.length === 0) {
+            container.innerHTML = '<div style="color:#4a5a6e;">Нет новостей</div>';
+            return;
+        }
+        container.innerHTML = news.map((n, i) => `
+            <div class="item">
+                <span><b>${n.title}</b> — ${new Date(n.date).toLocaleDateString()}</span>
+                <button class="del" onclick="deleteNews(${i})">✕</button>
+            </div>
+        `).join('');
+    }
+
+    // ============================================================
+    // ОБНОВЛЕНИЕ ВСЕХ СПИСКОВ
+    // ============================================================
+    function renderAll() {
+        renderPlayers();
+        renderMatches();
+        renderNews();
+    }
+
+    // ============================================================
+    // АВТО-ЗАГРУЗКА ПРИ СТАРТЕ
+    // ============================================================
+    console.log('✅ admin-simple.html загружен');
+</script>
+</body>
+</html>
