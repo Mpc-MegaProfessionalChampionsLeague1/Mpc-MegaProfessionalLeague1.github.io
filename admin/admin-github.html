@@ -143,15 +143,16 @@
         <div class="card">
             <h2>➕ Добавить игрока</h2>
             <input type="text" id="playerName" placeholder="Имя игрока">
-            <input type="number" id="playerK" placeholder="Убийств">
-            <input type="number" id="playerD" placeholder="Смертей">
+            <input type="number" id="playerK" placeholder="Убийств (всего)">
+            <input type="number" id="playerD" placeholder="Смертей (всего)">
+            <input type="number" id="playerMatches" placeholder="Матчей (всего)" value="1">
             <button onclick="addPlayer()">Добавить</button>
             <div id="playerStatus"></div>
         </div>
         <div class="card">
-            <h2>📋 Список игроков</h2>
+            <h2>📋 Список игроков (будет сохранён в players.json)</h2>
             <div id="playersList"></div>
-            <button onclick="saveToGitHub('players')" class="success" style="margin-top:10px;">💾 Сохранить в GitHub</button>
+            <button onclick="saveToGitHub('players')" class="success" style="margin-top:10px;">💾 Сохранить всех игроков в GitHub</button>
         </div>
     </div>
 
@@ -168,9 +169,9 @@
             <div id="matchStatus"></div>
         </div>
         <div class="card">
-            <h2>📋 Список матчей</h2>
+            <h2>📋 Список матчей (будет сохранён в matches.json)</h2>
             <div id="matchesList"></div>
-            <button onclick="saveToGitHub('matches')" class="success" style="margin-top:10px;">💾 Сохранить в GitHub</button>
+            <button onclick="saveToGitHub('matches')" class="success" style="margin-top:10px;">💾 Сохранить все матчи в GitHub</button>
         </div>
     </div>
 
@@ -184,9 +185,9 @@
             <div id="newsStatus"></div>
         </div>
         <div class="card">
-            <h2>📰 Список новостей</h2>
+            <h2>📰 Список новостей (будет сохранён в news.json)</h2>
             <div id="newsList"></div>
-            <button onclick="saveToGitHub('news')" class="success" style="margin-top:10px;">💾 Сохранить в GitHub</button>
+            <button onclick="saveToGitHub('news')" class="success" style="margin-top:10px;">💾 Сохранить все новости в GitHub</button>
         </div>
     </div>
 </div>
@@ -211,6 +212,8 @@ let news = [];
 async function loadFromGitHub(filePath) {
     try {
         const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filePath}`;
+        console.log('🔍 Загрузка:', filePath);
+        
         const response = await fetch(url, {
             headers: {
                 'Authorization': `token ${GITHUB_TOKEN}`,
@@ -219,7 +222,8 @@ async function loadFromGitHub(filePath) {
         });
         
         if (response.status === 404) {
-            return null; // Файл не найден
+            console.log(`⚠️ Файл ${filePath} не найден`);
+            return null;
         }
         
         if (!response.ok) {
@@ -235,12 +239,14 @@ async function loadFromGitHub(filePath) {
     }
 }
 
-async function saveToGitHub(filePath, data, message) {
+async function saveToGitHubFile(filePath, data, message) {
     try {
-        // Сначала получаем текущий файл (чтобы получить SHA)
+        console.log('💾 Сохранение:', filePath, data);
+        
         const url = `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${filePath}`;
         let sha = null;
         
+        // Проверяем, существует ли файл
         try {
             const response = await fetch(url, {
                 headers: {
@@ -251,8 +257,11 @@ async function saveToGitHub(filePath, data, message) {
             if (response.ok) {
                 const fileData = await response.json();
                 sha = fileData.sha;
+                console.log('📄 Файл существует, SHA:', sha);
             }
-        } catch (e) {}
+        } catch (e) {
+            console.log('📄 Файл будет создан');
+        }
         
         const content = btoa(unescape(encodeURIComponent(JSON.stringify(data, null, 2))));
         
@@ -266,6 +275,7 @@ async function saveToGitHub(filePath, data, message) {
             body.sha = sha;
         }
         
+        console.log('📤 Отправка запроса...');
         const response = await fetch(url, {
             method: 'PUT',
             headers: {
@@ -278,12 +288,15 @@ async function saveToGitHub(filePath, data, message) {
         
         if (!response.ok) {
             const error = await response.json();
+            console.error('❌ Ошибка ответа:', error);
             throw new Error(error.message || 'Ошибка сохранения');
         }
         
-        return await response.json();
+        const result = await response.json();
+        console.log('✅ Файл сохранён!');
+        return result;
     } catch (error) {
-        console.error('Ошибка сохранения:', error);
+        console.error('❌ Ошибка сохранения:', error);
         throw error;
     }
 }
@@ -297,32 +310,16 @@ async function loadAllData() {
     status.className = 'sync-status';
     
     try {
-        // Загружаем игроков
         const playersData = await loadFromGitHub('data/players.json');
-        if (playersData) {
-            players = playersData;
-        } else {
-            // Данных нет, используем пустой массив
-            players = [];
-        }
+        players = playersData || [];
         
-        // Загружаем матчи
         const matchesData = await loadFromGitHub('data/matches.json');
-        if (matchesData) {
-            matches = matchesData;
-        } else {
-            matches = [];
-        }
+        matches = matchesData || [];
         
-        // Загружаем новости
         const newsData = await loadFromGitHub('data/news.json');
-        if (newsData) {
-            news = newsData;
-        } else {
-            news = [];
-        }
+        news = newsData || [];
         
-        status.textContent = '✅ Данные загружены из GitHub!';
+        status.textContent = `✅ Данные загружены! Игроков: ${players.length}, Матчей: ${matches.length}, Новостей: ${news.length}`;
         status.className = 'sync-status success';
         renderAll();
     } catch (error) {
@@ -336,8 +333,6 @@ async function loadAllData() {
 // ============================================================
 async function saveToGitHub(type) {
     const status = document.getElementById('syncStatus');
-    status.textContent = `⏳ Сохранение ${type} в GitHub...`;
-    status.className = 'sync-status';
     
     try {
         let data, filePath, message;
@@ -345,44 +340,52 @@ async function saveToGitHub(type) {
         if (type === 'players') {
             data = players;
             filePath = 'data/players.json';
-            message = 'Обновление списка игроков';
+            message = `Обновление игроков (${players.length})`;
         } else if (type === 'matches') {
             data = matches;
             filePath = 'data/matches.json';
-            message = 'Обновление списка матчей';
+            message = `Обновление матчей (${matches.length})`;
         } else if (type === 'news') {
             data = news;
             filePath = 'data/news.json';
-            message = 'Обновление списка новостей';
+            message = `Обновление новостей (${news.length})`;
         }
         
-        await saveToGitHub(filePath, data, message);
+        if (!data || data.length === 0) {
+            status.textContent = `⚠️ Нет данных для сохранения! Сначала добавьте записи.`;
+            status.className = 'sync-status';
+            return;
+        }
         
-        status.textContent = `✅ ${type} сохранены в GitHub!`;
+        status.textContent = `⏳ Сохранение ${type} в GitHub...`;
+        status.className = 'sync-status';
+        
+        await saveToGitHubFile(filePath, data, message);
+        
+        status.textContent = `✅ ${type} сохранены в GitHub! (${data.length} записей)`;
         status.className = 'sync-status success';
         
-        // Обновляем статус в конкретной вкладке
-        if (type === 'players') {
-            document.getElementById('playerStatus').textContent = '✅ Сохранено в GitHub!';
-            document.getElementById('playerStatus').className = 'status success';
-        } else if (type === 'matches') {
-            document.getElementById('matchStatus').textContent = '✅ Сохранено в GitHub!';
-            document.getElementById('matchStatus').className = 'status success';
-        } else if (type === 'news') {
-            document.getElementById('newsStatus').textContent = '✅ Сохранено в GitHub!';
-            document.getElementById('newsStatus').className = 'status success';
+        // Показываем уведомление
+        const tabStatus = document.getElementById(type + 'Status');
+        if (tabStatus) {
+            tabStatus.textContent = `✅ Сохранено в GitHub! (${data.length} записей)`;
+            tabStatus.className = 'status success';
         }
         
-        // Подтверждение
+        // Обновляем список
+        renderAll();
+        
+        // Предлагаем обновить сайт
         setTimeout(() => {
-            if (confirm('✅ Данные сохранены!\n\nХотите обновить страницу, чтобы увидеть изменения?')) {
-                location.reload();
+            if (confirm('✅ Данные сохранены в GitHub!\n\nХотите открыть главную страницу, чтобы увидеть изменения?')) {
+                window.open('https://Mpc-MegaProfessionalChampionsLeague1.github.io/', '_blank');
             }
-        }, 500);
+        }, 1000);
         
     } catch (error) {
-        status.textContent = `❌ Ошибка сохранения: ${error.message}`;
+        status.textContent = `❌ Ошибка: ${error.message}`;
         status.className = 'sync-status';
+        alert('❌ Ошибка сохранения:\n' + error.message);
     }
 }
 
@@ -440,6 +443,7 @@ function addPlayer() {
     const name = document.getElementById('playerName').value.trim();
     const k = parseInt(document.getElementById('playerK').value) || 0;
     const d = parseInt(document.getElementById('playerD').value) || 0;
+    const matchesCount = parseInt(document.getElementById('playerMatches').value) || 1;
     
     if (!name) {
         document.getElementById('playerStatus').className = 'status error';
@@ -447,17 +451,43 @@ function addPlayer() {
         return;
     }
     
-    players.push({ name, k, d, matches: 1, kd: (d > 0 ? (k/d) : 0), rating: (d > 0 ? (k/d) * 0.8 : 0) });
+    // Проверяем, есть ли уже такой игрок
+    if (players.find(p => p.name === name)) {
+        document.getElementById('playerStatus').className = 'status error';
+        document.getElementById('playerStatus').textContent = '❌ Игрок с таким именем уже есть!';
+        return;
+    }
+    
+    const kd = d > 0 ? parseFloat((k / d).toFixed(2)) : 0;
+    const rating = d > 0 ? parseFloat(((k / d) * 0.8).toFixed(2)) : 0;
+    
+    players.push({ 
+        name, 
+        matches: matchesCount, 
+        k, 
+        d, 
+        a: 0, 
+        kd, 
+        adr: 0, 
+        diff: k - d, 
+        rating, 
+        you: false, 
+        avatar: '' 
+    });
+    
     document.getElementById('playerName').value = '';
     document.getElementById('playerK').value = '';
     document.getElementById('playerD').value = '';
+    document.getElementById('playerMatches').value = '1';
+    
     document.getElementById('playerStatus').className = 'status success';
-    document.getElementById('playerStatus').textContent = '✅ Игрок добавлен! Нажмите "Сохранить в GitHub"';
+    document.getElementById('playerStatus').textContent = `✅ Игрок "${name}" добавлен! (всего: ${players.length})`;
+    
     renderPlayers();
 }
 
 function deletePlayer(index) {
-    if (confirm('Удалить игрока?')) {
+    if (confirm(`Удалить игрока "${players[index].name}"?`)) {
         players.splice(index, 1);
         renderPlayers();
     }
@@ -466,13 +496,13 @@ function deletePlayer(index) {
 function renderPlayers() {
     const container = document.getElementById('playersList');
     if (players.length === 0) {
-        container.innerHTML = '<div style="color:#4a5a6e;padding:10px 0;">Нет игроков</div>';
+        container.innerHTML = '<div style="color:#4a5a6e;padding:10px 0;">Нет игроков. Добавьте первого!</div>';
         return;
     }
     container.innerHTML = players.map((p, i) => `
         <div class="item">
-            <span><b>${p.name}</b> — ${p.k} убийств, ${p.d} смертей, K/D: ${(p.d > 0 ? (p.k/p.d).toFixed(2) : '0')}</span>
-            <button class="del danger" onclick="deletePlayer(${i})" style="padding:4px 12px;font-size:12px;">✕</button>
+            <span><b>${p.name}</b> — ${p.matches} матчей, ${p.k} убийств, ${p.d} смертей, K/D: ${(p.kd || 0).toFixed(2)}</span>
+            <button class="danger" onclick="deletePlayer(${i})" style="padding:4px 12px;font-size:12px;">✕</button>
         </div>
     `).join('');
 }
@@ -493,19 +523,34 @@ function addMatch() {
         return;
     }
     
-    matches.push({ id: 'match' + Date.now(), title, date, score, winner, loser });
+    matches.push({ 
+        id: 'match' + (matches.length + 1), 
+        title, 
+        date, 
+        score, 
+        winner: winner || 'Team 1', 
+        loser: loser || 'Team 2',
+        detail: '',
+        teams: {
+            win: { name: winner || 'Team 1', players: [] },
+            loss: { name: loser || 'Team 2', players: [] }
+        }
+    });
+    
     document.getElementById('matchTitle').value = '';
     document.getElementById('matchDate').value = '';
     document.getElementById('matchScore').value = '';
     document.getElementById('matchWinner').value = '';
     document.getElementById('matchLoser').value = '';
+    
     document.getElementById('matchStatus').className = 'status success';
-    document.getElementById('matchStatus').textContent = '✅ Матч добавлен! Нажмите "Сохранить в GitHub"';
+    document.getElementById('matchStatus').textContent = `✅ Матч добавлен! (всего: ${matches.length})`;
+    
     renderMatches();
 }
 
 function deleteMatch(index) {
-    if (confirm('Удалить матч?')) {
+    if (confirm(`Удалить матч "${matches[index].title}"?`)) {
         matches.splice(index, 1);
         renderMatches();
     }
@@ -514,13 +559,13 @@ function deleteMatch(index) {
 function renderMatches() {
     const container = document.getElementById('matchesList');
     if (matches.length === 0) {
-        container.innerHTML = '<div style="color:#4a5a6e;padding:10px 0;">Нет матчей</div>';
+        container.innerHTML = '<div style="color:#4a5a6e;padding:10px 0;">Нет матчей.</div>';
         return;
     }
     container.innerHTML = matches.map((m, i) => `
         <div class="item">
             <span><b>${m.title}</b> — ${m.date} · ${m.score} | ${m.winner} vs ${m.loser}</span>
-            <button class="del danger" onclick="deleteMatch(${i})" style="padding:4px 12px;font-size:12px;">✕</button>
+            <button class="danger" onclick="deleteMatch(${i})" style="padding:4px 12px;font-size:12px;">✕</button>
         </div>
     `).join('');
 }
@@ -538,16 +583,24 @@ function addNews() {
         return;
     }
     
-    news.push({ id: Date.now(), title, text, date: new Date().toLocaleString() });
+    news.push({ 
+        id: Date.now(), 
+        title, 
+        text, 
+        date: new Date().toISOString() 
+    });
+    
     document.getElementById('newsTitle').value = '';
     document.getElementById('newsText').value = '';
+    
     document.getElementById('newsStatus').className = 'status success';
-    document.getElementById('newsStatus').textContent = '✅ Новость добавлена! Нажмите "Сохранить в GitHub"';
+    document.getElementById('newsStatus').textContent = `✅ Новость добавлена! (всего: ${news.length})`;
+    
     renderNews();
 }
 
 function deleteNews(index) {
-    if (confirm('Удалить новость?')) {
+    if (confirm(`Удалить новость "${news[index].title}"?`)) {
         news.splice(index, 1);
         renderNews();
     }
@@ -556,13 +609,13 @@ function deleteNews(index) {
 function renderNews() {
     const container = document.getElementById('newsList');
     if (news.length === 0) {
-        container.innerHTML = '<div style="color:#4a5a6e;padding:10px 0;">Нет новостей</div>';
+        container.innerHTML = '<div style="color:#4a5a6e;padding:10px 0;">Нет новостей.</div>';
         return;
     }
     container.innerHTML = news.map((n, i) => `
         <div class="item">
-            <span><b>${n.title}</b> — ${n.date}</span>
-            <button class="del danger" onclick="deleteNews(${i})" style="padding:4px 12px;font-size:12px;">✕</button>
+            <span><b>${n.title}</b> — ${new Date(n.date).toLocaleDateString()}</span>
+            <button class="danger" onclick="deleteNews(${i})" style="padding:4px 12px;font-size:12px;">✕</button>
         </div>
     `).join('');
 }
@@ -575,6 +628,12 @@ function renderAll() {
     renderMatches();
     renderNews();
 }
+
+// ============================================================
+// АВТО-ВХОД
+// ============================================================
+console.log('✅ admin-github.html загружен');
+console.log('📌 Используйте пароль: mpl2026');
 </script>
 
 </body>
