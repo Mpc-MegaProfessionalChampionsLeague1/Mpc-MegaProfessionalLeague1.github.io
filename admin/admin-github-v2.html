@@ -59,6 +59,24 @@
             console.log(message);
         }
 
+        // === ФУНКЦИЯ ДЛЯ КОДИРОВАНИЯ UTF-8 В base64 ===
+        function utf8ToBase64(str) {
+            try {
+                // Способ 1: TextEncoder (современный, работает с UTF-8)
+                const encoder = new TextEncoder();
+                const data = encoder.encode(str);
+                let binary = '';
+                for (let i = 0; i < data.length; i++) {
+                    binary += String.fromCharCode(data[i]);
+                }
+                return btoa(binary);
+            } catch (e) {
+                // Способ 2: старый способ (если TextEncoder не поддерживается)
+                addLog('⚠️ Использую резервный способ кодирования...', true);
+                return btoa(unescape(encodeURIComponent(str)));
+            }
+        }
+
         // === ВХОД ===
         function login() {
             const token = document.getElementById('tokenInput').value.trim();
@@ -156,8 +174,10 @@
                     return;
                 }
 
-                // 2. Подготавливаем данные
-                const content = btoa(unescape(encodeURIComponent(JSON.stringify(players, null, 2))));
+                // 2. Кодируем данные в base64 с поддержкой UTF-8
+                const jsonString = JSON.stringify(players, null, 2);
+                const content = utf8ToBase64(jsonString);
+
                 const body = {
                     message: `Обновление players.json (${players.length} игроков)`,
                     content: content,
@@ -193,7 +213,7 @@
         }
 
         // === СТАРТ ===
-        console.log('✅ Тестовая админ-панель загружена!');
+        console.log('✅ Тестовая админ-панель загружена (UTF-8 support)!');
         document.getElementById('log').textContent = '✅ Готов к работе. Введите токен и нажмите "Войти".';
     </script>
 </body>
