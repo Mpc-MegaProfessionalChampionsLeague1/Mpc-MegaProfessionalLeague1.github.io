@@ -4,14 +4,11 @@
 
 console.log('🔄 Загрузка данных из JSON-файлов...');
 
-// ============================================================
-// ЗАГРУЗКА JSON
-// ============================================================
 async function loadJSON(url) {
     try {
         const response = await fetch(url + '?t=' + Date.now());
         if (!response.ok) {
-            console.log(`⚠️ Файл ${url} не найден (${response.status})`);
+            console.log(`⚠️ Файл ${url} не найден`);
             return null;
         }
         return await response.json();
@@ -21,21 +18,18 @@ async function loadJSON(url) {
     }
 }
 
-// ============================================================
-// ЗАГРУЗКА ВСЕХ ДАННЫХ
-// ============================================================
 async function loadAllData() {
-    // 1. Загружаем игроков из players.json
+    // 1. Загружаем игроков
     const players = await loadJSON('data/players.json');
     if (players && players.length > 0) {
         window.playersData = players;
-        console.log(`✅ Загружено ${players.length} игроков из players.json`);
+        console.log(`✅ Загружено ${players.length} игроков`);
     } else {
         window.playersData = [];
         console.log('⚠️ Данные игроков не найдены');
     }
 
-    // 2. Загружаем матчи из matches.json
+    // 2. Загружаем матчи
     const matches = await loadJSON('data/matches.json');
     if (matches && matches.length > 0) {
         window.matchData = {};
@@ -43,87 +37,56 @@ async function loadAllData() {
             const id = m.id || `match${Math.random()}`;
             window.matchData[id] = m;
         });
-        console.log(`✅ Загружено ${matches.length} матчей из matches.json`);
+        console.log(`✅ Загружено ${matches.length} матчей`);
     } else {
         window.matchData = {};
         console.log('⚠️ Данные матчей не найдены');
     }
 
-    // 3. Загружаем новости из news.json
+    // 3. Загружаем новости
     const news = await loadJSON('data/news.json');
     if (news && news.length > 0) {
         window.newsData = news;
-        console.log(`✅ Загружено ${news.length} новостей из news.json`);
+        console.log(`✅ Загружено ${news.length} новостей`);
     } else {
         window.newsData = [];
         console.log('⚠️ Данные новостей не найдены');
     }
 
-    // 4. Оповещаем страницу
+    // 4. Строим историю матчей для каждого игрока
+    window.playerMatchHistory = {};
+    window.playersData.forEach(player => {
+        const history = [];
+        Object.keys(window.matchData).forEach(key => {
+            const match = window.matchData[key];
+            if (!match || !match.teams) return;
+            
+            ['win', 'loss'].forEach(side => {
+                const team = match.teams[side];
+                if (!team || !team.players) return;
+                const p = team.players.find(p2 => p2.name === player.name);
+                if (p) {
+                    history.push({
+                        match: match.title || key,
+                        k: p.k || 0,
+                        d: p.d || 0,
+                        diff: (p.k || 0) - (p.d || 0),
+                        map: match.map || '',
+                        id: key
+                    });
+                }
+            });
+        });
+        window.playerMatchHistory[player.name] = history;
+    });
+
+    // 5. Оповещаем страницу
     document.dispatchEvent(new Event('dataLoaded'));
     console.log('✅ Все данные загружены!');
 }
 
-// ============================================================
-// ФУНКЦИЯ ДЛЯ ФИЛЬТРА ПО МЕСЯЦАМ
-// ============================================================
-function getPlayersForMonth(month) {
-    const playersData = window.playersData || [];
-    const matchData = window.matchData || {};
-    
-    if (month === 'all') return playersData;
-
-    const matchKeys = [];
-    Object.keys(matchData).forEach(key => {
-        const match = matchData[key];
-        if (!match || !match.date) return;
-        const dateParts = match.date.split('.');
-        if (dateParts.length === 3 && parseInt(dateParts[1]) === parseInt(month)) {
-            matchKeys.push(key);
-        }
-    });
-
-    if (matchKeys.length === 0) return [];
-
-    const filteredPlayers = playersData.map(p => {
-        const copy = { ...p, k: 0, d: 0, a: 0, matches: 0, kd: 0, adr: 0, diff: 0, rating: 0 };
-
-        matchKeys.forEach(matchKey => {
-            const match = matchData[matchKey];
-            if (!match || !match.teams) return;
-
-            ['win', 'loss'].forEach(side => {
-                const team = match.teams[side];
-                if (!team || !team.players) return;
-                const player = team.players.find(p2 => p2.name === p.name);
-                if (player) {
-                    copy.k += player.k || 0;
-                    copy.d += player.d || 0;
-                    copy.a += player.a || 0;
-                    copy.matches++;
-                    copy.adr += player.adr || 0;
-                    copy.diff += (player.k || 0) - (player.d || 0);
-                }
-            });
-        });
-
-        if (copy.matches > 0) {
-            copy.kd = parseFloat((copy.k / (copy.d || 1)).toFixed(2));
-            copy.adr = Math.round(copy.adr / copy.matches);
-            copy.rating = parseFloat(((copy.k / (copy.d || 1)) * 0.8).toFixed(2));
-        }
-
-        return copy;
-    });
-
-    return filteredPlayers.filter(p => p.matches > 0);
-}
-
-// ============================================================
-// ЗАПУСК
-// ============================================================
 document.addEventListener('DOMContentLoaded', function() {
-    setTimeout(loadAllData, 500);
+    setTimeout(loadAllData, 300);
 });
 
-console.log('✅ script-loader.js загружен (читает из JSON-файлов)');
+console.log('✅ script-loader.js загружен');
