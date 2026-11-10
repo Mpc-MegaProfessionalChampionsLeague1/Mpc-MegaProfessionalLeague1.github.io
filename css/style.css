@@ -1163,3 +1163,22 @@ body {
   .player-page-avatar { width: 72px; height: 72px; font-size: 28px; }
   .player-page-name { font-size: 24px; }
 }
+
+/* ===== АНИМАЦИЯ НАЖАТИЯ КНОПОК НАВИГАЦИИ ===== */
+.nav-btn {
+    transition: background 0.15s, color 0.15s, transform 0.1s;
+}
+
+.nav-btn:active {
+    transform: scale(0.96) translateY(1px); /* кнопка слегка сжимается при клике */
+}
+
+/* Плавное появление контента при переходе на страницу */
+@keyframes pageFadeIn {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.container > *:not(.header):not(.nav) {
+    animation: pageFadeIn 0.3s ease forwards;
+}
