@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPL — Все матчи</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* ===== ВКЛАДКИ ===== */
+        .tabs-container {
+            display: flex;
+            gap: 4px;
+            margin-bottom: 18px;
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border-radius: 10px;
+            padding: 4px;
+            flex-wrap: wrap;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .tab-btn {
+            background: transparent;
+            border: none;
+            color: #8b9bb0;
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: 0.25s;
+            font-family: 'Inter', sans-serif;
+        }
+        .tab-btn:hover {
+            color: #e8eff7;
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .tab-btn.active {
+            background: #2a475e;
+            color: #fff;
+            box-shadow: 0 2px 12px rgba(42, 71, 94, 0.3);
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeUp 0.35s ease;
+        }
+        .tab-content.active {
+            display: block;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 700px) {
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+        @media (max-width: 400px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .stats-card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            padding: 14px 16px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .stats-card .num {
+            font-size: 28px;
+            font-weight: 800;
+            color: #ffb347;
+        }
+        .stats-card .num.good {
+            color: #7ddfa0;
+        }
+        .stats-card .num.bad {
+            color: #e07a7a;
+        }
+        .stats-card .label {
+            font-size: 11px;
+            color: #6e7f94;
+            margin-top: 2px;
+        }
+
+        .match-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            border-radius: 8px;
+            padding: 10px 14px;
+            border-left: 3px solid #2a475e;
+            cursor: pointer;
+            transition: 0.2s;
+            user-select: none;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+        .match-card:hover {
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateY(-1px);
+        }
+        .match-card.loss {
+            border-left-color: #c0392b;
+        }
+        .match-card .match-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px 8px;
+        }
+        .match-card .match-top .title {
+            font-weight: 600;
+            font-size: 12px;
+        }
+        .match-card .match-top .date {
+            color: #6e7f94;
+            font-size: 10px;
+        }
+        .match-card .match-teams {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 4px 8px;
+            font-size: 12px;
+            margin-top: 3px;
+        }
+        .match-card .match-teams .team {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .match-card .match-teams .team .name {
+            font-weight: 500;
+            font-size: 12px;
+        }
+        .match-card .match-teams .team .score {
+            font-weight: 700;
+            font-size: 14px;
+            min-width: 20px;
+            text-align: center;
+        }
+        .match-card .match-teams .team.win .score {
+            color: #7ddfa0;
+        }
+        .match-card .match-teams .team.loss .score {
+            color: #e07a7a;
+        }
+        .match-card .match-teams .vs {
+            color: #4a5a6e;
+            font-weight: 700;
+            font-size: 10px;
+        }
+        .match-card .match-stats-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px 12px;
+            margin-top: 4px;
+            padding-top: 4px;
+            border-top: 1px solid rgba(255, 255, 255, 0.04);
+            font-size: 10px;
+            color: #6e7f94;
+        }
+        .match-card .match-stats-row b {
+            color: #c7d5e0;
+        }
+        .match-card .match-stats-row .mvp {
+            color: #ffb347;
+        }
+        .match-card .match-stats-row .bad {
+            color: #e07a7a;
+        }
+        .match-card .click-hint {
+            font-size: 9px;
+            color: #4a5a6e;
+            transition: 0.2s;
+        }
+
+        .match-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-height: 600px;
+            overflow-y: auto;
+            padding-right: 3px;
+        }
+        .match-list::-webkit-scrollbar {
+            width: 3px;
+        }
+        .match-list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 4px;
+        }
+        .match-list::-webkit-scrollbar-thumb {
+            background: rgba(42, 71, 94, 0.4);
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="logo">
+            <h1 onclick="location.href='index.html'">MPL <small>Mega Professional League</small></h1>
+        </div>
+        <div class="header-right">
+            <span>📅 Май-Июль 2026</span>
+            <span class="status">● LIVE</span>
+            <button class="lang-toggle" onclick="toggleLang()" id="langBtn">🇬🇧 EN</button>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        </div>
+    </div>
+
+    <!-- NAV -->
+    <nav class="nav">
+        <a href="index.html" class="nav-btn">📊 Главная</a>
+        <a href="matches.html" class="nav-btn active">📋 Матчи</a>
+        <a href="players.html" class="nav-btn">👥 Игроки</a>
+        <a href="stats.html" class="nav-btn">📈 Статистика</a>
+        <a href="about.html" class="nav-btn">ℹ️ О сайте</a>
+    </nav>
+
+    <!-- PAGE TITLE -->
+    <div class="page-title">📋 Матчи</div>
+    <div class="page-subtitle">Все матчи турнира · Нажмите на матч для детальной статистики</div>
+
+    <!-- ===== ВКЛАДКИ ===== -->
+    <div class="tabs-container">
+        <button class="tab-btn active" onclick="switchTab('list')" id="tabList">📋 Список матчей</button>
+        <button class="tab-btn" onclick="switchTab('stats')" id="tabStats">📊 Статистика матчей</button>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- TAB 1: СПИСОК МАТЧЕЙ -->
+    <!-- ============================================ -->
+    <div class="tab-content active" id="tab-list">
+
+        <!-- FILTERS -->
+        <div class="filter-section">
+            <input type="text" class="search-input" placeholder="🔍 Поиск по карте или команде..." id="matchSearch" oninput="filterMatches()">
+            <select id="mapFilter" onchange="filterMatches()">
+                <option value="all">Все карты</option>
+                <option value="Mirage">Mirage</option>
+                <option value="Ancient">Ancient</option>
+                <option value="Anubis">Anubis</option>
+            </select>
+            <select id="resultFilter" onchange="filterMatches()">
+                <option value="all">Все результаты</option>
+                <option value="win">Победы</option>
+                <option value="loss">Поражения</option>
+            </select>
+        </div>
+
+        <!-- MATCHES LIST -->
+        <div class="match-list" id="matchesList">
+            <!-- Рендерится через JS -->
+        </div>
+    </div>
+
+    <!-- ============================================ -->
+    <!-- TAB 2: СТАТИСТИКА МАТЧЕЙ -->
+    <!-- ============================================ -->
+    <div class="tab-content" id="tab-stats">
+
+        <!-- STATS OVERVIEW -->
+        <div class="stats-grid" id="statsGrid">
+            <!-- Рендерится через JS -->
+        </div>
+
+        <!-- TABLE: МАТЧИ ПО КАРТАМ -->
+        <div class="glass-card" style="margin-bottom:16px;">
+            <div style="font-weight:600;margin-bottom:10px;color:#e8eff7;">📊 Матчи по картам</div>
+            <div id="mapsChart" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                <!-- Рендерится через JS -->
+            </div>
+        </div>
+
+        <!-- TABLE: ТОП MVP -->
+        <div class="glass-card">
+            <div style="font-weight:600;margin-bottom:10px;color:#e8eff7;">🏆 Топ MVP</div>
+            <div id="mvpList" style="display:flex;flex-direction:column;gap:6px;">
+                <!-- Рендерится через JS -->
+            </div>
+        </div>
+    </div>
+
+    <!-- FOOTER -->
+    <div class="footer">
+        MPL · Mega Professional League · <b>HLTV-style</b> · Май-Июль 2026
+    </div>
+
+</div>
+
+<script src="js/data.js"></script>
+<script>
+    // ===== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК =====
+    function switchTab(tab) {
+        document.getElementById('tabList').className = tab === 'list' ? 'tab-btn active' : 'tab-btn';
+        document.getElementById('tabStats').className = tab === 'stats' ? 'tab-btn active' : 'tab-btn';
+        document.getElementById('tab-list').className = tab === 'list' ? 'tab-content active' : 'tab-content';
+        document.getElementById('tab-stats').className = tab === 'stats' ? 'tab-content active' : 'tab-content';
+        if (tab === 'stats') renderStats();
+    }
+
+    // ============================================ -->
+    // TAB 1: СПИСОК МАТЧЕЙ -->
+    // ============================================ -->
+    function renderMatches(filterMap = 'all', filterResult = 'all', search = '') {
+        const container = document.getElementById('matchesList');
+        const keys = Object.keys(matchData);
+        let filtered = keys.map(key => ({ id: key, data: matchData[key] }));
+
+        if (filterMap !== 'all') {
+            filtered = filtered.filter(m => m.data.map.includes(filterMap));
+        }
+        if (filterResult !== 'all') {
+            filtered = filtered.filter(m => {
+                const isWin = m.data.winner.includes('Team 1') || m.data.winner.includes('Team Fortress 2');
+                return filterResult === 'win' ? isWin : !isWin;
+            });
+        }
+        if (search) {
+            const s = search.toLowerCase();
+            filtered = filtered.filter(m =>
+                m.data.map.toLowerCase().includes(s) ||
+                m.data.winner.toLowerCase().includes(s) ||
+                m.data.loser.toLowerCase().includes(s) ||
+                m.data.title.toLowerCase().includes(s)
+            );
+        }
+
+        filtered.sort((a, b) => new Date(b.data.date) - new Date(a.data.date));
+
+        container.innerHTML = filtered.map(({ id, data }) => {
+            const isLoss = data.loser.includes('Team 1') || data.loser.includes('Team Magic');
+            let mvp = '—';
+            let worst = '—';
+            if (data.teams) {
+                const winPlayers = data.teams.win.players || [];
+                const lossPlayers = data.teams.loss.players || [];
+                const mvpPlayer = winPlayers.find(p => p.highlight);
+                const worstPlayer = lossPlayers.find(p => p.worst);
+                if (mvpPlayer) mvp = mvpPlayer.name + ` (${mvpPlayer.k}-${mvpPlayer.d})`;
+                else if (winPlayers.length > 0) mvp = winPlayers[0].name;
+                if (worstPlayer) worst = worstPlayer.name;
+                else if (lossPlayers.length > 0) worst = lossPlayers[0].name;
+            } else if (data.total) {
+                const winPlayers = data.total.teams.win.players || [];
+                const lossPlayers = data.total.teams.loss.players || [];
+                const mvpPlayer = winPlayers.find(p => p.highlight);
+                const worstPlayer = lossPlayers.find(p => p.worst);
+                if (mvpPlayer) mvp = mvpPlayer.name + ` (${mvpPlayer.k}-${mvpPlayer.d})`;
+                else if (winPlayers.length > 0) mvp = winPlayers[0].name;
+                if (worstPlayer) worst = worstPlayer.name;
+                else if (lossPlayers.length > 0) worst = lossPlayers[0].name;
+            }
+
+            return `
+                <div class="match-card ${isLoss ? 'loss' : ''}" onclick="location.href='match.html?id=${id}'">
+                    <div class="match-top">
+                        <span class="title">${data.title}</span>
+                        <span class="date">${data.date} · ${data.map}</span>
+                        <span class="click-hint">▶</span>
+                    </div>
+                    <div class="match-teams">
+                        <div class="team ${data.winner.includes('Team 1') || data.winner.includes('Team Fortress 2') ? 'win' : ''}">
+                            <span class="name">${data.winner}</span>
+                            <span class="score">${data.score.split(':')[0]}</span>
+                        </div>
+                        <span class="vs">vs</span>
+                        <div class="team ${data.loser.includes('Team 1') || data.loser.includes('Team Magic') ? 'loss' : ''}">
+                            <span class="score">${data.score.split(':')[1]}</span>
+                            <span class="name">${data.loser}</span>
+                        </div>
+                    </div>
+                    <div class="match-stats-row">
+                        <span>🏆 <b class="mvp">${mvp}</b></span>
+                        <span>💀 <b class="bad">${worst}</b></span>
+                    </div>
+                </div>
+            `;
+        }).join('');
+
+        if (filtered.length === 0) {
+            container.innerHTML = '<div style="text-align:center;color:#4a5a6e;padding:30px 0;font-size:13px;">Матчи не найдены</div>';
+        }
+    }
+
+    function filterMatches() {
+        const search = document.getElementById('matchSearch').value;
+        const map = document.getElementById('mapFilter').value;
+        const result = document.getElementById('resultFilter').value;
+        renderMatches(map, result, search);
+    }
+
+    // ============================================ -->
+    // TAB 2: СТАТИСТИКА МАТЧЕЙ -->
+    // ============================================ -->
+    function renderStats() {
+        const keys = Object.keys(matchData);
+        const totalMatches = keys.length;
+        let wins = 0, losses = 0;
+        const mapStats = {};
+        const mvpStats = {};
+
+        keys.forEach(key => {
+            const data = matchData[key];
+            const isWin = data.winner.includes('Team 1') || data.winner.includes('Team Fortress 2');
+            if (isWin) wins++;
+            else losses++;
+
+            const maps = data.map.split(' + ');
+            maps.forEach(m => {
+                if (!mapStats[m]) mapStats[m] = { wins: 0, losses: 0, total: 0 };
+                mapStats[m].total++;
+                if (isWin) mapStats[m].wins++;
+                else mapStats[m].losses++;
+            });
+
+            let mvpName = '';
+            if (data.teams) {
+                const winPlayers = data.teams.win.players || [];
+                const mvpPlayer = winPlayers.find(p => p.highlight);
+                if (mvpPlayer) mvpName = mvpPlayer.name;
+                else if (winPlayers.length > 0) mvpName = winPlayers[0].name;
+            } else if (data.total) {
+                const winPlayers = data.total.teams.win.players || [];
+                const mvpPlayer = winPlayers.find(p => p.highlight);
+                if (mvpPlayer) mvpName = mvpPlayer.name;
+                else if (winPlayers.length > 0) mvpName = winPlayers[0].name;
+            }
+            if (mvpName) {
+                if (!mvpStats[mvpName]) mvpStats[mvpName] = 0;
+                mvpStats[mvpName]++;
+            }
+        });
+
+        const totalKills = playersData.reduce((sum, p) => sum + p.k, 0);
+        document.getElementById('statsGrid').innerHTML = `
+            <div class="stats-card"><div class="num">${totalMatches}</div><div class="label">Всего матчей</div></div>
+            <div class="stats-card"><div class="num good">${wins}</div><div class="label">Победы</div></div>
+            <div class="stats-card"><div class="num bad">${losses}</div><div class="label">Поражения</div></div>
+            <div class="stats-card"><div class="num">${totalKills}</div><div class="label">Всего убийств</div></div>
+        `;
+
+        const mapKeys = Object.keys(mapStats);
+        document.getElementById('mapsChart').innerHTML = mapKeys.map(m => `
+            <div style="background:rgba(255,255,255,0.03);border-radius:8px;padding:10px 14px;border:1px solid rgba(255,255,255,0.04);">
+                <div style="font-weight:600;color:#e8eff7;font-size:13px;">${m}</div>
+                <div style="display:flex;gap:16px;margin-top:4px;font-size:12px;">
+                    <span style="color:#7ddfa0;">✅ ${mapStats[m].wins} побед</span>
+                    <span style="color:#e07a7a;">❌ ${mapStats[m].losses} поражений</span>
+                    <span style="color:#6e7f94;">📊 ${mapStats[m].total} матчей</span>
+                </div>
+            </div>
+        `).join('');
+
+        const sortedMvp = Object.entries(mvpStats).sort((a, b) => b[1] - a[1]).slice(0, 5);
+        document.getElementById('mvpList').innerHTML = sortedMvp.length > 0 ? sortedMvp.map(([name, count], i) => `
+            <div style="display:flex;align-items:center;gap:10px;padding:6px 12px;background:rgba(255,255,255,0.03);border-radius:6px;border:1px solid rgba(255,255,255,0.04);">
+                <span style="font-weight:700;color:#6e7f94;min-width:28px;">#${i+1}</span>
+                <span style="font-weight:600;color:#e8eff7;">${name}</span>
+                <span style="color:#ffb347;font-weight:600;margin-left:auto;">${count} раз</span>
+            </div>
+        `).join('') : '<div style="color:#6e7f94;font-size:13px;">Нет данных о MVP</div>';
+    }
+
+    // ===== ТЕМА =====
+    function toggleTheme() {
+        document.body.classList.toggle('light');
+        document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '🌙' : '🌙';
+    }
+
+    let lang = 'ru';
+
+    function toggleLang() {
+        lang = lang === 'ru' ? 'en' : 'ru';
+        document.getElementById('langBtn').textContent = lang === 'ru' ? '🇬🇧 EN' : '🇷🇺 RU';
+    }
+
+    // ===== ИНИЦИАЛИЗАЦИЯ =====
+    renderMatches();
+</script>
+
+</body>
+</html>
