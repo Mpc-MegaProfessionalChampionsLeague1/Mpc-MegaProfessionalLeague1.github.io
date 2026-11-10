@@ -721,46 +721,63 @@
 
 function renderTopPlayers(type) {
     const data = getPlayersForMonth(currentMonth);
+    
     if (!data || !data.length) {
         document.getElementById('podiumContainer').innerHTML = '';
         document.getElementById('playerList').innerHTML = '<div style="text-align:center;color:var(--muted);padding:20px 0;font-size:12px;">Нет данных</div>';
         return;
     }
 
+    // Сортируем игроков
     const sorted = type === 'kd' ?
         [...data].filter(p => p.kd > 0).sort((a, b) => b.kd - a.kd) :
         [...data].filter(p => p.rating > 0).sort((a, b) => b.rating - a.rating);
 
     if (sorted.length === 0) return;
 
-    // 1. Рендерим ПОДИУМ (Топ-3)
+    // 1. РЕНДЕР ПОДИУМА (Топ-3)
     const podiumContainer = document.getElementById('podiumContainer');
-    const top3 = sorted.slice(0, 3);
-    const places = ['second', 'first', 'third']; // Визуальный порядок: 2, 1, 3
-    const medals = ['2', '1', '3'];
     
-    podiumContainer.innerHTML = top3.map((p, i) => {
-        const displayVal = type === 'kd' ? p.kd.toFixed(2) : p.rating.toFixed(2);
+    // Берем первых трех игроков из отсортированного списка
+    const first = sorted[0]; // 1-е место (должен быть по центру)
+    const second = sorted[1]; // 2-е место (должен быть слева)
+    const third = sorted[2]; // 3-е место (должен быть справа)
+
+    // Собираем HTML в правильном визуальном порядке: Слева (2-й) -> Центр (1-й) -> Справа (3-й)
+    let podiumHTML = '';
+
+    // Функция-помощник для создания карточки на подиуме
+    const createPodiumCard = (player, placeClass, placeNumber, medalEmoji) => {
+        if (!player) return ''; // Если игроков меньше 3, пропускаем
+        const displayVal = type === 'kd' ? player.kd.toFixed(2) : player.rating.toFixed(2);
         return `
-            <div class="podium-item ${places[i]}" onclick="location.href='player.html?name=${encodeURIComponent(p.name)}'">
-                <div class="podium-avatar">${p.avatar ? `<img src="${p.avatar}">` : p.name.charAt(0).toUpperCase()}</div>
-                <div class="podium-name">${p.name.split(' ')[0]}</div>
+            <div class="podium-item ${placeClass}" onclick="location.href='player.html?name=${encodeURIComponent(player.name)}'">
+                <div class="podium-avatar">
+                    ${player.avatar ? `<img src="${player.avatar}">` : player.name.charAt(0).toUpperCase()}
+                </div>
+                <div class="podium-name">${player.name.split(' ')[0]}</div>
                 <div class="podium-stat">${displayVal}</div>
-                <div class="podium-bar">${medals[i]}</div>
+                <div class="podium-bar">${placeNumber}</div>
             </div>
         `;
-    }).join('');
+    };
 
-    // 2. Рендерим ОСТАЛЬНЫХ (с 4-го места)
+    // Собираем подиум
+    if (second) podiumHTML += createPodiumCard(second, 'second', '2', '🥈');
+    if (first)  podiumHTML += createPodiumCard(first, 'first', '1', '🥇');
+    if (third)  podiumHTML += createPodiumCard(third, 'third', '3', '🥉');
+
+    podiumContainer.innerHTML = podiumHTML;
+
+    // 2. РЕНДЕР ОСТАЛЬНЫХ ИГРОКОВ (с 4-го места)
     const container = document.getElementById('playerList');
-    const rest = sorted.slice(3);
+    const rest = sorted.slice(3); // Отрезаем первых трех, они уже на подиуме
     
     if (rest.length === 0) {
         container.innerHTML = '<div style="text-align:center;color:var(--dim);padding:10px;font-size:10px;">Больше игроков нет</div>';
     } else {
         container.innerHTML = rest.map((p, i) => {
             const displayVal = type === 'kd' ? p.kd : p.rating;
-            const diff = p.diff || 0;
             return `
             <div class="player-row" onclick="location.href='player.html?name=${encodeURIComponent(p.name)}'" style="border-bottom:none; padding:6px 8px;">
                 <span class="rank">#${i+4}</span>
@@ -773,7 +790,8 @@ function renderTopPlayers(type) {
         `}).join('');
     }
 
-    document.getElementById('topFooterName').textContent = sorted[0]?.name || '—';
+    // Обновляем футер
+    document.getElementById('topFooterName').textContent = first?.name || '—';
     document.getElementById('topFooterText').textContent = type === 'kd' ? 'лидер по K/D' : 'лидер по рейтингу';
 }
 
