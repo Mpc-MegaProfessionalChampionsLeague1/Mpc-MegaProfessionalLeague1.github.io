@@ -308,26 +308,29 @@
     <!-- MAIN GRID -->
     <div style="display:grid;grid-template-columns:1fr 1.6fr 1fr;gap:16px;margin-top:4px;">
 
-        <!-- LEFT: TOP PLAYERS -->
-        <div class="glass-card">
-            <div class="panel-title">🏆 <span>Топ игроков</span></div>
+    <!-- LEFT: TOP PLAYERS (PODIUM) -->
+<div class="glass-card" style="display:flex; flex-direction:column;">
+    <div class="panel-title">🏆 <span>Топ игроков</span></div>
+    
+    <!-- Фильтр по месяцам -->
+    <div class="month-filter" id="monthFilter" style="margin-bottom:12px;"></div>
+    
+    <div style="display:flex;gap:3px;margin-bottom:10px;background:rgba(255,255,255,0.03);border-radius:0;padding:3px;border:1px solid var(--border);">
+        <button class="sub-nav-btn" onclick="switchTop('kd')" id="subKd">📊 K/D</button>
+        <button class="sub-nav-btn active" onclick="switchTop('rating')" id="subRating">📈 Rating</button>
+    </div>
 
-            <!-- Фильтр по месяцам -->
-            <div class="month-filter" id="monthFilter">
-                <!-- Рендерится через JS -->
-            </div>
+    <!-- ПОДИУМ -->
+    <div class="podium-container" id="podiumContainer"></div>
 
-            <div style="display:flex;gap:3px;margin-bottom:10px;background:rgba(255,255,255,0.03);border-radius:8px;padding:3px;border:1px solid rgba(255,255,255,0.05);">
-                <button class="sub-nav-btn" onclick="switchTop('kd')" id="subKd">📊 По K/D</button>
-                <button class="sub-nav-btn active" onclick="switchTop('rating')" id="subRating">📈 По рейтингу</button>
-            </div>
-
-            <div class="scroll-area" id="playerList"></div>
-            <div style="font-size:9px;color:#4a5a6e;margin-top:8px;text-align:center;border-top:1px solid rgba(255,255,255,0.04);padding-top:8px;">
-                🟣 <b style="color:#ffb347;" id="topFooterName">bomba69</b> — <span id="topFooterText">лидер по рейтингу</span>
-                <span id="monthInfo" style="display:block;color:#4a5a6e;font-size:8px;margin-top:2px;">за всё время</span>
-            </div>
-        </div>
+    <!-- Остальные (4-12 места) -->
+    <div class="scroll-area" id="playerList"></div>
+    
+    <div style="font-size:10px;color:var(--muted);margin-top:12px;text-align:center;border-top:1px solid var(--border);padding-top:12px;font-family:var(--mono);">
+        🟣 <b style="color:var(--accent);" id="topFooterName">bomba69</b> — <span id="topFooterText">лидер по рейтингу</span>
+        <span id="monthInfo" style="display:block;color:var(--dim);font-size:9px;margin-top:2px;">за всё время</span>
+    </div>
+</div>
 
         <!-- CENTER: NEWS -->
         <div class="glass-card">
