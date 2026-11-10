@@ -1,17 +1,17 @@
 // ===== ДАННЫЕ ИГРОКОВ =====
 const playersData = [
-    { name: 'bomba69', matches: 6, k: 104, d: 60, a: 12, kd: 1.73, adr: 97, diff: 133, rating: 1.53, you: true, avatar: '' },
-    { name: 'Хомяк с авт', matches: 4, k: 69, d: 60, a: 17, kd: 1.15, adr: 89, diff: 81, rating: 1.18, you: false, avatar: '' },
-    { name: 'uxaxaxaxa', matches: 6, k: 85, d: 69, a: 11, kd: 1.23, adr: 84, diff: 66, rating: 1.24, you: false, avatar: '' },
-    { name: 'Gonduras228', matches: 6, k: 74, d: 75, a: 24, kd: 0.99, adr: 77, diff: 35, rating: 1.05, you: false, avatar: '' },
-    { name: 'abdalbek', matches: 6, k: 86, d: 97, a: 21, kd: 0.89, adr: 84, diff: -30, rating: 0.89, you: false, avatar: '' },
-    { name: 'wadsf', matches: 5, k: 58, d: 61, a: 14, kd: 0.95, adr: 68, diff: -60, rating: 0.90, you: false, avatar: '' },
-    { name: 'AFKE', matches: 5, k: 33, d: 53, a: 21, kd: 0.62, adr: 61, diff: -15, rating: 0.83, you: false, avatar: '' },
-    { name: 'Adjiare Gudju', matches: 4, k: 59, d: 69, a: 17, kd: 0.86, adr: 73, diff: -35, rating: 0.96, you: false, avatar: '' },
-    { name: 'balchuqov_valera', matches: 2, k: 15, d: 31, a: 5, kd: 0.48, adr: 49, diff: -79, rating: 0.62, you: false, avatar: '' },
-    { name: 'baksyhanovvand...', matches: 4, k: 25, d: 75, a: 8, kd: 0.33, adr: 41, diff: -119, rating: 0.35, you: false, avatar: '' },
-    { name: 'andrejlybisin3', matches: 1, k: 7, d: 12, a: 1, kd: 0.58, adr: 38, diff: -38, rating: -0.61, you: false, avatar: '' },
-    { name: 'RUS_ENZO', matches: 1, k: 8, d: 16, a: 2, kd: 0.50, adr: 66, diff: -28, rating: -0.58, you: false, avatar: '' }
+    { name: 'bomba69', matches: 6, k: 104, d: 60, a: 12, kd: 1.73, adr: 97, diff: 133, rating: 1.53, you: true, avatar: '', steam: 'https://steamcommunity.com/profiles/76561199219403813/' },
+    { name: 'Хомяк с авт', matches: 4, k: 69, d: 60, a: 17, kd: 1.15, adr: 89, diff: 81, rating: 1.18, you: false, avatar: '', steam: 'https://steamcommunity.com/profiles/76561199523645388/' },
+    { name: 'uxaxaxaxa', matches: 6, k: 85, d: 69, a: 11, kd: 1.23, adr: 84, diff: 66, rating: 1.24, you: false, avatar: '', steam: 'https://steamcommunity.com/profiles/76561199776073705/' },
+    { name: 'Gonduras228', matches: 6, k: 74, d: 75, a: 24, kd: 0.99, adr: 77, diff: 35, rating: 1.05, you: false, avatar: '', steam: 'https://steamcommunity.com/profiles/76561199557288610/' },
+    { name: 'abdalbek', matches: 6, k: 86, d: 97, a: 21, kd: 0.89, adr: 84, diff: -30, rating: 0.89, you: false, avatar: '', steam: 'https://steamcommunity.com/profiles/76561199495034345/' },
+    { name: 'wadsf', matches: 5, k: 58, d: 61, a: 14, kd: 0.95, adr: 68, diff: -60, rating: 0.90, you: false, avatar: '', steam: 'https://steamcommunity.com/profiles/76561199773230809/' },
+    { name: 'AFKE', matches: 5, k: 33, d: 53, a: 21, kd: 0.62, adr: 61, diff: -15, rating: 0.83, you: false, avatar: '', steam: 'https://steamcommunity.com/id/geh69228/' },
+    { name: 'Adjiare Gudju', matches: 4, k: 59, d: 69, a: 17, kd: 0.86, adr: 73, diff: -35, rating: 0.96, you: false, avatar: '', steam: 'https://steamcommunity.com/profiles/76561198078027355/' },
+    { name: 'balchuqov_valera', matches: 2, k: 15, d: 31, a: 5, kd: 0.48, adr: 49, diff: -79, rating: 0.62, you: false, avatar: '', steam: 'https://steamcommunity.com/profiles/76561199813046829/' },
+    { name: 'baksyhanovvand...', matches: 4, k: 25, d: 75, a: 8, kd: 0.33, adr: 41, diff: -119, rating: 0.35, you: false, avatar: '', steam: 'https://steamcommunity.com/profiles/76561199859714337/' },
+    { name: 'andrejlybisin3', matches: 1, k: 7, d: 12, a: 1, kd: 0.58, adr: 38, diff: -38, rating: -0.61, you: false, avatar: '', steam: 'https://steamcommunity.com/profiles/76561199859593609/' },
+    { name: 'RUS_ENZO', matches: 1, k: 8, d: 16, a: 2, kd: 0.50, adr: 66, diff: -28, rating: -0.58, you: false, avatar: '', steam: 'https://steamcommunity.com/profiles/76561198650384820' }
 ];
 
 // ===== МАТЧИ ИГРОКОВ =====
@@ -321,49 +321,4 @@ const matchData = {
     }
 };
 
-// ===== ДОСТИЖЕНИЯ =====
-function getAchievements(player) {
-    const ach = [];
-    if (player.kd > 1.5) ach.push({ icon: '🥇', name: 'Элитный K/D' });
-    if (player.kd > 2.0) ach.push({ icon: '💎', name: 'Легендарный K/D' });
-    if (player.diff > 100) ach.push({ icon: '⚡', name: 'Доминатор' });
-    if (player.diff > 50 && player.diff <= 100) ach.push({ icon: '🔥', name: 'Кипящий' });
-    if (player.adr > 90) ach.push({ icon: '💥', name: 'Урон-машина' });
-    if (player.matches >= 4) ach.push({ icon: '🏅', name: 'Ветеран' });
-    if (player.name === 'bomba69') ach.push({ icon: '⭐', name: 'MVP турнира' });
-    if (player.name === 'Хомяк с авт' && player.diff === 116) ach.push({ icon: '🏆', name: 'Лучшая разница' });
-    return ach;
-}
 
-// ===== АВАТАРКИ =====
-function loadAvatars() {
-    const saved = localStorage.getItem('mpl_avatars');
-    if (saved) {
-        try {
-            const avatars = JSON.parse(saved);
-            playersData.forEach(p => {
-                if (avatars[p.name]) p.avatar = avatars[p.name];
-            });
-        } catch(e) {}
-    }
-}
-loadAvatars();
-
-function saveAvatar(playerName, dataUrl) {
-    const saved = JSON.parse(localStorage.getItem('mpl_avatars') || '{}');
-    saved[playerName] = dataUrl;
-    localStorage.setItem('mpl_avatars', JSON.stringify(saved));
-    const player = playersData.find(p => p.name === playerName);
-    if (player) player.avatar = dataUrl;
-}
-
-// ===== НОВОСТИ =====
-let newsData = JSON.parse(localStorage.getItem('mpl_news')) || [
-    { id: 1, title: '🏆 Старт сезона MPL!', text: 'Дружеский турнир MPL начался!', date: new Date('2026-05-09T10:00:00').toISOString() },
-    { id: 2, title: '🔥 Bomba69 делает 26-11!', text: 'В матче #5 Bomba69 показал невероятный результат!', date: new Date().toISOString() },
-    { id: 3, title: '📊 Добавлен матч #5!', text: 'Новый матч против Team 2. Итог: 13:5 в нашу пользу!', date: new Date().toISOString() }
-];
-
-function saveNews() {
-    localStorage.setItem('mpl_news', JSON.stringify(newsData));
-}
