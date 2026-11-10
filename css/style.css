@@ -1330,3 +1330,17 @@ body {
     height: 16px;
     fill: currentColor;
 }
+
+/* ===== МОБИЛЬНАЯ ВЕРСТКА ===== */
+.main-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.6fr 1fr;
+    gap: 16px;
+    margin-top: 4px;
+}
+
+@media (max-width: 900px) {
+    .main-grid {
+        grid-template-columns: 1fr; /* Все колонки ставим друг под другом */
+    }
+}
