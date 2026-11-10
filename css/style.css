@@ -1379,3 +1379,37 @@ body {
     .header { padding: 10px 12px; }
     .logo h1 { font-size: 18px; }
 }
+
+@media (max-width: 768px) {
+    /* Навигация скроллится по горизонтали, если не влезает */
+    .nav {
+        overflow-x: auto;
+        flex-wrap: nowrap;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 4px;
+    }
+    .nav::-webkit-scrollbar { display: none; }
+    .nav-btn {
+        white-space: nowrap;
+        padding: 8px 14px;
+        font-size: 11px;
+    }
+
+    /* Фильтры на всю ширину */
+    .filter-section {
+        flex-direction: column;
+    }
+    .filter-section input,
+    .filter-section select {
+        width: 100%;
+    }
+
+    /* Таблицы (в статистике) скроллятся */
+    .stats-grid, .grid-2 {
+        grid-template-columns: 1fr;
+    }
+    .player-stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
