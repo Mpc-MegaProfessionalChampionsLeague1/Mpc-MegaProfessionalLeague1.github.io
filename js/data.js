@@ -321,4 +321,38 @@ const matchData = {
     }
 };
 
+// ===== ДОСТИЖЕНИЯ =====
+function getAchievements(player) {
+    const ach = [];
+    if (player.kd > 1.5) ach.push({ icon: '🥇', name: 'Элитный K/D' });
+    if (player.kd > 2.0) ach.push({ icon: '💎', name: 'Легендарный K/D' });
+    if (player.diff > 100) ach.push({ icon: '⚡', name: 'Доминатор' });
+    if (player.diff > 50 && player.diff <= 100) ach.push({ icon: '🔥', name: 'Кипящий' });
+    if (player.adr > 90) ach.push({ icon: '💥', name: 'Урон-машина' });
+    if (player.matches >= 4) ach.push({ icon: '🏅', name: 'Ветеран' });
+    if (player.name === 'bomba69') ach.push({ icon: '⭐', name: 'MVP турнира' });
+    return ach;
+}
 
+// ===== АВАТАРКИ =====
+function loadAvatars() {
+    const saved = localStorage.getItem('mpl_avatars');
+    if (saved) {
+        try {
+            const avatars = JSON.parse(saved);
+            playersData.forEach(p => {
+                if (avatars[p.name]) p.avatar = avatars[p.name];
+            });
+        } catch(e) {}
+    }
+}
+loadAvatars();
+
+// ===== НОВОСТИ =====
+let newsData = JSON.parse(localStorage.getItem('mpl_news')) || [
+    { id: 1, title: '🏆 Старт сезона MPL!', text: 'Дружеский турнир MPL начался!', date: new Date('2026-05-09T10:00:00').toISOString() }
+];
+
+function saveNews() {
+    localStorage.setItem('mpl_news', JSON.stringify(newsData));
+}
