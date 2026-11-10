@@ -1344,3 +1344,38 @@ body {
         grid-template-columns: 1fr; /* Все колонки ставим друг под другом */
     }
 }
+
+@media (max-width: 500px) {
+    .podium-container {
+        gap: 6px;
+        height: 160px;
+    }
+    .podium-avatar {
+        width: 40px;
+        height: 40px;
+        font-size: 14px;
+    }
+    .podium-item.first .podium-avatar {
+        width: 50px;
+        height: 50px;
+        font-size: 18px;
+    }
+    .podium-name {
+        font-size: 10px;
+    }
+    .podium-bar {
+        font-size: 14px;
+    }
+    .podium-item.first .podium-bar { height: 70px; }
+    .podium-item.second .podium-bar { height: 55px; }
+    .podium-item.third .podium-bar { height: 40px; }
+    
+    /* Делаем карточки матчей чуть меньше */
+    .match-card { padding: 8px 10px; }
+    .match-card .match-teams .team .name { font-size: 11px; }
+    .match-card .match-teams .team .score { font-size: 14px; }
+    
+    /* Уменьшаем отступы в шапке */
+    .header { padding: 10px 12px; }
+    .logo h1 { font-size: 18px; }
+}
