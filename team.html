@@ -5,80 +5,192 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL — Профиль команды</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=6">
+    <link rel="stylesheet" href="css/style.css?v=7">
     <style>
-        .team-header {
-            background: var(--surface);
+        /* === ШАПКА КОМАНДЫ (HLTV STYLE) === */
+        .hltv-team-header {
+            background: #1f232b;
             border: 1px solid var(--border);
-            border-top: 4px solid var(--accent);
-            padding: 30px;
+            border-top: 3px solid var(--accent);
+            margin-bottom: 0;
+            position: relative;
+        }
+        
+        /* Верхняя часть с "фото" игроков */
+        .hltv-players-strip {
+            display: flex;
+            justify-content: center;
+            background: #2a2e37;
+            padding: 20px;
+            gap: 15px;
+            border-bottom: 1px solid #111;
+            overflow-x: auto;
+        }
+        .hltv-player-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 90px;
+            flex-shrink: 0;
+        }
+        .hltv-player-photo {
+            width: 80px;
+            height: 100px;
+            background: #111;
+            border: 1px solid #333;
             display: flex;
             align-items: center;
-            gap: 24px;
-            margin-bottom: 24px;
+            justify-content: center;
+            margin-bottom: -10px; /* Чтобы плашка с ником налезала */
+            z-index: 1;
+            overflow: hidden;
         }
-        .team-header.win { border-top-color: var(--success); }
-        .team-header.loss { border-top-color: var(--danger); }
+        .hltv-player-nick {
+            background: #111;
+            width: 100%;
+            text-align: center;
+            padding: 4px 0;
+            font-family: var(--mono);
+            font-size: 11px;
+            font-weight: 700;
+            color: #fff;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 4px;
+            border: 1px solid #333;
+        }
         
-        .team-logo {
+        /* Нижняя часть с логотипом и названием */
+        .hltv-team-info {
+            display: flex;
+            align-items: center;
+            padding: 20px 30px;
+            background: #171a21;
+            gap: 20px;
+        }
+        .hltv-team-logo {
             width: 80px;
             height: 80px;
-            background: var(--bg);
-            border: 1px solid var(--border);
+            background: #222;
+            border: 1px solid #333;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 40px;
-            border-radius: 8px;
         }
-        .team-title {
-            font-family: var(--mono);
+        .hltv-team-name {
+            font-family: var(--sans);
             font-size: 32px;
             font-weight: 800;
-            color: var(--text);
-            letter-spacing: -1px;
+            color: #fff;
+            letter-spacing: -0.5px;
         }
-        .team-status {
+        .hltv-team-country {
+            font-size: 12px;
+            color: #8b9bb0;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+        .hltv-team-rank {
+            margin-left: auto;
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
             font-family: var(--mono);
-            font-size: 14px;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-top: 4px;
+            font-size: 12px;
+            color: #c8d6e0;
         }
-        .team-status.win { color: var(--success); }
-        .team-status.loss { color: var(--danger); }
+        .hltv-rank-item {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 8px;
+        }
+        .hltv-rank-badge {
+            background: #1e8b4c;
+            color: #fff;
+            padding: 2px 6px;
+            font-size: 10px;
+            font-weight: 800;
+            border-radius: 2px;
+        }
 
-        .hltv-table {
-            width: 100%;
-            border-collapse: collapse;
+        /* === ВКЛАДКИ (INFO / ROSTER / MATCHES) === */
+        .hltv-tabs {
+            display: flex;
+            background: #171a21;
+            border: 1px solid var(--border);
+            border-top: none;
+            border-bottom: 2px solid #111;
+        }
+        .hltv-tab {
+            padding: 14px 30px;
+            font-family: var(--sans);
+            font-size: 14px;
+            font-weight: 600;
+            color: #8b9bb0;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: 0.15s;
+            text-transform: capitalize;
+        }
+        .hltv-tab:hover { color: #fff; background: rgba(255,255,255,0.03); }
+        .hltv-tab.active {
+            color: #fff;
+            border-bottom-color: var(--accent);
+        }
+
+        /* === КОНТЕНТ ВКЛАДОК === */
+        .hltv-tab-content {
+            display: none;
+            padding: 24px;
             background: var(--surface);
             border: 1px solid var(--border);
+            border-top: none;
+            min-height: 300px;
+            animation: fadeUp 0.3s ease;
         }
-        .hltv-table th {
-            background: var(--surface-2);
-            color: var(--muted);
+        .hltv-tab-content.active { display: block; }
+
+        /* Таблица Ростера */
+        .hltv-roster-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .hltv-roster-table th {
+            text-align: left;
+            padding: 10px 16px;
             font-family: var(--mono);
             font-size: 11px;
-            font-weight: 600;
+            color: #6e7f94;
+            border-bottom: 1px solid var(--border);
             text-transform: uppercase;
-            letter-spacing: 1px;
+        }
+        .hltv-roster-table td {
             padding: 12px 16px;
-            text-align: left;
             border-bottom: 1px solid var(--border);
+            font-family: var(--sans);
+            font-size: 14px;
+            color: #c8d6e0;
         }
-        .hltv-table td {
-            padding: 14px 16px;
-            border-bottom: 1px solid var(--border);
-            font-family: var(--mono);
-            font-size: 13px;
-            color: var(--text);
+        .hltv-roster-table tr:hover td {
+            background: #1f232b;
+            cursor: pointer;
         }
-        .hltv-table tr:last-child td { border-bottom: none; }
-        .hltv-table tr:hover td { background: var(--surface-2); cursor: pointer; }
-        
-        .player-name-cell { font-weight: 700; color: var(--accent); }
-        .stat-good { color: var(--success); font-weight: 700; }
-        .stat-bad { color: var(--danger); font-weight: 700; }
+        .hltv-roster-name {
+            font-weight: 600;
+            color: #fff;
+        }
+        .hltv-roster-flag {
+            display: inline-block;
+            margin-right: 8px;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
@@ -105,6 +217,14 @@
     const urlParams = new URLSearchParams(window.location.search);
     const teamId = urlParams.get('id');
 
+    function switchTeamTab(tabId) {
+        document.querySelectorAll('.hltv-tab').forEach(t => t.classList.remove('active'));
+        document.getElementById('tab-' + tabId).classList.add('active');
+        
+        document.querySelectorAll('.hltv-tab-content').forEach(c => c.classList.remove('active'));
+        document.getElementById('content-' + tabId).classList.add('active');
+    }
+
     function renderTeam(id) {
         const container = document.getElementById('teamContent');
         if (!id || (id !== 'tf2' && id !== 'magic')) {
@@ -115,49 +235,127 @@
         const isWin = id === 'tf2';
         const teamData = isWin ? matchData.match0.total.teams.win : matchData.match0.total.teams.loss;
         const teamName = isWin ? 'Team Fortress 2' : 'Team Magic';
-        const statusText = isWin ? 'Победа (2:0)' : 'Поражение (0:2)';
-        const statusClass = isWin ? 'win' : 'loss';
+        
+        const players = [...teamData.players].sort((a, b) => b.adr - a.adr);
 
+        // Стильный SVG-силуэт для игроков без аватарок
+        const silhouetteSVG = `<svg viewBox="0 0 24 24" fill="#555" style="width:80%; height:80%;"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>`;
+
+        // 1. ВЕРХНЯЯ ПЛАШКА С "ФОТО" ИГРОКОВ
+        let playersStripHTML = players.map(p => `
+            <div class="hltv-player-card" onclick="location.href='player.html?name=${encodeURIComponent(p.name)}'" style="cursor:pointer;">
+                <div class="hltv-player-photo">
+                    ${p.avatar ? `<img src="${p.avatar}" style="width:100%;height:100%;object-fit:cover;">` : silhouetteSVG}
+                </div>
+                <div class="hltv-player-nick"><span style="font-size:14px; margin-right:2px;">🇷🇺</span> ${p.name.split(' ')[0]}</div>
+            </div>
+        `).join('');
+
+        // 2. ИНФО О КОМАНДЕ
+        let teamHeaderHTML = `
+            <div class="hltv-team-info">
+                <div class="hltv-team-logo">🛡</div>
+                <div>
+                    <div class="hltv-team-country"><span>🇷🇺</span> Russia</div>
+                    <div class="hltv-team-name">${teamName}</div>
+                </div>
+                <div class="hltv-team-rank">
+                    <div class="hltv-rank-item">
+                        <span>Valve ranking</span>
+                        <span class="hltv-rank-badge">#${isWin ? '1' : '2'}</span>
+                    </div>
+                    <div class="hltv-rank-item">
+                        <span>World ranking</span>
+                        <span class="hltv-rank-badge">#${isWin ? '1' : '2'}</span>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // 3. ВКЛАДКИ
+        let tabsHTML = `
+            <div class="hltv-tabs">
+                <div class="hltv-tab active" id="tab-info" onclick="switchTeamTab('info')">Info</div>
+                <div class="hltv-tab" id="tab-roster" onclick="switchTeamTab('roster')">Roster</div>
+                <div class="hltv-tab" id="tab-matches" onclick="switchTeamTab('matches')">Matches</div>
+            </div>
+        `;
+
+        // 4. КОНТЕНТ ВКЛАДОК
+        let contentHTML = `
+            <!-- ИНФО -->
+            <div class="hltv-tab-content active" id="content-info">
+                <h3 style="font-family:var(--mono); font-size:16px; margin-bottom:12px; color:#fff;">О команде</h3>
+                <p style="color:#8b9bb0; font-size:14px; line-height:1.6;">
+                    ${teamName} — профессиональный состав по CS2, выступающий на турнире MPL. 
+                    В данном сезоне команда показала ${isWin ? 'отличный результат, одержав победу в матче #0 (BO3) со счетом 2:0' : 'достойную игру, уступив в матче #0 (BO3) со счетом 0:2'}.
+                    <br><br>
+                    <b style="color:var(--text);">Статус в турнире:</b> ${isWin ? 'Победитель' : 'Участник'}<br>
+                    <b style="color:var(--text);">Сезон:</b> Май-Сентябрь 2026
+                </p>
+            </div>
+
+            <!-- РОСТЕР -->
+            <div class="hltv-tab-content" id="content-roster">
+                <table class="hltv-roster-table">
+                    <thead>
+                        <tr>
+                            <th>Игрок</th>
+                            <th>K / D</th>
+                            <th>ADR</th>
+                            <th>Разница</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${players.map(p => `
+                            <tr onclick="location.href='player.html?name=${encodeURIComponent(p.name)}'">
+                                <td>
+                                    <span class="hltv-roster-flag">🇷🇺</span>
+                                    <span class="hltv-roster-name">${p.name}</span>
+                                </td>
+                                <td style="font-family:var(--mono);">${p.k} / ${p.d}</td>
+                                <td style="font-family:var(--mono);">${p.adr}</td>
+                                <td style="font-family:var(--mono); color:${p.diff > 0 ? 'var(--success)' : 'var(--danger)'}; font-weight:700;">
+                                    ${p.diff > 0 ? '+' : ''}${p.diff}
+                                </td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- МАТЧИ -->
+            <div class="hltv-tab-content" id="content-matches">
+                <div class="match-card ${isWin ? '' : 'loss'}" onclick="location.href='match.html?id=match0'" style="margin-bottom:0;">
+                    <div class="match-top">
+                        <span class="title">${matchData.match0.title}</span>
+                        <span class="date">${matchData.match0.date} · ${matchData.match0.score}</span>
+                    </div>
+                    <div class="match-teams">
+                        <div class="team win"><span class="name">${matchData.match0.winner}</span><span class="score">${matchData.match0.score.split(':')[0]}</span></div>
+                        <span class="vs">vs</span>
+                        <div class="team loss"><span class="score">${matchData.match0.score.split(':')[1]}</span><span class="name">${matchData.match0.loser}</span></div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // СБОРКА
         container.innerHTML = `
             <a href="index.html" class="back-btn">← На главную</a>
             
-            <!-- HLTV-Header -->
-            <div class="team-header ${statusClass}">
-                <div class="team-logo">🛡</div>
-                <div>
-                    <div class="team-title">${teamName}</div>
-                    <div class="team-status ${statusClass}">${statusText}</div>
+            <div class="hltv-team-header">
+                <div class="hltv-players-strip">
+                    ${playersStripHTML}
                 </div>
+                ${teamHeaderHTML}
             </div>
-
-            <!-- HLTV-Table -->
-            <div style="font-family:var(--mono); font-size:14px; font-weight:700; margin-bottom:12px; text-transform:uppercase; color:var(--text);">Состав команды</div>
-            <table class="hltv-table">
-                <thead>
-                    <tr>
-                        <th>Игрок</th>
-                        <th>K</th>
-                        <th>D</th>
-                        <th>A</th>
-                        <th>ADR</th>
-                        <th>+/-</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${teamData.players.map(p => `
-                        <tr onclick="location.href='player.html?name=${encodeURIComponent(p.name)}'">
-                            <td class="player-name-cell">${p.name}</td>
-                            <td>${p.k}</td>
-                            <td>${p.d}</td>
-                            <td>${p.a || 0}</td>
-                            <td>${p.adr}</td>
-                            <td class="${p.diff > 0 ? 'stat-good' : 'stat-bad'}">${p.diff > 0 ? '+' : ''}${p.diff}</td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
+            
+            ${tabsHTML}
+            ${contentHTML}
         `;
     }
+    
     renderTeam(teamId);
 </script>
 </body>
