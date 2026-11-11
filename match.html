@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL — Детали матча</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=26">
+    <link rel="stylesheet" href="css/style.css?v=27">
     <style>
+        /* ===== ШАПКА МАТЧА ===== */
         .hltv-match-header { background: #1f232b; border: 1px solid var(--border); display: flex; align-items: stretch; position: relative; margin-bottom: 20px; }
         .hltv-team-side { flex: 1; display: flex; align-items: center; justify-content: center; gap: 16px; padding: 24px; }
         .hltv-team-side.win { background: rgba(125, 223, 160, 0.05); }
@@ -19,6 +20,7 @@
         .hltv-match-date { font-size: 11px; color: #8b9bb0; margin-top: 4px; }
         .hltv-match-status { font-size: 12px; font-weight: 700; color: var(--dim); margin-top: 8px; text-transform: uppercase; letter-spacing: 1px; }
 
+        /* ===== КАРТЫ ===== */
         .hltv-maps-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
         .hltv-maps-list { background: var(--surface); border: 1px solid var(--border); padding: 16px; }
         .hltv-info-box { background: var(--surface); border: 1px solid var(--border); padding: 16px; }
@@ -27,15 +29,20 @@
         .hltv-map-name { font-weight: 600; color: var(--text); }
         .hltv-map-score { font-family: var(--mono); font-weight: 700; color: var(--success); }
 
-        /* ВКЛАДКИ КАРТ */
+        /* ===== ВКЛАДКИ КАРТ ===== */
         .map-tabs { display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
         .map-tab { background: var(--surface); border: 1px solid var(--border); color: var(--muted); padding: 8px 20px; font-family: var(--mono); font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; text-transform: uppercase; }
         .map-tab:hover { color: var(--text); border-color: var(--accent); }
         .map-tab.active { background: var(--accent); color: #000; border-color: var(--accent); }
 
-        /* Таблица */
-        .hltv-stats-table { width: 100%; border-collapse: collapse; background: var(--surface); border: 1px solid var(--border); margin-bottom: 20px; }
-        .hltv-stats-table th { text-align: left; padding: 10px 14px; font-family: var(--mono); font-size: 11px; color: #8b9bb0; border-bottom: 1px solid var(--border); text-transform: uppercase; }
+        /* ===== ТАБЛИЦА СТАТИСТИКИ ===== */
+        .hltv-table-wrapper { margin-bottom: 30px; border: 1px solid var(--border); }
+        .hltv-table-header { display: flex; align-items: center; gap: 10px; background: #1a1e26; padding: 12px 16px; border-bottom: 1px solid var(--border); }
+        .hltv-table-header img { width: 28px; height: 28px; }
+        .hltv-table-header span { font-size: 16px; font-weight: 700; color: #fff; }
+        
+        .hltv-stats-table { width: 100%; border-collapse: collapse; background: var(--surface); }
+        .hltv-stats-table th { text-align: left; padding: 10px 14px; font-family: var(--mono); font-size: 11px; color: #8b9bb0; border-bottom: 1px solid var(--border); text-transform: uppercase; background: #1a1e26; }
         .hltv-stats-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text); font-family: var(--mono); }
         .hltv-stats-table tr:hover td { background: #1f232b; cursor: pointer; }
         .hltv-stats-player { font-weight: 600; color: #fff; font-family: var(--sans); display: flex; align-items: center; gap: 8px; }
@@ -43,7 +50,36 @@
         .stat-good { color: var(--success); font-weight: 700; }
         .stat-bad { color: var(--danger); font-weight: 700; }
 
-        /* MVP */
+        /* ===== LINEUPS (СОСТАВЫ) ===== */
+        .hltv-lineups-title { font-size: 18px; font-weight: 700; color: #fff; margin: 30px 0 16px 0; display: flex; align-items: center; gap: 10px; }
+        .hltv-lineup-team { margin-bottom: 30px; }
+        .hltv-lineup-header { display: flex; justify-content: space-between; align-items: center; background: #1a1e26; padding: 10px 16px; border: 1px solid var(--border); border-bottom: none; }
+        .hltv-lineup-header .team-info { display: flex; align-items: center; gap: 10px; }
+        .hltv-lineup-header img { width: 32px; height: 32px; }
+        .hltv-lineup-header span { font-size: 16px; font-weight: 700; color: #fff; }
+        .hltv-rank-badges { display: flex; gap: 4px; }
+        .hltv-rank-badge { font-family: var(--mono); font-size: 10px; font-weight: 800; padding: 2px 6px; border-radius: 2px; }
+        .hltv-rank-badge.green { background: #1e8b4c; color: #fff; }
+        .hltv-rank-badge.orange { background: #d35400; color: #fff; }
+        .hltv-rank-badge.grey { background: #333; color: #888; }
+
+        .hltv-lineup-cards { display: flex; gap: 2px; background: var(--border); border: 1px solid var(--border); }
+        .hltv-player-card { flex: 1; background: #2a2e37; position: relative; display: flex; flex-direction: column; align-items: center; overflow: hidden; }
+        
+        .hltv-card-photo { width: 100%; height: 140px; background: #222; display: flex; align-items: flex-end; justify-content: center; overflow: hidden; position: relative; }
+        .hltv-card-photo img { width: 100%; height: 100%; object-fit: cover; }
+        
+        /* Иконки на фото */
+        .hltv-card-icons { position: absolute; top: 8px; left: 8px; display: flex; gap: 4px; z-index: 2; }
+        .hltv-icon { width: 18px; height: 18px; background: rgba(0,0,0,0.5); border-radius: 2px; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+        .hltv-icon.green { background: #1e8b4c; color: #fff; }
+        .hltv-icon.blue { background: #2980b9; color: #fff; }
+
+        .hltv-card-footer { width: 100%; display: flex; align-items: center; gap: 6px; padding: 8px 10px; background: #111; border-top: 1px solid #333; z-index: 2; }
+        .hltv-card-footer .flag-svg { width: 18px; height: 12px; border-radius: 1px; }
+        .hltv-card-footer .player-nick { font-size: 12px; font-weight: 700; color: #fff; font-family: var(--mono); }
+
+        /* ===== MVP ===== */
         .hltv-mvp { background: var(--surface); border: 1px solid var(--accent); padding: 20px; display: flex; align-items: center; gap: 20px; margin-top: 20px; position: relative; overflow: hidden; }
         .hltv-mvp::before { content: 'MVP'; position: absolute; right: -10px; top: -20px; font-size: 120px; font-weight: 900; font-family: var(--mono); color: rgba(200, 255, 0, 0.05); z-index: 0; }
         .hltv-mvp-avatar { width: 80px; height: 80px; border-radius: 8px; border: 2px solid #777; position: relative; overflow: hidden; z-index: 1; }
@@ -51,8 +87,6 @@
         .hltv-mvp-info { z-index: 1; }
         .hltv-mvp-name { font-size: 24px; font-weight: 800; color: #fff; }
         .hltv-mvp-stats { font-family: var(--mono); font-size: 14px; color: var(--accent); margin-top: 4px; }
-        
-        .hltv-team-label { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-size: 12px; color: var(--muted); background: #171a21; padding: 6px 12px; border: 1px solid var(--border); margin-bottom: 10px; }
 
         #settingsPanel { display: none; position: absolute; top: 60px; right: 20px; background: #1a1e26; border: 1px solid #444; border-radius: 8px; padding: 16px; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.8); width: 250px; flex-direction: column; gap: 12px; }
     </style>
@@ -110,8 +144,9 @@
     const magicLogo = 'img/magic.png';
     const defaultImg = 'img/default.png';
     const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23555'><path d='M12 2L2 22h20L12 2z'/></svg>`;
+    const flagSVG = `<svg class="flag-svg" viewBox="0 0 100 70"><rect width="100" height="23.3" fill="#fff"/><rect y="23.3" width="100" height="23.3" fill="#0039a6"/><rect y="46.6" width="100" height="23.4" fill="#d52b1e"/></svg>`;
 
-    let currentMatchData = null; // Глобальная переменная для хранения текущего матча
+    let currentMatchData = null;
 
     function renderMatchPage(id) {
         const container = document.getElementById('matchContent');
@@ -133,7 +168,6 @@
         const score1 = data.score.split(':')[0];
         const score2 = data.score.split(':')[1];
 
-        // Генерируем список карт
         let mapsHTML = '';
         if (isBo3) {
             mapsHTML = `
@@ -168,7 +202,6 @@
             `;
         }
 
-        // Кнопки вкладок
         let tabsHTML = '';
         if (isBo3) {
             tabsHTML = `
@@ -209,92 +242,141 @@
 
             <div class="hltv-maps-grid">${mapsHTML}</div>
 
-            <div class="hltv-team-label">📊 Статистика матча</div>
+            <div class="hltv-box-title" style="background:none; border:none; padding:0; margin-bottom:12px;">📊 Match stats</div>
             ${tabsHTML}
             <div id="statsTableContainer"></div>
+            
+            <div id="lineupsContainer"></div>
             <div id="mvpContainer"></div>
         `;
 
-        // По умолчанию рендерим общую статистику
         switchMapStats('all');
     }
 
     function switchMapStats(mapType) {
-        // Обновляем активную кнопку
         document.querySelectorAll('.map-tab').forEach(btn => btn.classList.remove('active'));
         if (mapType === 'all') document.getElementById('tab-all')?.classList.add('active');
         if (mapType === 'map1') document.getElementById('tab-map1')?.classList.add('active');
         if (mapType === 'map2') document.getElementById('tab-map2')?.classList.add('active');
 
         const data = currentMatchData;
-        let allPlayers = [];
-        let statsSource = null;
+        const isBo3 = data.map1 !== undefined;
+        let winPlayers = [], lossPlayers = [];
 
         if (mapType === 'all') {
-            statsSource = data.total ? data.total.teams : data.teams;
+            const source = data.total ? data.total.teams : data.teams;
+            winPlayers = source.win.players;
+            lossPlayers = source.loss.players;
         } else if (mapType === 'map1') {
-            statsSource = data.map1.teams;
+            winPlayers = data.map1.teams.win.players;
+            lossPlayers = data.map1.teams.loss.players;
         } else if (mapType === 'map2') {
-            statsSource = data.map2.teams;
+            winPlayers = data.map2.teams.win.players;
+            lossPlayers = data.map2.teams.loss.players;
         }
 
-        if (statsSource) {
-            allPlayers = [
-                ...statsSource.win.players.map(p => ({ ...p, team: 'win' })),
-                ...statsSource.loss.players.map(p => ({ ...p, team: 'loss' }))
-            ];
-        }
+        const team1Logo = isBo3 ? tf2Logo : fallbackSVG;
+        const team2Logo = isBo3 ? magicLogo : fallbackSVG;
+        const isWinTeam1 = data.winner.includes('Team 1') || data.winner.includes('Team Fortress 2');
+        
+        const winTeamName = isBo3 ? 'Team Fortress 2' : (isWinTeam1 ? 'Team 1' : 'Team 2');
+        const lossTeamName = isBo3 ? 'Team Magic' : (isWinTeam1 ? 'Team 2' : 'Team 1');
 
-        // Сортируем по рейтингу (если рейтинга нет, используем K/D)
-        allPlayers.sort((a,b) => {
-            const rA = a.rating || (a.k / (a.d || 1));
-            const rB = b.rating || (b.k / (b.d || 1));
-            return rB - rA;
-        });
-
-        const mvpPlayer = allPlayers.find(p => p.highlight) || allPlayers[0];
-
-        // Рендерим таблицу
-        const statsTableHTML = allPlayers.map(p => {
-            const isWin = p.team === 'win';
-            const kdStr = `${p.k}-${p.d}`;
-            const rating = p.rating || (p.k / (p.d || 1));
-            const ratingClass = rating >= 1.0 ? 'stat-good' : 'stat-bad';
-
+        // Рендер таблиц (разделенных по командам)
+        const generateTable = (players, teamName, logo) => {
+            const sorted = [...players].sort((a,b) => (b.rating || (b.k/b.d)) - (a.rating || (a.k/a.d)));
             return `
-                <tr onclick="location.href='player.html?name=${encodeURIComponent(p.name)}'">
-                    <td>
-                        <div class="hltv-stats-player">
-                            <img src="${defaultImg}">
-                            <span>${p.name}</span>
-                        </div>
-                    </td>
-                    <td>${kdStr}</td>
-                    <td class="${p.diff > 0 ? 'stat-good' : 'stat-bad'}">${p.diff > 0 ? '+' : ''}${p.diff}</td>
-                    <td>${p.adr || '—'}</td>
-                    <td>${p.a || '—'}</td>
-                    <td class="${ratingClass}">${rating.toFixed(2)}</td>
-                </tr>
+                <div class="hltv-table-wrapper">
+                    <div class="hltv-table-header">
+                        <img src="${logo}" onerror="this.src='${fallbackSVG}';">
+                        <span>${teamName}</span>
+                    </div>
+                    <table class="hltv-stats-table">
+                        <thead>
+                            <tr>
+                                <th>Игрок</th>
+                                <th>K-D</th>
+                                <th>Разница</th>
+                                <th>ADR</th>
+                                <th>Ассисты</th>
+                                <th>Rating</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${sorted.map(p => {
+                                const rating = p.rating || (p.k / (p.d || 1));
+                                return `
+                                <tr onclick="location.href='player.html?name=${encodeURIComponent(p.name)}'">
+                                    <td>
+                                        <div class="hltv-stats-player">
+                                            <img src="${defaultImg}">
+                                            <span>${p.name}</span>
+                                        </div>
+                                    </td>
+                                    <td>${p.k}-${p.d}</td>
+                                    <td class="${p.diff > 0 ? 'stat-good' : 'stat-bad'}">${p.diff > 0 ? '+' : ''}${p.diff}</td>
+                                    <td>${p.adr || '—'}</td>
+                                    <td>${p.a || '—'}</td>
+                                    <td class="${rating >= 1 ? 'stat-good' : 'stat-bad'}">${rating.toFixed(2)}</td>
+                                </tr>
+                            `}).join('')}
+                        </tbody>
+                    </table>
+                </div>
             `;
-        }).join('');
+        };
 
-        document.getElementById('statsTableContainer').innerHTML = `
-            <table class="hltv-stats-table">
-                <thead>
-                    <tr>
-                        <th>Игрок</th>
-                        <th>K-D</th>
-                        <th>Разница</th>
-                        <th>ADR</th>
-                        <th>Ассисты</th>
-                        <th>Рейтинг</th>
-                    </tr>
-                </thead>
-                <tbody>${statsTableHTML}</tbody>
-            </table>
-        `;
+        document.getElementById('statsTableContainer').innerHTML = 
+            generateTable(winPlayers, winTeamName, team1Logo) + 
+            generateTable(lossPlayers, lossTeamName, team2Logo);
 
-        // Рендерим MVP
+        // Рендер Lineups (Составы) - только для All maps
+        let lineupsHTML = '';
+        if (mapType === 'all') {
+            const createLineup = (players, teamName, logo, isWin) => `
+                <div class="hltv-lineup-team">
+                    <div class="hltv-lineup-header">
+                        <div class="team-info">
+                            <img src="${logo}" onerror="this.src='${fallbackSVG}';">
+                            <span>${teamName}</span>
+                        </div>
+                        <div class="hltv-rank-badges">
+                            <span class="hltv-rank-badge green">HLTV: #${isWin ? '1' : '2'}</span>
+                            <span class="hltv-rank-badge orange">VRS: #${isWin ? '1' : '2'}</span>
+                        </div>
+                    </div>
+                    <div class="hltv-lineup-cards">
+                        ${players.map((p, i) => `
+                            <div class="hltv-player-card" onclick="location.href='player.html?name=${encodeURIComponent(p.name)}'" style="cursor:pointer;">
+                                <div class="hltv-card-photo">
+                                    <img src="${defaultImg}">
+                                    <div class="hltv-card-icons">
+                                        ${i === 0 ? '<div class="hltv-icon green">★</div>' : ''}
+                                        ${i === 1 ? '<div class="hltv-icon blue">C</div>' : ''}
+                                    </div>
+                                </div>
+                                <div class="hltv-card-footer">
+                                    ${flagSVG}
+                                    <span class="player-nick">${p.name}</span>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            
+            lineupsHTML = `
+                <div class="hltv-lineups-title">Составы команд</div>
+                ${createLineup(winPlayers, winTeamName, team1Logo, true)}
+                ${createLineup(lossPlayers, lossTeamName, team2Logo, false)}
+            `;
+        }
+        document.getElementById('lineupsContainer').innerHTML = lineupsHTML;
+
+        // MVP
+        const allMapPlayers = [...winPlayers, ...lossPlayers];
+        const mvpPlayer = allMapPlayers.sort((a,b) => (b.rating || (b.k/b.d)) - (a.rating || (a.k/a.d)))[0];
+        
         if (mvpPlayer) {
             const mvpRating = mvpPlayer.rating || (mvpPlayer.k / (mvpPlayer.d || 1));
             document.getElementById('mvpContainer').innerHTML = `
@@ -307,8 +389,6 @@
                     </div>
                 </div>
             `;
-        } else {
-            document.getElementById('mvpContainer').innerHTML = '';
         }
     }
 
