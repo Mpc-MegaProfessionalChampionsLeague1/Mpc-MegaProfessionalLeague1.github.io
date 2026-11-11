@@ -5,7 +5,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL — Все игроки</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=10">
+    <link rel="stylesheet" href="css/style.css?v=17">
+    <style>
+        /* Стили для квадратных аватарок с логотипом */
+        .player-avatar-mini {
+            width: 40px; 
+            height: 40px; 
+            background: #1a1a1a; 
+            border: 1px solid #777; 
+            border-radius: 6px; /* Квадрат со скруглением */
+            position: relative; 
+            overflow: hidden; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .player-avatar-mini .team-bg {
+            position: absolute;
+            width: 80%;
+            height: 80%;
+            opacity: 0.3;
+            z-index: 1;
+            object-fit: contain;
+        }
+        .player-avatar-mini .player-img {
+            position: relative;
+            z-index: 2;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -52,11 +83,15 @@
 
 <script src="js/data.js"></script>
 <script>
+    const tf2Roster = ['bomba69', 'Хомяк с авт', 'uxaxaxaxa', 'AFKE', 'wadsf'];
+    const defaultImg = 'img/default.png';
+
     function renderPlayers(sort = 'kd', search = '', top = 'all') {
         const container = document.getElementById('playersList');
         let filtered = [...playersData];
-        const defaultImg = 'img/default.png';
+        
         const flagSVG = `<svg viewBox="0 0 100 70" style="width:16px; height:12px; border-radius:2px; display:inline-block; vertical-align:middle; margin-right:6px;"><rect width="100" height="23.3" fill="#fff"/><rect y="23.3" width="100" height="23.3" fill="#0039a6"/><rect y="46.6" width="100" height="23.4" fill="#d52b1e"/></svg>`;
+        const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M12 2L2 22h20L12 2z'/></svg>`;
 
         if (search) {
             const s = search.toLowerCase();
@@ -72,16 +107,24 @@
             return b.matches - a.matches;
         });
 
-        container.innerHTML = filtered.map((p, i) => `
+        container.innerHTML = filtered.map((p, i) => {
+            const isTf2 = tf2Roster.includes(p.name);
+            const teamLogo = isTf2 ? 'img/tf2.png' : 'img/magic.png';
+            
+            return `
             <div class="glass-card" style="cursor:pointer;padding:12px 14px;transition:0.2s;" 
                  onclick="location.href='player.html?name=${encodeURIComponent(p.name)}'"
                  onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='var(--accent)';"
                  onmouseout="this.style.transform='none';this.style.borderColor='var(--border)';">
                 <div style="display:flex;align-items:center;gap:10px;">
                     <span style="font-weight:700;font-size:13px;color:var(--muted);min-width:22px;">#${i+1}</span>
-                    <div class="player-avatar-mini" style="width:40px;height:40px;font-size:16px;background:#1a1a1a;border:1px solid #777;">
-                        <img src="${defaultImg}" style="width:100%;height:100%;object-fit:cover;">
+                    
+                    <!-- КВАДРАТНАЯ АВАТАРКА С ЛОГОТИПОМ КОМАНДЫ -->
+                    <div class="player-avatar-mini">
+                        <img src="${teamLogo}" class="team-bg" onerror="this.src='${fallbackSVG}';">
+                        <img src="${defaultImg}" class="player-img">
                     </div>
+                    
                     <div style="flex:1;">
                         <div style="font-weight:600;font-size:14px;color:var(--text);">${flagSVG} ${p.name} ${p.you ? '⭐' : ''}</div>
                         <div style="font-size:11px;color:var(--muted);">${p.matches} матчей · ${p.k} убийств · ${p.d} смертей</div>
@@ -97,7 +140,7 @@
                     <div style="color:var(--muted);font-size:18px;margin-left:4px;">→</div>
                 </div>
             </div>
-        `).join('');
+        `}).join('');
 
         if (filtered.length === 0) {
             container.innerHTML = '<div style="text-align:center;color:var(--muted);padding:30px 0;font-size:13px;grid-column:1/-1;">Игроки не найдены</div>';
