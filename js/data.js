@@ -293,7 +293,7 @@ const matchData = {
         title: 'Матч #5',
         date: '01.09.2026',
         map: 'Mirage',
-        score: 13:5',
+        score: '13:5',
         winner: 'Team 1',
         loser: 'Team 2',
         detail: 'Карта: Mirage',
