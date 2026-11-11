@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPL — Профиль команды</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=4">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="logo"><h1 onclick="location.href='index.html'">MPL <small>Mega Professional League</small></h1></div>
+        <div class="header-right"><span class="status">● LIVE</span></div>
+    </div>
+    <nav class="nav">
+        <a href="index.html" class="nav-btn">01 / Главная</a>
+        <a href="matches.html" class="nav-btn">02 / Матчи</a>
+        <a href="players.html" class="nav-btn">03 / Игроки</a>
+        <a href="stats.html" class="nav-btn">04 / Статистика</a>
+        <a href="hall.html" class="nav-btn">05 / Зал славы</a>
+        <a href="about.html" class="nav-btn">06 / О сайте</a>
+    </nav>
+
+    <div id="teamContent"></div>
+</div>
+
+<script src="js/data.js"></script>
+<script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const teamId = urlParams.get('id');
+
+    function renderTeam(id) {
+        const container = document.getElementById('teamContent');
+        const isWin = id === 'tf2';
+        const teamData = isWin ? matchData.match0.total.teams.win : matchData.match0.total.teams.loss;
+        const teamName = isWin ? 'Team Fortress 2' : 'Team Magic';
+        const statusColor = isWin ? 'var(--success)' : 'var(--danger)';
+        const statusText = isWin ? 'ПОБЕДА (2:0)' : 'ПОРАЖЕНИЕ (0:2)';
+
+        container.innerHTML = `
+            <a href="index.html" class="back-btn">← На главную</a>
+            <div class="player-page-header" style="border-color: ${statusColor};">
+                <div style="font-size:48px;">🛡</div>
+                <div>
+                    <div class="player-page-name">${teamName}</div>
+                    <div class="player-page-sub" style="color:${statusColor}; font-weight:700;">${statusText}</div>
+                </div>
+            </div>
+            
+            <div class="match-page-section-title">Состав команды</div>
+            <div class="match-page-grid">
+                ${teamData.players.map(p => `
+                    <div class="player-stat-card" style="cursor:pointer;" onclick="location.href='player.html?name=${encodeURIComponent(p.name)}'">
+                        <div class="num" style="font-size:20px; margin-bottom:8px;">${p.name}</div>
+                        <div class="label">${p.k} K / ${p.d} D</div>
+                        <div class="label" style="color:var(--accent);">ADR ${p.adr}</div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+    renderTeam(teamId);
+</script>
+</body>
+</html>
