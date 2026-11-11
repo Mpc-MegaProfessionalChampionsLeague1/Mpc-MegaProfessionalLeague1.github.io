@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL — Все игроки</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=8">
+    <link rel="stylesheet" href="css/style.css?v=9">
 </head>
 <body>
 <div class="container">
@@ -56,6 +56,9 @@
         const container = document.getElementById('playersList');
         let filtered = [...playersData];
         const defaultImg = 'img/default.png';
+        
+        // Цветной SVG-флаг
+        const flagSVG = `<svg viewBox="0 0 100 70" style="width:16px; height:12px; border-radius:2px; display:inline-block; vertical-align:middle; margin-right:6px;"><rect width="100" height="23.3" fill="#fff"/><rect y="23.3" width="100" height="23.3" fill="#0039a6"/><rect y="46.6" width="100" height="23.4" fill="#d52b1e"/></svg>`;
 
         if (search) {
             const s = search.toLowerCase();
@@ -78,11 +81,11 @@
                  onmouseout="this.style.transform='none';this.style.borderColor='var(--border)';">
                 <div style="display:flex;align-items:center;gap:10px;">
                     <span style="font-weight:700;font-size:13px;color:var(--muted);min-width:22px;">#${i+1}</span>
-                    <div class="player-avatar-mini" style="width:40px;height:40px;font-size:16px;">
-                        <img src="${defaultImg}" style="width:100%;height:100%;object-fit:cover;">
+                    <div class="player-avatar-mini" style="width:40px;height:40px;font-size:16px;background:#1a1a1a;">
+                        <img src="${defaultImg}" style="width:100%;height:100%;object-fit:cover; opacity:0.8;">
                     </div>
                     <div style="flex:1;">
-                        <div style="font-weight:600;font-size:14px;color:var(--text);"><span style="font-size:12px; margin-right:4px;">🇷🇺</span> ${p.name} ${p.you ? '⭐' : ''}</div>
+                        <div style="font-weight:600;font-size:14px;color:var(--text);">${flagSVG} ${p.name} ${p.you ? '⭐' : ''}</div>
                         <div style="font-size:11px;color:var(--muted);">${p.matches} матчей · ${p.k} убийств · ${p.d} смертей</div>
                     </div>
                     <div style="text-align:right;">
