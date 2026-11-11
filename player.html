@@ -5,13 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL — Профиль игрока</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=15">
+    <link rel="stylesheet" href="css/style.css?v=16">
     <style>
+        /* КВАДРАТНАЯ АВАТАРКА В ПРОФИЛЕ */
         .avatar-wrapper {
             position: relative;
             width: 100px;
             height: 100px;
-            border-radius: 50%;
+            border-radius: 6px; /* Квадрат со скруглением */
             border: 2px solid #777;
             background: #1a1a1a;
             overflow: hidden;
@@ -74,9 +75,7 @@
         return 'match' + num;
     }
 
-    // ЖЕСТКАЯ ПРИВЯЗКА ИГРОКОВ К КОМАНДАМ (чтобы не было путаницы)
     const tf2Roster = ['bomba69', 'Хомяк с авт', 'uxaxaxaxa', 'AFKE', 'wadsf'];
-    const magicRoster = ['abdalbek', 'Gonduras228', 'Adjiare Gudju', 'baksyhanovvand...', 'balchuqov_valera'];
 
     function renderPlayerPage(name) {
         const container = document.getElementById('playerContent');
@@ -94,7 +93,6 @@
         const achievements = (typeof getAchievements === 'function') ? getAchievements(player) : [];
         const defaultImg = 'img/default.png';
         
-        // Определяем команду игрока по жесткому списку
         const isTf2 = tf2Roster.includes(player.name);
         const teamLogo = isTf2 ? 'img/tf2.png' : 'img/magic.png';
         const teamName = isTf2 ? 'Team Fortress 2' : 'Team Magic';
@@ -102,7 +100,6 @@
         const flagSVG = `<svg viewBox="0 0 100 70" style="width:18px; height:12px; border-radius:2px; display:inline-block; vertical-align:middle;"><rect width="100" height="23.3" fill="#fff"/><rect y="23.3" width="100" height="23.3" fill="#0039a6"/><rect y="46.6" width="100" height="23.4" fill="#d52b1e"/></svg>`;
         const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M12 2L2 22h20L12 2z'/></svg>`;
 
-        // График
         let sparklineHTML = '';
         if (history.length > 1) {
             const kdValues = history.map(m => m.k / (m.d || 1)).reverse();
@@ -126,7 +123,6 @@
             `;
         }
 
-        // H2H
         let h2hHTML = '';
         if (typeof matchData !== 'undefined') {
             const teammates = {};
@@ -166,7 +162,7 @@
         container.innerHTML = `
             <a href="players.html" class="back-btn">← Назад к списку игроков</a>
             <div class="player-page-header">
-                <!-- АВАТАРКА С ЛОГОТИПОМ КОМАНДЫ -->
+                <!-- КВАДРАТНАЯ АВАТАРКА С ЛОГОТИПОМ -->
                 <div class="avatar-wrapper">
                     <img src="${teamLogo}" class="avatar-bg-logo" alt="${teamName}" onerror="this.src='${fallbackSVG}';">
                     <img src="${defaultImg}" class="avatar-player-img" alt="${player.name}">
