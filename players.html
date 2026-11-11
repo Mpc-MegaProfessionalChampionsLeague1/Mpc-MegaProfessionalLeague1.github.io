@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL — Все игроки</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=18">
+    <link rel="stylesheet" href="css/style.css?v=19">
     <style>
         .player-avatar-mini {
             width: 40px; height: 40px; background: #1a1a1a; border: 1px solid #777; border-radius: 6px; 
@@ -61,7 +61,6 @@
 
 <script src="js/data.js"></script>
 <script>
-    // СТРОГИЕ СОСТАВЫ ПО 4 ЧЕЛОВЕКА
     const tf2Roster = ['bomba69', 'Хомяк с авт', 'uxaxaxaxa', 'AFKE'];
     const magicRoster = ['abdalbek', 'Gonduras228', 'Adjiare Gudju', 'baksyhanovvand...'];
     const defaultImg = 'img/default.png';
@@ -71,7 +70,8 @@
         let filtered = [...playersData];
         
         const flagSVG = `<svg viewBox="0 0 100 70" style="width:16px; height:12px; border-radius:2px; display:inline-block; vertical-align:middle; margin-right:6px;"><rect width="100" height="23.3" fill="#fff"/><rect y="23.3" width="100" height="23.3" fill="#0039a6"/><rect y="46.6" width="100" height="23.4" fill="#d52b1e"/></svg>`;
-        const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M12 2L2 22h20L12 2z'/></svg>`;
+        // Серый щит для запасных
+        const freeAgentSVG = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23555'><path d='M12 2L2 22h20L12 2z'/></svg>`;
 
         if (search) {
             const s = search.toLowerCase();
@@ -88,8 +88,7 @@
         });
 
         container.innerHTML = filtered.map((p, i) => {
-            // Если игрок не в основном составе, он получает серый щит (fallback)
-            let teamLogo = fallbackSVG;
+            let teamLogo = freeAgentSVG; // По умолчанию серый щит
             if (tf2Roster.includes(p.name)) teamLogo = 'img/tf2.png';
             else if (magicRoster.includes(p.name)) teamLogo = 'img/magic.png';
             
@@ -102,7 +101,7 @@
                     <span style="font-weight:700;font-size:13px;color:var(--muted);min-width:22px;">#${i+1}</span>
                     
                     <div class="player-avatar-mini">
-                        <img src="${teamLogo}" class="team-bg" onerror="this.src='${fallbackSVG}';">
+                        <img src="${teamLogo}" class="team-bg">
                         <img src="${defaultImg}" class="player-img">
                     </div>
                     
