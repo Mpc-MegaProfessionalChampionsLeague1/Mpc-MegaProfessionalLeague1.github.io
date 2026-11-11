@@ -5,17 +5,49 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL — Зал славы</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=4">
+    <link rel="stylesheet" href="css/style.css?v=24">
+    <style>
+        .hall-of-fame-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 20px; }
+        .hof-card { background: var(--surface); border: 1px solid var(--border); padding: 20px; position: relative; border-left: 4px solid var(--accent); transition: 0.2s; }
+        .hof-card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(200, 255, 0, 0.1); }
+        .hof-title { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+        .hof-player { font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
+        .hof-stat { font-family: var(--mono); font-size: 24px; font-weight: 800; color: var(--accent); }
+        .hof-sub { font-size: 11px; color: var(--dim); margin-top: 8px; }
+        #settingsPanel { display: none; position: absolute; top: 60px; right: 20px; background: #1a1e26; border: 1px solid #444; border-radius: 8px; padding: 16px; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.8); width: 250px; flex-direction: column; gap: 12px; }
+    </style>
 </head>
 <body>
 <div class="container">
     <div class="header">
         <div class="logo"><h1 onclick="location.href='index.html'">MPL <small>Mega Professional League</small></h1></div>
         <div class="header-right">
+            <span>📅 Май-Сентябрь 2026</span>
             <span class="status">● LIVE</span>
+            <button class="lang-toggle" onclick="toggleLang()" id="langBtn">EN</button>
             <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">◐</button>
+            <button class="theme-toggle" onclick="toggleSettings()" id="settingsBtn" title="Настройки">⚙️</button>
+            <div id="settingsPanel">
+                <div style="font-family:var(--mono); font-size:12px; font-weight:700; color:#fff; border-bottom:1px solid #333; padding-bottom:8px;">🎨 Настройки сайта</div>
+                <div>
+                    <div style="font-size:11px; color:#8b9bb0; margin-bottom:6px;">Цвет акцента:</div>
+                    <div style="display:flex; gap:6px;">
+                        <button onclick="setAccent('#c8ff00')" style="width:24px; height:24px; background:#c8ff00; border:none; border-radius:4px; cursor:pointer;"></button>
+                        <button onclick="setAccent('#00d2ff')" style="width:24px; height:24px; background:#00d2ff; border:none; border-radius:4px; cursor:pointer;"></button>
+                        <button onclick="setAccent('#ff0055')" style="width:24px; height:24px; background:#ff0055; border:none; border-radius:4px; cursor:pointer;"></button>
+                        <button onclick="setAccent('#b000ff')" style="width:24px; height:24px; background:#b000ff; border:none; border-radius:4px; cursor:pointer;"></button>
+                        <button onclick="setAccent('#ffb347')" style="width:24px; height:24px; background:#ffb347; border:none; border-radius:4px; cursor:pointer;"></button>
+                    </div>
+                </div>
+                <div>
+                    <div style="font-size:11px; color:#8b9bb0; margin-bottom:6px;">Свой фон (картинка):</div>
+                    <input type="file" id="bgUpload" accept="image/*" style="width:100%; font-size:10px; color:#fff; background:#111; border:1px solid #333; padding:4px; border-radius:4px; cursor:pointer;">
+                    <button onclick="resetBg()" style="width:100%; margin-top:6px; background:#333; border:none; color:#fff; padding:6px; border-radius:4px; font-size:10px; cursor:pointer;">Сбросить фон</button>
+                </div>
+            </div>
         </div>
     </div>
+
     <nav class="nav">
         <a href="index.html" class="nav-btn">01 / Главная</a>
         <a href="matches.html" class="nav-btn">02 / Матчи</a>
@@ -26,9 +58,10 @@
     </nav>
 
     <div class="page-title">🏆 Зал славы</div>
-    <div class="page-subtitle">Абсолютные рекорды турнира MPL</div>
+    <div class="page-subtitle">Абсолютные рекорды лиги MPL</div>
 
     <div class="hall-of-fame-grid" id="hallGrid"></div>
+    <div class="footer">MPL · Mega Professional League · <b>TERMINAL</b> · Май-Сентябрь 2026</div>
 </div>
 
 <script src="js/data.js"></script>
@@ -40,12 +73,10 @@
         let maxDiff = { name: '—', val: -999 };
         let maxKd = { name: '—', val: 0 };
 
-        // Ищем рекорды в матчах
         Object.keys(matchData).forEach(key => {
             const m = matchData[key];
-            if (!m.teams && !m.total) return;
-            
-            const teams = m.teams || m.total.teams;
+            const teams = m.teams || (m.total && m.total.teams);
+            if (!teams) return;
             ['win', 'loss'].forEach(side => {
                 const team = teams[side];
                 if (!team || !team.players) return;
@@ -57,10 +88,7 @@
             });
         });
 
-        // Ищем рекорды в игроках
-        playersData.forEach(p => {
-            if (p.kd > maxKd.val) maxKd = { name: p.name, val: p.kd };
-        });
+        playersData.forEach(p => { if (p.kd > maxKd.val) maxKd = { name: p.name, val: p.kd }; });
 
         container.innerHTML = `
             <div class="hof-card">
@@ -90,10 +118,21 @@
         `;
     }
 
-    function toggleTheme() {
-        document.body.classList.toggle('light');
-        document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '☀️' : '◐';
-    }
+    function toggleTheme() { document.body.classList.toggle('light'); document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '☀️' : '◐'; }
+    let lang = 'ru';
+    function toggleLang() { lang = lang === 'ru' ? 'en' : 'ru'; document.getElementById('langBtn').textContent = lang === 'ru' ? 'EN' : 'RU'; }
+
+    function toggleSettings() { const panel = document.getElementById('settingsPanel'); panel.style.display = panel.style.display === 'none' ? 'flex' : 'none'; }
+    function setAccent(color) { document.documentElement.style.setProperty('--accent', color); localStorage.setItem('mpl_accent', color); }
+    function resetBg() { document.body.style.backgroundImage = 'none'; document.body.style.backgroundColor = 'var(--bg)'; localStorage.removeItem('mpl_bg'); document.getElementById('bgUpload').value = ''; }
+    document.getElementById('bgUpload').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) { const reader = new FileReader(); reader.onload = function(event) { document.body.style.backgroundImage = `url(${event.target.result})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; localStorage.setItem('mpl_bg', event.target.result); }; reader.readAsDataURL(file); }
+    });
+    window.addEventListener('DOMContentLoaded', () => {
+        const savedAccent = localStorage.getItem('mpl_accent'); if (savedAccent) setAccent(savedAccent);
+        const savedBg = localStorage.getItem('mpl_bg'); if (savedBg) { document.body.style.backgroundImage = `url(${savedBg})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; }
+    });
 
     renderHall();
 </script>
