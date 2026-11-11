@@ -347,12 +347,3 @@ function loadAvatars() {
     }
 }
 loadAvatars();
-
-// ===== НОВОСТИ =====
-let newsData = JSON.parse(localStorage.getItem('mpl_news')) || [
-    { id: 1, title: '🏆 Старт сезона MPL!', text: 'Дружеский турнир MPL начался!', date: new Date('2026-05-09T10:00:00').toISOString() }
-];
-
-function saveNews() {
-    localStorage.setItem('mpl_news', JSON.stringify(newsData));
-}
