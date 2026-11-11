@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL — Профиль игрока</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=8">
+    <link rel="stylesheet" href="css/style.css?v=9">
 </head>
 <body>
 <div class="container">
@@ -56,9 +56,9 @@
 
         const history = (typeof playerMatchHistory !== 'undefined' && playerMatchHistory[player.name]) ? playerMatchHistory[player.name] : [];
         const achievements = (typeof getAchievements === 'function') ? getAchievements(player) : [];
-        
-        // Ссылка на твою картинку
         const defaultImg = 'img/default.png';
+        // Цветной SVG-флаг России (картинка, работает везде)
+        const flagSVG = `<svg viewBox="0 0 100 70" style="width:18px; height:12px; border-radius:2px; display:inline-block; vertical-align:middle;"><rect width="100" height="23.3" fill="#fff"/><rect y="23.3" width="100" height="23.3" fill="#0039a6"/><rect y="46.6" width="100" height="23.4" fill="#d52b1e"/></svg>`;
 
         // График
         let sparklineHTML = '';
@@ -124,13 +124,13 @@
         container.innerHTML = `
             <a href="players.html" class="back-btn">← Назад к списку игроков</a>
             <div class="player-page-header">
-                <div class="player-page-avatar">
-                    <img src="${defaultImg}" alt="default" style="width:100%;height:100%;object-fit:cover;">
+                <div class="player-page-avatar" style="background: #1a1a1a; border-color: var(--accent);">
+                    <img src="${defaultImg}" alt="default" style="width:100%;height:100%;object-fit:cover; opacity: 0.8;">
                 </div>
                 <div style="flex:1;">
                     <div class="player-page-name">${player.name} ${player.you ? '<span class="you-badge">⭐</span>' : ''}</div>
                     <div class="player-page-sub" style="margin-bottom:12px; display:flex; align-items:center; gap:6px;">
-                        <span style="font-size:16px;">🇷🇺</span> Russia · ${player.matches} матчей · ${player.k} убийств · ${player.d} смертей
+                        ${flagSVG} Russia · ${player.matches} матчей · ${player.k} убийств · ${player.d} смертей
                     </div>
                     ${player.steam ? `
                         <a href="${player.steam}" target="_blank" class="btn-steam">
