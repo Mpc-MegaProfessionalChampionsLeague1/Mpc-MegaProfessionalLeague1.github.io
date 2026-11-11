@@ -5,27 +5,55 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL — Профиль команды</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=10">
+    <link rel="stylesheet" href="css/style.css?v=13">
     <style>
         .hltv-team-header { background: #1f232b; border: 1px solid var(--border); border-top: 3px solid var(--accent); margin-bottom: 0; position: relative; }
         .hltv-players-strip { display: flex; justify-content: center; background: #2a2e37; padding: 20px; gap: 15px; border-bottom: 1px solid #111; overflow-x: auto; }
         .hltv-player-card { display: flex; flex-direction: column; align-items: center; width: 90px; flex-shrink: 0; }
-        .hltv-player-photo { width: 80px; height: 100px; background: #1a1a1a; border: 1px solid #777; display: flex; align-items: center; justify-content: center; margin-bottom: -10px; z-index: 1; overflow: hidden; }
+        
+        /* ИГРОКИ 50x50 в полоске */
+        .hltv-player-photo { 
+            width: 50px; height: 50px; 
+            background: #1a1a1a; 
+            border: 2px solid #777; 
+            display: flex; align-items: center; justify-content: center; 
+            margin-bottom: 8px; 
+            z-index: 1; overflow: hidden; 
+            border-radius: 50%;
+        }
         .hltv-player-photo img { width: 100%; height: 100%; object-fit: cover; }
-        .hltv-player-nick { background: #111; width: 100%; text-align: center; padding: 4px 0; font-family: var(--mono); font-size: 11px; font-weight: 700; color: #fff; z-index: 2; display: flex; justify-content: center; align-items: center; gap: 4px; border: 1px solid #333; }
+        
+        .hltv-player-nick { 
+            background: #111; width: 100%; text-align: center; padding: 4px 0; 
+            font-family: var(--mono); font-size: 11px; font-weight: 700; color: #fff; 
+            z-index: 2; display: flex; justify-content: center; align-items: center; gap: 4px; 
+            border: 1px solid #333; border-radius: 4px;
+        }
         .hltv-team-info { display: flex; align-items: center; padding: 20px 30px; background: #171a21; gap: 20px; }
-        .hltv-team-logo { width: 80px; height: 80px; background: #222; border: 1px solid #333; display: flex; align-items: center; justify-content: center; font-size: 40px; }
+        
+        /* ЛОГО КОМАНДЫ 50x50 */
+        .hltv-team-logo { 
+            width: 50px; height: 50px; 
+            background: #222; border: 2px solid #555; 
+            display: flex; align-items: center; justify-content: center; 
+            border-radius: 8px; overflow: hidden; padding: 4px;
+        }
+        .hltv-team-logo img { width: 100%; height: 100%; object-fit: contain; }
+        
         .hltv-team-name { font-family: var(--sans); font-size: 32px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
         .hltv-team-country { font-size: 12px; color: #8b9bb0; display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
         .hltv-team-rank { margin-left: auto; text-align: right; display: flex; flex-direction: column; gap: 6px; font-family: var(--mono); font-size: 12px; color: #c8d6e0; }
         .hltv-rank-item { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
         .hltv-rank-badge { background: #1e8b4c; color: #fff; padding: 2px 6px; font-size: 10px; font-weight: 800; border-radius: 2px; }
+        
         .hltv-tabs { display: flex; background: #171a21; border: 1px solid var(--border); border-top: none; border-bottom: 2px solid #111; }
         .hltv-tab { padding: 14px 30px; font-family: var(--sans); font-size: 14px; font-weight: 600; color: #8b9bb0; cursor: pointer; border-bottom: 3px solid transparent; transition: 0.15s; }
         .hltv-tab:hover { color: #fff; background: rgba(255,255,255,0.03); }
         .hltv-tab.active { color: #fff; border-bottom-color: var(--accent); }
+        
         .hltv-tab-content { display: none; padding: 24px; background: var(--surface); border: 1px solid var(--border); border-top: none; min-height: 300px; animation: fadeUp 0.3s ease; }
         .hltv-tab-content.active { display: block; }
+        
         .hltv-roster-table { width: 100%; border-collapse: collapse; }
         .hltv-roster-table th { text-align: left; padding: 10px 16px; font-family: var(--mono); font-size: 11px; color: #6e7f94; border-bottom: 1px solid var(--border); text-transform: uppercase; }
         .hltv-roster-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); font-family: var(--sans); font-size: 14px; color: #c8d6e0; }
@@ -37,12 +65,28 @@
         .transfer-row { display: flex; align-items: center; padding: 12px 16px; border-bottom: 1px solid var(--border); }
         .transfer-row:last-child { border-bottom: none; }
         .transfer-player { display: flex; align-items: center; gap: 12px; width: 220px; }
-        .transfer-photo { width: 36px; height: 36px; border-radius: 50%; background: #111; border: 2px solid #777; overflow: hidden; flex-shrink: 0; }
+        
+        /* В профиле команды тоже 50x50 */
+        .transfer-photo { 
+            width: 50px; height: 50px; 
+            border-radius: 50%; 
+            background: #111; 
+            border: 2px solid #777; 
+            overflow: hidden; 
+            flex-shrink: 0; 
+        }
         .transfer-photo img { width: 100%; height: 100%; object-fit: cover; }
         .transfer-name { font-weight: 600; font-size: 14px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        
         .transfer-arrow { color: #555; margin: 0 20px; font-size: 18px; }
         .transfer-team { display: flex; align-items: center; gap: 8px; font-family: var(--mono); font-weight: 700; font-size: 14px; }
-        .transfer-logo { width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; background: #222; border: 1px solid #444; border-radius: 4px; font-size: 14px; }
+        
+        .transfer-logo { 
+            width: 50px; height: 50px; 
+            display: flex; align-items: center; justify-content: center; 
+            background: #222; border: 1px solid #444; border-radius: 4px; padding: 4px; 
+        }
+        .transfer-logo img { width: 100%; height: 100%; object-fit: contain; }
     </style>
 </head>
 <body>
@@ -89,9 +133,13 @@
         const players = [...teamData.players].sort((a, b) => b.adr - a.adr);
 
         const defaultImg = 'img/default.png';
+        const teamImg = isWin ? 'img/tf2.png' : 'img/magic.png';
+        
         const flagSVG = `<svg viewBox="0 0 100 70" style="width:18px; height:12px; border-radius:2px; display:inline-block; vertical-align:middle;"><rect width="100" height="23.3" fill="#fff"/><rect y="23.3" width="100" height="23.3" fill="#0039a6"/><rect y="46.6" width="100" height="23.4" fill="#d52b1e"/></svg>`;
         const flagSVGSmall = `<svg viewBox="0 0 100 70" style="width:14px; height:10px; border-radius:2px; display:inline-block; vertical-align:middle;"><rect width="100" height="23.3" fill="#fff"/><rect y="23.3" width="100" height="23.3" fill="#0039a6"/><rect y="46.6" width="100" height="23.4" fill="#d52b1e"/></svg>`;
+        const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M12 2L2 22h20L12 2z'/></svg>`;
 
+        // Верхняя плашка с игроками (50x50)
         let playersStripHTML = players.map(p => `
             <div class="hltv-player-card" onclick="location.href='player.html?name=${encodeURIComponent(p.name)}'" style="cursor:pointer;">
                 <div class="hltv-player-photo">
@@ -103,9 +151,12 @@
             </div>
         `).join('');
 
+        // Шапка команды (Лого 50x50)
         let teamHeaderHTML = `
             <div class="hltv-team-info">
-                <div class="hltv-team-logo">🛡</div>
+                <div class="hltv-team-logo">
+                    <img src="${teamImg}" alt="${teamName}" onerror="this.src='${fallbackSVG}';">
+                </div>
                 <div>
                     <div class="hltv-team-country">${flagSVG} Russia</div>
                     <div class="hltv-team-name">${teamName}</div>
@@ -117,6 +168,7 @@
             </div>
         `;
 
+        // Вкладки
         let tabsHTML = `
             <div class="hltv-tabs">
                 <div class="hltv-tab active" id="tab-info" onclick="switchTeamTab('info')">Info</div>
@@ -125,6 +177,7 @@
             </div>
         `;
 
+        // Контент вкладок
         let contentHTML = `
             <div class="hltv-tab-content active" id="content-info">
                 <h3 style="font-family:var(--mono); font-size:16px; margin-bottom:12px; color:#fff;">О команде</h3>
@@ -133,6 +186,7 @@
                     В данном сезоне команда показала ${isWin ? 'отличный результат, одержав победу в матче #0 (BO3) со счетом 2:0' : 'достойную игру, уступив в матче #0 (BO3) со счетом 0:2'}.
                 </p>
 
+                <!-- БЛОК ТРАНСФЕРОВ (50x50) -->
                 <h3 style="font-family:var(--mono); font-size:14px; margin-bottom:12px; color:var(--accent); text-transform:uppercase; letter-spacing:1px;">История трансферов</h3>
                 <div class="transfer-list">
                     ${players.map(p => `
@@ -145,8 +199,10 @@
                             </div>
                             <div class="transfer-arrow">→</div>
                             <div class="transfer-team">
-                                <div class="transfer-logo">🛡</div>
-                                <span style="color:${isWin ? 'var(--success)' : 'var(--danger)'};">${teamName}</span>
+                                <div class="transfer-logo">
+                                    <img src="${teamImg}" alt="${teamName}" onerror="this.src='${fallbackSVG}';">
+                                </div>
+                                <span style="color:${isWin ? 'var(--success)' : 'var(--danger)'}; margin-left:10px;">${teamName}</span>
                             </div>
                         </div>
                     `).join('')}
@@ -155,6 +211,8 @@
                     </div>
                 </div>
             </div>
+
+            <!-- РОСТЕР -->
             <div class="hltv-tab-content" id="content-roster">
                 <table class="hltv-roster-table">
                     <thead><tr><th>Игрок</th><th>K / D</th><th>ADR</th><th>Разница</th></tr></thead>
@@ -170,6 +228,8 @@
                     </tbody>
                 </table>
             </div>
+
+            <!-- МАТЧИ -->
             <div class="hltv-tab-content" id="content-matches">
                 <div class="match-card ${isWin ? '' : 'loss'}" onclick="location.href='match.html?id=match0'" style="margin-bottom:0;">
                     <div class="match-top">
