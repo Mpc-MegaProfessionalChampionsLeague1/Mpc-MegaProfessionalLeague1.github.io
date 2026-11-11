@@ -5,23 +5,52 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL — Главная</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=5">
+    <link rel="stylesheet" href="css/style.css?v=13">
     <style>
-        /* Дополнительные стили для вкладок в левой колонке */
         .team-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            padding: 12px 16px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 12px;
+            background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent);
+            padding: 12px 16px; margin-bottom: 10px; cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center; gap: 12px;
         }
         .team-card:hover { transform: translateX(4px); background: var(--surface-2); }
-        .team-card.win { border-left: 3px solid var(--success); }
-        .team-card.loss { border-left: 3px solid var(--danger); }
+
+        /* Стили для трансферов на главной */
+        .transfer-row { display: flex; align-items: center; padding: 10px 14px; border-bottom: 1px solid var(--border); transition: 0.15s; }
+        .transfer-row:hover { background: var(--surface-2); }
+        .transfer-row:last-child { border-bottom: none; }
+        
+        /* КРУГЛАЯ АВАТАРКА ИГРОКА 50x50 */
+        .transfer-photo { 
+            width: 50px; height: 50px; 
+            border-radius: 50%; 
+            background: #111; 
+            border: 2px solid #777; 
+            overflow: hidden; 
+            flex-shrink: 0; 
+        }
+        .transfer-photo img { 
+            width: 100%; height: 100%; 
+            object-fit: cover; 
+            object-position: center;
+        }
+        
+        .transfer-name { flex: 1; margin-left: 12px; font-weight: 600; font-size: 13px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .transfer-arrow { color: #555; margin: 0 10px; font-size: 14px; }
+        
+        /* ЛОГОТИП КОМАНДЫ 50x50 */
+        .transfer-logo { 
+            width: 50px; height: 50px; 
+            padding: 2px; 
+            background: #222; 
+            border: 1px solid #444; 
+            border-radius: 4px; 
+            flex-shrink: 0; 
+            display: flex; align-items: center; justify-content: center;
+        }
+        .transfer-logo img { 
+            width: 100%; height: 100%; 
+            object-fit: contain; 
+        }
     </style>
 </head>
 <body>
@@ -53,13 +82,11 @@
         <div class="glass-card" style="display:flex; flex-direction:column;">
             <div class="panel-title">🏆 <span>Рейтинги</span></div>
             
-            <!-- Вкладки Игроки / Команды -->
             <div style="display:flex; margin-bottom:12px; border:1px solid var(--border);">
                 <button class="sub-nav-btn active" onclick="switchLeftTab('players')" id="tabPlayersBtn" style="flex:1; padding:8px;">Игроки</button>
                 <button class="sub-nav-btn" onclick="switchLeftTab('teams')" id="tabTeamsBtn" style="flex:1; padding:8px; border-left:1px solid var(--border);">Команды</button>
             </div>
 
-            <!-- БЛОК: ИГРОКИ -->
             <div id="leftContentPlayers" style="display:block;">
                 <div class="month-filter" id="monthFilter" style="margin-bottom:12px;"></div>
                 <div style="display:flex;gap:3px;margin-bottom:10px;background:rgba(255,255,255,0.03);border-radius:0;padding:3px;border:1px solid var(--border);">
@@ -74,7 +101,6 @@
                 </div>
             </div>
 
-            <!-- БЛОК: КОМАНДЫ -->
             <div id="leftContentTeams" style="display:none;">
                 <div id="teamListContainer"></div>
             </div>
@@ -83,13 +109,22 @@
         <!-- CENTER: NEWS -->
         <div class="glass-card">
             <div class="panel-title">📰 <span>Новости</span></div>
-            <div id="newsList" style="display:flex;flex-direction:column;gap:8px;max-height:500px;overflow-y:auto;"></div>
+            <div id="newsList" style="display:flex;flex-direction:column;gap:8px;max-height:650px;overflow-y:auto;"></div>
         </div>
 
-        <!-- RIGHT: MATCHES -->
-        <div style="display:flex;flex-direction:column;gap:8px;">
-            <div class="panel-title" style="padding:0 4px 8px 4px;border-bottom:1px solid rgba(255,255,255,0.06);">📋 <span>Матчи</span></div>
-            <div id="matchList" style="display:flex;flex-direction:column;gap:8px;max-height:600px;overflow-y:auto;"></div>
+        <!-- RIGHT: MATCHES & TRANSFERS -->
+        <div style="display:flex;flex-direction:column;gap:16px;">
+            <!-- Матчи -->
+            <div>
+                <div class="panel-title" style="padding:0 4px 8px 4px;border-bottom:1px solid var(--border);">📋 <span>Матчи</span></div>
+                <div id="matchList" style="display:flex;flex-direction:column;gap:8px;max-height:400px;overflow-y:auto;"></div>
+            </div>
+
+            <!-- Трансферы -->
+            <div>
+                <div class="panel-title" style="padding:0 4px 8px 4px;border-bottom:1px solid var(--border);">🔄 <span>Трансферы</span></div>
+                <div id="transferList" style="background: var(--surface); border: 1px solid var(--border); max-height: 400px; overflow-y: auto;"></div>
+            </div>
         </div>
     </div>
 
@@ -139,6 +174,42 @@
         }).join('');
     }
 
+    // ===== ТРАНСФЕРЫ =====
+    function renderTransfers() {
+        const container = document.getElementById('transferList');
+        const defaultImg = 'img/default.png';
+        
+        const tf2Logo = 'img/tf2.png';
+        const magicLogo = 'img/magic.png';
+
+        const winPlayers = matchData.match0.total.teams.win.players;
+        const lossPlayers = matchData.match0.total.teams.loss.players;
+        
+        const allTransfers = [
+            ...winPlayers.map(p => ({ ...p, team: 'Team Fortress 2', logo: tf2Logo, color: 'var(--success)' })),
+            ...lossPlayers.map(p => ({ ...p, team: 'Team Magic', logo: magicLogo, color: 'var(--danger)' }))
+        ];
+
+        const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M12 2L2 22h20L12 2z'/></svg>`;
+
+        container.innerHTML = allTransfers.map(p => `
+            <div class="transfer-row" onclick="location.href='player.html?name=${encodeURIComponent(p.name)}'" style="cursor:pointer;">
+                <div class="transfer-photo">
+                    <img src="${defaultImg}" alt="player">
+                </div>
+                <div class="transfer-name">${p.name}</div>
+                <div class="transfer-arrow">→</div>
+                <div class="transfer-logo">
+                    <img src="${p.logo}" alt="${p.team}" onerror="this.src='${fallbackSVG}';">
+                </div>
+            </div>
+        `).join('') + `
+            <div style="text-align:center; padding:12px; font-family:var(--mono); font-size:10px; color:var(--muted); background: rgba(255,255,255,0.02); text-transform:uppercase; cursor:pointer;" onclick="location.href='players.html'">
+                Все переходы
+            </div>
+        `;
+    }
+
     // ===== ПЕРЕКЛЮЧЕНИЕ ВКЛАДОК (Игроки / Команды) =====
     function switchLeftTab(tab) {
         document.getElementById('tabPlayersBtn').classList.toggle('active', tab === 'players');
@@ -150,32 +221,26 @@
     }
 
     // ===== РЕНДЕР КОМАНД =====
-  function renderTeamsList() {
-    const container = document.getElementById('teamListContainer');
-    const teams = [
-        { id: 'tf2', name: 'Team Fortress 2' },
-        { id: 'magic', name: 'Team Magic' }
-    ];
+    function renderTeamsList() {
+        const container = document.getElementById('teamListContainer');
+        const teams = [
+            { id: 'tf2', name: 'Team Fortress 2', img: 'img/tf2.png' },
+            { id: 'magic', name: 'Team Magic', img: 'img/magic.png' }
+        ];
 
-    container.innerHTML = teams.map((t, i) => `
-        <div class="team-card" onclick="location.href='team.html?id=${t.id}'" style="
-            background: var(--surface); 
-            border: 1px solid var(--border); 
-            border-left: 3px solid var(--accent);
-            padding: 12px 16px;
-            margin-bottom: 10px;
-            cursor: pointer;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        " onmouseover="this.style.transform='translateX(4px)'" onmouseout="this.style.transform='none'">
-            <div style="font-family:var(--mono); font-size:18px; font-weight:800; color:var(--muted);">#${i+1}</div>
-            <div style="flex:1; font-weight:700; font-size:14px; color:var(--text);">${t.name}</div>
-            <div style="color:var(--dim); font-family:var(--mono); font-size:14px;">→</div>
-        </div>
-    `).join('');
-}
+        const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23777'><path d='M12 2L2 22h20L12 2z'/></svg>`;
+
+        container.innerHTML = teams.map((t, i) => `
+            <div class="team-card" onclick="location.href='team.html?id=${t.id}'">
+                <div style="font-family:var(--mono); font-size:18px; font-weight:800; color:var(--muted);">#${i+1}</div>
+                <div style="width:50px; height:50px; display:flex; align-items:center; justify-content:center; padding:2px; background:#222; border:1px solid #444; border-radius:4px;">
+                    <img src="${t.img}" alt="${t.name}" style="width:100%; height:100%; object-fit:contain;" onerror="this.src='${fallbackSVG}';">
+                </div>
+                <div style="flex:1; font-weight:700; font-size:14px; color:var(--text);">${t.name}</div>
+                <div style="color:var(--dim); font-family:var(--mono); font-size:14px;">→</div>
+            </div>
+        `).join('');
+    }
 
     // ===== ТОП ИГРОКОВ (ПОДИУМ) =====
     let currentTop = 'rating';
@@ -273,13 +338,16 @@
 
         const podiumContainer = document.getElementById('podiumContainer');
         const first = sorted[0]; const second = sorted[1]; const third = sorted[2];
+        const defaultImg = 'img/default.png';
 
         const createPodiumCard = (player, placeClass, placeNumber) => {
             if (!player) return '';
             const displayVal = type === 'kd' ? player.kd.toFixed(2) : player.rating.toFixed(2);
             return `
                 <div class="podium-item ${placeClass}" onclick="location.href='player.html?name=${encodeURIComponent(player.name)}'">
-                    <div class="podium-avatar">${player.avatar ? `<img src="${player.avatar}">` : player.name.charAt(0).toUpperCase()}</div>
+                    <div class="podium-avatar" style="border: 2px solid #777; padding: 2px; width:50px; height:50px;">
+                        <img src="${defaultImg}" style="width:100%; height:100%; object-fit:cover; border-radius:50%;">
+                    </div>
                     <div class="podium-name">${player.name.split(' ')[0]}</div>
                     <div class="podium-stat">${displayVal}</div>
                     <div class="podium-bar">${placeNumber}</div>
@@ -303,7 +371,9 @@
                 return `
                 <div class="player-row" onclick="location.href='player.html?name=${encodeURIComponent(p.name)}'" style="border-bottom:none; padding:6px 8px;">
                     <span class="rank">#${i+4}</span>
-                    <div class="player-avatar-mini">${p.avatar ? `<img src="${p.avatar}" alt="${p.name}">` : p.name.charAt(0).toUpperCase()}</div>
+                    <div class="player-avatar-mini" style="width:30px; height:30px; border:1px solid #777; background:#1a1a1a;">
+                        <img src="${defaultImg}" style="width:100%; height:100%; object-fit:cover;">
+                    </div>
                     <span class="pname ${p.you ? 'you' : ''}">${p.name}</span>
                     <span class="badge-kd">${displayVal.toFixed(2)}</span>
                 </div>
@@ -321,6 +391,7 @@
     // ИНИЦИАЛИЗАЦИЯ
     renderNews();
     renderMatchesList();
+    renderTransfers(); 
     renderMonthFilter();
     renderTopPlayers('rating');
 </script>
