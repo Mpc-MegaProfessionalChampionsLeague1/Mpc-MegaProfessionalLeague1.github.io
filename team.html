@@ -5,69 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL — Профиль команды</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=8">
+    <link rel="stylesheet" href="css/style.css?v=9">
     <style>
-        .hltv-team-header {
-            background: #1f232b; border: 1px solid var(--border); border-top: 3px solid var(--accent);
-            margin-bottom: 0; position: relative;
-        }
-        .hltv-players-strip {
-            display: flex; justify-content: center; background: #2a2e37; padding: 20px;
-            gap: 15px; border-bottom: 1px solid #111; overflow-x: auto;
-        }
-        .hltv-player-card {
-            display: flex; flex-direction: column; align-items: center; width: 90px; flex-shrink: 0;
-        }
-        .hltv-player-photo {
-            width: 80px; height: 100px; background: #111; border: 1px solid #333;
-            display: flex; align-items: center; justify-content: center;
-            margin-bottom: -10px; z-index: 1; overflow: hidden;
-        }
-        .hltv-player-photo img { width: 100%; height: 100%; object-fit: cover; }
-        .hltv-player-nick {
-            background: #111; width: 100%; text-align: center; padding: 4px 0;
-            font-family: var(--mono); font-size: 11px; font-weight: 700; color: #fff;
-            z-index: 2; display: flex; justify-content: center; align-items: center;
-            gap: 4px; border: 1px solid #333;
-        }
-        .hltv-team-info {
-            display: flex; align-items: center; padding: 20px 30px; background: #171a21; gap: 20px;
-        }
-        .hltv-team-logo {
-            width: 80px; height: 80px; background: #222; border: 1px solid #333;
-            display: flex; align-items: center; justify-content: center; font-size: 40px;
-        }
+        .hltv-team-header { background: #1f232b; border: 1px solid var(--border); border-top: 3px solid var(--accent); margin-bottom: 0; position: relative; }
+        .hltv-players-strip { display: flex; justify-content: center; background: #2a2e37; padding: 20px; gap: 15px; border-bottom: 1px solid #111; overflow-x: auto; }
+        .hltv-player-card { display: flex; flex-direction: column; align-items: center; width: 90px; flex-shrink: 0; }
+        .hltv-player-photo { width: 80px; height: 100px; background: #111; border: 1px solid #333; display: flex; align-items: center; justify-content: center; margin-bottom: -10px; z-index: 1; overflow: hidden; }
+        .hltv-player-photo img { width: 100%; height: 100%; object-fit: cover; opacity: 0.8; }
+        .hltv-player-nick { background: #111; width: 100%; text-align: center; padding: 4px 0; font-family: var(--mono); font-size: 11px; font-weight: 700; color: #fff; z-index: 2; display: flex; justify-content: center; align-items: center; gap: 4px; border: 1px solid #333; }
+        .hltv-team-info { display: flex; align-items: center; padding: 20px 30px; background: #171a21; gap: 20px; }
+        .hltv-team-logo { width: 80px; height: 80px; background: #222; border: 1px solid #333; display: flex; align-items: center; justify-content: center; font-size: 40px; }
         .hltv-team-name { font-family: var(--sans); font-size: 32px; font-weight: 800; color: #fff; letter-spacing: -0.5px; }
         .hltv-team-country { font-size: 12px; color: #8b9bb0; display: flex; align-items: center; gap: 6px; margin-bottom: 4px; }
-        .hltv-team-rank {
-            margin-left: auto; text-align: right; display: flex; flex-direction: column;
-            gap: 6px; font-family: var(--mono); font-size: 12px; color: #c8d6e0;
-        }
+        .hltv-team-rank { margin-left: auto; text-align: right; display: flex; flex-direction: column; gap: 6px; font-family: var(--mono); font-size: 12px; color: #c8d6e0; }
         .hltv-rank-item { display: flex; align-items: center; justify-content: flex-end; gap: 8px; }
         .hltv-rank-badge { background: #1e8b4c; color: #fff; padding: 2px 6px; font-size: 10px; font-weight: 800; border-radius: 2px; }
-        .hltv-tabs {
-            display: flex; background: #171a21; border: 1px solid var(--border); border-top: none; border-bottom: 2px solid #111;
-        }
-        .hltv-tab {
-            padding: 14px 30px; font-family: var(--sans); font-size: 14px; font-weight: 600;
-            color: #8b9bb0; cursor: pointer; border-bottom: 3px solid transparent; transition: 0.15s;
-        }
+        .hltv-tabs { display: flex; background: #171a21; border: 1px solid var(--border); border-top: none; border-bottom: 2px solid #111; }
+        .hltv-tab { padding: 14px 30px; font-family: var(--sans); font-size: 14px; font-weight: 600; color: #8b9bb0; cursor: pointer; border-bottom: 3px solid transparent; transition: 0.15s; }
         .hltv-tab:hover { color: #fff; background: rgba(255,255,255,0.03); }
         .hltv-tab.active { color: #fff; border-bottom-color: var(--accent); }
-        .hltv-tab-content {
-            display: none; padding: 24px; background: var(--surface);
-            border: 1px solid var(--border); border-top: none; min-height: 300px; animation: fadeUp 0.3s ease;
-        }
+        .hltv-tab-content { display: none; padding: 24px; background: var(--surface); border: 1px solid var(--border); border-top: none; min-height: 300px; animation: fadeUp 0.3s ease; }
         .hltv-tab-content.active { display: block; }
         .hltv-roster-table { width: 100%; border-collapse: collapse; }
-        .hltv-roster-table th {
-            text-align: left; padding: 10px 16px; font-family: var(--mono); font-size: 11px;
-            color: #6e7f94; border-bottom: 1px solid var(--border); text-transform: uppercase;
-        }
-        .hltv-roster-table td {
-            padding: 12px 16px; border-bottom: 1px solid var(--border);
-            font-family: var(--sans); font-size: 14px; color: #c8d6e0;
-        }
+        .hltv-roster-table th { text-align: left; padding: 10px 16px; font-family: var(--mono); font-size: 11px; color: #6e7f94; border-bottom: 1px solid var(--border); text-transform: uppercase; }
+        .hltv-roster-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); font-family: var(--sans); font-size: 14px; color: #c8d6e0; }
         .hltv-roster-table tr:hover td { background: #1f232b; cursor: pointer; }
         .hltv-roster-name { font-weight: 600; color: #fff; }
         .hltv-roster-flag { display: inline-block; margin-right: 8px; font-size: 16px; }
@@ -116,8 +77,9 @@
         const teamName = isWin ? 'Team Fortress 2' : 'Team Magic';
         const players = [...teamData.players].sort((a, b) => b.adr - a.adr);
 
-        // Ссылка на твою картинку (если положил в папку img)
         const defaultImg = 'img/default.png';
+        const flagSVG = `<svg viewBox="0 0 100 70" style="width:18px; height:12px; border-radius:2px; display:inline-block; vertical-align:middle;"><rect width="100" height="23.3" fill="#fff"/><rect y="23.3" width="100" height="23.3" fill="#0039a6"/><rect y="46.6" width="100" height="23.4" fill="#d52b1e"/></svg>`;
+        const flagSVGSmall = `<svg viewBox="0 0 100 70" style="width:14px; height:10px; border-radius:2px; display:inline-block; vertical-align:middle;"><rect width="100" height="23.3" fill="#fff"/><rect y="23.3" width="100" height="23.3" fill="#0039a6"/><rect y="46.6" width="100" height="23.4" fill="#d52b1e"/></svg>`;
 
         let playersStripHTML = players.map(p => `
             <div class="hltv-player-card" onclick="location.href='player.html?name=${encodeURIComponent(p.name)}'" style="cursor:pointer;">
@@ -125,7 +87,7 @@
                     <img src="${defaultImg}" alt="player">
                 </div>
                 <div class="hltv-player-nick">
-                    <span style="font-size:14px; margin-right:2px;">🇷🇺</span> ${p.name.split(' ')[0]}
+                    ${flagSVGSmall} ${p.name.split(' ')[0]}
                 </div>
             </div>
         `).join('');
@@ -134,7 +96,7 @@
             <div class="hltv-team-info">
                 <div class="hltv-team-logo">🛡</div>
                 <div>
-                    <div class="hltv-team-country"><span>🇷🇺</span> Russia</div>
+                    <div class="hltv-team-country">${flagSVG} Russia</div>
                     <div class="hltv-team-name">${teamName}</div>
                 </div>
                 <div class="hltv-team-rank">
@@ -169,7 +131,7 @@
                     <tbody>
                         ${players.map(p => `
                             <tr onclick="location.href='player.html?name=${encodeURIComponent(p.name)}'">
-                                <td><span class="hltv-roster-flag">🇷🇺</span><span class="hltv-roster-name">${p.name}</span></td>
+                                <td>${flagSVG} <span class="hltv-roster-name" style="margin-left:6px;">${p.name}</span></td>
                                 <td style="font-family:var(--mono);">${p.k} / ${p.d}</td>
                                 <td style="font-family:var(--mono);">${p.adr}</td>
                                 <td style="font-family:var(--mono); color:${p.diff > 0 ? 'var(--success)' : 'var(--danger)'}; font-weight:700;">${p.diff > 0 ? '+' : ''}${p.diff}</td>
