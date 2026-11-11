@@ -1413,3 +1413,97 @@ body {
     }
 }
 
+/* ===== ЗАЛ СЛАВЫ ===== */
+.hall-of-fame-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 20px;
+}
+.hof-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 20px;
+    position: relative;
+    border-left: 4px solid var(--accent);
+    transition: 0.2s;
+}
+.hof-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(200, 255, 0, 0.1);
+}
+.hof-title {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+}
+.hof-player {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--text);
+    margin-bottom: 4px;
+}
+.hof-stat {
+    font-family: var(--mono);
+    font-size: 24px;
+    font-weight: 800;
+    color: var(--accent);
+}
+.hof-sub {
+    font-size: 11px;
+    color: var(--dim);
+    margin-top: 8px;
+}
+
+/* ===== ИСТОРИЯ ВСТРЕЧ (Head-to-Head) ===== */
+.h2h-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-top: 12px;
+}
+.h2h-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface-2);
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    font-family: var(--mono);
+    font-size: 12px;
+}
+.h2h-item .h2h-name { color: var(--text); }
+.h2h-item .h2h-wins { color: var(--success); font-weight: 700; }
+.h2h-item .h2h-losses { color: var(--danger); font-weight: 700; }
+
+/* ===== КОМАНДЫ (Правая колонка) ===== */
+.teams-widget {
+    margin-top: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 16px;
+}
+.teams-widget .team-btn {
+    display: block;
+    width: 100%;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text);
+    padding: 10px;
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-bottom: 8px;
+    transition: 0.2s;
+}
+.teams-widget .team-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+}
+.teams-widget .team-btn.win { border-left: 3px solid var(--success); }
+.teams-widget .team-btn.loss { border-left: 3px solid var(--danger); }
