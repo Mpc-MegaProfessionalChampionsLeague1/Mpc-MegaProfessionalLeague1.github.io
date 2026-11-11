@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPL — Зал славы</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=4">
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="logo"><h1 onclick="location.href='index.html'">MPL <small>Mega Professional League</small></h1></div>
+        <div class="header-right">
+            <span class="status">● LIVE</span>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">◐</button>
+        </div>
+    </div>
+    <nav class="nav">
+        <a href="index.html" class="nav-btn">01 / Главная</a>
+        <a href="matches.html" class="nav-btn">02 / Матчи</a>
+        <a href="players.html" class="nav-btn">03 / Игроки</a>
+        <a href="stats.html" class="nav-btn">04 / Статистика</a>
+        <a href="hall.html" class="nav-btn active">05 / Зал славы</a>
+        <a href="about.html" class="nav-btn">06 / О сайте</a>
+    </nav>
+
+    <div class="page-title">🏆 Зал славы</div>
+    <div class="page-subtitle">Абсолютные рекорды турнира MPL</div>
+
+    <div class="hall-of-fame-grid" id="hallGrid"></div>
+</div>
+
+<script src="js/data.js"></script>
+<script>
+    function renderHall() {
+        const container = document.getElementById('hallGrid');
+        let maxKills = { name: '—', val: 0, match: '' };
+        let worstMatch = { name: '—', val: 0, match: '' };
+        let maxDiff = { name: '—', val: -999 };
+        let maxKd = { name: '—', val: 0 };
+
+        // Ищем рекорды в матчах
+        Object.keys(matchData).forEach(key => {
+            const m = matchData[key];
+            if (!m.teams && !m.total) return;
+            
+            const teams = m.teams || m.total.teams;
+            ['win', 'loss'].forEach(side => {
+                const team = teams[side];
+                if (!team || !team.players) return;
+                team.players.forEach(p => {
+                    if (p.k > maxKills.val) maxKills = { name: p.name, val: p.k, match: m.title };
+                    if (p.d > 10 && (p.k - p.d) < worstMatch.val) worstMatch = { name: p.name, val: p.k - p.d, match: m.title };
+                    if (p.diff > maxDiff.val) maxDiff = { name: p.name, val: p.diff };
+                });
+            });
+        });
+
+        // Ищем рекорды в игроках
+        playersData.forEach(p => {
+            if (p.kd > maxKd.val) maxKd = { name: p.name, val: p.kd };
+        });
+
+        container.innerHTML = `
+            <div class="hof-card">
+                <div class="hof-title">🔥 Больше всего убийств</div>
+                <div class="hof-player">${maxKills.name}</div>
+                <div class="hof-stat">${maxKills.val} убийств</div>
+                <div class="hof-sub">в матче ${maxKills.match}</div>
+            </div>
+            <div class="hof-card">
+                <div class="hof-title">🎯 Лучший K/D</div>
+                <div class="hof-player">${maxKd.name}</div>
+                <div class="hof-stat">${maxKd.val.toFixed(2)}</div>
+                <div class="hof-sub">за всё время</div>
+            </div>
+            <div class="hof-card">
+                <div class="hof-title">⚡ Лучшая разница</div>
+                <div class="hof-player">${maxDiff.name}</div>
+                <div class="hof-stat">+${maxDiff.val}</div>
+                <div class="hof-sub">убийства минус смерти</div>
+            </div>
+            <div class="hof-card">
+                <div class="hof-title">💀 Худший матч</div>
+                <div class="hof-player">${worstMatch.name}</div>
+                <div class="hof-stat" style="color:var(--danger);">${worstMatch.val}</div>
+                <div class="hof-sub">в матче ${worstMatch.match}</div>
+            </div>
+        `;
+    }
+
+    function toggleTheme() {
+        document.body.classList.toggle('light');
+        document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '☀️' : '◐';
+    }
+
+    renderHall();
+</script>
+</body>
+</html>
