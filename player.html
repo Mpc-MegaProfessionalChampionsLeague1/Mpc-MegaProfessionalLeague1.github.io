@@ -6,22 +6,15 @@
     <title>MPL — Профиль игрока</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=30">
+    <link rel="stylesheet" href="css/style.css?v=31">
     <style>
-        /* Шапка профиля HLTV */
-        .hltv-profile-header {
-            background: #1f232b; border: 1px solid var(--border);
-            display: flex; align-items: stretch; margin-bottom: 20px; border-radius: 4px; overflow: hidden;
-        }
-        .hltv-profile-photo {
-            width: 180px; background: #111; position: relative; display: flex; align-items: flex-end;
-        }
+        /* Шапка профиля */
+        .hltv-profile-header { background: #1f232b; border: 1px solid var(--border); display: flex; align-items: stretch; margin-bottom: 20px; border-radius: 4px; overflow: hidden; }
+        .hltv-profile-photo { width: 180px; background: #111; position: relative; display: flex; align-items: flex-end; }
         .hltv-profile-photo img.bg-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; height: 80%; opacity: 0.1; object-fit: contain; }
         .hltv-profile-photo img.player { position: relative; z-index: 2; width: 100%; height: 100%; object-fit: cover; }
-        
         .hltv-profile-info { flex: 1; padding: 20px 24px; display: flex; flex-direction: column; justify-content: center; }
         .hltv-profile-name { font-size: 32px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-        
         .hltv-info-table { width: 100%; border-collapse: collapse; font-size: 13px; }
         .hltv-info-table td { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
         .hltv-info-table td:first-child { color: #8b9bb0; width: 140px; }
@@ -33,35 +26,48 @@
         .hltv-tab:hover { color: #fff; background: rgba(255,255,255,0.03); }
         .hltv-tab.active { color: #fff; border-bottom-color: var(--accent); }
         
-        /* Контент вкладок */
         .tab-content { display: none; animation: fadeUp 0.3s ease; }
         .tab-content.active { display: block; }
         
-        /* Сетка контента */
+        /* Сетка для Info */
         .hltv-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
         @media (max-width: 800px) { .hltv-stats-grid { grid-template-columns: 1fr; } }
         
-        /* Блок статистики (слева) */
         .hltv-stat-box { background: var(--surface); border: 1px solid var(--border); padding: 16px; }
         .hltv-stat-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 16px; display: flex; justify-content: space-between; }
         .hltv-stat-row { margin-bottom: 12px; }
         .hltv-stat-label { display: flex; justify-content: space-between; font-size: 12px; color: #c8d6e0; margin-bottom: 4px; }
         .hltv-stat-bar-bg { width: 100%; height: 6px; background: #222; border-radius: 3px; overflow: hidden; }
-        .hltv-stat-bar-fill { height: 100%; background: #66c0f4; } /* HLTV blue */
+        .hltv-stat-bar-fill { height: 100%; background: #66c0f4; }
         
-        /* Блок матчей (справа) */
+        /* Блок матчей в Info (правый) */
         .hltv-matches-box { background: var(--surface); border: 1px solid var(--border); padding: 16px; }
-        .hltv-match-row { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .hltv-match-row:last-child { border-bottom: none; }
-        .hltv-match-team { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: #fff; }
-        .hltv-match-team img { width: 24px; height: 24px; object-fit: contain; }
-        .hltv-match-score { font-family: var(--mono); font-size: 14px; font-weight: 800; }
-        .hltv-match-score.win { color: var(--success); }
-        .hltv-match-score.loss { color: var(--danger); }
+        .hltv-match-row-simple { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .hltv-match-row-simple:last-child { border-bottom: none; }
+        .hltv-match-team-simple { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: #fff; }
+        .hltv-match-team-simple img { width: 24px; height: 24px; object-fit: contain; }
+        .hltv-match-score-simple { font-family: var(--mono); font-size: 14px; font-weight: 800; }
+        .hltv-match-score-simple.win { color: var(--success); }
+        .hltv-match-score-simple.loss { color: var(--danger); }
 
-        /* Настройки */
-        #settingsPanel { display: none; position: absolute; top: 60px; right: 20px; background: #1a1e26; border: 1px solid #444; border-radius: 8px; padding: 16px; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.8); width: 250px; flex-direction: column; gap: 12px; }
+        /* Вкладка Matches (как на скрине HLTV) */
+        .hltv-matches-tab-box { background: #1f232b; border: 1px solid var(--border); margin-bottom: 20px; }
+        .hltv-matches-tab-title { background: #171a21; padding: 12px 16px; font-size: 14px; font-weight: 700; color: #fff; border-bottom: 1px solid var(--border); }
+        .hltv-event-header { background: #2a2e37; padding: 8px 16px; font-size: 12px; font-weight: 600; color: #8b9bb0; text-align: center; border-bottom: 1px solid var(--border); }
+        .hltv-match-table { width: 100%; border-collapse: collapse; }
+        .hltv-match-table th { text-align: left; padding: 10px 16px; font-size: 11px; color: #6e7f94; text-transform: uppercase; border-bottom: 1px solid var(--border); }
+        .hltv-match-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 13px; color: #fff; vertical-align: middle; }
         
+        .hltv-match-team-cell { display: flex; align-items: center; gap: 8px; justify-content: flex-start; }
+        .hltv-match-team-cell img { width: 24px; height: 24px; object-fit: contain; }
+        .hltv-match-vs-cell { text-align: center; font-family: var(--mono); font-weight: 800; }
+        .hltv-match-vs-cell .win { color: var(--success); }
+        .hltv-match-vs-cell .loss { color: var(--danger); }
+        
+        .btn-stats { background: #2a475e; color: #fff; border: none; padding: 4px 12px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer; text-transform: uppercase; transition: 0.2s; float: right; }
+        .btn-stats:hover { background: var(--accent); color: #000; }
+
+        #settingsPanel { display: none; position: absolute; top: 60px; right: 20px; background: #1a1e26; border: 1px solid #444; border-radius: 8px; padding: 16px; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.8); width: 250px; flex-direction: column; gap: 12px; }
         @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -117,14 +123,22 @@
     const tf2Roster = ['bomba69', 'Хомяк с авт', 'uxaxaxaxa', 'AFKE'];
     const magicRoster = ['abdalbek', 'Gonduras228', 'Adjiare Gudju', 'baksyhanovvand...'];
     const defaultImg = 'img/default.png';
+    const tf2Logo = 'img/tf2.png';
+    const magicLogo = 'img/magic.png';
     const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23555'><path d='M12 2L2 22h20L12 2z'/></svg>`;
     const flagSVG = `<svg viewBox="0 0 100 70" style="width:24px; height:16px; border-radius:2px; display:inline-block; vertical-align:middle; margin-right:8px;"><rect width="100" height="23.3" fill="#fff"/><rect y="23.3" width="100" height="23.3" fill="#0039a6"/><rect y="46.6" width="100" height="23.4" fill="#d52b1e"/></svg>`;
 
-    // Возраст игроков
     const playerAges = {
         'bomba69': 14, 'Хомяк с авт': 14, 'uxaxaxaxa': 14, 'AFKE': 14, 'abdalbek': 14,
         'Gonduras228': 14, 'baksyhanovvand...': 14, 'Adjiare Gudju': 15
     };
+
+    // Функция для определения логотипа по названию команды
+    function getTeamLogo(teamName) {
+        if (teamName.includes('Fortress') || teamName === 'Team 1' || teamName === 'TF2') return tf2Logo;
+        if (teamName.includes('Magic') || teamName === 'Team 2') return magicLogo;
+        return fallbackSVG;
+    }
 
     function renderPlayerPage(name) {
         const container = document.getElementById('playerContent');
@@ -138,57 +152,101 @@
             return;
         }
 
-        const history = (typeof playerMatchHistory !== 'undefined' && playerMatchHistory[player.name]) ? playerMatchHistory[player.name] : [];
-        
         let teamLogo = fallbackSVG;
         let teamName = 'Без команды';
-        if (tf2Roster.includes(player.name)) { teamLogo = 'img/tf2.png'; teamName = 'Team Fortress 2'; }
-        else if (magicRoster.includes(player.name)) { teamLogo = 'img/magic.png'; teamName = 'Team Magic'; }
+        if (tf2Roster.includes(player.name)) { teamLogo = tf2Logo; teamName = 'Team Fortress 2'; }
+        else if (magicRoster.includes(player.name)) { teamLogo = magicLogo; teamName = 'Team Magic'; }
 
         const age = playerAges[player.name] || 14;
-        
-        // Ищем место в топе (по рейтингу)
         const allSorted = [...playersData].sort((a, b) => b.rating - a.rating);
         const rank = allSorted.findIndex(p => p.name === player.name) + 1;
 
-        // Ищем матчи, в которых игрок участвовал
+        // Собираем матчи
         const playedMatches = [];
         Object.keys(matchData).forEach(key => {
             const m = matchData[key];
             const teams = m.teams || (m.total && m.total.teams);
             if (!teams) return;
             let isInMatch = false;
-            ['win', 'loss'].forEach(side => {
-                if (teams[side].players.some(p => p.name === player.name)) isInMatch = true;
-            });
-            if (isInMatch) playedMatches.push({ id: key, data: m });
+            let isWin = false;
+            
+            if (teams.win.players.some(p => p.name === player.name)) { isInMatch = true; isWin = true; }
+            if (teams.loss.players.some(p => p.name === player.name)) { isInMatch = true; }
+            
+            if (isInMatch) playedMatches.push({ id: key, data: m, isWin: isWin });
         });
         playedMatches.sort((a, b) => new Date(b.data.date) - new Date(a.data.date));
 
-        // Генерируем список последних матчей для правой колонки
+        // Генерация списка для правой колонки (Info)
         const recentMatchesHTML = playedMatches.slice(0, 5).map(m => {
-            const isWin = m.data.teams?.win?.players.some(p => p.name === player.name) || m.data.total?.teams.win.players.some(p => p.name === player.name);
-            const opponentName = m.data.winner.includes('Team 1') ? m.data.loser : m.data.winner;
-            const opponentLogo = opponentName.includes('Team Fortress') || opponentName === 'Team 1' ? (teamName === 'Team Fortress 2' ? 'img/magic.png' : 'img/tf2.png') : fallbackSVG;
+            const opponentName = m.data.winner.includes('Team 1') || m.data.winner.includes('Team Fortress') ? m.data.loser : m.data.winner;
+            const opponentLogo = getTeamLogo(opponentName);
             
-            // Форматируем счет для BO3
-            let scoreStr = m.data.score;
-            if (m.data.map1) scoreStr = m.data.score; 
-
             return `
-                <div class="hltv-match-row">
-                    <div class="hltv-match-team">
+                <div class="hltv-match-row-simple">
+                    <div class="hltv-match-team-simple">
                         <span style="color:#8b9bb0; width: 30px; font-size:10px;">VS</span>
                         <img src="${opponentLogo}" onerror="this.src='${fallbackSVG}';">
                         <span>${opponentName}</span>
                     </div>
                     <div style="display:flex; flex-direction:column; align-items:flex-end;">
-                        <span class="hltv-match-score ${isWin ? 'win' : 'loss'}">${scoreStr}</span>
+                        <span class="hltv-match-score-simple ${m.isWin ? 'win' : 'loss'}">${m.data.score}</span>
                         <span style="font-size:10px; color:#6e7f94;">${m.data.date}</span>
                     </div>
                 </div>
             `;
         }).join('');
+
+        // Генерация таблицы для вкладки Matches (как на скрине HLTV)
+        let matchTableHTML = `
+            <div class="hltv-event-header">MPL Season 1</div>
+            <table class="hltv-match-table">
+                <thead>
+                    <tr>
+                        <th style="width: 100px;">Date</th>
+                        <th>Matches</th>
+                        <th style="width: 60px; text-align:right;"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${playedMatches.map(m => {
+                        const team1Name = m.data.winner.includes('Team 1') || m.data.winner.includes('Team Fortress') ? m.data.winner : m.data.loser;
+                        const team2Name = m.data.winner.includes('Team 1') || m.data.winner.includes('Team Fortress') ? m.data.loser : m.data.winner;
+                        
+                        const team1Logo = getTeamLogo(team1Name);
+                        const team2Logo = getTeamLogo(team2Name);
+                        
+                        const score1 = m.data.score.split(':')[0];
+                        const score2 = m.data.score.split(':')[1];
+                        
+                        const isWin = m.isWin;
+                        return `
+                            <tr>
+                                <td style="color:#8b9bb0; font-family:var(--mono);">${m.data.date}</td>
+                                <td>
+                                    <div style="display:flex; align-items:center; justify-content:space-between; padding-right:20px;">
+                                        <div class="hltv-match-team-cell" style="width: 40%; justify-content:flex-end; padding-right: 10px;">
+                                            <span>${team1Name}</span>
+                                            <img src="${team1Logo}" onerror="this.src='${fallbackSVG}';">
+                                        </div>
+                                        <div class="hltv-match-vs-cell" style="width: 20%;">
+                                            <span class="${isWin ? 'win' : 'loss'}">${score1}</span> : <span class="${isWin ? 'loss' : 'win'}">${score2}</span>
+                                        </div>
+                                        <div class="hltv-match-team-cell" style="width: 40%; padding-left: 10px;">
+                                            <img src="${team2Logo}" onerror="this.src='${fallbackSVG}';">
+                                            <span>${team2Name}</span>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td style="text-align:right;">
+                                    <button class="btn-stats" onclick="location.href='match.html?id=${m.id}'">Stats</button>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('')}
+                </tbody>
+            </table>
+        `;
 
         container.innerHTML = `
             <a href="players.html" class="back-btn">← Назад к списку игроков</a>
@@ -200,8 +258,7 @@
                 </div>
                 <div class="hltv-profile-info">
                     <div class="hltv-profile-name">
-                        ${flagSVG} ${player.name}
-                        ${player.you ? '<span style="color:var(--accent);font-size:24px;">⭐</span>' : ''}
+                        ${flagSVG} ${player.name} ${player.you ? '<span style="color:var(--accent);font-size:24px;">⭐</span>' : ''}
                     </div>
                     <table class="hltv-info-table">
                         <tr><td>Возраст</td><td>${age} лет</td></tr>
@@ -220,10 +277,8 @@
             <!-- ВКЛАДКА INFO -->
             <div class="tab-content active" id="content-info">
                 <div class="hltv-stats-grid">
-                    <!-- Левая колонка: Статистика -->
                     <div class="hltv-stat-box">
                         <div class="hltv-stat-title">Статистика игрока (Rating 3.0)</div>
-                        
                         <div class="hltv-stat-row">
                             <div class="hltv-stat-label"><span>Rating 3.0</span><span>${player.rating.toFixed(2)}</span></div>
                             <div class="hltv-stat-bar-bg"><div class="hltv-stat-bar-fill" style="width:${Math.min(100, (player.rating / 2) * 100)}%; background:${player.rating > 1.2 ? '#7ddfa0' : '#66c0f4'};"></div></div>
@@ -240,13 +295,8 @@
                             <div class="hltv-stat-label"><span>Entrying (Убийства)</span><span>${player.k}</span></div>
                             <div class="hltv-stat-bar-bg"><div class="hltv-stat-bar-fill" style="width:${Math.min(100, (player.k / 150) * 100)}%;"></div></div>
                         </div>
-                        <div class="hltv-stat-row">
-                            <div class="hltv-stat-label"><span>Utility (Ассисты)</span><span>${player.a}</span></div>
-                            <div class="hltv-stat-bar-bg"><div class="hltv-stat-bar-fill" style="width:${Math.min(100, (player.a / 30) * 100)}%;"></div></div>
-                        </div>
                     </div>
 
-                    <!-- Правая колонка: Последние матчи -->
                     <div class="hltv-matches-box">
                         <div class="hltv-stat-title" style="margin-bottom:16px;">Последние матчи</div>
                         ${recentMatchesHTML || '<div style="font-size:12px;color:#8b9bb0;">Нет матчей</div>'}
@@ -259,7 +309,7 @@
                 <div class="hltv-stat-box">
                     <div class="hltv-stat-title">История команд</div>
                     <div style="display:flex; align-items:center; gap:16px; padding:12px; background:#1a1e26; border:1px solid var(--border); margin-bottom:10px;">
-                        <img src="${teamLogo}" style="width:40px; height:40px; object-fit:contain;">
+                        <img src="${teamLogo}" style="width:40px; height:40px; object-fit:contain;" onerror="this.src='${fallbackSVG}';">
                         <div>
                             <div style="font-size:16px; font-weight:700; color:#fff;">${teamName}</div>
                             <div style="font-size:12px; color:var(--success);">Текущая команда</div>
@@ -270,20 +320,9 @@
 
             <!-- ВКЛАДКА MATCHES -->
             <div class="tab-content" id="content-matches">
-                <div class="hltv-stat-box">
-                    <div class="hltv-stat-title">Все матчи (${playedMatches.length})</div>
-                    ${playedMatches.map(m => `
-                        <div class="hltv-match-row" style="cursor:pointer;" onclick="location.href='match.html?id=${m.id}'">
-                            <div class="hltv-match-team">
-                                <span style="color:#8b9bb0; width: 30px; font-size:10px;">VS</span>
-                                <img src="${m.data.loser.includes('Team Fortress') || m.data.loser === 'Team 1' ? 'img/tf2.png' : 'img/magic.png'}">
-                                <span>${m.data.winner.includes('Team 1') ? m.data.loser : m.data.winner}</span>
-                            </div>
-                            <div class="hltv-match-score ${m.data.teams?.win?.players.some(p => p.name === player.name) ? 'win' : 'loss'}">
-                                ${m.data.score}
-                            </div>
-                        </div>
-                    `).join('')}
+                <div class="hltv-matches-tab-box">
+                    <div class="hltv-matches-tab-title">Latest results</div>
+                    ${matchTableHTML}
                 </div>
             </div>
         `;
@@ -292,7 +331,6 @@
     function switchProfileTab(tab) {
         document.querySelectorAll('.hltv-tab').forEach(t => t.classList.remove('active'));
         document.getElementById('tab-' + tab).classList.add('active');
-        
         document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
         document.getElementById('content-' + tab).classList.add('active');
     }
