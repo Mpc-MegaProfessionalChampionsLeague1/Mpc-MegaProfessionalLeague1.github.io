@@ -4,27 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL — Все игроки</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=8">
 </head>
 <body>
-
 <div class="container">
-
-    <!-- HEADER -->
     <div class="header">
-        <div class="logo">
-            <h1 onclick="location.href='index.html'">MPL <small>Mega Professional League</small></h1>
-        </div>
+        <div class="logo"><h1 onclick="location.href='index.html'">MPL <small>Mega Professional League</small></h1></div>
         <div class="header-right">
-            <span>📅 Май-Июль 2026</span>
+            <span>📅 Май-Сентябрь 2026</span>
             <span class="status">● LIVE</span>
-            <button class="lang-toggle" onclick="toggleLang()" id="langBtn">🇬🇧 EN</button>
-            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+            <button class="lang-toggle" onclick="toggleLang()" id="langBtn">EN</button>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">◐</button>
         </div>
     </div>
 
-    <!-- NAV -->
     <nav class="nav">
         <a href="index.html" class="nav-btn">01 / Главная</a>
         <a href="matches.html" class="nav-btn">02 / Матчи</a>
@@ -34,11 +28,9 @@
         <a href="about.html" class="nav-btn">06 / О сайте</a>
     </nav>
 
-    <!-- PAGE TITLE -->
     <div class="page-title">👥 Все игроки</div>
-    <div class="page-subtitle">Всего 10 игроков · Кликните на игрока для открытия профиля</div>
+    <div class="page-subtitle">Всего 12 игроков · Кликните на игрока для открытия профиля</div>
 
-    <!-- FILTERS -->
     <div class="filter-section">
         <input type="text" class="search-input" placeholder="🔍 Поиск по имени..." id="playerSearch" oninput="filterPlayers()">
         <select id="sortFilter" onchange="filterPlayers()">
@@ -54,24 +46,16 @@
         </select>
     </div>
 
-    <!-- PLAYERS LIST -->
-    <div id="playersList" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
-        <!-- Рендерится через JS -->
-    </div>
-
-    <!-- FOOTER -->
-    <div class="footer">
-        MPL · Mega Professional League · <b>HLTV-style</b> · Май-Июль 2026
-    </div>
-
+    <div id="playersList" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"></div>
+    <div class="footer">MPL · Mega Professional League · <b>TERMINAL</b> · Май-Сентябрь 2026</div>
 </div>
 
 <script src="js/data.js"></script>
 <script>
-    // ===== РЕНДЕР ИГРОКОВ =====
     function renderPlayers(sort = 'kd', search = '', top = 'all') {
         const container = document.getElementById('playersList');
         let filtered = [...playersData];
+        const defaultImg = 'img/default.png';
 
         if (search) {
             const s = search.toLowerCase();
@@ -87,36 +71,35 @@
             return b.matches - a.matches;
         });
 
-        const ranks = ['gold', 'silver', 'bronze', '', '', '', '', '', '', ''];
         container.innerHTML = filtered.map((p, i) => `
             <div class="glass-card" style="cursor:pointer;padding:12px 14px;transition:0.2s;" 
                  onclick="location.href='player.html?name=${encodeURIComponent(p.name)}'"
-                 onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='#2a475e';"
-                 onmouseout="this.style.transform='none';this.style.borderColor='rgba(255,255,255,0.05)';">
+                 onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='var(--accent)';"
+                 onmouseout="this.style.transform='none';this.style.borderColor='var(--border)';">
                 <div style="display:flex;align-items:center;gap:10px;">
-                    <span style="font-weight:700;font-size:13px;color:#6e7f94;min-width:22px;">#${i+1}</span>
+                    <span style="font-weight:700;font-size:13px;color:var(--muted);min-width:22px;">#${i+1}</span>
                     <div class="player-avatar-mini" style="width:40px;height:40px;font-size:16px;">
-                        ${p.avatar ? `<img src="${p.avatar}" style="width:100%;height:100%;object-fit:cover;">` : p.name.charAt(0).toUpperCase()}
+                        <img src="${defaultImg}" style="width:100%;height:100%;object-fit:cover;">
                     </div>
                     <div style="flex:1;">
-                        <div style="font-weight:600;font-size:14px;color:#e8eff7;">${p.name} ${p.you ? '⭐' : ''}</div>
-                        <div style="font-size:11px;color:#6e7f94;">${p.matches} матчей · ${p.k} убийств · ${p.d} смертей</div>
+                        <div style="font-weight:600;font-size:14px;color:var(--text);"><span style="font-size:12px; margin-right:4px;">🇷🇺</span> ${p.name} ${p.you ? '⭐' : ''}</div>
+                        <div style="font-size:11px;color:var(--muted);">${p.matches} матчей · ${p.k} убийств · ${p.d} смертей</div>
                     </div>
                     <div style="text-align:right;">
-                        <div style="font-size:16px;font-weight:700;color:#ffb347;">${p.kd.toFixed(2)}</div>
-                        <div style="font-size:10px;color:#6e7f94;">K/D</div>
+                        <div style="font-size:16px;font-weight:700;color:var(--accent);">${p.kd.toFixed(2)}</div>
+                        <div style="font-size:10px;color:var(--muted);">K/D</div>
                     </div>
                     <div style="text-align:right;min-width:44px;">
                         <div style="font-size:14px;font-weight:600;color:#7a9bcb;">${p.rating.toFixed(2)}</div>
-                        <div style="font-size:10px;color:#6e7f94;">Рейтинг</div>
+                        <div style="font-size:10px;color:var(--muted);">Рейтинг</div>
                     </div>
-                    <div style="color:#6e7f94;font-size:18px;margin-left:4px;">→</div>
+                    <div style="color:var(--muted);font-size:18px;margin-left:4px;">→</div>
                 </div>
             </div>
         `).join('');
 
         if (filtered.length === 0) {
-            container.innerHTML = '<div style="text-align:center;color:#4a5a6e;padding:30px 0;font-size:13px;grid-column:1/-1;">Игроки не найдены</div>';
+            container.innerHTML = '<div style="text-align:center;color:var(--muted);padding:30px 0;font-size:13px;grid-column:1/-1;">Игроки не найдены</div>';
         }
     }
 
@@ -127,22 +110,11 @@
         renderPlayers(sort, search, top);
     }
 
-    // ===== ТЕМА =====
-    function toggleTheme() {
-        document.body.classList.toggle('light');
-        document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '🌙' : '🌙';
-    }
-
+    function toggleTheme() { document.body.classList.toggle('light'); document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '☀️' : '◐'; }
     let lang = 'ru';
+    function toggleLang() { lang = lang === 'ru' ? 'en' : 'ru'; document.getElementById('langBtn').textContent = lang === 'ru' ? 'EN' : 'RU'; }
 
-    function toggleLang() {
-        lang = lang === 'ru' ? 'en' : 'ru';
-        document.getElementById('langBtn').textContent = lang === 'ru' ? '🇬🇧 EN' : '🇷🇺 RU';
-    }
-
-    // ===== ИНИЦИАЛИЗАЦИЯ =====
     renderPlayers();
 </script>
-
 </body>
 </html>
