@@ -4,39 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL — Профиль игрока</title>
+    <!-- ПОДКЛЮЧАЕМ БИБЛИОТЕКУ ДЛЯ СКАЧИВАНИЯ КАРТИНКИ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=20">
+    <link rel="stylesheet" href="css/style.css?v=23">
     <style>
         .avatar-wrapper {
-            position: relative;
-            width: 100px;
-            height: 100px;
-            border-radius: 6px;
-            border: 2px solid #777;
-            background: #1a1a1a;
-            overflow: hidden;
-            flex-shrink: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            position: relative; width: 100px; height: 100px; border-radius: 6px; border: 2px solid #777;
+            background: #1a1a1a; overflow: hidden; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
         }
-        .avatar-bg-logo {
-            position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            width: 80%;
-            height: 80%;
-            opacity: 0.3;
-            object-fit: contain;
-            z-index: 1;
-        }
-        .avatar-player-img {
-            position: relative;
-            z-index: 2;
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .avatar-bg-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; height: 80%; opacity: 0.3; object-fit: contain; z-index: 1; }
+        .avatar-player-img { position: relative; z-index: 2; width: 100%; height: 100%; object-fit: cover; }
+        
+        #settingsPanel { display: none; position: absolute; top: 60px; right: 20px; background: #1a1e26; border: 1px solid #444; border-radius: 8px; padding: 16px; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.8); width: 250px; flex-direction: column; gap: 12px; }
     </style>
 </head>
 <body>
@@ -48,6 +28,25 @@
             <span class="status">● LIVE</span>
             <button class="lang-toggle" onclick="toggleLang()" id="langBtn">EN</button>
             <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">◐</button>
+            <button class="theme-toggle" onclick="toggleSettings()" id="settingsBtn" title="Настройки">⚙️</button>
+            <div id="settingsPanel">
+                <div style="font-family:var(--mono); font-size:12px; font-weight:700; color:#fff; border-bottom:1px solid #333; padding-bottom:8px;">🎨 Настройки сайта</div>
+                <div>
+                    <div style="font-size:11px; color:#8b9bb0; margin-bottom:6px;">Цвет акцента:</div>
+                    <div style="display:flex; gap:6px;">
+                        <button onclick="setAccent('#c8ff00')" style="width:24px; height:24px; background:#c8ff00; border:none; border-radius:4px; cursor:pointer;"></button>
+                        <button onclick="setAccent('#00d2ff')" style="width:24px; height:24px; background:#00d2ff; border:none; border-radius:4px; cursor:pointer;"></button>
+                        <button onclick="setAccent('#ff0055')" style="width:24px; height:24px; background:#ff0055; border:none; border-radius:4px; cursor:pointer;"></button>
+                        <button onclick="setAccent('#b000ff')" style="width:24px; height:24px; background:#b000ff; border:none; border-radius:4px; cursor:pointer;"></button>
+                        <button onclick="setAccent('#ffb347')" style="width:24px; height:24px; background:#ffb347; border:none; border-radius:4px; cursor:pointer;"></button>
+                    </div>
+                </div>
+                <div>
+                    <div style="font-size:11px; color:#8b9bb0; margin-bottom:6px;">Свой фон (картинка):</div>
+                    <input type="file" id="bgUpload" accept="image/*" style="width:100%; font-size:10px; color:#fff; background:#111; border:1px solid #333; padding:4px; border-radius:4px; cursor:pointer;">
+                    <button onclick="resetBg()" style="width:100%; margin-top:6px; background:#333; border:none; color:#fff; padding:6px; border-radius:4px; font-size:10px; cursor:pointer;">Сбросить фон</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -74,7 +73,6 @@
         return 'match' + num;
     }
 
-    // Жесткие составы
     const tf2Roster = ['bomba69', 'Хомяк с авт', 'uxaxaxaxa', 'AFKE'];
     const magicRoster = ['abdalbek', 'Gonduras228', 'Adjiare Gudju', 'baksyhanovvand...'];
 
@@ -94,21 +92,12 @@
         const achievements = (typeof getAchievements === 'function') ? getAchievements(player) : [];
         const defaultImg = 'img/default.png';
         
-        // Проверяем, в какой команде игрок
         let teamLogo = '';
         let teamName = '';
         
-        if (tf2Roster.includes(player.name)) {
-            teamLogo = 'img/tf2.png';
-            teamName = 'Team Fortress 2';
-        } else if (magicRoster.includes(player.name)) {
-            teamLogo = 'img/magic.png';
-            teamName = 'Team Magic';
-        } else {
-            // Если игрок не в основном составе
-            teamLogo = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23555'><path d='M12 2L2 22h20L12 2z'/></svg>`;
-            teamName = 'Без команды';
-        }
+        if (tf2Roster.includes(player.name)) { teamLogo = 'img/tf2.png'; teamName = 'Team Fortress 2'; }
+        else if (magicRoster.includes(player.name)) { teamLogo = 'img/magic.png'; teamName = 'Team Magic'; }
+        else { teamLogo = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23555'><path d='M12 2L2 22h20L12 2z'/></svg>`; teamName = 'Без команды'; }
 
         const flagSVG = `<svg viewBox="0 0 100 70" style="width:18px; height:12px; border-radius:2px; display:inline-block; vertical-align:middle;"><rect width="100" height="23.3" fill="#fff"/><rect y="23.3" width="100" height="23.3" fill="#0039a6"/><rect y="46.6" width="100" height="23.4" fill="#d52b1e"/></svg>`;
 
@@ -173,6 +162,17 @@
 
         container.innerHTML = `
             <a href="players.html" class="back-btn">← Назад к списку игроков</a>
+            
+            <!-- КНОПКА СКАЧИВАНИЯ -->
+            <div style="text-align:right; margin-bottom: 16px;" id="downloadBtnWrapper">
+                <button onclick="downloadCard('${player.name}')" style="background: var(--surface); border: 1px solid var(--accent); color: var(--accent); padding: 8px 16px; border-radius: 4px; font-family: var(--mono); font-size: 12px; font-weight: 700; cursor: pointer; text-transform: uppercase; transition: 0.2s;" onmouseover="this.style.background='var(--accent)'; this.style.color='#000';" onmouseout="this.style.background='var(--surface)'; this.style.color='var(--accent)';">
+                    📸 Скачать карточку
+                </button>
+            </div>
+
+            <!-- НАЧАЛО КАРТОЧКИ ДЛЯ СКАЧИВАНИЯ -->
+            <div id="player-card-export" style="background: var(--bg); padding: 20px; border-radius: 8px; border: 1px solid var(--border);">
+            
             <div class="player-page-header">
                 <div class="avatar-wrapper">
                     <img src="${teamLogo}" class="avatar-bg-logo" alt="${teamName}">
@@ -223,12 +223,79 @@
                     <span class="match-stats">${m.k} - ${m.d} <span class="${m.diff > 0 ? 'good' : 'bad'}">${m.diff > 0 ? '+' : ''}${m.diff}</span><span class="match-arrow">→</span></span>
                 </div>
             `}).join('') : '<div style="font-size:13px;color:var(--muted);">Нет данных о матчах</div>'}
+            
+            </div> <!-- КОНЕЦ КАРТОЧКИ -->
         `;
+    }
+
+    // ===== СКАЧИВАНИЕ КАРТОЧКИ =====
+    function downloadCard(name) {
+        const card = document.getElementById('player-card-export');
+        const btnWrapper = document.getElementById('downloadBtnWrapper');
+        if (!card) return;
+        
+        // Прячем кнопку скачивания, чтобы она не попала на картинку
+        if (btnWrapper) btnWrapper.style.display = 'none';
+
+        html2canvas(card, {
+            backgroundColor: '#0a0a0a',
+            scale: 2,
+            useCORS: true
+        }).then(canvas => {
+            // Возвращаем кнопку на место
+            if (btnWrapper) btnWrapper.style.display = 'block';
+
+            // Создаем ссылку для скачивания
+            const link = document.createElement('a');
+            link.download = `MPL_${name}.png`;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+        });
     }
 
     function toggleTheme() { document.body.classList.toggle('light'); document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '☀️' : '◐'; }
     let lang = 'ru';
     function toggleLang() { lang = lang === 'ru' ? 'en' : 'ru'; document.getElementById('langBtn').textContent = lang === 'ru' ? 'EN' : 'RU'; }
+
+    // ===== НАСТРОЙКИ =====
+    function toggleSettings() {
+        const panel = document.getElementById('settingsPanel');
+        panel.style.display = panel.style.display === 'none' ? 'flex' : 'none';
+    }
+    function setAccent(color) {
+        document.documentElement.style.setProperty('--accent', color);
+        localStorage.setItem('mpl_accent', color);
+    }
+    function resetBg() {
+        document.body.style.backgroundImage = 'none';
+        document.body.style.backgroundColor = 'var(--bg)';
+        localStorage.removeItem('mpl_bg');
+        document.getElementById('bgUpload').value = '';
+    }
+    document.getElementById('bgUpload').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                const bgUrl = event.target.result;
+                document.body.style.backgroundImage = `url(${bgUrl})`;
+                document.body.style.backgroundSize = 'cover';
+                document.body.style.backgroundPosition = 'center';
+                localStorage.setItem('mpl_bg', bgUrl);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
+    window.addEventListener('DOMContentLoaded', () => {
+        const savedAccent = localStorage.getItem('mpl_accent');
+        if (savedAccent) setAccent(savedAccent);
+        const savedBg = localStorage.getItem('mpl_bg');
+        if (savedBg) {
+            document.body.style.backgroundImage = `url(${savedBg})`;
+            document.body.style.backgroundSize = 'cover';
+            document.body.style.backgroundPosition = 'center';
+        }
+    });
 
     renderPlayerPage(playerName);
 </script>
