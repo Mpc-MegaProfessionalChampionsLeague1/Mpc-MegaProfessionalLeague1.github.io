@@ -319,7 +319,7 @@ const matchData = {
             }
         }
     }
-}
+};
 
 // ===== ДОСТИЖЕНИЯ =====
 function getAchievements(player) {
