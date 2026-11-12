@@ -6,7 +6,7 @@
     <title>MPL — Профиль игрока</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=32">
+    <link rel="stylesheet" href="css/style.css?v=33">
     <style>
         /* Шапка профиля */
         .hltv-profile-header { background: #1f232b; border: 1px solid var(--border); display: flex; align-items: stretch; margin-bottom: 20px; border-radius: 4px; overflow: hidden; }
@@ -50,7 +50,7 @@
         .hltv-match-score-simple.win { color: var(--success); }
         .hltv-match-score-simple.loss { color: var(--danger); }
 
-        /* Вкладка Matches (как на скрине HLTV) */
+        /* Вкладка Matches */
         .hltv-matches-tab-box { background: #1f232b; border: 1px solid var(--border); margin-bottom: 20px; }
         .hltv-matches-tab-title { background: #171a21; padding: 12px 16px; font-size: 14px; font-weight: 700; color: #fff; border-bottom: 1px solid var(--border); }
         .hltv-event-header { background: #2a2e37; padding: 8px 16px; font-size: 12px; font-weight: 600; color: #8b9bb0; text-align: center; border-bottom: 1px solid var(--border); }
@@ -125,7 +125,6 @@
     const defaultImg = 'img/default.png';
     const tf2Logo = 'img/tf2.png';
     const magicLogo = 'img/magic.png';
-    // Дефолтный серый щит (код в base64, работает всегда)
     const shieldSVG = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23666'><path d='M12 2L2 22h20L12 2z'/></svg>`;
     const flagSVG = `<svg viewBox="0 0 100 70" style="width:24px; height:16px; border-radius:2px; display:inline-block; vertical-align:middle; margin-right:8px;"><rect width="100" height="23.3" fill="#fff"/><rect y="23.3" width="100" height="23.3" fill="#0039a6"/><rect y="46.6" width="100" height="23.4" fill="#d52b1e"/></svg>`;
 
@@ -134,13 +133,9 @@
         'Gonduras228': 14, 'baksyhanovvand...': 14, 'Adjiare Gudju': 15
     };
 
-    // Функция для определения логотипа по названию команды
     function getTeamLogo(teamName) {
-        // Если в названии есть TF2 или Fortress, ставим лого TF2
-        if (teamName.includes('Fortress') || teamName === 'TF2') return tf2Logo;
-        // Если в названии есть Magic, ставим лого Magic
-        if (teamName.includes('Magic')) return magicLogo;
-        // Во всех остальных случаях (Team 1, Team 2 и т.д.) ставим серый щит
+        if (teamName.includes('Fortress') || teamName === 'TF2' || teamName === 'Team 1') return tf2Logo; // Для Team 1 поставим лого TF2
+        if (teamName.includes('Magic') || teamName === 'Team 2') return magicLogo; // Для Team 2 поставим лого Magic
         return shieldSVG;
     }
 
@@ -186,6 +181,11 @@
             const opponentName = m.data.winner.includes('Team 1') || m.data.winner.includes('Team Fortress') ? m.data.loser : m.data.winner;
             const opponentLogo = getTeamLogo(opponentName);
             
+            // Умный счет: если игрок проиграл (isWin = false), то счет должен быть перевернут
+            let score1 = m.data.score.split(':')[0];
+            let score2 = m.data.score.split(':')[1];
+            if (!m.isWin) { [score1, score2] = [score2, score1]; } // Меняем местами, если это поражение
+
             return `
                 <div class="hltv-match-row-simple">
                     <div class="hltv-match-team-simple">
@@ -194,14 +194,15 @@
                         <span>${opponentName}</span>
                     </div>
                     <div style="display:flex; flex-direction:column; align-items:flex-end;">
-                        <span class="hltv-match-score-simple ${m.isWin ? 'win' : 'loss'}">${m.data.score}</span>
+                        <!-- Выводим перевернутый счет -->
+                        <span class="hltv-match-score-simple ${m.isWin ? 'win' : 'loss'}">${score1} : ${score2}</span>
                         <span style="font-size:10px; color:#6e7f94;">${m.data.date}</span>
                     </div>
                 </div>
             `;
         }).join('');
 
-        // Генерация таблицы для вкладки Matches (как на скрине HLTV)
+        // Генерация таблицы для вкладки Matches
         let matchTableHTML = `
             <div class="hltv-event-header">MPL Season 1</div>
             <table class="hltv-match-table">
@@ -214,16 +215,18 @@
                 </thead>
                 <tbody>
                     ${playedMatches.map(m => {
+                        // Определяем, кто победил (всегда победитель слева)
                         const team1Name = m.data.winner.includes('Team 1') || m.data.winner.includes('Team Fortress') ? m.data.winner : m.data.loser;
                         const team2Name = m.data.winner.includes('Team 1') || m.data.winner.includes('Team Fortress') ? m.data.loser : m.data.winner;
                         
                         const team1Logo = getTeamLogo(team1Name);
                         const team2Logo = getTeamLogo(team2Name);
                         
-                        const score1 = m.data.score.split(':')[0];
-                        const score2 = m.data.score.split(':')[1];
-                        
-                        const isWin = m.isWin;
+                        // Ставим счет: победитель слева, проигравший справа
+                        let score1 = m.data.score.split(':')[0];
+                        let score2 = m.data.score.split(':')[1];
+                        if (!m.isWin) { [score1, score2] = [score2, score1]; } // Если мы смотрим за проигравшего, счет все равно пишется как Победитель : Проигравший
+
                         return `
                             <tr>
                                 <td style="color:#8b9bb0; font-family:var(--mono);">${m.data.date}</td>
@@ -234,7 +237,8 @@
                                             <img src="${team1Logo}" onerror="this.src='${shieldSVG}';">
                                         </div>
                                         <div class="hltv-match-vs-cell" style="width: 20%;">
-                                            <span class="${isWin ? 'win' : 'loss'}">${score1}</span> : <span class="${isWin ? 'loss' : 'win'}">${score2}</span>
+                                            <!-- Зеленый всегда у победителя (score1), красный у проигравшего (score2) -->
+                                            <span class="win">${score1}</span> : <span class="loss">${score2}</span>
                                         </div>
                                         <div class="hltv-match-team-cell" style="width: 40%; padding-left: 10px;">
                                             <img src="${team2Logo}" onerror="this.src='${shieldSVG}';">
