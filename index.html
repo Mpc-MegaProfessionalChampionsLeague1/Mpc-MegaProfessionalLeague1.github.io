@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL — Главная</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=47">
+    <link rel="stylesheet" href="css/style.css?v=49">
     <style>
         .team-card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); padding: 12px 16px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 12px; border-radius: 6px; }
         .team-card:hover { transform: translateX(4px); background: var(--surface-2); border-left-color: var(--accent); }
@@ -15,11 +15,10 @@
         .transfer-photo { width: 40px; height: 40px; border-radius: 4px; background: var(--bg); border: 1px solid #777; overflow: hidden; flex-shrink: 0; position: relative; display: flex; align-items: center; justify-content: center; }
         .transfer-photo .team-bg { position: absolute; width: 80%; height: 80%; opacity: 0.3; z-index: 1; object-fit: contain; }
         .transfer-photo .player-img { position: relative; z-index: 2; width: 100%; height: 100%; object-fit: cover; }
-        .transfer-name { flex: 1; margin-left: 10px; font-weight: 600; font-size: 12px; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .transfer-name { flex: 1; margin-left: 10px; font-weight: 600; font-size: 12px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         .transfer-arrow { color: var(--dim); margin: 0 8px; font-size: 12px; }
         .transfer-logo { width: 40px; height: 40px; padding: 4px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         .transfer-logo img { width: 100%; height: 100%; object-fit: contain; }
-        
         #settingsPanel { display: none; position: absolute; top: 60px; right: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.8); width: 250px; flex-direction: column; gap: 12px; }
     </style>
 </head>
@@ -35,7 +34,6 @@
             <button class="theme-toggle" onclick="toggleSettings()" id="settingsBtn" title="Настройки">⚙️</button>
             <div id="settingsPanel">
                 <div style="font-family:var(--mono); font-size:12px; font-weight:700; color:var(--text); border-bottom:1px solid var(--border); padding-bottom:8px;">🎨 Настройки сайта</div>
-                
                 <div>
                     <div style="font-size:11px; color:var(--muted); margin-bottom:6px;">Тема оформления:</div>
                     <select id="themeSelect" onchange="changeTheme(this.value)" style="width:100%; background:var(--bg); color:var(--text); border:1px solid var(--border); padding:6px; border-radius:4px; font-family:var(--mono); font-size:11px; cursor:pointer;">
@@ -46,7 +44,6 @@
                         <option value="theme-matrix">Matrix (Черно-зеленая)</option>
                     </select>
                 </div>
-
                 <div>
                     <div style="font-size:11px; color:var(--muted); margin-bottom:6px;">Свой фон (картинка):</div>
                     <input type="file" id="bgUpload" accept="image/*" style="width:100%; font-size:10px; color:var(--text); background:var(--bg); border:1px solid var(--border); padding:4px; border-radius:4px; cursor:pointer;">
@@ -65,15 +62,22 @@
         <a href="about.html" class="nav-btn">06 / О сайте</a>
     </nav>
 
+    <!-- HERO BANNER -->
+    <div id="heroBanner" class="tilt">
+        <div class="skeleton" style="width: 100px; height: 100px; border-radius: 8px;"></div>
+        <div style="flex: 1;">
+            <div class="skeleton" style="width: 200px; height: 24px; margin-bottom: 12px;"></div>
+            <div class="skeleton" style="width: 150px; height: 16px;"></div>
+        </div>
+    </div>
+
     <div class="main-grid">
         <div class="glass-card" style="display:flex; flex-direction:column;">
             <div class="panel-title">🏆 <span>Рейтинги</span></div>
-            
             <div style="display:flex; margin-bottom:12px; border:1px solid var(--border);">
                 <button class="sub-nav-btn active" onclick="switchLeftTab('players')" id="tabPlayersBtn" style="flex:1; padding:8px;">Игроки</button>
                 <button class="sub-nav-btn" onclick="switchLeftTab('teams')" id="tabTeamsBtn" style="flex:1; padding:8px; border-left:1px solid var(--border);">Команды</button>
             </div>
-
             <div id="leftContentPlayers" style="display:block;">
                 <div class="month-filter" id="monthFilter" style="margin-bottom:12px;"></div>
                 <div style="display:flex;gap:3px;margin-bottom:10px;background:rgba(255,255,255,0.03);border-radius:0;padding:3px;border:1px solid var(--border);">
@@ -87,7 +91,6 @@
                     <span id="monthInfo" style="display:block;color:var(--dim);font-size:9px;margin-top:2px;">за всё время</span>
                 </div>
             </div>
-
             <div id="leftContentTeams" style="display:none;">
                 <div id="teamListContainer"></div>
             </div>
@@ -103,7 +106,6 @@
                 <div class="panel-title" style="padding:0 4px 8px 4px;border-bottom:1px solid var(--border);">📋 <span>Матчи</span></div>
                 <div id="matchList" style="display:flex;flex-direction:column;gap:8px;max-height:400px;overflow-y:auto;"></div>
             </div>
-
             <div>
                 <div class="panel-title" style="padding:0 4px 8px 4px;border-bottom:1px solid var(--border);">🔄 <span>Трансферы</span></div>
                 <div id="transferList" style="background: var(--surface); border: 1px solid var(--border); max-height: 350px; overflow-y:auto; border-radius:6px;"></div>
@@ -122,6 +124,21 @@
     const flagSVG = `<svg viewBox="0 0 100 70" style="width:18px; height:12px; border-radius:2px; display:inline-block; vertical-align:middle;"><rect width="100" height="23.3" fill="#fff"/><rect y="23.3" width="100" height="23.3" fill="#0039a6"/><rect y="46.6" width="100" height="23.4" fill="#d52b1e"/></svg>`;
     const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23555'><path d='M12 2L2 22h20L12 2z'/></svg>`;
 
+    // НОВОСТИ
+    function renderNews() {
+        const container = document.getElementById('newsList');
+        const newsData = [
+            { id: 1, title: '🏆 Старт сезона MPL!', text: 'Дружеский турнир MPL начался!', date: '2026-05-09T10:00:00.000Z' },
+            { id: 2, title: '🔥 Bomba69 делает 26-11!', text: 'В матче #5 Bomba69 показал невероятный результат — 26 убийств!', date: new Date().toISOString() }
+        ];
+        container.innerHTML = newsData.sort((a, b) => new Date(b.date) - new Date(a.date)).map(n => `
+            <div class="news-item">
+                <div class="news-header"><span class="news-title">${n.title}</span><span class="news-meta">✏️ MPL</span></div>
+                <div class="news-text">${n.text}</div>
+            </div>
+        `).join('');
+    }
+
     function renderHeroBanner() {
         const container = document.getElementById('heroBanner');
         if (!container) return;
@@ -135,18 +152,15 @@
 
         container.innerHTML = `
             <img src="${teamLogo}" style="position: absolute; right: -20px; bottom: -20px; width: 200px; height: 200px; opacity: 0.05; object-fit: contain; pointer-events: none;">
-            
             <div style="position: relative; z-index: 2; width: 100px; height: 100px; border-radius: 8px; border: 2px solid #777; background: #111; display: flex; align-items: center; justify-content: center; overflow: hidden;">
                 <img src="${teamLogo}" style="position: absolute; width: 80%; height: 80%; opacity: 0.3; object-fit: contain;">
                 <img src="${defaultImg}" style="position: relative; z-index: 2; width: 100%; height: 100%; object-fit: cover;">
             </div>
-            
             <div style="position: relative; z-index: 2; flex: 1;">
                 <div style="font-family: var(--mono); font-size: 11px; color: var(--accent); text-transform: uppercase; letter-spacing: 1px; font-weight: 700; margin-bottom: 6px;">⭐ Текущий лидер лиги</div>
                 <div style="font-size: 32px; font-weight: 800; color: #fff; line-height: 1; margin-bottom: 8px;">${topPlayer.name}</div>
                 <div style="font-size: 13px; color: var(--muted); font-family: var(--mono);">${flagSVG} Russia · ${teamName} · ${topPlayer.matches} матчей</div>
             </div>
-
             <div style="position: relative; z-index: 2; display: flex; gap: 20px; text-align: right;">
                 <div>
                     <div style="font-family: var(--mono); font-size: 24px; font-weight: 800; color: var(--accent);">${topPlayer.rating.toFixed(2)}</div>
@@ -198,9 +212,7 @@
                 </div>
             </div>
         `}).join('') + `
-            <div style="text-align:center; padding:12px; font-family:var(--mono); font-size:10px; color:var(--muted); background: rgba(255,255,255,0.02); text-transform:uppercase; cursor:pointer;" onclick="location.href='players.html'">
-                Все переходы
-            </div>
+            <div style="text-align:center; padding:12px; font-family:var(--mono); font-size:10px; color:var(--muted); background: rgba(255,255,255,0.02); text-transform:uppercase; cursor:pointer;" onclick="location.href='players.html'">Все переходы</div>
         `;
     }
 
@@ -276,7 +288,6 @@
             return parseInt(match.date.split('.')[1]) === parseInt(month);
         });
         if (matchKeys.length === 0) return [];
-
         return playersData.map(p => {
             const copy = { ...p, k: 0, d: 0, a: 0, matches: 0, kd: 0, adr: 0, diff: 0, rating: 0 };
             matchKeys.forEach(matchKey => {
@@ -315,13 +326,8 @@
             document.getElementById('playerList').innerHTML = '<div style="text-align:center;color:var(--muted);padding:20px 0;font-size:12px;">Нет данных</div>';
             return;
         }
-
-        const sorted = type === 'kd' ?
-            [...data].sort((a, b) => b.kd - a.kd) :
-            [...data].sort((a, b) => b.rating - a.rating);
-
+        const sorted = type === 'kd' ? [...data].sort((a, b) => b.kd - a.kd) : [...data].sort((a, b) => b.rating - a.rating);
         if (sorted.length === 0) return;
-
         const podiumContainer = document.getElementById('podiumContainer');
         const first = sorted[0]; const second = sorted[1]; const third = sorted[2];
 
@@ -331,7 +337,6 @@
             let teamLogo = fallbackSVG;
             if (tf2Roster.includes(player.name)) teamLogo = 'img/tf2.png';
             else if (magicRoster.includes(player.name)) teamLogo = 'img/magic.png';
-            
             return `
                 <div class="podium-item ${placeClass}" onclick="location.href='player.html?name=${encodeURIComponent(player.name)}'">
                     <div class="podium-avatar" style="position:relative; border: 2px solid #777; width:50px; height:50px; overflow:hidden; border-radius:6px; background:#111; display:flex; align-items:center; justify-content:center;">
@@ -361,7 +366,6 @@
                 let teamLogo = fallbackSVG;
                 if (tf2Roster.includes(p.name)) teamLogo = 'img/tf2.png';
                 else if (magicRoster.includes(p.name)) teamLogo = 'img/magic.png';
-                
                 return `
                 <div class="player-row" onclick="location.href='player.html?name=${encodeURIComponent(p.name)}'" style="border-bottom:none; padding:6px 8px;">
                     <span class="rank">#${i+4}</span>
@@ -374,7 +378,6 @@
                 </div>
             `}).join('');
         }
-
         document.getElementById('topFooterName').textContent = first?.name || '—';
         document.getElementById('topFooterText').textContent = type === 'kd' ? 'лидер по K/D' : 'лидер по рейтингу';
     }
@@ -384,29 +387,21 @@
     let lang = 'ru';
     function toggleLang() { lang = lang === 'ru' ? 'en' : 'ru'; document.getElementById('langBtn').textContent = lang === 'ru' ? 'EN' : 'RU'; }
     function toggleSettings() { const panel = document.getElementById('settingsPanel'); panel.style.display = panel.style.display === 'none' ? 'flex' : 'none'; }
-
-    function changeTheme(themeName) {
-        localStorage.setItem('mpl_theme', themeName);
-        document.body.className = themeName;
-        location.reload();
-    }
-
+    function changeTheme(themeName) { localStorage.setItem('mpl_theme', themeName); document.body.className = themeName; location.reload(); }
     function resetBg() { document.body.style.backgroundImage = 'none'; document.body.style.backgroundColor = 'var(--bg)'; localStorage.removeItem('mpl_bg'); document.getElementById('bgUpload').value = ''; }
     document.getElementById('bgUpload').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) { const reader = new FileReader(); reader.onload = function(event) { document.body.style.backgroundImage = `url(${event.target.result})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; localStorage.setItem('mpl_bg', event.target.result); }; reader.readAsDataURL(file); }
     });
-
     window.addEventListener('DOMContentLoaded', () => {
         const savedTheme = localStorage.getItem('mpl_theme') || 'theme-terminal';
         document.body.className = savedTheme;
-        const select = document.getElementById('themeSelect');
-        if (select) select.value = savedTheme;
-        
+        const select = document.getElementById('themeSelect'); if (select) select.value = savedTheme;
         const savedBg = localStorage.getItem('mpl_bg'); 
         if (savedBg) { document.body.style.backgroundImage = `url(${savedBg})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; }
     });
 
+    // ВЫЗОВ ФУНКЦИЙ
     renderNews();
     renderHeroBanner();
     renderMatchesList();
