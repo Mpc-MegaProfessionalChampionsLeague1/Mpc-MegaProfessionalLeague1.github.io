@@ -6,7 +6,7 @@
     <title>MPL — Статистика</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=42">
+    <link rel="stylesheet" href="css/style.css?v=45">
     <style>
         .chart-container {
             background: var(--surface);
@@ -14,7 +14,8 @@
             border-radius: 8px;
             padding: 20px;
             position: relative;
-            height: 300px;
+            /* Жесткая высота контейнера, чтобы графики не мерцали */
+            height: 320px; 
             display: flex;
             flex-direction: column;
         }
@@ -31,7 +32,8 @@
             flex: 1;
             position: relative;
             width: 100%;
-            height: 100%;
+            /* Жесткая высота для самого графика */
+            height: 250px; 
         }
 
         /* Стили для винрейта игроков */
@@ -157,7 +159,7 @@
     <div class="grid-2">
         <div class="chart-container" style="grid-column: span 2; height: 350px;">
             <div class="chart-title">Рейтинг игроков</div>
-            <div class="chart-wrapper">
+            <div class="chart-wrapper" style="height: 280px;">
                 <canvas id="ratingChart"></canvas>
             </div>
         </div>
@@ -174,46 +176,30 @@
 
     // ==== ЛОГИКА ПОДСЧЕТА ВИНРЕЙТА КАЖДОГО ИГРОКА ====
     const playerStats = {};
-    
-    // Инициализация
-    playersData.forEach(p => {
-        playerStats[p.name] = { wins: 0, losses: 0, total: 0 };
-    });
+    playersData.forEach(p => { playerStats[p.name] = { wins: 0, losses: 0, total: 0 }; });
 
-    // Проходим по всем матчам
     Object.keys(matchData).forEach(key => {
         const m = matchData[key];
         const teams = m.teams || (m.total && m.total.teams);
         if (!teams) return;
 
-        // Определяем победителя по счету
         const score1 = parseInt(m.score.split(':')[0]);
         const score2 = parseInt(m.score.split(':')[1]);
         const winnerSide = score1 > score2 ? 'win' : 'loss'; 
         const loserSide = score1 > score2 ? 'loss' : 'win';
 
-        // Записываем победу игрокам выигравшей команды
         if (teams[winnerSide] && teams[winnerSide].players) {
             teams[winnerSide].players.forEach(p => {
-                if (playerStats[p.name]) {
-                    playerStats[p.name].wins++;
-                    playerStats[p.name].total++;
-                }
+                if (playerStats[p.name]) { playerStats[p.name].wins++; playerStats[p.name].total++; }
             });
         }
-        
-        // Записываем поражение игрокам проигравшей команды
         if (teams[loserSide] && teams[loserSide].players) {
             teams[loserSide].players.forEach(p => {
-                if (playerStats[p.name]) {
-                    playerStats[p.name].losses++;
-                    playerStats[p.name].total++;
-                }
+                if (playerStats[p.name]) { playerStats[p.name].losses++; playerStats[p.name].total++; }
             });
         }
     });
 
-    // Рендерим полоски винрейта
     const winrateList = document.getElementById('winrateList');
     const sortedByWinrate = Object.entries(playerStats)
         .filter(([name, stats]) => stats.total > 0)
@@ -224,9 +210,7 @@
         return `
             <div class="winrate-row">
                 <div class="winrate-name">${name}</div>
-                <div class="winrate-bar-bg">
-                    <div class="winrate-bar-fill" style="width: ${wr}%;"></div>
-                </div>
+                <div class="winrate-bar-bg"><div class="winrate-bar-fill" style="width: ${wr}%;"></div></div>
                 <div class="winrate-percent">${wr}%</div>
             </div>
         `;
@@ -236,6 +220,9 @@
     const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#c8ff00';
     Chart.defaults.color = '#8b9bb0';
     Chart.defaults.font.family = "'JetBrains Mono', monospace";
+
+    // ОТКЛЮЧАЕМ АНИМАЦИЮ ПРИ ЗАГРУЗКЕ (чтобы не было мерцания)
+    Chart.defaults.animation = false; 
 
     // Radar (Профиль лучшего игрока)
     const topPlayer = [...playersData].sort((a, b) => b.rating - a.rating)[0];
@@ -256,7 +243,8 @@
             }]
         },
         options: {
-            responsive: true, maintainAspectRatio: false,
+            responsive: true, 
+            maintainAspectRatio: false,
             scales: { r: { angleLines: { color: '#333' }, grid: { color: '#333' }, pointLabels: { color: '#fff', font: { size: 10 } }, ticks: { display: false } } },
             plugins: { legend: { display: false } }
         }
@@ -276,7 +264,8 @@
             datasets: [{ label: 'Рейтинг', data: sortedPlayers.map(p => p.rating), backgroundColor: gradient, borderRadius: 4, borderWidth: 0 }]
         },
         options: {
-            responsive: true, maintainAspectRatio: false,
+            responsive: true, 
+            maintainAspectRatio: false,
             scales: { y: { beginAtZero: true, grid: { color: '#222' }, ticks: { color: '#8b9bb0' } }, x: { grid: { display: false }, ticks: { color: '#8b9bb0' } } },
             plugins: { legend: { display: false } }
         }
