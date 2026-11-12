@@ -101,4 +101,99 @@
         document.getElementById('tabStats').className = tab === 'stats' ? 'tab-btn active' : 'tab-btn';
         document.getElementById('tab-list').className = tab === 'list' ? 'tab-content active' : 'tab-content';
         document.getElementById('tab-stats').className = tab === 'stats' ? 'tab-content active' : 'tab-content';
-        if (tab === 'stats
+        if (tab === 'stats') renderStats();
+    }
+
+    function renderMatches(filterMap = 'all', filterResult = 'all', search = '') {
+        const container = document.getElementById('matchesList');
+        let filtered = Object.keys(matchData).map(key => ({ id: key, data: matchData[key] }));
+        if (filterMap !== 'all') filtered = filtered.filter(m => m.data.map.includes(filterMap));
+        if (filterResult !== 'all') filtered = filtered.filter(m => { const isWin = m.data.winner.includes('Team 1') || m.data.winner.includes('Team Fortress'); return filterResult === 'win' ? isWin : !isWin; });
+        if (search) { const s = search.toLowerCase(); filtered = filtered.filter(m => m.data.map.toLowerCase().includes(s) || m.data.winner.toLowerCase().includes(s) || m.data.loser.toLowerCase().includes(s) || m.data.title.toLowerCase().includes(s)); }
+        filtered.sort((a, b) => new Date(b.data.date) - new Date(a.data.date));
+
+        container.innerHTML = filtered.map(({ id, data }) => {
+            const isLoss = data.loser.includes('Team 1') || data.loser.includes('Team Magic');
+            let mvp = '—', worst = '—';
+            if (data.teams) {
+                const winPlayers = data.teams.win.players || []; const lossPlayers = data.teams.loss.players || [];
+                const mvpPlayer = winPlayers.find(p => p.highlight); const worstPlayer = lossPlayers.find(p => p.worst);
+                if (mvpPlayer) mvp = mvpPlayer.name + ` (${mvpPlayer.k}-${mvpPlayer.d})`; else if (winPlayers.length > 0) mvp = winPlayers[0].name;
+                if (worstPlayer) worst = worstPlayer.name; else if (lossPlayers.length > 0) worst = lossPlayers[0].name;
+            } else if (data.total) {
+                const winPlayers = data.total.teams.win.players || []; const lossPlayers = data.total.teams.loss.players || [];
+                const mvpPlayer = winPlayers.find(p => p.highlight); const worstPlayer = lossPlayers.find(p => p.worst);
+                if (mvpPlayer) mvp = mvpPlayer.name + ` (${mvpPlayer.k}-${mvpPlayer.d})`; else if (winPlayers.length > 0) mvp = winPlayers[0].name;
+                if (worstPlayer) worst = worstPlayer.name; else if (lossPlayers.length > 0) worst = lossPlayers[0].name;
+            }
+            return `
+                <div class="match-card ${isLoss ? 'loss' : ''}" onclick="location.href='match.html?id=${id}'">
+                    <div class="match-top"><span class="title">${data.title}</span><span class="date">${data.date} · ${data.map}</span><span class="click-hint">▶</span></div>
+                    <div class="match-teams">
+                        <div class="team ${data.winner.includes('Team 1') || data.winner.includes('Team Fortress') ? 'win' : ''}"><span class="name">${data.winner}</span><span class="score">${data.score.split(':')[0]}</span></div>
+                        <span class="vs">vs</span>
+                        <div class="team ${data.loser.includes('Team 1') || data.loser.includes('Team Magic') ? 'loss' : ''}"><span class="score">${data.score.split(':')[1]}</span><span class="name">${data.loser}</span></div>
+                    </div>
+                    <div class="match-stats-row"><span>🏆 <b class="mvp">${mvp}</b></span><span>💀 <b class="bad">${worst}</b></span></div>
+                </div>
+            `;
+        }).join('');
+        if (filtered.length === 0) container.innerHTML = '<div style="text-align:center;color:var(--dim);padding:30px 0;font-size:13px;">Матчи не найдены</div>';
+    }
+
+    function filterMatches() { renderMatches(document.getElementById('mapFilter').value, document.getElementById('resultFilter').value, document.getElementById('matchSearch').value); }
+
+    function renderStats() {
+        let wins = 0, losses = 0; const mapStats = {}; const mvpStats = {};
+        Object.keys(matchData).forEach(key => {
+            const data = matchData[key];
+            const isWin = data.winner.includes('Team 1') || data.winner.includes('Team Fortress');
+            if (isWin) wins++; else losses++;
+            const maps = data.map.split(' + ');
+            maps.forEach(m => { if (!mapStats[m]) mapStats[m] = { wins: 0, losses: 0, total: 0 }; mapStats[m].total++; if (isWin) mapStats[m].wins++; else mapStats[m].losses++; });
+            let mvpName = '';
+            if (data.teams) { const winPlayers = data.teams.win.players || []; const mvpPlayer = winPlayers.find(p => p.highlight); if (mvpPlayer) mvpName = mvpPlayer.name; else if (winPlayers.length > 0) mvpName = winPlayers[0].name; }
+            else if (data.total) { const winPlayers = data.total.teams.win.players || []; const mvpPlayer = winPlayers.find(p => p.highlight); if (mvpPlayer) mvpName = mvpPlayer.name; else if (winPlayers.length > 0) mvpName = winPlayers[0].name; }
+            if (mvpName) { if (!mvpStats[mvpName]) mvpStats[mvpName] = 0; mvpStats[mvpName]++; }
+        });
+
+        const totalKills = playersData.reduce((sum, p) => sum + p.k, 0);
+        document.getElementById('statsGrid').innerHTML = `
+            <div class="stats-card"><div class="num">${Object.keys(matchData).length}</div><div class="label">Всего матчей</div></div>
+            <div class="stats-card"><div class="num good">${wins}</div><div class="label">Победы</div></div>
+            <div class="stats-card"><div class="num bad">${losses}</div><div class="label">Поражения</div></div>
+            <div class="stats-card"><div class="num">${totalKills}</div><div class="label">Всего убийств</div></div>
+        `;
+        document.getElementById('mapsChart').innerHTML = Object.keys(mapStats).map(m => `
+            <div style="background:var(--surface-2);border-radius:8px;padding:10px 14px;border:1px solid var(--border);">
+                <div style="font-weight:600;color:var(--text);font-size:13px;">${m}</div>
+                <div style="display:flex;gap:16px;margin-top:4px;font-size:12px;">
+                    <span style="color:var(--success);">✅ ${mapStats[m].wins} побед</span>
+                    <span style="color:var(--danger);">❌ ${mapStats[m].losses} поражений</span>
+                    <span style="color:var(--muted);">📊 ${mapStats[m].total} матчей</span>
+                </div>
+            </div>
+        `).join('');
+        const sortedMvp = Object.entries(mvpStats).sort((a, b) => b[1] - a[1]).slice(0, 5);
+        document.getElementById('mvpList').innerHTML = sortedMvp.length > 0 ? sortedMvp.map(([name, count], i) => `
+            <div style="display:flex;align-items:center;gap:10px;padding:6px 12px;background:var(--surface-2);border-radius:6px;border:1px solid var(--border);">
+                <span style="font-weight:700;color:var(--muted);min-width:28px;">#${i+1}</span>
+                <span style="font-weight:600;color:var(--text);">${name}</span>
+                <span style="color:var(--accent);font-weight:600;margin-left:auto;">${count} раз</span>
+            </div>
+        `).join('') : '<div style="color:var(--muted);font-size:13px;">Нет данных о MVP</div>';
+    }
+
+    function toggleTheme() { document.body.classList.toggle('light'); document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '☀️' : '◐'; }
+    let lang = 'ru';
+    function toggleLang() { lang = lang === 'ru' ? 'en' : 'ru'; document.getElementById('langBtn').textContent = lang === 'ru' ? 'EN' : 'RU'; }
+    function toggleSettings() { const panel = document.getElementById('settingsPanel'); panel.style.display = panel.style.display === 'none' ? 'flex' : 'none'; }
+    function changeTheme(themeName) { localStorage.setItem('mpl_theme', themeName); document.body.className = themeName; location.reload(); }
+    function resetBg() { document.body.style.backgroundImage = 'none'; document.body.style.backgroundColor = 'var(--bg)'; localStorage.removeItem('mpl_bg'); document.getElementById('bgUpload').value = ''; }
+    document.getElementById('bgUpload').addEventListener('change', function(e) { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = function(event) { document.body.style.backgroundImage = `url(${event.target.result})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; localStorage.setItem('mpl_bg', event.target.result); }; reader.readAsDataURL(file); } });
+    window.addEventListener('DOMContentLoaded', () => { const savedTheme = localStorage.getItem('mpl_theme') || 'theme-terminal'; document.body.className = savedTheme; const select = document.getElementById('themeSelect'); if (select) select.value = savedTheme; const savedBg = localStorage.getItem('mpl_bg'); if (savedBg) { document.body.style.backgroundImage = `url(${savedBg})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; } });
+
+    renderMatches();
+</script>
+</body>
+</html>
