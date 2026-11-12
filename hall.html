@@ -5,15 +5,125 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL — Зал славы</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=24">
+    <link rel="stylesheet" href="css/style.css?v=39">
     <style>
-        .hall-of-fame-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 20px; }
-        .hof-card { background: var(--surface); border: 1px solid var(--border); padding: 20px; position: relative; border-left: 4px solid var(--accent); transition: 0.2s; }
-        .hof-card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(200, 255, 0, 0.1); }
-        .hof-title { font-family: var(--mono); font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
-        .hof-player { font-size: 20px; font-weight: 800; color: var(--text); margin-bottom: 4px; }
-        .hof-stat { font-family: var(--mono); font-size: 24px; font-weight: 800; color: var(--accent); }
-        .hof-sub { font-size: 11px; color: var(--dim); margin-top: 8px; }
+        /* Общие стили страницы */
+        .hall-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        /* Карточка достижения */
+        .achievement-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.2s;
+        }
+        .achievement-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+        }
+
+        /* 3D-МЕДАЛИ (CSS) */
+        .medal-3d {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 36px;
+            position: relative;
+            flex-shrink: 0;
+            box-shadow: 
+                inset 0 4px 6px rgba(255,255,255,0.6),
+                inset 0 -4px 6px rgba(0,0,0,0.4),
+                0 10px 15px rgba(0,0,0,0.5);
+            transform-style: preserve-3d;
+            transition: transform 0.3s;
+        }
+        .achievement-card:hover .medal-3d {
+            transform: scale(1.1) rotate(10deg);
+        }
+
+        /* Золото */
+        .medal-gold {
+            background: radial-gradient(circle at 30% 30%, #fff599, #ffcc00, #b38600);
+            border: 2px solid #ffe066;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        /* Серебро */
+        .medal-silver {
+            background: radial-gradient(circle at 30% 30%, #ffffff, #cccccc, #808080);
+            border: 2px solid #e6e6e6;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        /* Бронза */
+        .medal-bronze {
+            background: radial-gradient(circle at 30% 30%, #ffb380, #cd7f32, #804d1a);
+            border: 2px solid #e69966;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        /* Огонь / Доминатор */
+        .medal-fire {
+            background: radial-gradient(circle at 30% 30%, #ff9933, #ff3300, #800000);
+            border: 2px solid #ff6633;
+            box-shadow: 
+                inset 0 4px 6px rgba(255,200,150,0.6),
+                inset 0 -4px 6px rgba(0,0,0,0.4),
+                0 0 20px rgba(255, 51, 0, 0.5);
+        }
+        /* Лед / Холод */
+        .medal-ice {
+            background: radial-gradient(circle at 30% 30%, #ccffff, #3399ff, #003366);
+            border: 2px solid #66ccff;
+            box-shadow: 
+                inset 0 4px 6px rgba(200,240,255,0.6),
+                inset 0 -4px 6px rgba(0,0,0,0.4),
+                0 0 20px rgba(51, 153, 255, 0.5);
+        }
+
+        /* Текст достижения */
+        .achievement-info {
+            flex: 1;
+        }
+        .achievement-title {
+            font-family: var(--mono);
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 4px;
+        }
+        .achievement-desc {
+            font-size: 12px;
+            color: var(--muted);
+            line-height: 1.4;
+        }
+
+        /* Свечение на фоне карточки */
+        .achievement-card::before {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            width: 150px; height: 150px;
+            background: var(--accent);
+            filter: blur(80px);
+            opacity: 0.05;
+            transform: translate(-50%, -50%);
+            z-index: 0;
+            pointer-events: none;
+        }
+        .achievement-card > * { z-index: 1; }
+
         #settingsPanel { display: none; position: absolute; top: 60px; right: 20px; background: #1a1e26; border: 1px solid #444; border-radius: 8px; padding: 16px; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.8); width: 250px; flex-direction: column; gap: 12px; }
     </style>
 </head>
@@ -58,70 +168,59 @@
     </nav>
 
     <div class="page-title">🏆 Зал славы</div>
-    <div class="page-subtitle">Абсолютные рекорды лиги MPL</div>
+    <div class="page-subtitle">Легендарные достижения игроков лиги MPL</div>
 
-    <div class="hall-of-fame-grid" id="hallGrid"></div>
+    <div class="hall-grid" id="hallGrid"></div>
     <div class="footer">MPL · Mega Professional League · <b>TERMINAL</b> · Май-Сентябрь 2026</div>
 </div>
 
 <script src="js/data.js"></script>
 <script>
+    // РАСШИРЕННЫЙ СПИСОК ДОСТИЖЕНИЙ
+    const achievementsList = [
+        { title: 'Лучший K/D', desc: 'Наивысший коэффициент убийств/смертей в лиге', icon: '🎯', medalClass: 'medal-gold', statType: 'kd' },
+        { title: 'Доминатор', desc: 'Лучшая разница между убийствами и смертями', icon: '⚡', medalClass: 'medal-fire', statType: 'diff' },
+        { title: 'Урон-машина', desc: 'Наивысший средний урон за раунд (ADR)', icon: '💥', medalClass: 'medal-gold', statType: 'adr' },
+        { title: 'Хладнокровие', desc: 'Лучший рейтинг в самых сложных матчах', icon: '🧊', medalClass: 'medal-ice', statType: 'rating' },
+        { title: 'Ветеран лиги', desc: 'Игрок, сыгравший больше всего матчей', icon: '🏅', medalClass: 'medal-bronze', statType: 'matches' },
+        { title: 'Жажда крови', desc: 'Больше всего убийств за всё время', icon: '🩸', medalClass: 'medal-fire', statType: 'k' }
+    ];
+
     function renderHall() {
         const container = document.getElementById('hallGrid');
-        let maxKills = { name: '—', val: 0, match: '' };
-        let worstMatch = { name: '—', val: 0, match: '' };
-        let maxDiff = { name: '—', val: -999 };
-        let maxKd = { name: '—', val: 0 };
+        container.innerHTML = achievementsList.map(ach => {
+            // Ищем лучшего игрока по нужному статисту
+            let bestPlayer = [...playersData].sort((a, b) => b[ach.statType] - a[ach.statType])[0];
+            let statValue = bestPlayer[ach.statType];
 
-        Object.keys(matchData).forEach(key => {
-            const m = matchData[key];
-            const teams = m.teams || (m.total && m.total.teams);
-            if (!teams) return;
-            ['win', 'loss'].forEach(side => {
-                const team = teams[side];
-                if (!team || !team.players) return;
-                team.players.forEach(p => {
-                    if (p.k > maxKills.val) maxKills = { name: p.name, val: p.k, match: m.title };
-                    if (p.d > 10 && (p.k - p.d) < worstMatch.val) worstMatch = { name: p.name, val: p.k - p.d, match: m.title };
-                    if (p.diff > maxDiff.val) maxDiff = { name: p.name, val: p.diff };
-                });
-            });
-        });
+            // Красивое форматирование для K/D и Рейтинга
+            if (ach.statType === 'kd' || ach.statType === 'rating') {
+                statValue = statValue.toFixed(2);
+            } else if (ach.statType === 'diff') {
+                statValue = '+' + statValue;
+            }
 
-        playersData.forEach(p => { if (p.kd > maxKd.val) maxKd = { name: p.name, val: p.kd }; });
-
-        container.innerHTML = `
-            <div class="hof-card">
-                <div class="hof-title">🔥 Больше всего убийств</div>
-                <div class="hof-player">${maxKills.name}</div>
-                <div class="hof-stat">${maxKills.val} убийств</div>
-                <div class="hof-sub">в матче ${maxKills.match}</div>
-            </div>
-            <div class="hof-card">
-                <div class="hof-title">🎯 Лучший K/D</div>
-                <div class="hof-player">${maxKd.name}</div>
-                <div class="hof-stat">${maxKd.val.toFixed(2)}</div>
-                <div class="hof-sub">за всё время</div>
-            </div>
-            <div class="hof-card">
-                <div class="hof-title">⚡ Лучшая разница</div>
-                <div class="hof-player">${maxDiff.name}</div>
-                <div class="hof-stat">+${maxDiff.val}</div>
-                <div class="hof-sub">убийства минус смерти</div>
-            </div>
-            <div class="hof-card">
-                <div class="hof-title">💀 Худший матч</div>
-                <div class="hof-player">${worstMatch.name}</div>
-                <div class="hof-stat" style="color:var(--danger);">${worstMatch.val}</div>
-                <div class="hof-sub">в матче ${worstMatch.match}</div>
-            </div>
-        `;
+            return `
+                <div class="achievement-card">
+                    <div class="medal-3d ${ach.medalClass}">
+                        ${ach.icon}
+                    </div>
+                    <div class="achievement-info">
+                        <div class="achievement-title">${ach.title}</div>
+                        <div class="achievement-desc">${ach.desc}</div>
+                        <div style="margin-top: 8px; font-size: 14px; font-weight: 700; color: #fff;">
+                            <span style="color: var(--accent);">${bestPlayer.name}</span> 
+                            <span style="font-family: var(--mono); font-size: 12px; color: var(--muted); margin-left: 6px;">(${statValue})</span>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
     }
 
     function toggleTheme() { document.body.classList.toggle('light'); document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '☀️' : '◐'; }
     let lang = 'ru';
     function toggleLang() { lang = lang === 'ru' ? 'en' : 'ru'; document.getElementById('langBtn').textContent = lang === 'ru' ? 'EN' : 'RU'; }
-
     function toggleSettings() { const panel = document.getElementById('settingsPanel'); panel.style.display = panel.style.display === 'none' ? 'flex' : 'none'; }
     function setAccent(color) { document.documentElement.style.setProperty('--accent', color); localStorage.setItem('mpl_accent', color); }
     function resetBg() { document.body.style.backgroundImage = 'none'; document.body.style.backgroundColor = 'var(--bg)'; localStorage.removeItem('mpl_bg'); document.getElementById('bgUpload').value = ''; }
