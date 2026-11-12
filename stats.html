@@ -6,89 +6,24 @@
     <title>MPL — Статистика</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=46">
+    <link rel="stylesheet" href="css/style.css?v=48">
     <style>
-        .chart-container {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 20px;
-            position: relative;
-            height: 320px; 
-            display: flex;
-            flex-direction: column;
-        }
-        .chart-title {
-            font-family: var(--mono);
-            font-size: 14px;
-            font-weight: 700;
-            color: #fff;
-            margin-bottom: 16px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .chart-wrapper {
-            flex: 1;
-            position: relative;
-            width: 100%;
-            height: 250px; 
-        }
-
-        .winrate-list {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            overflow-y: auto;
-            max-height: 250px;
-            padding-right: 4px;
-        }
-        .winrate-row {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 6px 10px;
-            background: #1a1e26;
-            border: 1px solid var(--border);
-            border-radius: 6px;
-        }
-        .winrate-name {
-            width: 100px;
-            font-size: 12px;
-            font-weight: 600;
-            color: #fff;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-        .winrate-bar-bg {
-            flex: 1;
-            height: 8px;
-            background: #333;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .winrate-bar-fill {
-            height: 100%;
-            background: var(--accent);
-            border-radius: 4px;
-        }
-        .winrate-percent {
-            width: 45px;
-            text-align: right;
-            font-family: var(--mono);
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--accent);
-        }
-
+        .chart-container { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px; position: relative; height: 320px; display: flex; flex-direction: column; }
+        .chart-title { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 16px; text-transform: uppercase; letter-spacing: 1px; }
+        .chart-wrapper { flex: 1; position: relative; width: 100%; height: 250px; }
+        .winrate-list { display: flex; flex-direction: column; gap: 10px; overflow-y: auto; max-height: 250px; padding-right: 4px; }
+        .winrate-row { display: flex; align-items: center; gap: 10px; padding: 6px 10px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 6px; }
+        .winrate-name { width: 100px; font-size: 12px; font-weight: 600; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .winrate-bar-bg { flex: 1; height: 8px; background: var(--border); border-radius: 4px; overflow: hidden; }
+        .winrate-bar-fill { height: 100%; background: var(--accent); border-radius: 4px; }
+        .winrate-percent { width: 45px; text-align: right; font-family: var(--mono); font-size: 12px; font-weight: 700; color: var(--accent); }
         .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
         .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
         @media (max-width: 900px) { .grid-2, .grid-3 { grid-template-columns: 1fr; } }
-
-        #settingsPanel { display: none; position: absolute; top: 60px; right: 20px; background: #1a1e26; border: 1px solid #444; border-radius: 8px; padding: 16px; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.8); width: 250px; flex-direction: column; gap: 12px; }
+        #settingsPanel { display: none; position: absolute; top: 60px; right: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.8); width: 250px; flex-direction: column; gap: 12px; }
     </style>
 </head>
-<body>
+<body class="theme-terminal">
 <div class="container">
     <div class="header">
         <div class="logo"><h1 onclick="location.href='index.html'">MPL <small>Mega Professional League</small></h1></div>
@@ -99,21 +34,21 @@
             <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">◐</button>
             <button class="theme-toggle" onclick="toggleSettings()" id="settingsBtn" title="Настройки">⚙️</button>
             <div id="settingsPanel">
-                <div style="font-family:var(--mono); font-size:12px; font-weight:700; color:#fff; border-bottom:1px solid #333; padding-bottom:8px;">🎨 Настройки сайта</div>
+                <div style="font-family:var(--mono); font-size:12px; font-weight:700; color:var(--text); border-bottom:1px solid var(--border); padding-bottom:8px;">🎨 Настройки сайта</div>
                 <div>
-                    <div style="font-size:11px; color:#8b9bb0; margin-bottom:6px;">Цвет акцента:</div>
-                    <div style="display:flex; gap:6px;">
-                        <button onclick="changeAccent('#c8ff00')" style="width:24px; height:24px; background:#c8ff00; border:none; border-radius:4px; cursor:pointer;"></button>
-                        <button onclick="changeAccent('#00d2ff')" style="width:24px; height:24px; background:#00d2ff; border:none; border-radius:4px; cursor:pointer;"></button>
-                        <button onclick="changeAccent('#ff0055')" style="width:24px; height:24px; background:#ff0055; border:none; border-radius:4px; cursor:pointer;"></button>
-                        <button onclick="changeAccent('#b000ff')" style="width:24px; height:24px; background:#b000ff; border:none; border-radius:4px; cursor:pointer;"></button>
-                        <button onclick="changeAccent('#ffb347')" style="width:24px; height:24px; background:#ffb347; border:none; border-radius:4px; cursor:pointer;"></button>
-                    </div>
+                    <div style="font-size:11px; color:var(--muted); margin-bottom:6px;">Тема оформления:</div>
+                    <select id="themeSelect" onchange="changeTheme(this.value)" style="width:100%; background:var(--bg); color:var(--text); border:1px solid var(--border); padding:6px; border-radius:4px; font-family:var(--mono); font-size:11px; cursor:pointer;">
+                        <option value="theme-terminal">Terminal (Зеленая)</option>
+                        <option value="theme-cyberpunk">Cyberpunk (Розовая)</option>
+                        <option value="theme-ocean">Ocean (Синяя)</option>
+                        <option value="theme-blood">Blood Moon (Красная)</option>
+                        <option value="theme-matrix">Matrix (Черно-зеленая)</option>
+                    </select>
                 </div>
                 <div>
-                    <div style="font-size:11px; color:#8b9bb0; margin-bottom:6px;">Свой фон (картинка):</div>
-                    <input type="file" id="bgUpload" accept="image/*" style="width:100%; font-size:10px; color:#fff; background:#111; border:1px solid #333; padding:4px; border-radius:4px; cursor:pointer;">
-                    <button onclick="resetBg()" style="width:100%; margin-top:6px; background:#333; border:none; color:#fff; padding:6px; border-radius:4px; font-size:10px; cursor:pointer;">Сбросить фон</button>
+                    <div style="font-size:11px; color:var(--muted); margin-bottom:6px;">Свой фон (картинка):</div>
+                    <input type="file" id="bgUpload" accept="image/*" style="width:100%; font-size:10px; color:var(--text); background:var(--bg); border:1px solid var(--border); padding:4px; border-radius:4px; cursor:pointer;">
+                    <button onclick="resetBg()" style="width:100%; margin-top:6px; background:var(--surface-2); border:none; color:var(--text); padding:6px; border-radius:4px; font-size:10px; cursor:pointer;">Сбросить фон</button>
                 </div>
             </div>
         </div>
@@ -142,21 +77,16 @@
             <div class="chart-title">Винрейт игроков</div>
             <div class="winrate-list" id="winrateList"></div>
         </div>
-
         <div class="chart-container">
             <div class="chart-title">Профиль лучшего игрока</div>
-            <div class="chart-wrapper">
-                <canvas id="radarChart"></canvas>
-            </div>
+            <div class="chart-wrapper"><canvas id="radarChart"></canvas></div>
         </div>
     </div>
 
     <div class="grid-2">
         <div class="chart-container" style="grid-column: span 2; height: 350px;">
             <div class="chart-title">Рейтинг игроков</div>
-            <div class="chart-wrapper" style="height: 280px;">
-                <canvas id="ratingChart"></canvas>
-            </div>
+            <div class="chart-wrapper" style="height: 280px;"><canvas id="ratingChart"></canvas></div>
         </div>
     </div>
 
@@ -171,123 +101,61 @@
 
     const playerStats = {};
     playersData.forEach(p => { playerStats[p.name] = { wins: 0, losses: 0, total: 0 }; });
-
     Object.keys(matchData).forEach(key => {
         const m = matchData[key];
         const teams = m.teams || (m.total && m.total.teams);
         if (!teams) return;
-
         const score1 = parseInt(m.score.split(':')[0]);
         const score2 = parseInt(m.score.split(':')[1]);
         const winnerSide = score1 > score2 ? 'win' : 'loss'; 
         const loserSide = score1 > score2 ? 'loss' : 'win';
-
         if (teams[winnerSide] && teams[winnerSide].players) {
-            teams[winnerSide].players.forEach(p => {
-                if (playerStats[p.name]) { playerStats[p.name].wins++; playerStats[p.name].total++; }
-            });
+            teams[winnerSide].players.forEach(p => { if (playerStats[p.name]) { playerStats[p.name].wins++; playerStats[p.name].total++; } });
         }
         if (teams[loserSide] && teams[loserSide].players) {
-            teams[loserSide].players.forEach(p => {
-                if (playerStats[p.name]) { playerStats[p.name].losses++; playerStats[p.name].total++; }
-            });
+            teams[loserSide].players.forEach(p => { if (playerStats[p.name]) { playerStats[p.name].losses++; playerStats[p.name].total++; } });
         }
     });
 
     const winrateList = document.getElementById('winrateList');
-    const sortedByWinrate = Object.entries(playerStats)
-        .filter(([name, stats]) => stats.total > 0)
-        .sort((a, b) => (b[1].wins / b[1].total) - (a[1].wins / a[1].total));
-
+    const sortedByWinrate = Object.entries(playerStats).filter(([name, stats]) => stats.total > 0).sort((a, b) => (b[1].wins / b[1].total) - (a[1].wins / a[1].total));
     winrateList.innerHTML = sortedByWinrate.map(([name, stats]) => {
         const wr = Math.round((stats.wins / stats.total) * 100);
-        return `
-            <div class="winrate-row">
-                <div class="winrate-name">${name}</div>
-                <div class="winrate-bar-bg"><div class="winrate-bar-fill" style="width: ${wr}%;"></div></div>
-                <div class="winrate-percent">${wr}%</div>
-            </div>
-        `;
+        return `<div class="winrate-row"><div class="winrate-name">${name}</div><div class="winrate-bar-bg"><div class="winrate-bar-fill" style="width: ${wr}%;"></div></div><div class="winrate-percent">${wr}%</div></div>`;
     }).join('');
 
     const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#c8ff00';
-    Chart.defaults.color = '#8b9bb0';
-    Chart.defaults.font.family = "'JetBrains Mono', monospace";
-    Chart.defaults.animation = false; 
+    Chart.defaults.color = '#8b9bb0'; Chart.defaults.font.family = "'JetBrains Mono', monospace"; Chart.defaults.animation = false; 
 
     const topPlayer = [...playersData].sort((a, b) => b.rating - a.rating)[0];
     const ctxRadar = document.getElementById('radarChart').getContext('2d');
     new Chart(ctxRadar, {
         type: 'radar',
-        data: {
-            labels: ['K/D', 'ADR', 'Убийства', 'Разница', 'Рейтинг'],
-            datasets: [{
-                label: topPlayer.name,
-                data: [topPlayer.kd, topPlayer.adr / 10, topPlayer.k / 10, topPlayer.diff / 10, topPlayer.rating * 50],
-                backgroundColor: 'rgba(200, 255, 0, 0.2)',
-                borderColor: accentColor,
-                pointBackgroundColor: accentColor,
-                pointBorderColor: '#fff',
-                pointHoverBackgroundColor: '#fff',
-                pointHoverBorderColor: accentColor
-            }]
-        },
-        options: {
-            responsive: true, maintainAspectRatio: false,
-            scales: { r: { angleLines: { color: '#333' }, grid: { color: '#333' }, pointLabels: { color: '#fff', font: { size: 10 } }, ticks: { display: false } } },
-            plugins: { legend: { display: false } }
-        }
+        data: { labels: ['K/D', 'ADR', 'Убийства', 'Разница', 'Рейтинг'], datasets: [{ label: topPlayer.name, data: [topPlayer.kd, topPlayer.adr / 10, topPlayer.k / 10, topPlayer.diff / 10, topPlayer.rating * 50], backgroundColor: 'rgba(200, 255, 0, 0.2)', borderColor: accentColor, pointBackgroundColor: accentColor, pointBorderColor: '#fff', pointHoverBackgroundColor: '#fff', pointHoverBorderColor: accentColor }] },
+        options: { responsive: true, maintainAspectRatio: false, scales: { r: { angleLines: { color: '#333' }, grid: { color: '#333' }, pointLabels: { color: '#fff', font: { size: 10 } }, ticks: { display: false } } }, plugins: { legend: { display: false } } }
     });
 
     const sortedPlayers = [...playersData].sort((a, b) => b.rating - a.rating);
     const ctxRating = document.getElementById('ratingChart').getContext('2d');
     const gradient = ctxRating.createLinearGradient(0, 0, 0, 300);
-    gradient.addColorStop(0, accentColor);
-    gradient.addColorStop(1, 'rgba(200, 255, 0, 0.1)');
-
+    gradient.addColorStop(0, accentColor); gradient.addColorStop(1, 'rgba(200, 255, 0, 0.1)');
     new Chart(ctxRating, {
         type: 'bar',
-        data: {
-            labels: sortedPlayers.map(p => p.name.split(' ')[0]),
-            datasets: [{ label: 'Рейтинг', data: sortedPlayers.map(p => p.rating), backgroundColor: gradient, borderRadius: 4, borderWidth: 0 }]
-        },
-        options: {
-            responsive: true, maintainAspectRatio: false,
-            scales: { y: { beginAtZero: true, grid: { color: '#222' }, ticks: { color: '#8b9bb0' } }, x: { grid: { display: false }, ticks: { color: '#8b9bb0' } } },
-            plugins: { legend: { display: false } }
-        }
+        data: { labels: sortedPlayers.map(p => p.name.split(' ')[0]), datasets: [{ label: 'Рейтинг', data: sortedPlayers.map(p => p.rating), backgroundColor: gradient, borderRadius: 4, borderWidth: 0 }] },
+        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: '#222' }, ticks: { color: '#8b9bb0' } }, x: { grid: { display: false }, ticks: { color: '#8b9bb0' } } }, plugins: { legend: { display: false } } }
     });
 
-    // ==== ИСПРАВЛЕННАЯ ЛОГИКА НАСТРОЕК ====
     function toggleTheme() { document.body.classList.toggle('light'); document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '☀️' : '◐'; }
     let lang = 'ru';
     function toggleLang() { lang = lang === 'ru' ? 'en' : 'ru'; document.getElementById('langBtn').textContent = lang === 'ru' ? 'EN' : 'RU'; }
     function toggleSettings() { const panel = document.getElementById('settingsPanel'); panel.style.display = panel.style.display === 'none' ? 'flex' : 'none'; }
-    
-    // Для кнопок изменения цвета (с перезагрузкой)
-    function changeAccent(color) { 
-        localStorage.setItem('mpl_accent', color); 
-        location.reload(); 
-    }
-    
-    // Для загрузки страницы (без перезагрузки)
-    function applyAccentOnLoad(color) {
-        document.documentElement.style.setProperty('--accent', color);
-    }
-
+    function changeTheme(themeName) { localStorage.setItem('mpl_theme', themeName); document.body.className = themeName; location.reload(); }
     function resetBg() { document.body.style.backgroundImage = 'none'; document.body.style.backgroundColor = 'var(--bg)'; localStorage.removeItem('mpl_bg'); document.getElementById('bgUpload').value = ''; }
-    document.getElementById('bgUpload').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) { const reader = new FileReader(); reader.onload = function(event) { document.body.style.backgroundImage = `url(${event.target.result})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; localStorage.setItem('mpl_bg', event.target.result); }; reader.readAsDataURL(file); }
-    });
-
-    // При загрузке проверяем сохраненные настройки
+    document.getElementById('bgUpload').addEventListener('change', function(e) { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = function(event) { document.body.style.backgroundImage = `url(${event.target.result})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; localStorage.setItem('mpl_bg', event.target.result); }; reader.readAsDataURL(file); } });
     window.addEventListener('DOMContentLoaded', () => {
-        const savedAccent = localStorage.getItem('mpl_accent'); 
-        if (savedAccent) applyAccentOnLoad(savedAccent);
-        
-        const savedBg = localStorage.getItem('mpl_bg'); 
-        if (savedBg) { document.body.style.backgroundImage = `url(${savedBg})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; }
+        const savedTheme = localStorage.getItem('mpl_theme') || 'theme-terminal'; document.body.className = savedTheme;
+        const select = document.getElementById('themeSelect'); if (select) select.value = savedTheme;
+        const savedBg = localStorage.getItem('mpl_bg'); if (savedBg) { document.body.style.backgroundImage = `url(${savedBg})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; }
     });
 </script>
 </body>
