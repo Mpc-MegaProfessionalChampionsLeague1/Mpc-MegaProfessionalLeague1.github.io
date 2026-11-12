@@ -6,7 +6,7 @@
     <title>MPL — Статистика</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=45">
+    <link rel="stylesheet" href="css/style.css?v=46">
     <style>
         .chart-container {
             background: var(--surface);
@@ -14,7 +14,6 @@
             border-radius: 8px;
             padding: 20px;
             position: relative;
-            /* Жесткая высота контейнера, чтобы графики не мерцали */
             height: 320px; 
             display: flex;
             flex-direction: column;
@@ -32,11 +31,9 @@
             flex: 1;
             position: relative;
             width: 100%;
-            /* Жесткая высота для самого графика */
             height: 250px; 
         }
 
-        /* Стили для винрейта игроков */
         .winrate-list {
             display: flex;
             flex-direction: column;
@@ -106,11 +103,11 @@
                 <div>
                     <div style="font-size:11px; color:#8b9bb0; margin-bottom:6px;">Цвет акцента:</div>
                     <div style="display:flex; gap:6px;">
-                        <button onclick="setAccent('#c8ff00')" style="width:24px; height:24px; background:#c8ff00; border:none; border-radius:4px; cursor:pointer;"></button>
-                        <button onclick="setAccent('#00d2ff')" style="width:24px; height:24px; background:#00d2ff; border:none; border-radius:4px; cursor:pointer;"></button>
-                        <button onclick="setAccent('#ff0055')" style="width:24px; height:24px; background:#ff0055; border:none; border-radius:4px; cursor:pointer;"></button>
-                        <button onclick="setAccent('#b000ff')" style="width:24px; height:24px; background:#b000ff; border:none; border-radius:4px; cursor:pointer;"></button>
-                        <button onclick="setAccent('#ffb347')" style="width:24px; height:24px; background:#ffb347; border:none; border-radius:4px; cursor:pointer;"></button>
+                        <button onclick="changeAccent('#c8ff00')" style="width:24px; height:24px; background:#c8ff00; border:none; border-radius:4px; cursor:pointer;"></button>
+                        <button onclick="changeAccent('#00d2ff')" style="width:24px; height:24px; background:#00d2ff; border:none; border-radius:4px; cursor:pointer;"></button>
+                        <button onclick="changeAccent('#ff0055')" style="width:24px; height:24px; background:#ff0055; border:none; border-radius:4px; cursor:pointer;"></button>
+                        <button onclick="changeAccent('#b000ff')" style="width:24px; height:24px; background:#b000ff; border:none; border-radius:4px; cursor:pointer;"></button>
+                        <button onclick="changeAccent('#ffb347')" style="width:24px; height:24px; background:#ffb347; border:none; border-radius:4px; cursor:pointer;"></button>
                     </div>
                 </div>
                 <div>
@@ -141,13 +138,11 @@
     </div>
 
     <div class="grid-2">
-        <!-- Винрейт игроков -->
         <div class="chart-container">
             <div class="chart-title">Винрейт игроков</div>
             <div class="winrate-list" id="winrateList"></div>
         </div>
 
-        <!-- Radar график лучшего игрока -->
         <div class="chart-container">
             <div class="chart-title">Профиль лучшего игрока</div>
             <div class="chart-wrapper">
@@ -174,7 +169,6 @@
     document.getElementById('totalKills').textContent = playersData.reduce((sum, p) => sum + p.k, 0);
     document.getElementById('totalMatches').textContent = Object.keys(matchData).length;
 
-    // ==== ЛОГИКА ПОДСЧЕТА ВИНРЕЙТА КАЖДОГО ИГРОКА ====
     const playerStats = {};
     playersData.forEach(p => { playerStats[p.name] = { wins: 0, losses: 0, total: 0 }; });
 
@@ -216,15 +210,11 @@
         `;
     }).join('');
 
-    // ==== НАСТРОЙКИ CHART.JS ====
     const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#c8ff00';
     Chart.defaults.color = '#8b9bb0';
     Chart.defaults.font.family = "'JetBrains Mono', monospace";
-
-    // ОТКЛЮЧАЕМ АНИМАЦИЮ ПРИ ЗАГРУЗКЕ (чтобы не было мерцания)
     Chart.defaults.animation = false; 
 
-    // Radar (Профиль лучшего игрока)
     const topPlayer = [...playersData].sort((a, b) => b.rating - a.rating)[0];
     const ctxRadar = document.getElementById('radarChart').getContext('2d');
     new Chart(ctxRadar, {
@@ -243,14 +233,12 @@
             }]
         },
         options: {
-            responsive: true, 
-            maintainAspectRatio: false,
+            responsive: true, maintainAspectRatio: false,
             scales: { r: { angleLines: { color: '#333' }, grid: { color: '#333' }, pointLabels: { color: '#fff', font: { size: 10 } }, ticks: { display: false } } },
             plugins: { legend: { display: false } }
         }
     });
 
-    // Столбчатая диаграмма (Рейтинг игроков)
     const sortedPlayers = [...playersData].sort((a, b) => b.rating - a.rating);
     const ctxRating = document.getElementById('ratingChart').getContext('2d');
     const gradient = ctxRating.createLinearGradient(0, 0, 0, 300);
@@ -264,27 +252,42 @@
             datasets: [{ label: 'Рейтинг', data: sortedPlayers.map(p => p.rating), backgroundColor: gradient, borderRadius: 4, borderWidth: 0 }]
         },
         options: {
-            responsive: true, 
-            maintainAspectRatio: false,
+            responsive: true, maintainAspectRatio: false,
             scales: { y: { beginAtZero: true, grid: { color: '#222' }, ticks: { color: '#8b9bb0' } }, x: { grid: { display: false }, ticks: { color: '#8b9bb0' } } },
             plugins: { legend: { display: false } }
         }
     });
 
-    // ==== ФУНКЦИИ НАСТРОЕК ====
+    // ==== ИСПРАВЛЕННАЯ ЛОГИКА НАСТРОЕК ====
     function toggleTheme() { document.body.classList.toggle('light'); document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '☀️' : '◐'; }
     let lang = 'ru';
     function toggleLang() { lang = lang === 'ru' ? 'en' : 'ru'; document.getElementById('langBtn').textContent = lang === 'ru' ? 'EN' : 'RU'; }
     function toggleSettings() { const panel = document.getElementById('settingsPanel'); panel.style.display = panel.style.display === 'none' ? 'flex' : 'none'; }
-    function setAccent(color) { document.documentElement.style.setProperty('--accent', color); localStorage.setItem('mpl_accent', color); location.reload(); }
+    
+    // Для кнопок изменения цвета (с перезагрузкой)
+    function changeAccent(color) { 
+        localStorage.setItem('mpl_accent', color); 
+        location.reload(); 
+    }
+    
+    // Для загрузки страницы (без перезагрузки)
+    function applyAccentOnLoad(color) {
+        document.documentElement.style.setProperty('--accent', color);
+    }
+
     function resetBg() { document.body.style.backgroundImage = 'none'; document.body.style.backgroundColor = 'var(--bg)'; localStorage.removeItem('mpl_bg'); document.getElementById('bgUpload').value = ''; }
     document.getElementById('bgUpload').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) { const reader = new FileReader(); reader.onload = function(event) { document.body.style.backgroundImage = `url(${event.target.result})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; localStorage.setItem('mpl_bg', event.target.result); }; reader.readAsDataURL(file); }
     });
+
+    // При загрузке проверяем сохраненные настройки
     window.addEventListener('DOMContentLoaded', () => {
-        const savedAccent = localStorage.getItem('mpl_accent'); if (savedAccent) setAccent(savedAccent);
-        const savedBg = localStorage.getItem('mpl_bg'); if (savedBg) { document.body.style.backgroundImage = `url(${savedBg})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; }
+        const savedAccent = localStorage.getItem('mpl_accent'); 
+        if (savedAccent) applyAccentOnLoad(savedAccent);
+        
+        const savedBg = localStorage.getItem('mpl_bg'); 
+        if (savedBg) { document.body.style.backgroundImage = `url(${savedBg})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; }
     });
 </script>
 </body>
