@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL — Главная</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=50">
+    <link rel="stylesheet" href="css/style.css?v=51">
     <style>
         .team-card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); padding: 12px 16px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 12px; border-radius: 6px; }
         .team-card:hover { transform: translateX(4px); background: var(--surface-2); border-left-color: var(--accent); }
@@ -20,26 +20,11 @@
         .transfer-logo { width: 40px; height: 40px; padding: 4px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
         .transfer-logo img { width: 100%; height: 100%; object-fit: contain; }
         
-        #heroBanner {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-top: 4px solid var(--accent);
-            padding: 24px 30px;
-            display: flex;
-            align-items: center;
-            gap: 24px;
-            position: relative;
-            overflow: hidden;
-            margin-bottom: 16px;
-            border-radius: 8px;
-            transition: transform 0.1s ease;
-            transform-style: preserve-3d;
-        }
-
+        #heroBanner { background: var(--surface); border: 1px solid var(--border); border-top: 4px solid var(--accent); padding: 24px 30px; display: flex; align-items: center; gap: 24px; position: relative; overflow: hidden; margin-bottom: 16px; border-radius: 8px; transition: transform 0.1s ease; transform-style: preserve-3d; }
         #settingsPanel { display: none; position: absolute; top: 60px; right: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.8); width: 250px; flex-direction: column; gap: 12px; }
     </style>
 </head>
-<body class="theme-terminal">
+<body>
 <div class="container">
     <div class="header">
         <div class="logo"><h1 onclick="location.href='index.html'">MPL <small>Mega Professional League</small></h1></div>
@@ -79,14 +64,7 @@
         <a href="about.html" class="nav-btn">06 / О сайте</a>
     </nav>
 
-    <!-- HERO BANNER -->
-    <div id="heroBanner" class="tilt">
-        <div class="skeleton" style="width: 100px; height: 100px; border-radius: 8px;"></div>
-        <div style="flex: 1;">
-            <div class="skeleton" style="width: 200px; height: 24px; margin-bottom: 12px;"></div>
-            <div class="skeleton" style="width: 150px; height: 16px;"></div>
-        </div>
-    </div>
+    <div id="heroBanner" class="tilt"></div>
 
     <div class="main-grid">
         <div class="glass-card" style="display:flex; flex-direction:column;">
@@ -108,9 +86,7 @@
                     <span id="monthInfo" style="display:block;color:var(--dim);font-size:9px;margin-top:2px;">за всё время</span>
                 </div>
             </div>
-            <div id="leftContentTeams" style="display:none;">
-                <div id="teamListContainer"></div>
-            </div>
+            <div id="leftContentTeams" style="display:none;"><div id="teamListContainer"></div></div>
         </div>
 
         <div class="glass-card">
@@ -129,12 +105,49 @@
             </div>
         </div>
     </div>
-
     <div class="footer">MPL · Mega Professional League · <b>TERMINAL</b> · Май-Сентябрь 2026</div>
 </div>
 
 <script src="js/data.js"></script>
 <script>
+    // ==== ОПРЕДЕЛЕНИЕ ТЕМ ====
+    const themes = {
+        'theme-terminal': {
+            '--bg': '#0a0a0a', '--surface': '#101010', '--surface-2': '#161616', '--border': '#262626',
+            '--text': '#e8e8e8', '--muted': '#737373', '--dim': '#4a4a4a', '--accent': '#c8ff00', '--success': '#00ff88', '--danger': '#ff3b3b'
+        },
+        'theme-cyberpunk': {
+            '--bg': '#0b0c10', '--surface': '#15171e', '--surface-2': '#1f232c', '--border': '#2e3440',
+            '--text': '#f0f4f8', '--muted': '#8b9bb0', '--dim': '#4a5a6e', '--accent': '#ff0055', '--success': '#00d2ff', '--danger': '#ff3b3b'
+        },
+        'theme-ocean': {
+            '--bg': '#050a15', '--surface': '#0a1428', '--surface-2': '#0f1c38', '--border': '#1a2c4e',
+            '--text': '#e0e8f0', '--muted': '#6e8fb0', '--dim': '#3a5a7a', '--accent': '#00d2ff', '--success': '#00ff88', '--danger': '#ff3b3b'
+        },
+        'theme-blood': {
+            '--bg': '#0d0404', '--surface': '#160707', '--surface-2': '#240c0c', '--border': '#3a1414',
+            '--text': '#f0e6e6', '--muted': '#9e7373', '--dim': '#5e3a3a', '--accent': '#ff3b3b', '--success': '#ffb020', '--danger': '#c0392b'
+        },
+        'theme-matrix': {
+            '--bg': '#000000', '--surface': '#050505', '--surface-2': '#0a0a0a', '--border': '#112211',
+            '--text': '#00ff41', '--muted': '#008f11', '--dim': '#004d0a', '--accent': '#00ff41', '--success': '#00ff88', '--danger': '#ff3b3b'
+        }
+    };
+
+    function applyTheme(themeName) {
+        const theme = themes[themeName];
+        if (!theme) return;
+        for (const [key, value] of Object.entries(theme)) {
+            document.documentElement.style.setProperty(key, value);
+        }
+    }
+
+    function changeTheme(themeName) {
+        localStorage.setItem('mpl_theme', themeName);
+        applyTheme(themeName);
+    }
+
+    // ==== ДАННЫЕ ====
     const tf2Roster = ['bomba69', 'Хомяк с авт', 'uxaxaxaxa', 'AFKE'];
     const magicRoster = ['abdalbek', 'Gonduras228', 'Adjiare Gudju', 'baksyhanovvand...'];
     const defaultImg = 'img/default.png';
@@ -217,19 +230,11 @@
             const logo = isTf2 ? 'img/tf2.png' : 'img/magic.png';
             return `
             <div class="transfer-row" onclick="location.href='player.html?name=${encodeURIComponent(p.name)}'" style="cursor:pointer;">
-                <div class="transfer-photo">
-                    <img src="${logo}" class="team-bg" onerror="this.src='${fallbackSVG}';">
-                    <img src="${defaultImg}" class="player-img">
-                </div>
-                <div class="transfer-name">${p.name}</div>
-                <div class="transfer-arrow">→</div>
-                <div class="transfer-logo">
-                    <img src="${logo}" alt="team" onerror="this.src='${fallbackSVG}';">
-                </div>
+                <div class="transfer-photo"><img src="${logo}" class="team-bg" onerror="this.src='${fallbackSVG}';"><img src="${defaultImg}" class="player-img"></div>
+                <div class="transfer-name">${p.name}</div><div class="transfer-arrow">→</div>
+                <div class="transfer-logo"><img src="${logo}" alt="team" onerror="this.src='${fallbackSVG}';"></div>
             </div>
-        `}).join('') + `
-            <div style="text-align:center; padding:12px; font-family:var(--mono); font-size:10px; color:var(--muted); background: rgba(255,255,255,0.02); text-transform:uppercase; cursor:pointer;" onclick="location.href='players.html'">Все переходы</div>
-        `;
+        `}).join('') + `<div style="text-align:center; padding:12px; font-family:var(--mono); font-size:10px; color:var(--muted); background: rgba(255,255,255,0.02); text-transform:uppercase; cursor:pointer;" onclick="location.href='players.html'">Все переходы</div>`;
     }
 
     function switchLeftTab(tab) {
@@ -242,16 +247,11 @@
 
     function renderTeamsList() {
         const container = document.getElementById('teamListContainer');
-        const teams = [
-            { id: 'tf2', name: 'Team Fortress 2', img: 'img/tf2.png' },
-            { id: 'magic', name: 'Team Magic', img: 'img/magic.png' }
-        ];
+        const teams = [{ id: 'tf2', name: 'Team Fortress 2', img: 'img/tf2.png' }, { id: 'magic', name: 'Team Magic', img: 'img/magic.png' }];
         container.innerHTML = teams.map((t, i) => `
             <div class="team-card" onclick="location.href='team.html?id=${t.id}'">
                 <div style="font-family:var(--mono); font-size:18px; font-weight:800; color:var(--muted);">#${i+1}</div>
-                <div style="width:50px; height:50px; display:flex; align-items:center; justify-content:center; padding:4px; background:var(--surface-2); border:1px solid var(--border); border-radius:6px;">
-                    <img src="${t.img}" alt="${t.name}" style="width:100%; height:100%; object-fit:contain;" onerror="this.src='${fallbackSVG}';">
-                </div>
+                <div style="width:50px; height:50px; display:flex; align-items:center; justify-content:center; padding:4px; background:var(--surface-2); border:1px solid var(--border); border-radius:6px;"><img src="${t.img}" alt="${t.name}" style="width:100%; height:100%; object-fit:contain;" onerror="this.src='${fallbackSVG}';"></div>
                 <div style="flex:1; font-weight:700; font-size:14px; color:var(--text);">${t.name}</div>
                 <div style="color:var(--dim); font-family:var(--mono); font-size:14px;">→</div>
             </div>
@@ -262,86 +262,56 @@
     let currentMonth = 'all';
 
     function getAvailableMonths() {
-        const months = {};
-        const monthNames = { '5': 'Май', '6': 'Июнь', '7': 'Июль', '8': 'Август', '9': 'Сентябрь' };
+        const months = {}; const monthNames = { '5': 'Май', '6': 'Июнь', '7': 'Июль', '8': 'Август', '9': 'Сентябрь' };
         Object.keys(matchData).forEach(key => {
-            const match = matchData[key];
-            if (!match || !match.date) return;
+            const match = matchData[key]; if (!match || !match.date) return;
             const dateParts = match.date.split('.');
             if (dateParts.length === 3) {
-                const month = parseInt(dateParts[1]);
-                if (!months[month]) months[month] = { count: 0, name: monthNames[month] || month };
-                months[month].count++;
+                const month = parseInt(dateParts[1]); if (!months[month]) months[month] = { count: 0, name: monthNames[month] || month }; months[month].count++;
             }
-        });
-        return months;
+        }); return months;
     }
 
     function renderMonthFilter() {
         const container = document.getElementById('monthFilter');
-        const months = getAvailableMonths();
-        const sortedMonths = Object.keys(months).sort((a, b) => parseInt(a) - parseInt(b));
+        const months = getAvailableMonths(); const sortedMonths = Object.keys(months).sort((a, b) => parseInt(a) - parseInt(b));
         let html = `<button class="month-btn active" onclick="setMonth('all')" data-month="all">📅 Всё время</button>`;
-        sortedMonths.forEach(month => {
-            html += `<button class="month-btn" onclick="setMonth('${month}')" data-month="${month}">${months[month].name} <span class="count">(${months[month].count})</span></button>`;
-        });
+        sortedMonths.forEach(month => { html += `<button class="month-btn" onclick="setMonth('${month}')" data-month="${month}">${months[month].name} <span class="count">(${months[month].count})</span></button>`; });
         container.innerHTML = html;
     }
 
     function setMonth(month) {
-        currentMonth = month;
-        document.querySelectorAll('.month-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.month === month));
+        currentMonth = month; document.querySelectorAll('.month-btn').forEach(btn => btn.classList.toggle('active', btn.dataset.month === month));
         const monthNames = { 'all': 'всё время', '5': 'май', '6': 'июнь', '7': 'июль', '8': 'август', '9': 'сентябрь' };
-        document.getElementById('monthInfo').textContent = `за ${monthNames[month] || 'всё время'}`;
-        renderTopPlayers(currentTop);
+        document.getElementById('monthInfo').textContent = `за ${monthNames[month] || 'всё время'}`; renderTopPlayers(currentTop);
     }
 
     function getPlayersForMonth(month) {
         if (month === 'all') return playersData;
-        const matchKeys = Object.keys(matchData).filter(key => {
-            const match = matchData[key];
-            if (!match || !match.date) return false;
-            return parseInt(match.date.split('.')[1]) === parseInt(month);
-        });
+        const matchKeys = Object.keys(matchData).filter(key => { const match = matchData[key]; if (!match || !match.date) return false; return parseInt(match.date.split('.')[1]) === parseInt(month); });
         if (matchKeys.length === 0) return [];
         return playersData.map(p => {
             const copy = { ...p, k: 0, d: 0, a: 0, matches: 0, kd: 0, adr: 0, diff: 0, rating: 0 };
             matchKeys.forEach(matchKey => {
                 const match = matchData[matchKey];
                 ['win', 'loss'].forEach(side => {
-                    const team = match.teams?.[side] || match.total?.teams?.[side];
-                    if (!team) return;
+                    const team = match.teams?.[side] || match.total?.teams?.[side]; if (!team) return;
                     const player = team.players.find(p2 => p2.name === p.name);
-                    if (player) {
-                        copy.k += player.k || 0; copy.d += player.d || 0; copy.a += player.a || 0;
-                        copy.diff += player.diff || 0; copy.matches++; copy.adr += player.adr || 0;
-                        copy.rating += player.rating || p.rating || 0;
-                    }
+                    if (player) { copy.k += player.k || 0; copy.d += player.d || 0; copy.a += player.a || 0; copy.diff += player.diff || 0; copy.matches++; copy.adr += player.adr || 0; copy.rating += player.rating || p.rating || 0; }
                 });
             });
-            if (copy.matches > 0) {
-                copy.kd = copy.k / (copy.d || 1) || 0;
-                copy.adr = Math.round(copy.adr / copy.matches);
-                copy.rating = parseFloat((copy.rating / copy.matches).toFixed(2));
-            }
+            if (copy.matches > 0) { copy.kd = copy.k / (copy.d || 1) || 0; copy.adr = Math.round(copy.adr / copy.matches); copy.rating = parseFloat((copy.rating / copy.matches).toFixed(2)); }
             return copy;
         }).filter(p => p.matches > 0);
     }
 
     function switchTop(type) {
-        currentTop = type;
-        document.getElementById('subKd').className = type === 'kd' ? 'sub-nav-btn active' : 'sub-nav-btn';
-        document.getElementById('subRating').className = type === 'rating' ? 'sub-nav-btn active' : 'sub-nav-btn';
-        renderTopPlayers(type);
+        currentTop = type; document.getElementById('subKd').className = type === 'kd' ? 'sub-nav-btn active' : 'sub-nav-btn'; document.getElementById('subRating').className = type === 'rating' ? 'sub-nav-btn active' : 'sub-nav-btn'; renderTopPlayers(type);
     }
 
     function renderTopPlayers(type) {
         const data = getPlayersForMonth(currentMonth);
-        if (!data || !data.length) {
-            document.getElementById('podiumContainer').innerHTML = '';
-            document.getElementById('playerList').innerHTML = '<div style="text-align:center;color:var(--muted);padding:20px 0;font-size:12px;">Нет данных</div>';
-            return;
-        }
+        if (!data || !data.length) { document.getElementById('podiumContainer').innerHTML = ''; document.getElementById('playerList').innerHTML = '<div style="text-align:center;color:var(--muted);padding:20px 0;font-size:12px;">Нет данных</div>'; return; }
         const sorted = type === 'kd' ? [...data].sort((a, b) => b.kd - a.kd) : [...data].sort((a, b) => b.rating - a.rating);
         if (sorted.length === 0) return;
         const podiumContainer = document.getElementById('podiumContainer');
@@ -350,47 +320,31 @@
         const createPodiumCard = (player, placeClass, placeNumber) => {
             if (!player) return '';
             const displayVal = type === 'kd' ? player.kd.toFixed(2) : player.rating.toFixed(2);
-            let teamLogo = fallbackSVG;
-            if (tf2Roster.includes(player.name)) teamLogo = 'img/tf2.png';
-            else if (magicRoster.includes(player.name)) teamLogo = 'img/magic.png';
+            let teamLogo = fallbackSVG; if (tf2Roster.includes(player.name)) teamLogo = 'img/tf2.png'; else if (magicRoster.includes(player.name)) teamLogo = 'img/magic.png';
             return `
                 <div class="podium-item ${placeClass}" onclick="location.href='player.html?name=${encodeURIComponent(player.name)}'">
                     <div class="podium-avatar" style="position:relative; border: 2px solid #777; width:50px; height:50px; overflow:hidden; border-radius:6px; background:#111; display:flex; align-items:center; justify-content:center;">
-                        <img src="${teamLogo}" style="position:absolute; width:80%; height:80%; opacity:0.3; z-index:1; object-fit:contain;">
-                        <img src="${defaultImg}" style="position:relative; z-index:2; width:100%; height:100%; object-fit:cover;">
+                        <img src="${teamLogo}" style="position:absolute; width:80%; height:80%; opacity:0.3; z-index:1; object-fit:contain;"><img src="${defaultImg}" style="position:relative; z-index:2; width:100%; height:100%; object-fit:cover;">
                     </div>
-                    <div class="podium-name">${player.name.split(' ')[0]}</div>
-                    <div class="podium-stat">${displayVal}</div>
-                    <div class="podium-bar">${placeNumber}</div>
+                    <div class="podium-name">${player.name.split(' ')[0]}</div><div class="podium-stat">${displayVal}</div><div class="podium-bar">${placeNumber}</div>
                 </div>
             `;
         };
-
-        let podiumHTML = '';
-        if (second) podiumHTML += createPodiumCard(second, 'second', '2');
-        if (first)  podiumHTML += createPodiumCard(first, 'first', '1');
-        if (third)  podiumHTML += createPodiumCard(third, 'third', '3');
-        podiumContainer.innerHTML = podiumHTML;
+        let podiumHTML = ''; if (second) podiumHTML += createPodiumCard(second, 'second', '2'); if (first)  podiumHTML += createPodiumCard(first, 'first', '1'); if (third)  podiumHTML += createPodiumCard(third, 'third', '3'); podiumContainer.innerHTML = podiumHTML;
 
         const container = document.getElementById('playerList');
         const rest = sorted.slice(3);
-        if (rest.length === 0) {
-            container.innerHTML = '<div style="text-align:center;color:var(--dim);padding:10px;font-size:10px;">Больше игроков нет</div>';
-        } else {
+        if (rest.length === 0) { container.innerHTML = '<div style="text-align:center;color:var(--dim);padding:10px;font-size:10px;">Больше игроков нет</div>'; } else {
             container.innerHTML = rest.map((p, i) => {
                 const displayVal = type === 'kd' ? p.kd : p.rating;
-                let teamLogo = fallbackSVG;
-                if (tf2Roster.includes(p.name)) teamLogo = 'img/tf2.png';
-                else if (magicRoster.includes(p.name)) teamLogo = 'img/magic.png';
+                let teamLogo = fallbackSVG; if (tf2Roster.includes(p.name)) teamLogo = 'img/tf2.png'; else if (magicRoster.includes(p.name)) teamLogo = 'img/magic.png';
                 return `
                 <div class="player-row" onclick="location.href='player.html?name=${encodeURIComponent(p.name)}'" style="border-bottom:none; padding:6px 8px;">
                     <span class="rank">#${i+4}</span>
                     <div class="player-avatar-mini" style="width:30px; height:30px; border:1px solid #777; background:#1a1a1a; position:relative; overflow:hidden; border-radius:4px; display:flex; align-items:center; justify-content:center;">
-                        <img src="${teamLogo}" style="position:absolute; width:80%; height:80%; opacity:0.3; z-index:1; object-fit:contain;">
-                        <img src="${defaultImg}" style="position:relative; z-index:2; width:100%; height:100%; object-fit:cover;">
+                        <img src="${teamLogo}" style="position:absolute; width:80%; height:80%; opacity:0.3; z-index:1; object-fit:contain;"><img src="${defaultImg}" style="position:relative; z-index:2; width:100%; height:100%; object-fit:cover;">
                     </div>
-                    <span class="pname ${p.you ? 'you' : ''}">${p.name}</span>
-                    <span class="badge-kd">${displayVal.toFixed(2)}</span>
+                    <span class="pname ${p.you ? 'you' : ''}">${p.name}</span><span class="badge-kd">${displayVal.toFixed(2)}</span>
                 </div>
             `}).join('');
         }
@@ -403,21 +357,30 @@
     let lang = 'ru';
     function toggleLang() { lang = lang === 'ru' ? 'en' : 'ru'; document.getElementById('langBtn').textContent = lang === 'ru' ? 'EN' : 'RU'; }
     function toggleSettings() { const panel = document.getElementById('settingsPanel'); panel.style.display = panel.style.display === 'none' ? 'flex' : 'none'; }
-    function changeTheme(themeName) { localStorage.setItem('mpl_theme', themeName); document.body.className = themeName; location.reload(); }
+    
+    // Изменение темы без перезагрузки
+    function changeTheme(themeName) {
+        localStorage.setItem('mpl_theme', themeName);
+        applyTheme(themeName);
+        const select = document.getElementById('themeSelect');
+        if (select) select.value = themeName;
+    }
+
     function resetBg() { document.body.style.backgroundImage = 'none'; document.body.style.backgroundColor = 'var(--bg)'; localStorage.removeItem('mpl_bg'); document.getElementById('bgUpload').value = ''; }
     document.getElementById('bgUpload').addEventListener('change', function(e) {
         const file = e.target.files[0];
         if (file) { const reader = new FileReader(); reader.onload = function(event) { document.body.style.backgroundImage = `url(${event.target.result})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; localStorage.setItem('mpl_bg', event.target.result); }; reader.readAsDataURL(file); }
     });
+
     window.addEventListener('DOMContentLoaded', () => {
         const savedTheme = localStorage.getItem('mpl_theme') || 'theme-terminal';
-        document.body.className = savedTheme;
+        applyTheme(savedTheme);
         const select = document.getElementById('themeSelect'); if (select) select.value = savedTheme;
+        
         const savedBg = localStorage.getItem('mpl_bg'); 
         if (savedBg) { document.body.style.backgroundImage = `url(${savedBg})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; }
     });
 
-    // ВЫЗОВ ФУНКЦИЙ
     renderNews();
     renderHeroBanner();
     renderMatchesList();
