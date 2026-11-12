@@ -6,7 +6,7 @@
     <title>MPL — Профиль игрока</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=33">
+    <link rel="stylesheet" href="css/style.css?v=34">
     <style>
         /* Шапка профиля */
         .hltv-profile-header { background: #1f232b; border: 1px solid var(--border); display: flex; align-items: stretch; margin-bottom: 20px; border-radius: 4px; overflow: hidden; }
@@ -134,8 +134,8 @@
     };
 
     function getTeamLogo(teamName) {
-        if (teamName.includes('Fortress') || teamName === 'TF2' || teamName === 'Team 1') return tf2Logo; // Для Team 1 поставим лого TF2
-        if (teamName.includes('Magic') || teamName === 'Team 2') return magicLogo; // Для Team 2 поставим лого Magic
+        if (teamName.includes('Fortress') || teamName === 'TF2' || teamName === 'Team 1') return tf2Logo;
+        if (teamName.includes('Magic') || teamName === 'Team 2') return magicLogo;
         return shieldSVG;
     }
 
@@ -160,41 +160,67 @@
         const allSorted = [...playersData].sort((a, b) => b.rating - a.rating);
         const rank = allSorted.findIndex(p => p.name === player.name) + 1;
 
-        // Собираем матчи
+        // Собираем матчи с привязкой к игроку
         const playedMatches = [];
         Object.keys(matchData).forEach(key => {
             const m = matchData[key];
             const teams = m.teams || (m.total && m.total.teams);
             if (!teams) return;
+            
             let isInMatch = false;
             let isWin = false;
+            let playerTeamName = '';
+            let enemyTeamName = '';
             
-            if (teams.win.players.some(p => p.name === player.name)) { isInMatch = true; isWin = true; }
-            if (teams.loss.players.some(p => p.name === player.name)) { isInMatch = true; }
+            // Проверяем, за кого играл игрок
+            if (teams.win.players.some(p => p.name === player.name)) {
+                isInMatch = true;
+                isWin = true;
+                playerTeamName = m.winner.includes('Team 1') || m.winner.includes('Team Fortress') ? 'Team Fortress 2' : 'Team 2'; // Определяем название команды
+                enemyTeamName = m.loser.includes('Team 2') || m.loser.includes('Team Magic') ? 'Team Magic' : 'Team 1';
+            } 
+            if (teams.loss.players.some(p => p.name === player.name)) {
+                isInMatch = true;
+                isWin = false;
+                playerTeamName = m.loser.includes('Team 1') || m.loser.includes('Team Fortress') ? 'Team Fortress 2' : 'Team 2';
+                enemyTeamName = m.winner.includes('Team 2') || m.winner.includes('Team Magic') ? 'Team Magic' : 'Team 1';
+            }
             
-            if (isInMatch) playedMatches.push({ id: key, data: m, isWin: isWin });
+            if (isInMatch) {
+                playedMatches.push({ 
+                    id: key, 
+                    data: m, 
+                    isWin: isWin,
+                    playerTeamName: playerTeamName,
+                    enemyTeamName: enemyTeamName
+                });
+            }
         });
+        
+        // Сортируем по дате (от новых к старым)
         playedMatches.sort((a, b) => new Date(b.data.date) - new Date(a.data.date));
 
-        // Генерация списка для правой колонки (Info)
+        // Блок "Последние матчи" (правая колонка)
         const recentMatchesHTML = playedMatches.slice(0, 5).map(m => {
-            const opponentName = m.data.winner.includes('Team 1') || m.data.winner.includes('Team Fortress') ? m.data.loser : m.data.winner;
-            const opponentLogo = getTeamLogo(opponentName);
+            const enemyLogo = getTeamLogo(m.enemyTeamName);
             
-            // Умный счет: если игрок проиграл (isWin = false), то счет должен быть перевернут
+            // Счет берем из data, но разворачиваем, если нужно показать глазами игрока
             let score1 = m.data.score.split(':')[0];
             let score2 = m.data.score.split(':')[1];
-            if (!m.isWin) { [score1, score2] = [score2, score1]; } // Меняем местами, если это поражение
+            
+            // Если игрок проиграл, счет должен быть 1:13 (где 1 - его раунды)
+            if (!m.isWin) {
+                [score1, score2] = [score2, score1];
+            }
 
             return `
                 <div class="hltv-match-row-simple">
                     <div class="hltv-match-team-simple">
                         <span style="color:#8b9bb0; width: 30px; font-size:10px;">VS</span>
-                        <img src="${opponentLogo}" onerror="this.src='${shieldSVG}';">
-                        <span>${opponentName}</span>
+                        <img src="${enemyLogo}" onerror="this.src='${shieldSVG}';">
+                        <span>${m.enemyTeamName}</span>
                     </div>
                     <div style="display:flex; flex-direction:column; align-items:flex-end;">
-                        <!-- Выводим перевернутый счет -->
                         <span class="hltv-match-score-simple ${m.isWin ? 'win' : 'loss'}">${score1} : ${score2}</span>
                         <span style="font-size:10px; color:#6e7f94;">${m.data.date}</span>
                     </div>
@@ -202,7 +228,7 @@
             `;
         }).join('');
 
-        // Генерация таблицы для вкладки Matches
+        // Таблица во вкладке Matches (Всегда слева Игрок, справа Враг)
         let matchTableHTML = `
             <div class="hltv-event-header">MPL Season 1</div>
             <table class="hltv-match-table">
@@ -215,34 +241,37 @@
                 </thead>
                 <tbody>
                     ${playedMatches.map(m => {
-                        // Определяем, кто победил (всегда победитель слева)
-                        const team1Name = m.data.winner.includes('Team 1') || m.data.winner.includes('Team Fortress') ? m.data.winner : m.data.loser;
-                        const team2Name = m.data.winner.includes('Team 1') || m.data.winner.includes('Team Fortress') ? m.data.loser : m.data.winner;
+                        const playerLogo = getTeamLogo(m.playerTeamName);
+                        const enemyLogo = getTeamLogo(m.enemyTeamName);
                         
-                        const team1Logo = getTeamLogo(team1Name);
-                        const team2Logo = getTeamLogo(team2Name);
-                        
-                        // Ставим счет: победитель слева, проигравший справа
                         let score1 = m.data.score.split(':')[0];
                         let score2 = m.data.score.split(':')[1];
-                        if (!m.isWin) { [score1, score2] = [score2, score1]; } // Если мы смотрим за проигравшего, счет все равно пишется как Победитель : Проигравший
+                        
+                        // Разворачиваем счет, если игрок проиграл, чтобы слева был его счет
+                        if (!m.isWin) {
+                            [score1, score2] = [score2, score1];
+                        }
 
                         return `
                             <tr>
                                 <td style="color:#8b9bb0; font-family:var(--mono);">${m.data.date}</td>
                                 <td>
                                     <div style="display:flex; align-items:center; justify-content:space-between; padding-right:20px;">
+                                        <!-- ЛЕВАЯ КОМАНДА (Команда игрока) -->
                                         <div class="hltv-match-team-cell" style="width: 40%; justify-content:flex-end; padding-right: 10px;">
-                                            <span>${team1Name}</span>
-                                            <img src="${team1Logo}" onerror="this.src='${shieldSVG}';">
+                                            <span>${m.playerTeamName}</span>
+                                            <img src="${playerLogo}" onerror="this.src='${shieldSVG}';">
                                         </div>
+                                        
+                                        <!-- СЧЕТ -->
                                         <div class="hltv-match-vs-cell" style="width: 20%;">
-                                            <!-- Зеленый всегда у победителя (score1), красный у проигравшего (score2) -->
-                                            <span class="win">${score1}</span> : <span class="loss">${score2}</span>
+                                            <span class="${m.isWin ? 'win' : 'loss'}">${score1}</span> : <span class="${m.isWin ? 'loss' : 'win'}">${score2}</span>
                                         </div>
+                                        
+                                        <!-- ПРАВАЯ КОМАНДА (Враг) -->
                                         <div class="hltv-match-team-cell" style="width: 40%; padding-left: 10px;">
-                                            <img src="${team2Logo}" onerror="this.src='${shieldSVG}';">
-                                            <span>${team2Name}</span>
+                                            <img src="${enemyLogo}" onerror="this.src='${shieldSVG}';">
+                                            <span>${m.enemyTeamName}</span>
                                         </div>
                                     </div>
                                 </td>
