@@ -6,7 +6,7 @@
     <title>MPL — Профиль игрока</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=37">
+    <link rel="stylesheet" href="css/style.css?v=38">
     <style>
         /* Шапка профиля */
         .hltv-profile-header { background: #1f232b; border: 1px solid var(--border); display: flex; align-items: stretch; margin-bottom: 20px; border-radius: 4px; overflow: hidden; }
@@ -133,9 +133,13 @@
         'Gonduras228': 14, 'baksyhanovvand...': 14, 'Adjiare Gudju': 15
     };
 
+    // ЖЕСТКАЯ ЛОГИКА ЛОГОТИПОВ
     function getTeamLogo(teamName) {
-        if (teamName.includes('Fortress') || teamName === 'TF2' || teamName === 'Team 1') return tf2Logo;
-        if (teamName.includes('Magic') || teamName === 'Team 2') return magicLogo;
+        // Логотип TF2 ТОЛЬКО для названия "Team Fortress 2" (или если оно содержит "Fortress")
+        if (teamName.includes('Fortress') || teamName === 'Team Fortress 2') return tf2Logo;
+        // Логотип Magic ТОЛЬКО для названия "Team Magic"
+        if (teamName.includes('Magic') || teamName === 'Team Magic') return magicLogo;
+        // Во всех остальных случаях (Team 1, Team 2, Без команды и т.д.) - серый щит
         return shieldSVG;
     }
 
@@ -186,13 +190,13 @@
                 let enemyScore = 0;
 
                 if (playerTeamSide === 'win') {
-                    playerTeamName = actualWinnerName.includes('Team 1') || actualWinnerName.includes('Team Fortress') ? 'Team Fortress 2' : 'Team 2';
-                    enemyTeamName = actualLoserName.includes('Team 2') || actualLoserName.includes('Magic') ? 'Team Magic' : 'Team 1';
+                    playerTeamName = actualWinnerName; 
+                    enemyTeamName = actualLoserName;
                     playerScore = score1; 
                     enemyScore = score2;
                 } else {
-                    playerTeamName = actualLoserName.includes('Team 1') || actualLoserName.includes('Team Fortress') ? 'Team Fortress 2' : 'Team 2';
-                    enemyTeamName = actualWinnerName.includes('Team 2') || actualWinnerName.includes('Magic') ? 'Team Magic' : 'Team 1';
+                    playerTeamName = actualLoserName;
+                    enemyTeamName = actualWinnerName;
                     playerScore = score2; 
                     enemyScore = score1;
                 }
