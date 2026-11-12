@@ -4,9 +4,47 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL — Статистика</title>
+    <!-- ПОДКЛЮЧАЕМ CHART.JS -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=24">
+    <link rel="stylesheet" href="css/style.css?v=40">
     <style>
+        /* Стили для контейнеров графиков */
+        .chart-container {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 20px;
+            position: relative;
+            height: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+        .chart-title {
+            font-family: var(--mono);
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 16px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chart-wrapper {
+            flex: 1;
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+        .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+        @media (max-width: 900px) {
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+        }
+
         #settingsPanel { display: none; position: absolute; top: 60px; right: 20px; background: #1a1e26; border: 1px solid #444; border-radius: 8px; padding: 16px; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.8); width: 250px; flex-direction: column; gap: 12px; }
     </style>
 </head>
@@ -50,17 +88,52 @@
         <a href="about.html" class="nav-btn">06 / О сайте</a>
     </nav>
 
-    <div class="grid-3" style="margin-bottom:16px;">
-        <div class="stats-card"><div class="num" id="totalMatches">5</div><div class="label">Всего матчей</div></div>
-        <div class="stats-card"><div class="num" id="totalPlayers">10</div><div class="label">Всего игроков</div></div>
-        <div class="stats-card"><div class="num" id="totalKills">?</div><div class="label">Всего убийств</div></div>
+    <div class="page-title">📈 Статистика</div>
+    <div class="page-subtitle">Аналитика игроков и матчей лиги</div>
+
+    <!-- ВЕРХНИЕ БЛОКИ -->
+    <div class="grid-3">
+        <div class="stats-card">
+            <div class="num" id="totalMatches">0</div>
+            <div class="label">Всего матчей</div>
+        </div>
+        <div class="stats-card">
+            <div class="num" id="totalPlayers">0</div>
+            <div class="label">Всего игроков</div>
+        </div>
+        <div class="stats-card">
+            <div class="num" id="totalKills">0</div>
+            <div class="label">Всего убийств</div>
+        </div>
+    </div>
+
+    <!-- ГРАФИКИ -->
+    <div class="grid-2">
+        <!-- Круговая диаграмма винрейта -->
+        <div class="chart-container">
+            <div class="chart-title">Общий винрейт</div>
+            <div class="chart-wrapper">
+                <canvas id="winrateChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Radar график лучшего игрока -->
+        <div class="chart-container">
+            <div class="chart-title">Профиль лучшего игрока</div>
+            <div class="chart-wrapper">
+                <canvas id="radarChart"></canvas>
+            </div>
+        </div>
     </div>
 
     <div class="grid-2">
-        <div class="glass-card"><div style="font-weight:600;margin-bottom:8px;color:#e8eff7;">📊 K/D всех игроков</div><div id="kdChart"></div></div>
-        <div class="glass-card"><div style="font-weight:600;margin-bottom:8px;color:#e8eff7;">📈 Рейтинг всех игроков</div><div id="ratingChart"></div></div>
-        <div class="glass-card"><div style="font-weight:600;margin-bottom:8px;color:#e8eff7;">💥 ADR всех игроков</div><div id="adrChart"></div></div>
-        <div class="glass-card"><div style="font-weight:600;margin-bottom:8px;color:#e8eff7;">📊 Разница (±)</div><div id="diffChart"></div></div>
+        <!-- Столбчатая диаграмма рейтинга -->
+        <div class="chart-container" style="grid-column: span 2; height: 350px;">
+            <div class="chart-title">Рейтинг игроков</div>
+            <div class="chart-wrapper">
+                <canvas id="ratingChart"></canvas>
+            </div>
+        </div>
     </div>
 
     <div class="footer">MPL · Mega Professional League · <b>TERMINAL</b> · Май-Сентябрь 2026</div>
@@ -68,63 +141,138 @@
 
 <script src="js/data.js"></script>
 <script>
+    // ==== СТАТИСТИКА В ЦИФРАХ ====
     document.getElementById('totalPlayers').textContent = playersData.length;
-    const totalKills = playersData.reduce((sum, p) => sum + p.k, 0);
-    document.getElementById('totalKills').textContent = totalKills;
+    document.getElementById('totalKills').textContent = playersData.reduce((sum, p) => sum + p.k, 0);
 
-    function renderCharts() {
-        const maxKd = Math.max(...playersData.map(p => p.kd));
-        const maxAdr = Math.max(...playersData.map(p => p.adr));
-        const maxDiff = Math.max(...playersData.map(p => Math.abs(p.diff)));
-        const maxRating = Math.max(...playersData.map(p => p.rating));
+    // Считаем винрейт
+    let wins = 0, losses = 0;
+    Object.keys(matchData).forEach(key => {
+        const m = matchData[key];
+        const isWin = m.winner.includes('Team 1') || m.winner.includes('Team Fortress');
+        if (isWin) wins++; else losses++;
+    });
+    document.getElementById('totalMatches').textContent = wins + losses;
 
-        document.getElementById('kdChart').innerHTML = [...playersData].sort((a, b) => b.kd - a.kd).map(p => `
-            <div style="display:flex;align-items:center;gap:5px;margin:2px 0;font-size:10px;">
-                <span style="min-width:70px;text-align:right;color:#8b9bb0;">${p.name}</span>
-                <div style="flex:1;height:12px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;">
-                    <div style="height:100%;width:${p.kd/maxKd*100}%;background:var(--accent);border-radius:3px;"></div>
-                </div>
-                <span style="min-width:32px;font-weight:600;">${p.kd.toFixed(2)}</span>
-            </div>
-        `).join('');
+    // ==== НАСТРОЙКА ЦВЕТОВ CHART.JS ====
+    // Берем акцентный цвет из CSS (зеленый по умолчанию)
+    const accentColor = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#c8ff00';
+    const accentColorTransparent = accentColor.replace(')', ', 0.2)').replace('rgb', 'rgba'); // Для фона
 
-        document.getElementById('ratingChart').innerHTML = [...playersData].sort((a, b) => b.rating - a.rating).map(p => `
-            <div style="display:flex;align-items:center;gap:5px;margin:2px 0;font-size:10px;">
-                <span style="min-width:70px;text-align:right;color:#8b9bb0;">${p.name}</span>
-                <div style="flex:1;height:12px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;">
-                    <div style="height:100%;width:${Math.max(0, p.rating/maxRating*100)}%;background:var(--accent);border-radius:3px;"></div>
-                </div>
-                <span style="min-width:32px;font-weight:600;">${p.rating.toFixed(2)}</span>
-            </div>
-        `).join('');
+    Chart.defaults.color = '#8b9bb0'; // Цвет текста
+    Chart.defaults.font.family = "'JetBrains Mono', monospace";
 
-        document.getElementById('adrChart').innerHTML = [...playersData].sort((a, b) => b.adr - a.adr).map(p => `
-            <div style="display:flex;align-items:center;gap:5px;margin:2px 0;font-size:10px;">
-                <span style="min-width:70px;text-align:right;color:#8b9bb0;">${p.name}</span>
-                <div style="flex:1;height:12px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;">
-                    <div style="height:100%;width:${p.adr/maxAdr*100}%;background:var(--success);border-radius:3px;"></div>
-                </div>
-                <span style="min-width:32px;font-weight:600;">${p.adr}</span>
-            </div>
-        `).join('');
+    // 1. Круговая диаграмма (Винрейт)
+    const ctxWinrate = document.getElementById('winrateChart').getContext('2d');
+    new Chart(ctxWinrate, {
+        type: 'doughnut',
+        data: {
+            labels: ['Победы', 'Поражения'],
+            datasets: [{
+                data: [wins, losses],
+                backgroundColor: [accentColor, '#333'],
+                borderWidth: 0,
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '70%',
+            plugins: {
+                legend: { position: 'bottom', labels: { color: '#fff', padding: 20 } }
+            }
+        }
+    });
 
-        document.getElementById('diffChart').innerHTML = [...playersData].sort((a, b) => b.diff - a.diff).map(p => `
-            <div style="display:flex;align-items:center;gap:5px;margin:2px 0;font-size:10px;">
-                <span style="min-width:70px;text-align:right;color:#8b9bb0;">${p.name}</span>
-                <div style="flex:1;height:12px;background:rgba(255,255,255,0.05);border-radius:3px;overflow:hidden;">
-                    <div style="height:100%;width:${Math.abs(p.diff)/maxDiff*100}%;background:${p.diff>=0?'var(--success)':'var(--danger)'};border-radius:3px;"></div>
-                </div>
-                <span style="min-width:32px;font-weight:600;">${p.diff > 0 ? '+' : ''}${p.diff}</span>
-            </div>
-        `).join('');
-    }
+    // 2. Radar (Профиль лучшего игрока)
+    const topPlayer = [...playersData].sort((a, b) => b.rating - a.rating)[0];
+    const ctxRadar = document.getElementById('radarChart').getContext('2d');
+    new Chart(ctxRadar, {
+        type: 'radar',
+        data: {
+            labels: ['K/D', 'ADR', 'Убийства', 'Разница', 'Рейтинг'],
+            datasets: [{
+                label: topPlayer.name,
+                data: [
+                    topPlayer.kd, 
+                    topPlayer.adr / 10, // Делим ADR, чтобы график был ровным
+                    topPlayer.k / 10, 
+                    topPlayer.diff / 10, 
+                    topPlayer.rating * 50 // Умножаем рейтинг для видимости
+                ],
+                backgroundColor: 'rgba(200, 255, 0, 0.2)',
+                borderColor: accentColor,
+                pointBackgroundColor: accentColor,
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: accentColor
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                r: {
+                    angleLines: { color: '#333' },
+                    grid: { color: '#333' },
+                    pointLabels: { color: '#fff', font: { size: 10 } },
+                    ticks: { display: false } // Скрываем цифры на осях
+                }
+            },
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
 
+    // 3. Столбчатая диаграмма (Рейтинг игроков)
+    const sortedPlayers = [...playersData].sort((a, b) => b.rating - a.rating);
+    const ctxRating = document.getElementById('ratingChart').getContext('2d');
+    
+    // Создаем градиент для столбцов
+    const gradient = ctxRating.createLinearGradient(0, 0, 0, 300);
+    gradient.addColorStop(0, accentColor);
+    gradient.addColorStop(1, 'rgba(200, 255, 0, 0.1)');
+
+    new Chart(ctxRating, {
+        type: 'bar',
+        data: {
+            labels: sortedPlayers.map(p => p.name.split(' ')[0]), // Берем только первое слово ника
+            datasets: [{
+                label: 'Рейтинг',
+                data: sortedPlayers.map(p => p.rating),
+                backgroundColor: gradient,
+                borderRadius: 4,
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: { color: '#222' },
+                    ticks: { color: '#8b9bb0' }
+                },
+                x: {
+                    grid: { display: false },
+                    ticks: { color: '#8b9bb0' }
+                }
+            },
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+
+    // ==== ФУНКЦИИ НАСТРОЕК ====
     function toggleTheme() { document.body.classList.toggle('light'); document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '☀️' : '◐'; }
     let lang = 'ru';
     function toggleLang() { lang = lang === 'ru' ? 'en' : 'ru'; document.getElementById('langBtn').textContent = lang === 'ru' ? 'EN' : 'RU'; }
-
     function toggleSettings() { const panel = document.getElementById('settingsPanel'); panel.style.display = panel.style.display === 'none' ? 'flex' : 'none'; }
-    function setAccent(color) { document.documentElement.style.setProperty('--accent', color); localStorage.setItem('mpl_accent', color); }
+    function setAccent(color) { document.documentElement.style.setProperty('--accent', color); localStorage.setItem('mpl_accent', color); location.reload(); } // Перезагружаем страницу, чтобы графики перекрасились
     function resetBg() { document.body.style.backgroundImage = 'none'; document.body.style.backgroundColor = 'var(--bg)'; localStorage.removeItem('mpl_bg'); document.getElementById('bgUpload').value = ''; }
     document.getElementById('bgUpload').addEventListener('change', function(e) {
         const file = e.target.files[0];
@@ -134,8 +282,6 @@
         const savedAccent = localStorage.getItem('mpl_accent'); if (savedAccent) setAccent(savedAccent);
         const savedBg = localStorage.getItem('mpl_bg'); if (savedBg) { document.body.style.backgroundImage = `url(${savedBg})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; }
     });
-
-    renderCharts();
 </script>
 </body>
 </html>
