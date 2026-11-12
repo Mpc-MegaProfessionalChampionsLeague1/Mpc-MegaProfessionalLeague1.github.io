@@ -575,3 +575,118 @@ body {
     .main-grid { grid-template-columns: 1fr; }
     .main-grid > div:nth-child(2) { grid-column: span 1; grid-row: auto; }
 }
+
+
+
+/* ===== ПОДИУМ (ТОП-3) ===== */
+.podium-container {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding-top: 20px;
+    height: 180px;
+}
+
+.podium-item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.podium-item:hover {
+    transform: translateY(-5px);
+}
+
+/* Контейнер для аватарки */
+.podium-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 6px;
+    border: 2px solid var(--border);
+    background: var(--surface);
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-weight: 800;
+    font-size: 18px;
+    z-index: 2;
+    position: relative;
+    overflow: hidden;
+}
+
+/* Увеличенная аватарка для 1-го места */
+.podium-item.first .podium-avatar {
+    width: 64px;
+    height: 64px;
+    font-size: 22px;
+}
+
+.podium-item.first .podium-avatar { border-color: var(--accent); }
+.podium-item.second .podium-avatar { border-color: #c0c0c0; }
+.podium-item.third .podium-avatar { border-color: #cd7f32; }
+
+.podium-name {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 600;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    margin-bottom: 4px;
+    color: var(--text);
+}
+
+.podium-stat {
+    font-family: var(--mono);
+    font-weight: 800;
+    font-size: 14px;
+    color: var(--accent);
+}
+
+/* Сами ступеньки пьедестала */
+.podium-bar {
+    width: 100%;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-bottom: none;
+    margin-top: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--mono);
+    font-weight: 800;
+    font-size: 24px;
+    color: var(--dim);
+    transition: 0.2s;
+}
+
+.podium-item.first .podium-bar {
+    height: 90px;
+    background: rgba(200, 255, 0, 0.1);
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.podium-item.second .podium-bar {
+    height: 70px;
+    background: rgba(192, 192, 192, 0.1);
+    color: #c0c0c0;
+    border-color: #c0c0c0;
+}
+
+.podium-item.third .podium-bar {
+    height: 50px;
+    background: rgba(205, 127, 50, 0.1);
+    color: #cd7f32;
+    border-color: #cd7f32;
+}
