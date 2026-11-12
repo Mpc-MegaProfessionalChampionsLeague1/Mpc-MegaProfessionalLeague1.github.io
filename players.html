@@ -5,35 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL — Все игроки</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=22">
+    <link rel="stylesheet" href="css/style.css?v=48">
     <style>
-        .player-avatar-mini {
-            width: 40px; height: 40px; background: #1a1a1a; border: 1px solid #777; border-radius: 6px; 
-            position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-        }
+        .player-avatar-mini { width: 40px; height: 40px; background: var(--bg); border: 1px solid #777; border-radius: 6px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .player-avatar-mini .team-bg { position: absolute; width: 80%; height: 80%; opacity: 0.3; z-index: 1; object-fit: contain; }
         .player-avatar-mini .player-img { position: relative; z-index: 2; width: 100%; height: 100%; object-fit: cover; }
-
-        /* Панель настроек */
-        #settingsPanel {
-            display: none;
-            position: absolute;
-            top: 60px;
-            right: 20px;
-            background: #1a1e26;
-            border: 1px solid #444;
-            border-radius: 8px;
-            padding: 16px;
-            z-index: 9999;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.8);
-            width: 250px;
-            flex-direction: column;
-            gap: 12px;
-        }
+        #settingsPanel { display: none; position: absolute; top: 60px; right: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.8); width: 250px; flex-direction: column; gap: 12px; }
     </style>
 </head>
-<body>
+<body class="theme-terminal">
 <div class="container">
     <div class="header">
         <div class="logo"><h1 onclick="location.href='index.html'">MPL <small>Mega Professional League</small></h1></div>
@@ -42,26 +22,23 @@
             <span class="status">● LIVE</span>
             <button class="lang-toggle" onclick="toggleLang()" id="langBtn">EN</button>
             <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">◐</button>
-            
-            <!-- КНОПКА НАСТРОЕК -->
             <button class="theme-toggle" onclick="toggleSettings()" id="settingsBtn" title="Настройки">⚙️</button>
-            <!-- ВЫПАДАЮЩЕЕ МЕНЮ НАСТРОЕК -->
             <div id="settingsPanel">
-                <div style="font-family:var(--mono); font-size:12px; font-weight:700; color:#fff; border-bottom:1px solid #333; padding-bottom:8px;">🎨 Настройки сайта</div>
+                <div style="font-family:var(--mono); font-size:12px; font-weight:700; color:var(--text); border-bottom:1px solid var(--border); padding-bottom:8px;">🎨 Настройки сайта</div>
                 <div>
-                    <div style="font-size:11px; color:#8b9bb0; margin-bottom:6px;">Цвет акцента:</div>
-                    <div style="display:flex; gap:6px;">
-                        <button onclick="setAccent('#c8ff00')" style="width:24px; height:24px; background:#c8ff00; border:none; border-radius:4px; cursor:pointer;" title="Зелёный"></button>
-                        <button onclick="setAccent('#00d2ff')" style="width:24px; height:24px; background:#00d2ff; border:none; border-radius:4px; cursor:pointer;" title="Синий"></button>
-                        <button onclick="setAccent('#ff0055')" style="width:24px; height:24px; background:#ff0055; border:none; border-radius:4px; cursor:pointer;" title="Красный"></button>
-                        <button onclick="setAccent('#b000ff')" style="width:24px; height:24px; background:#b000ff; border:none; border-radius:4px; cursor:pointer;" title="Фиолетовый"></button>
-                        <button onclick="setAccent('#ffb347')" style="width:24px; height:24px; background:#ffb347; border:none; border-radius:4px; cursor:pointer;" title="Оранжевый"></button>
-                    </div>
+                    <div style="font-size:11px; color:var(--muted); margin-bottom:6px;">Тема оформления:</div>
+                    <select id="themeSelect" onchange="changeTheme(this.value)" style="width:100%; background:var(--bg); color:var(--text); border:1px solid var(--border); padding:6px; border-radius:4px; font-family:var(--mono); font-size:11px; cursor:pointer;">
+                        <option value="theme-terminal">Terminal (Зеленая)</option>
+                        <option value="theme-cyberpunk">Cyberpunk (Розовая)</option>
+                        <option value="theme-ocean">Ocean (Синяя)</option>
+                        <option value="theme-blood">Blood Moon (Красная)</option>
+                        <option value="theme-matrix">Matrix (Черно-зеленая)</option>
+                    </select>
                 </div>
                 <div>
-                    <div style="font-size:11px; color:#8b9bb0; margin-bottom:6px;">Свой фон (картинка):</div>
-                    <input type="file" id="bgUpload" accept="image/*" style="width:100%; font-size:10px; color:#fff; background:#111; border:1px solid #333; padding:4px; border-radius:4px; cursor:pointer;">
-                    <button onclick="resetBg()" style="width:100%; margin-top:6px; background:#333; border:none; color:#fff; padding:6px; border-radius:4px; font-size:10px; cursor:pointer;">Сбросить фон</button>
+                    <div style="font-size:11px; color:var(--muted); margin-bottom:6px;">Свой фон (картинка):</div>
+                    <input type="file" id="bgUpload" accept="image/*" style="width:100%; font-size:10px; color:var(--text); background:var(--bg); border:1px solid var(--border); padding:4px; border-radius:4px; cursor:pointer;">
+                    <button onclick="resetBg()" style="width:100%; margin-top:6px; background:var(--surface-2); border:none; color:var(--text); padding:6px; border-radius:4px; font-size:10px; cursor:pointer;">Сбросить фон</button>
                 </div>
             </div>
         </div>
@@ -81,17 +58,8 @@
 
     <div class="filter-section">
         <input type="text" class="search-input" placeholder="🔍 Поиск по имени..." id="playerSearch" oninput="filterPlayers()">
-        <select id="sortFilter" onchange="filterPlayers()">
-            <option value="kd">По K/D</option>
-            <option value="rating">По рейтингу</option>
-            <option value="adr">По ADR</option>
-            <option value="matches">По матчам</option>
-        </select>
-        <select id="topFilter" onchange="filterPlayers()">
-            <option value="all">Все игроки</option>
-            <option value="5">Топ-5</option>
-            <option value="10">Топ-10</option>
-        </select>
+        <select id="sortFilter" onchange="filterPlayers()"><option value="kd">По K/D</option><option value="rating">По рейтингу</option><option value="adr">По ADR</option><option value="matches">По матчам</option></select>
+        <select id="topFilter" onchange="filterPlayers()"><option value="all">Все игроки</option><option value="5">Топ-5</option><option value="10">Топ-10</option></select>
     </div>
 
     <div id="playersList" style="display:grid;grid-template-columns:1fr 1fr;gap:10px;"></div>
@@ -103,116 +71,48 @@
     const tf2Roster = ['bomba69', 'Хомяк с авт', 'uxaxaxaxa', 'AFKE'];
     const magicRoster = ['abdalbek', 'Gonduras228', 'Adjiare Gudju', 'baksyhanovvand...'];
     const defaultImg = 'img/default.png';
+    const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23555'><path d='M12 2L2 22h20L12 2z'/></svg>`;
 
     function renderPlayers(sort = 'kd', search = '', top = 'all') {
         const container = document.getElementById('playersList');
         let filtered = [...playersData];
-        
         const flagSVG = `<svg viewBox="0 0 100 70" style="width:16px; height:12px; border-radius:2px; display:inline-block; vertical-align:middle; margin-right:6px;"><rect width="100" height="23.3" fill="#fff"/><rect y="23.3" width="100" height="23.3" fill="#0039a6"/><rect y="46.6" width="100" height="23.4" fill="#d52b1e"/></svg>`;
-        const freeAgentSVG = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23555'><path d='M12 2L2 22h20L12 2z'/></svg>`;
 
-        if (search) {
-            const s = search.toLowerCase();
-            filtered = filtered.filter(p => p.name.toLowerCase().includes(s));
-        }
-        if (top === '5') filtered = filtered.slice(0, 5);
-        else if (top === '10') filtered = filtered.slice(0, 10);
-
-        filtered.sort((a, b) => {
-            if (sort === 'kd') return b.kd - a.kd;
-            if (sort === 'rating') return b.rating - a.rating;
-            if (sort === 'adr') return b.adr - a.adr;
-            return b.matches - a.matches;
-        });
+        if (search) { const s = search.toLowerCase(); filtered = filtered.filter(p => p.name.toLowerCase().includes(s)); }
+        if (top === '5') filtered = filtered.slice(0, 5); else if (top === '10') filtered = filtered.slice(0, 10);
+        filtered.sort((a, b) => { if (sort === 'kd') return b.kd - a.kd; if (sort === 'rating') return b.rating - a.rating; if (sort === 'adr') return b.adr - a.adr; return b.matches - a.matches; });
 
         container.innerHTML = filtered.map((p, i) => {
-            let teamLogo = freeAgentSVG;
+            let teamLogo = fallbackSVG;
             if (tf2Roster.includes(p.name)) teamLogo = 'img/tf2.png';
             else if (magicRoster.includes(p.name)) teamLogo = 'img/magic.png';
-            
             return `
-            <div class="glass-card" style="cursor:pointer;padding:12px 14px;transition:0.2s;" 
-                 onclick="location.href='player.html?name=${encodeURIComponent(p.name)}'"
-                 onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='var(--accent)';"
-                 onmouseout="this.style.transform='none';this.style.borderColor='var(--border)';">
+            <div class="glass-card" style="cursor:pointer;padding:12px 14px;transition:0.2s;" onclick="location.href='player.html?name=${encodeURIComponent(p.name)}'" onmouseover="this.style.transform='translateY(-2px)';this.style.borderColor='var(--accent)';" onmouseout="this.style.transform='none';this.style.borderColor='var(--border)';">
                 <div style="display:flex;align-items:center;gap:10px;">
                     <span style="font-weight:700;font-size:13px;color:var(--muted);min-width:22px;">#${i+1}</span>
-                    <div class="player-avatar-mini">
-                        <img src="${teamLogo}" class="team-bg">
-                        <img src="${defaultImg}" class="player-img">
-                    </div>
+                    <div class="player-avatar-mini"><img src="${teamLogo}" class="team-bg"><img src="${defaultImg}" class="player-img"></div>
                     <div style="flex:1;">
                         <div style="font-weight:600;font-size:14px;color:var(--text);">${flagSVG} ${p.name} ${p.you ? '⭐' : ''}</div>
                         <div style="font-size:11px;color:var(--muted);">${p.matches} матчей · ${p.k} убийств · ${p.d} смертей</div>
                     </div>
-                    <div style="text-align:right;">
-                        <div style="font-size:16px;font-weight:700;color:var(--accent);">${p.kd.toFixed(2)}</div>
-                        <div style="font-size:10px;color:var(--muted);">K/D</div>
-                    </div>
-                    <div style="text-align:right;min-width:44px;">
-                        <div style="font-size:14px;font-weight:600;color:#7a9bcb;">${p.rating.toFixed(2)}</div>
-                        <div style="font-size:10px;color:var(--muted);">Рейтинг</div>
-                    </div>
+                    <div style="text-align:right;"><div style="font-size:16px;font-weight:700;color:var(--accent);">${p.kd.toFixed(2)}</div><div style="font-size:10px;color:var(--muted);">K/D</div></div>
+                    <div style="text-align:right;min-width:44px;"><div style="font-size:14px;font-weight:600;color:#7a9bcb;">${p.rating.toFixed(2)}</div><div style="font-size:10px;color:var(--muted);">Рейтинг</div></div>
                     <div style="color:var(--muted);font-size:18px;margin-left:4px;">→</div>
                 </div>
             </div>
         `}).join('');
-
-        if (filtered.length === 0) {
-            container.innerHTML = '<div style="text-align:center;color:var(--muted);padding:30px 0;font-size:13px;grid-column:1/-1;">Игроки не найдены</div>';
-        }
+        if (filtered.length === 0) { container.innerHTML = '<div style="text-align:center;color:var(--muted);padding:30px 0;font-size:13px;grid-column:1/-1;">Игроки не найдены</div>'; }
     }
-
-    function filterPlayers() {
-        const search = document.getElementById('playerSearch').value;
-        const sort = document.getElementById('sortFilter').value;
-        const top = document.getElementById('topFilter').value;
-        renderPlayers(sort, search, top);
-    }
+    function filterPlayers() { renderPlayers(document.getElementById('sortFilter').value, document.getElementById('playerSearch').value, document.getElementById('topFilter').value); }
 
     function toggleTheme() { document.body.classList.toggle('light'); document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '☀️' : '◐'; }
     let lang = 'ru';
     function toggleLang() { lang = lang === 'ru' ? 'en' : 'ru'; document.getElementById('langBtn').textContent = lang === 'ru' ? 'EN' : 'RU'; }
-
-    // ===== НАСТРОЙКИ =====
-    function toggleSettings() {
-        const panel = document.getElementById('settingsPanel');
-        panel.style.display = panel.style.display === 'none' ? 'flex' : 'none';
-    }
-    function setAccent(color) {
-        document.documentElement.style.setProperty('--accent', color);
-        localStorage.setItem('mpl_accent', color);
-    }
-    function resetBg() {
-        document.body.style.backgroundImage = 'none';
-        document.body.style.backgroundColor = 'var(--bg)';
-        localStorage.removeItem('mpl_bg');
-        document.getElementById('bgUpload').value = '';
-    }
-    document.getElementById('bgUpload').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const bgUrl = event.target.result;
-                document.body.style.backgroundImage = `url(${bgUrl})`;
-                document.body.style.backgroundSize = 'cover';
-                document.body.style.backgroundPosition = 'center';
-                localStorage.setItem('mpl_bg', bgUrl);
-            };
-            reader.readAsDataURL(file);
-        }
-    });
-    window.addEventListener('DOMContentLoaded', () => {
-        const savedAccent = localStorage.getItem('mpl_accent');
-        if (savedAccent) setAccent(savedAccent);
-        const savedBg = localStorage.getItem('mpl_bg');
-        if (savedBg) {
-            document.body.style.backgroundImage = `url(${savedBg})`;
-            document.body.style.backgroundSize = 'cover';
-            document.body.style.backgroundPosition = 'center';
-        }
-    });
+    function toggleSettings() { const panel = document.getElementById('settingsPanel'); panel.style.display = panel.style.display === 'none' ? 'flex' : 'none'; }
+    function changeTheme(themeName) { localStorage.setItem('mpl_theme', themeName); document.body.className = themeName; location.reload(); }
+    function resetBg() { document.body.style.backgroundImage = 'none'; document.body.style.backgroundColor = 'var(--bg)'; localStorage.removeItem('mpl_bg'); document.getElementById('bgUpload').value = ''; }
+    document.getElementById('bgUpload').addEventListener('change', function(e) { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = function(event) { document.body.style.backgroundImage = `url(${event.target.result})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; localStorage.setItem('mpl_bg', event.target.result); }; reader.readAsDataURL(file); } });
+    window.addEventListener('DOMContentLoaded', () => { const savedTheme = localStorage.getItem('mpl_theme') || 'theme-terminal'; document.body.className = savedTheme; const select = document.getElementById('themeSelect'); if (select) select.value = savedTheme; const savedBg = localStorage.getItem('mpl_bg'); if (savedBg) { document.body.style.backgroundImage = `url(${savedBg})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; } });
 
     renderPlayers();
 </script>
