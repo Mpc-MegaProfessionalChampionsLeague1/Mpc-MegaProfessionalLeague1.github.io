@@ -3,72 +3,87 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MPL — Профиль игрока</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <title>MPL — Детали матча</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=34">
+    <link rel="stylesheet" href="css/style.css?v=36">
     <style>
-        /* Шапка профиля */
-        .hltv-profile-header { background: #1f232b; border: 1px solid var(--border); display: flex; align-items: stretch; margin-bottom: 20px; border-radius: 4px; overflow: hidden; }
-        .hltv-profile-photo { width: 180px; background: #111; position: relative; display: flex; align-items: flex-end; }
-        .hltv-profile-photo img.bg-logo { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; height: 80%; opacity: 0.1; object-fit: contain; }
-        .hltv-profile-photo img.player { position: relative; z-index: 2; width: 100%; height: 100%; object-fit: cover; }
-        .hltv-profile-info { flex: 1; padding: 20px 24px; display: flex; flex-direction: column; justify-content: center; }
-        .hltv-profile-name { font-size: 32px; font-weight: 800; color: #fff; display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
-        .hltv-info-table { width: 100%; border-collapse: collapse; font-size: 13px; }
-        .hltv-info-table td { padding: 6px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .hltv-info-table td:first-child { color: #8b9bb0; width: 140px; }
-        .hltv-info-table td:last-child { color: #fff; font-weight: 600; text-align: right; }
-        
-        /* Вкладки */
-        .hltv-tabs { display: flex; background: #171a21; border: 1px solid var(--border); border-top: none; border-bottom: 2px solid #111; margin-bottom: 20px; }
-        .hltv-tab { padding: 12px 24px; font-family: var(--sans); font-size: 14px; font-weight: 600; color: #8b9bb0; cursor: pointer; border-bottom: 3px solid transparent; transition: 0.15s; }
-        .hltv-tab:hover { color: #fff; background: rgba(255,255,255,0.03); }
-        .hltv-tab.active { color: #fff; border-bottom-color: var(--accent); }
-        
-        .tab-content { display: none; animation: fadeUp 0.3s ease; }
-        .tab-content.active { display: block; }
-        
-        /* Сетка для Info */
-        .hltv-stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        @media (max-width: 800px) { .hltv-stats-grid { grid-template-columns: 1fr; } }
-        
-        .hltv-stat-box { background: var(--surface); border: 1px solid var(--border); padding: 16px; }
-        .hltv-stat-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 16px; display: flex; justify-content: space-between; }
-        .hltv-stat-row { margin-bottom: 12px; }
-        .hltv-stat-label { display: flex; justify-content: space-between; font-size: 12px; color: #c8d6e0; margin-bottom: 4px; }
-        .hltv-stat-bar-bg { width: 100%; height: 6px; background: #222; border-radius: 3px; overflow: hidden; }
-        .hltv-stat-bar-fill { height: 100%; background: #66c0f4; }
-        
-        /* Блок матчей в Info (правый) */
-        .hltv-matches-box { background: var(--surface); border: 1px solid var(--border); padding: 16px; }
-        .hltv-match-row-simple { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
-        .hltv-match-row-simple:last-child { border-bottom: none; }
-        .hltv-match-team-simple { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 600; color: #fff; }
-        .hltv-match-team-simple img { width: 24px; height: 24px; object-fit: contain; }
-        .hltv-match-score-simple { font-family: var(--mono); font-size: 14px; font-weight: 800; }
-        .hltv-match-score-simple.win { color: var(--success); }
-        .hltv-match-score-simple.loss { color: var(--danger); }
+        .hltv-match-header { background: #1f232b; border: 1px solid var(--border); display: flex; align-items: stretch; position: relative; margin-bottom: 20px; }
+        .hltv-team-side { flex: 1; display: flex; align-items: center; justify-content: center; gap: 16px; padding: 24px; }
+        .hltv-team-side.win { background: rgba(125, 223, 160, 0.05); }
+        .hltv-team-side.loss { background: rgba(224, 122, 122, 0.05); }
+        .hltv-logo { width: 60px; height: 60px; object-fit: contain; }
+        .hltv-team-name { font-size: 20px; font-weight: 700; color: #fff; }
+        .hltv-score { font-size: 36px; font-weight: 800; font-family: var(--mono); color: var(--accent); }
+        .hltv-match-center { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 16px 30px; background: #171a21; border-left: 1px solid var(--border); border-right: 1px solid var(--border); text-align: center; }
+        .hltv-match-time { font-size: 24px; font-weight: 800; color: #fff; font-family: var(--mono); }
+        .hltv-match-date { font-size: 11px; color: #8b9bb0; margin-top: 4px; }
+        .hltv-match-status { font-size: 12px; font-weight: 700; color: var(--dim); margin-top: 8px; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* Вкладка Matches */
-        .hltv-matches-tab-box { background: #1f232b; border: 1px solid var(--border); margin-bottom: 20px; }
-        .hltv-matches-tab-title { background: #171a21; padding: 12px 16px; font-size: 14px; font-weight: 700; color: #fff; border-bottom: 1px solid var(--border); }
-        .hltv-event-header { background: #2a2e37; padding: 8px 16px; font-size: 12px; font-weight: 600; color: #8b9bb0; text-align: center; border-bottom: 1px solid var(--border); }
-        .hltv-match-table { width: 100%; border-collapse: collapse; }
-        .hltv-match-table th { text-align: left; padding: 10px 16px; font-size: 11px; color: #6e7f94; text-transform: uppercase; border-bottom: 1px solid var(--border); }
-        .hltv-match-table td { padding: 12px 16px; border-bottom: 1px solid var(--border); font-size: 13px; color: #fff; vertical-align: middle; }
+        /* ===== НОВЫЙ ЗАГОЛОВОК ТАБЛИЦЫ ===== */
+        .hltv-table-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #1a1e26;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+        .hltv-table-team-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .hltv-table-team-info img { width: 28px; height: 28px; object-fit: contain; }
+        .hltv-table-team-info span { font-size: 16px; font-weight: 700; color: #fff; }
+        .hltv-table-score {
+            font-family: var(--mono);
+            font-size: 24px;
+            font-weight: 800;
+        }
+        .hltv-table-score.win { color: var(--success); }
+        .hltv-table-score.loss { color: var(--danger); }
+
+        /* ===== ОСТАЛЬНОЕ БЕЗ ИЗМЕНЕНИЙ ===== */
+        .map-tabs { display: flex; gap: 4px; margin-bottom: 12px; flex-wrap: wrap; }
+        .map-tab { background: var(--surface); border: 1px solid var(--border); color: var(--muted); padding: 8px 20px; font-family: var(--mono); font-size: 12px; font-weight: 700; cursor: pointer; transition: 0.2s; text-transform: uppercase; }
+        .map-tab:hover { color: var(--text); border-color: var(--accent); }
+        .map-tab.active { background: var(--accent); color: #000; border-color: var(--accent); }
+
+        .hltv-table-wrapper { margin-bottom: 30px; border: 1px solid var(--border); }
         
-        .hltv-match-team-cell { display: flex; align-items: center; gap: 8px; justify-content: flex-start; }
-        .hltv-match-team-cell img { width: 24px; height: 24px; object-fit: contain; }
-        .hltv-match-vs-cell { text-align: center; font-family: var(--mono); font-weight: 800; }
-        .hltv-match-vs-cell .win { color: var(--success); }
-        .hltv-match-vs-cell .loss { color: var(--danger); }
+        .hltv-stats-table { width: 100%; border-collapse: collapse; background: var(--surface); }
+        .hltv-stats-table th { text-align: left; padding: 10px 14px; font-family: var(--mono); font-size: 11px; color: #8b9bb0; border-bottom: 1px solid var(--border); text-transform: uppercase; background: #1a1e26; }
+        .hltv-stats-table td { padding: 10px 14px; border-bottom: 1px solid var(--border); font-size: 13px; color: var(--text); font-family: var(--mono); }
+        .hltv-stats-table tr:hover td { background: #1f232b; cursor: pointer; }
+        .hltv-stats-player { font-weight: 600; color: #fff; font-family: var(--sans); display: flex; align-items: center; gap: 8px; }
+        .hltv-stats-player img { width: 24px; height: 24px; border-radius: 4px; object-fit: cover; border: 1px solid #555; }
+        .stat-good { color: var(--success); font-weight: 700; }
+        .stat-bad { color: var(--danger); font-weight: 700; }
+
+        .hltv-lineups-title { font-size: 18px; font-weight: 700; color: #fff; margin: 30px 0 16px 0; display: flex; align-items: center; gap: 10px; }
+        .hltv-lineup-team { margin-bottom: 30px; }
+        .hltv-lineup-header { display: flex; justify-content: space-between; align-items: center; background: #1a1e26; padding: 10px 16px; border: 1px solid var(--border); border-bottom: none; }
+        .hltv-lineup-header .team-info { display: flex; align-items: center; gap: 10px; }
+        .hltv-lineup-header img { width: 32px; height: 32px; }
+        .hltv-lineup-header span { font-size: 16px; font-weight: 700; color: #fff; }
         
-        .btn-stats { background: #2a475e; color: #fff; border: none; padding: 4px 12px; border-radius: 4px; font-size: 11px; font-weight: 700; cursor: pointer; text-transform: uppercase; transition: 0.2s; float: right; }
-        .btn-stats:hover { background: var(--accent); color: #000; }
+        .hltv-lineup-cards { display: flex; gap: 2px; background: var(--border); border: 1px solid var(--border); }
+        .hltv-player-card { flex: 1; background: #2a2e37; position: relative; display: flex; flex-direction: column; align-items: center; overflow: hidden; }
+        .hltv-card-photo { width: 100%; height: 140px; background: #222; display: flex; align-items: flex-end; justify-content: center; overflow: hidden; position: relative; }
+        .hltv-card-photo img { width: 100%; height: 100%; object-fit: cover; }
+        .hltv-card-footer { width: 100%; display: flex; align-items: center; gap: 6px; padding: 8px 10px; background: #111; border-top: 1px solid #333; z-index: 2; }
+        .hltv-card-footer .flag-svg { width: 18px; height: 12px; border-radius: 1px; }
+        .hltv-card-footer .player-nick { font-size: 12px; font-weight: 700; color: #fff; font-family: var(--mono); }
+
+        .hltv-mvp { background: var(--surface); border: 1px solid var(--accent); padding: 20px; display: flex; align-items: center; gap: 20px; margin-top: 20px; position: relative; overflow: hidden; }
+        .hltv-mvp::before { content: 'MVP'; position: absolute; right: -10px; top: -20px; font-size: 120px; font-weight: 900; font-family: var(--mono); color: rgba(200, 255, 0, 0.05); z-index: 0; }
+        .hltv-mvp-avatar { width: 80px; height: 80px; border-radius: 8px; border: 2px solid #777; position: relative; overflow: hidden; z-index: 1; }
+        .hltv-mvp-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .hltv-mvp-info { z-index: 1; }
+        .hltv-mvp-name { font-size: 24px; font-weight: 800; color: #fff; }
+        .hltv-mvp-stats { font-family: var(--mono); font-size: 14px; color: var(--accent); margin-top: 4px; }
 
         #settingsPanel { display: none; position: absolute; top: 60px; right: 20px; background: #1a1e26; border: 1px solid #444; border-radius: 8px; padding: 16px; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.8); width: 250px; flex-direction: column; gap: 12px; }
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
@@ -104,277 +119,267 @@
 
     <nav class="nav">
         <a href="index.html" class="nav-btn">01 / Главная</a>
-        <a href="matches.html" class="nav-btn">02 / Матчи</a>
-        <a href="players.html" class="nav-btn active">03 / Игроки</a>
+        <a href="matches.html" class="nav-btn active">02 / Матчи</a>
+        <a href="players.html" class="nav-btn">03 / Игроки</a>
         <a href="stats.html" class="nav-btn">04 / Статистика</a>
         <a href="hall.html" class="nav-btn">05 / Зал славы</a>
         <a href="about.html" class="nav-btn">06 / О сайте</a>
     </nav>
 
-    <div id="playerContent"></div>
+    <div id="matchContent"></div>
     <div class="footer">MPL · Mega Professional League · <b>TERMINAL</b> · Май-Сентябрь 2026</div>
 </div>
 
 <script src="js/data.js"></script>
 <script>
     const urlParams = new URLSearchParams(window.location.search);
-    const playerName = urlParams.get('name');
+    const matchId = urlParams.get('id');
 
-    const tf2Roster = ['bomba69', 'Хомяк с авт', 'uxaxaxaxa', 'AFKE'];
-    const magicRoster = ['abdalbek', 'Gonduras228', 'Adjiare Gudju', 'baksyhanovvand...'];
-    const defaultImg = 'img/default.png';
     const tf2Logo = 'img/tf2.png';
     const magicLogo = 'img/magic.png';
-    const shieldSVG = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23666'><path d='M12 2L2 22h20L12 2z'/></svg>`;
-    const flagSVG = `<svg viewBox="0 0 100 70" style="width:24px; height:16px; border-radius:2px; display:inline-block; vertical-align:middle; margin-right:8px;"><rect width="100" height="23.3" fill="#fff"/><rect y="23.3" width="100" height="23.3" fill="#0039a6"/><rect y="46.6" width="100" height="23.4" fill="#d52b1e"/></svg>`;
+    const defaultImg = 'img/default.png';
+    const fallbackSVG = `data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23555'><path d='M12 2L2 22h20L12 2z'/></svg>`;
+    const flagSVG = `<svg class="flag-svg" viewBox="0 0 100 70"><rect width="100" height="23.3" fill="#fff"/><rect y="23.3" width="100" height="23.3" fill="#0039a6"/><rect y="46.6" width="100" height="23.4" fill="#d52b1e"/></svg>`;
 
-    const playerAges = {
-        'bomba69': 14, 'Хомяк с авт': 14, 'uxaxaxaxa': 14, 'AFKE': 14, 'abdalbek': 14,
-        'Gonduras228': 14, 'baksyhanovvand...': 14, 'Adjiare Gudju': 15
-    };
+    let currentMatchData = null;
 
     function getTeamLogo(teamName) {
         if (teamName.includes('Fortress') || teamName === 'TF2' || teamName === 'Team 1') return tf2Logo;
         if (teamName.includes('Magic') || teamName === 'Team 2') return magicLogo;
-        return shieldSVG;
+        return fallbackSVG;
     }
 
-    function renderPlayerPage(name) {
-        const container = document.getElementById('playerContent');
-        if (!name) {
-            container.innerHTML = `<div style="text-align:center;padding:40px 0;"><div style="font-size:20px;font-weight:700;color:var(--text);">Игрок не выбран</div><div style="color:var(--muted);margin-top:8px;"><a href="players.html" style="color:var(--accent);">Вернуться к списку</a></div></div>`;
-            return;
-        }
-        const player = playersData.find(p => p.name === name);
-        if (!player) {
-            container.innerHTML = `<div style="text-align:center;padding:40px 0;"><div style="font-size:20px;font-weight:700;color:var(--text);">Игрок не найден</div><div style="color:var(--muted);margin-top:8px;"><a href="players.html" style="color:var(--accent);">Вернуться к списку</a></div></div>`;
+    function renderMatchPage(id) {
+        const container = document.getElementById('matchContent');
+        if (!id || !matchData[id]) {
+            container.innerHTML = `<div style="text-align:center;padding:40px;"><div style="font-size:24px;">❌</div><div style="font-size:20px;font-weight:700;color:#fff;margin-top:10px;">Матч не найден</div><a href="matches.html" style="color:var(--accent);margin-top:10px;display:inline-block;">← Назад к матчам</a></div>`;
             return;
         }
 
-        let teamLogo = shieldSVG;
-        let teamName = 'Без команды';
-        if (tf2Roster.includes(player.name)) { teamLogo = tf2Logo; teamName = 'Team Fortress 2'; }
-        else if (magicRoster.includes(player.name)) { teamLogo = magicLogo; teamName = 'Team Magic'; }
-
-        const age = playerAges[player.name] || 14;
-        const allSorted = [...playersData].sort((a, b) => b.rating - a.rating);
-        const rank = allSorted.findIndex(p => p.name === player.name) + 1;
-
-        // Собираем матчи с привязкой к игроку
-        const playedMatches = [];
-        Object.keys(matchData).forEach(key => {
-            const m = matchData[key];
-            const teams = m.teams || (m.total && m.total.teams);
-            if (!teams) return;
-            
-            let isInMatch = false;
-            let isWin = false;
-            let playerTeamName = '';
-            let enemyTeamName = '';
-            
-            // Проверяем, за кого играл игрок
-            if (teams.win.players.some(p => p.name === player.name)) {
-                isInMatch = true;
-                isWin = true;
-                playerTeamName = m.winner.includes('Team 1') || m.winner.includes('Team Fortress') ? 'Team Fortress 2' : 'Team 2'; // Определяем название команды
-                enemyTeamName = m.loser.includes('Team 2') || m.loser.includes('Team Magic') ? 'Team Magic' : 'Team 1';
-            } 
-            if (teams.loss.players.some(p => p.name === player.name)) {
-                isInMatch = true;
-                isWin = false;
-                playerTeamName = m.loser.includes('Team 1') || m.loser.includes('Team Fortress') ? 'Team Fortress 2' : 'Team 2';
-                enemyTeamName = m.winner.includes('Team 2') || m.winner.includes('Team Magic') ? 'Team Magic' : 'Team 1';
-            }
-            
-            if (isInMatch) {
-                playedMatches.push({ 
-                    id: key, 
-                    data: m, 
-                    isWin: isWin,
-                    playerTeamName: playerTeamName,
-                    enemyTeamName: enemyTeamName
-                });
-            }
-        });
+        currentMatchData = matchData[id];
+        const data = currentMatchData;
+        const isBo3 = id === 'match0';
         
-        // Сортируем по дате (от новых к старым)
-        playedMatches.sort((a, b) => new Date(b.data.date) - new Date(a.data.date));
+        // УМНАЯ ЛОГИКА СЧЕТА И ПОБЕДИТЕЛЯ
+        let score1 = parseInt(data.score.split(':')[0]);
+        let score2 = parseInt(data.score.split(':')[1]);
+        
+        // Определяем, кто реально выиграл по цифрам
+        let actualWinnerName = score1 > score2 ? data.winner : data.loser;
+        let actualLoserName = score1 > score2 ? data.loser : data.winner;
+        
+        const team1Name = actualWinnerName.includes('Team 1') || actualWinnerName.includes('Team Fortress') ? 'Team Fortress 2' : 'Team 2';
+        const team2Name = actualLoserName.includes('Team 2') || actualLoserName.includes('Team Magic') ? 'Team Magic' : 'Team 1';
+        
+        const team1Logo = getTeamLogo(actualWinnerName);
+        const team2Logo = getTeamLogo(actualLoserName);
 
-        // Блок "Последние матчи" (правая колонка)
-        const recentMatchesHTML = playedMatches.slice(0, 5).map(m => {
-            const enemyLogo = getTeamLogo(m.enemyTeamName);
-            
-            // Счет берем из data, но разворачиваем, если нужно показать глазами игрока
-            let score1 = m.data.score.split(':')[0];
-            let score2 = m.data.score.split(':')[1];
-            
-            // Если игрок проиграл, счет должен быть 1:13 (где 1 - его раунды)
-            if (!m.isWin) {
-                [score1, score2] = [score2, score1];
-            }
+        // Заголовки для таблиц
+        const winScore = Math.max(score1, score2);
+        const lossScore = Math.min(score1, score2);
 
-            return `
-                <div class="hltv-match-row-simple">
-                    <div class="hltv-match-team-simple">
-                        <span style="color:#8b9bb0; width: 30px; font-size:10px;">VS</span>
-                        <img src="${enemyLogo}" onerror="this.src='${shieldSVG}';">
-                        <span>${m.enemyTeamName}</span>
-                    </div>
-                    <div style="display:flex; flex-direction:column; align-items:flex-end;">
-                        <span class="hltv-match-score-simple ${m.isWin ? 'win' : 'loss'}">${score1} : ${score2}</span>
-                        <span style="font-size:10px; color:#6e7f94;">${m.data.date}</span>
+        let mapsHTML = '';
+        if (isBo3) {
+            mapsHTML = `
+                <div class="hltv-maps-list">
+                    <div class="hltv-box-title">Карты</div>
+                    <div class="hltv-map-row"><span class="hltv-map-name">Ancient</span><span class="hltv-map-score">${data.map1.score}</span></div>
+                    <div class="hltv-map-row"><span class="hltv-map-name">Anubis</span><span class="hltv-map-score">${data.map2.score}</span></div>
+                </div>
+                <div class="hltv-info-box">
+                    <div class="hltv-box-title">Информация</div>
+                    <div style="font-size:12px; color:#8b9bb0; line-height:1.6;">
+                        <p>Формат: <b style="color:#fff;">Best of 3 (BO3)</b></p>
+                        <p>Турнир: MPL Season 1</p>
+                        <p>Дата: ${data.date}</p>
                     </div>
                 </div>
             `;
-        }).join('');
+        } else {
+            mapsHTML = `
+                <div class="hltv-maps-list">
+                    <div class="hltv-box-title">Карта</div>
+                    <div class="hltv-map-row"><span class="hltv-map-name">${data.map}</span><span class="hltv-map-score">${data.score}</span></div>
+                </div>
+                <div class="hltv-info-box">
+                    <div class="hltv-box-title">Информация</div>
+                    <div style="font-size:12px; color:#8b9bb0; line-height:1.6;">
+                        <p>Формат: <b style="color:#fff;">Best of 1 (BO1)</b></p>
+                        <p>Турнир: MPL Season 1</p>
+                        <p>Дата: ${data.date}</p>
+                    </div>
+                </div>
+            `;
+        }
 
-        // Таблица во вкладке Matches (Всегда слева Игрок, справа Враг)
-        let matchTableHTML = `
-            <div class="hltv-event-header">MPL Season 1</div>
-            <table class="hltv-match-table">
-                <thead>
-                    <tr>
-                        <th style="width: 100px;">Date</th>
-                        <th>Matches</th>
-                        <th style="width: 60px; text-align:right;"></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${playedMatches.map(m => {
-                        const playerLogo = getTeamLogo(m.playerTeamName);
-                        const enemyLogo = getTeamLogo(m.enemyTeamName);
-                        
-                        let score1 = m.data.score.split(':')[0];
-                        let score2 = m.data.score.split(':')[1];
-                        
-                        // Разворачиваем счет, если игрок проиграл, чтобы слева был его счет
-                        if (!m.isWin) {
-                            [score1, score2] = [score2, score1];
-                        }
-
-                        return `
-                            <tr>
-                                <td style="color:#8b9bb0; font-family:var(--mono);">${m.data.date}</td>
-                                <td>
-                                    <div style="display:flex; align-items:center; justify-content:space-between; padding-right:20px;">
-                                        <!-- ЛЕВАЯ КОМАНДА (Команда игрока) -->
-                                        <div class="hltv-match-team-cell" style="width: 40%; justify-content:flex-end; padding-right: 10px;">
-                                            <span>${m.playerTeamName}</span>
-                                            <img src="${playerLogo}" onerror="this.src='${shieldSVG}';">
-                                        </div>
-                                        
-                                        <!-- СЧЕТ -->
-                                        <div class="hltv-match-vs-cell" style="width: 20%;">
-                                            <span class="${m.isWin ? 'win' : 'loss'}">${score1}</span> : <span class="${m.isWin ? 'loss' : 'win'}">${score2}</span>
-                                        </div>
-                                        
-                                        <!-- ПРАВАЯ КОМАНДА (Враг) -->
-                                        <div class="hltv-match-team-cell" style="width: 40%; padding-left: 10px;">
-                                            <img src="${enemyLogo}" onerror="this.src='${shieldSVG}';">
-                                            <span>${m.enemyTeamName}</span>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td style="text-align:right;">
-                                    <button class="btn-stats" onclick="location.href='match.html?id=${m.id}'">Stats</button>
-                                </td>
-                            </tr>
-                        `;
-                    }).join('')}
-                </tbody>
-            </table>
-        `;
+        let tabsHTML = '';
+        if (isBo3) {
+            tabsHTML = `
+                <div class="map-tabs">
+                    <button class="map-tab active" onclick="switchMapStats('all')" id="tab-all">All maps</button>
+                    <button class="map-tab" onclick="switchMapStats('map1')" id="tab-map1">${data.map1.name}</button>
+                    <button class="map-tab" onclick="switchMapStats('map2')" id="tab-map2">${data.map2.name}</button>
+                </div>
+            `;
+        } else {
+            tabsHTML = `
+                <div class="map-tabs">
+                    <button class="map-tab active" onclick="switchMapStats('all')">${data.map}</button>
+                </div>
+            `;
+        }
 
         container.innerHTML = `
-            <a href="players.html" class="back-btn">← Назад к списку игроков</a>
+            <a href="matches.html" class="back-btn">← Назад ко всем матчам</a>
+
+            <div class="hltv-match-header">
+                <div class="hltv-team-side win">
+                    <img src="${team1Logo}" class="hltv-logo" onerror="this.src='${fallbackSVG}';">
+                    <div><div class="hltv-team-name">${team1Name}</div></div>
+                    <div class="hltv-score">${winScore}</div>
+                </div>
+                <div class="hltv-match-center">
+                    <div class="hltv-match-time">${data.title.replace('Матч ', '').replace('🏆 ', '')}</div>
+                    <div class="hltv-match-date">${data.date}</div>
+                    <div class="hltv-match-status">Match over</div>
+                </div>
+                <div class="hltv-team-side loss">
+                    <div class="hltv-score">${lossScore}</div>
+                    <div><div class="hltv-team-name">${team2Name}</div></div>
+                    <img src="${team2Logo}" class="hltv-logo" onerror="this.src='${fallbackSVG}';">
+                </div>
+            </div>
+
+            <div class="hltv-maps-grid">${mapsHTML}</div>
+
+            <div class="hltv-box-title" style="background:none; border:none; padding:0; margin-bottom:12px; font-size:16px;">📊 Match stats</div>
+            ${tabsHTML}
+            <div id="statsTableContainer"></div>
             
-            <div class="hltv-profile-header">
-                <div class="hltv-profile-photo">
-                    <img src="${teamLogo}" class="bg-logo">
-                    <img src="${defaultImg}" class="player">
-                </div>
-                <div class="hltv-profile-info">
-                    <div class="hltv-profile-name">
-                        ${flagSVG} ${player.name} ${player.you ? '<span style="color:var(--accent);font-size:24px;">⭐</span>' : ''}
-                    </div>
-                    <table class="hltv-info-table">
-                        <tr><td>Возраст</td><td>${age} лет</td></tr>
-                        <tr><td>Текущая команда</td><td><img src="${teamLogo}" style="width:16px; height:16px; display:inline-block; vertical-align:middle; margin-right:6px;" onerror="this.src='${shieldSVG}';"> ${teamName}</td></tr>
-                        <tr><td>Место в топе (Rating)</td><td>#${rank}</td></tr>
-                    </table>
-                </div>
-            </div>
-
-            <div class="hltv-tabs">
-                <div class="hltv-tab active" onclick="switchProfileTab('info')" id="tab-info">Info</div>
-                <div class="hltv-tab" onclick="switchProfileTab('teams')" id="tab-teams">Teams</div>
-                <div class="hltv-tab" onclick="switchProfileTab('matches')" id="tab-matches">Matches</div>
-            </div>
-
-            <!-- ВКЛАДКА INFO -->
-            <div class="tab-content active" id="content-info">
-                <div class="hltv-stats-grid">
-                    <div class="hltv-stat-box">
-                        <div class="hltv-stat-title">Статистика игрока (Rating 3.0)</div>
-                        <div class="hltv-stat-row">
-                            <div class="hltv-stat-label"><span>Rating 3.0</span><span>${player.rating.toFixed(2)}</span></div>
-                            <div class="hltv-stat-bar-bg"><div class="hltv-stat-bar-fill" style="width:${Math.min(100, (player.rating / 2) * 100)}%; background:${player.rating > 1.2 ? '#7ddfa0' : '#66c0f4'};"></div></div>
-                        </div>
-                        <div class="hltv-stat-row">
-                            <div class="hltv-stat-label"><span>Firepower (K/D)</span><span>${player.kd.toFixed(2)}</span></div>
-                            <div class="hltv-stat-bar-bg"><div class="hltv-stat-bar-fill" style="width:${Math.min(100, (player.kd / 2) * 100)}%;"></div></div>
-                        </div>
-                        <div class="hltv-stat-row">
-                            <div class="hltv-stat-label"><span>ADR</span><span>${player.adr}</span></div>
-                            <div class="hltv-stat-bar-bg"><div class="hltv-stat-bar-fill" style="width:${Math.min(100, (player.adr / 150) * 100)}%;"></div></div>
-                        </div>
-                        <div class="hltv-stat-row">
-                            <div class="hltv-stat-label"><span>Entrying (Убийства)</span><span>${player.k}</span></div>
-                            <div class="hltv-stat-bar-bg"><div class="hltv-stat-bar-fill" style="width:${Math.min(100, (player.k / 150) * 100)}%;"></div></div>
-                        </div>
-                    </div>
-
-                    <div class="hltv-matches-box">
-                        <div class="hltv-stat-title" style="margin-bottom:16px;">Последние матчи</div>
-                        ${recentMatchesHTML || '<div style="font-size:12px;color:#8b9bb0;">Нет матчей</div>'}
-                    </div>
-                </div>
-            </div>
-
-            <!-- ВКЛАДКА TEAMS -->
-            <div class="tab-content" id="content-teams">
-                <div class="hltv-stat-box">
-                    <div class="hltv-stat-title">История команд</div>
-                    <div style="display:flex; align-items:center; gap:16px; padding:12px; background:#1a1e26; border:1px solid var(--border); margin-bottom:10px;">
-                        <img src="${teamLogo}" style="width:40px; height:40px; object-fit:contain;" onerror="this.src='${shieldSVG}';">
-                        <div>
-                            <div style="font-size:16px; font-weight:700; color:#fff;">${teamName}</div>
-                            <div style="font-size:12px; color:var(--success);">Текущая команда</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ВКЛАДКА MATCHES -->
-            <div class="tab-content" id="content-matches">
-                <div class="hltv-matches-tab-box">
-                    <div class="hltv-matches-tab-title">Latest results</div>
-                    ${matchTableHTML}
-                </div>
-            </div>
+            <div id="lineupsContainer"></div>
+            <div id="mvpContainer"></div>
         `;
+
+        switchMapStats('all');
     }
 
-    function switchProfileTab(tab) {
-        document.querySelectorAll('.hltv-tab').forEach(t => t.classList.remove('active'));
-        document.getElementById('tab-' + tab).classList.add('active');
-        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-        document.getElementById('content-' + tab).classList.add('active');
+    function switchMapStats(mapType) {
+        document.querySelectorAll('.map-tab').forEach(btn => btn.classList.remove('active'));
+        if (mapType === 'all') document.getElementById('tab-all')?.classList.add('active');
+        if (mapType === 'map1') document.getElementById('tab-map1')?.classList.add('active');
+        if (mapType === 'map2') document.getElementById('tab-map2')?.classList.add('active');
+
+        const data = currentMatchData;
+        const isBo3 = data.map1 !== undefined;
+        let winPlayers = [], lossPlayers = [];
+        let winnerName = '', loserName = '';
+        let winScore = 0, lossScore = 0;
+
+        // Определяем счет для текущей вкладки (карты)
+        const matchScore1 = parseInt(data.score.split(':')[0]);
+        const matchScore2 = parseInt(data.score.split(':')[1]);
+        const actualWinnerName = matchScore1 > matchScore2 ? data.winner : data.loser;
+        const actualLoserName = matchScore1 > matchScore2 ? data.loser : data.winner;
+
+        if (mapType === 'all') {
+            const source = data.total ? data.total.teams : data.teams;
+            winPlayers = source.win.players;
+            lossPlayers = source.loss.players;
+            winnerName = source.win.name;
+            loserName = source.loss.name;
+            winScore = Math.max(matchScore1, matchScore2);
+            lossScore = Math.min(matchScore1, matchScore2);
+        } else if (mapType === 'map1') {
+            winPlayers = data.map1.teams.win.players;
+            lossPlayers = data.map1.teams.loss.players;
+            winnerName = data.map1.teams.win.name;
+            loserName = data.map1.teams.loss.name;
+            // Счет карты
+            const mapScore1 = parseInt(data.map1.score.split(':')[0]);
+            const mapScore2 = parseInt(data.map1.score.split(':')[1]);
+            winScore = Math.max(mapScore1, mapScore2);
+            lossScore = Math.min(mapScore1, mapScore2);
+        } else if (mapType === 'map2') {
+            winPlayers = data.map2.teams.win.players;
+            lossPlayers = data.map2.teams.loss.players;
+            winnerName = data.map2.teams.win.name;
+            loserName = data.map2.teams.loss.name;
+            // Счет карты
+            const mapScore1 = parseInt(data.map2.score.split(':')[0]);
+            const mapScore2 = parseInt(data.map2.score.split(':')[1]);
+            winScore = Math.max(mapScore1, mapScore2);
+            lossScore = Math.min(mapScore1, mapScore2);
+        }
+
+        // Функция для таблицы с добавленным счетом в заголовок
+        const generateTable = (players, teamName, logo, score, isWin) => {
+            const sorted = [...players].sort((a,b) => (b.rating || (b.k/b.d)) - (a.rating || (a.k/a.d)));
+            return `
+                <div class="hltv-table-wrapper">
+                    <div class="hltv-table-header">
+                        <div class="hltv-table-team-info">
+                            <img src="${logo}" onerror="this.src='${fallbackSVG}';">
+                            <span>${teamName}</span>
+                        </div>
+                        <!-- СЧЕТ В ЗАГОЛОВКЕ -->
+                        <div class="hltv-table-score ${isWin ? 'win' : 'loss'}">${score}</div>
+                    </div>
+                    <table class="hltv-stats-table">
+                        <thead>
+                            <tr><th>Игрок</th><th>K-D</th><th>Разница</th><th>ADR</th><th>Ассисты</th><th>Rating</th></tr>
+                        </thead>
+                        <tbody>
+                            ${sorted.map(p => {
+                                const rating = p.rating || (p.k / (p.d || 1));
+                                return `
+                                <tr onclick="location.href='player.html?name=${encodeURIComponent(p.name)}'">
+                                    <td><div class="hltv-stats-player"><img src="${defaultImg}"><span>${p.name}</span></div></td>
+                                    <td>${p.k}-${p.d}</td>
+                                    <td class="${p.diff > 0 ? 'stat-good' : 'stat-bad'}">${p.diff > 0 ? '+' : ''}${p.diff}</td>
+                                    <td>${p.adr || '—'}</td>
+                                    <td>${p.a || '—'}</td>
+                                    <td class="${rating >= 1 ? 'stat-good' : 'stat-bad'}">${rating.toFixed(2)}</td>
+                                </tr>
+                            `}).join('')}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        };
+
+        const getLogoForName = (name) => {
+            if (name.includes('Fortress') || name.includes('Team 1')) return tf2Logo;
+            if (name.includes('Magic') || name.includes('Team 2')) return magicLogo;
+            return fallbackSVG;
+        };
+
+        document.getElementById('statsTableContainer').innerHTML = 
+            generateTable(winPlayers, winnerName, getLogoForName(winnerName), winScore, true) + 
+            generateTable(lossPlayers, loserName, getLogoForName(loserName), lossScore, false);
+
+        // MVP
+        const allMapPlayers = [...winPlayers, ...lossPlayers];
+        const mvpPlayer = allMapPlayers.sort((a,b) => (b.rating || (b.k/b.d)) - (a.rating || (a.k/a.d)))[0];
+        
+        if (mvpPlayer) {
+            const mvpRating = mvpPlayer.rating || (mvpPlayer.k / (mvpPlayer.d || 1));
+            document.getElementById('mvpContainer').innerHTML = `
+                <div class="hltv-mvp">
+                    <div class="hltv-mvp-avatar"><img src="${defaultImg}"></div>
+                    <div class="hltv-mvp-info">
+                        <div style="font-size:12px; font-family:var(--mono); color:var(--muted); text-transform:uppercase; letter-spacing:1px;">MVP ${mapType === 'all' ? 'Матча' : 'Карты'}</div>
+                        <div class="hltv-mvp-name">${mvpPlayer.name}</div>
+                        <div class="hltv-mvp-stats">Рейтинг ${mvpRating.toFixed(2)} · K/D ${(mvpPlayer.k/mvpPlayer.d).toFixed(2)}</div>
+                    </div>
+                </div>
+            `;
+        }
     }
 
     function toggleTheme() { document.body.classList.toggle('light'); document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '☀️' : '◐'; }
     let lang = 'ru';
     function toggleLang() { lang = lang === 'ru' ? 'en' : 'ru'; document.getElementById('langBtn').textContent = lang === 'ru' ? 'EN' : 'RU'; }
+
     function toggleSettings() { const panel = document.getElementById('settingsPanel'); panel.style.display = panel.style.display === 'none' ? 'flex' : 'none'; }
     function setAccent(color) { document.documentElement.style.setProperty('--accent', color); localStorage.setItem('mpl_accent', color); }
     function resetBg() { document.body.style.backgroundImage = 'none'; document.body.style.backgroundColor = 'var(--bg)'; localStorage.removeItem('mpl_bg'); document.getElementById('bgUpload').value = ''; }
@@ -387,7 +392,7 @@
         const savedBg = localStorage.getItem('mpl_bg'); if (savedBg) { document.body.style.backgroundImage = `url(${savedBg})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; }
     });
 
-    renderPlayerPage(playerName);
+    renderMatchPage(matchId);
 </script>
 </body>
 </html>
