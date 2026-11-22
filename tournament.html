@@ -31,10 +31,12 @@
         .bracket-team.loser { color: var(--dim); opacity: 0.7; }
         .bracket-score { font-weight: 800; color: var(--muted); background: var(--bg); padding: 2px 6px; border-radius: 2px; border: 1px solid var(--border); }
         
-        /* Отступы для соединительных линий (визуально) */
-        .match-spacing-1 { margin-top: 20px; }
-        .match-spacing-2 { margin-top: 90px; }
-        .match-spacing-3 { margin-top: 210px; }
+        /* Отступы для 6 команд (Вайлдкард + Полуфинал) */
+        .match-spacing-wildcard { margin-top: 45px; }
+        .match-spacing-semi1 { margin-top: 10px; }
+        .match-spacing-semi2 { margin-top: 120px; }
+        .match-spacing-final { margin-top: 90px; }
+        .match-spacing-champ { margin-top: 105px; }
 
         /* Скрытие вкладок */
         .tab-content { display: none; }
@@ -200,7 +202,7 @@
                 tournaments.push({ id: `mpl-ranked-${mNum}-2027`, name: `MPL ${el} RANKED`, year: 2027, month: mNum, status: "upcoming", dates: `1-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "Top 1", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-cup-${mNum}-2027`, name: `MPL ${el} CUP`, year: 2027, month: mNum, status: "upcoming", dates: `3-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
             } else if (mNum === 1) { // Kickoff
-                tournaments.push({ id: `mpl-kickoff-2027`, name: `MPL KICKOFF 2027`, year: 2027, month: 1, status: "upcoming", dates: `1-я неделя Января 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
+                tournaments.push({ id: `mpl-kickoff-2027`, name: `MPL KICKOFF 2027`, year: 2027, month: 1, status: "upcoming", dates: `1-я неделя Января 2027`, prizePool: "Points", teamsCount: "6", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }, {place: "2nd", reward: "TBD"}, {place: "3rd-4th", reward: "TBD"}, {place: "5th-6th", reward: "TBD"}] });
                 tournaments.push({ id: `mpl-ranked-${mNum}-2027`, name: `MPL ${el} RANKED`, year: 2027, month: mNum, status: "upcoming", dates: `2-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "Top 1", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-cup-${mNum}-2027`, name: `MPL ${el} CUP`, year: 2027, month: mNum, status: "upcoming", dates: `4-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
             } else if (mNum === 7) { // Mid-Season
@@ -237,7 +239,8 @@
             document.getElementById('t-location').textContent = tournament.location;
 
             const teamsContainer = document.getElementById('teams-container');
-            const teams = tournament.teams.length > 0 ? tournament.teams : Array(8).fill("TBD");
+            // Если команд в базе нет, рисуем 6 заглушек TBD
+            const teams = tournament.teams.length > 0 ? tournament.teams : Array(6).fill("TBD");
             teams.forEach(team => {
                 teamsContainer.innerHTML += `
                     <div class="team-card">
@@ -262,22 +265,18 @@
     });
 
     function switchTab(tabName) {
-        // Скрываем все вкладки
         document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
         
-        // Показываем нужную
         if (tabName === 'overview') {
             document.getElementById('content-overview').classList.add('active');
             document.getElementById('tab-overview').classList.add('active');
         } else if (tabName === 'bracket') {
             document.getElementById('content-bracket').classList.add('active');
             document.getElementById('tab-bracket').classList.add('active');
-            renderBracket(); // Рендерим сетку при открытии
+            renderBracket(); 
         } else if (tabName === 'matches') {
-            // Заглушка для матчей
             alert('Вкладка матчей пока в разработке! Скоро здесь появятся матчи этого турнира.');
-            // Возвращаем активный класс обратно на обзор
             document.getElementById('content-overview').classList.add('active');
             document.getElementById('tab-overview').classList.add('active');
         }
@@ -289,46 +288,54 @@
         
         container.innerHTML = '';
 
-        const col1 = document.createElement('div'); col1.className = 'bracket-col';
-        col1.innerHTML = '<div class="bracket-title">1/4 ФИНАЛА</div>';
-        const col2 = document.createElement('div'); col2.className = 'bracket-col';
-        col2.innerHTML = '<div class="bracket-title">1/2 ФИНАЛА</div>';
-        const col3 = document.createElement('div'); col3.className = 'bracket-col';
-        col3.innerHTML = '<div class="bracket-title">ГРАНД-ФИНАЛ</div>';
-        const col4 = document.createElement('div'); col4.className = 'bracket-col';
-        col4.innerHTML = '<div class="bracket-title">ЧЕМПИОН</div>';
-
-        // 1/4 Финала (4 матча)
-        for (let i = 0; i < 4; i++) {
-            col1.innerHTML += `
-                <div class="bracket-match match-spacing-1">
-                    <div class="bracket-team"><span>TBD</span><span class="bracket-score">-</span></div>
-                    <div class="bracket-team"><span>TBD</span><span class="bracket-score">-</span></div>
-                </div>
-            `;
-        }
-
-        // 1/2 Финала (2 матча)
-        for (let i = 0; i < 2; i++) {
-            col2.innerHTML += `
-                <div class="bracket-match match-spacing-2">
-                    <div class="bracket-team"><span>TBD</span><span class="bracket-score">-</span></div>
-                    <div class="bracket-team"><span>TBD</span><span class="bracket-score">-</span></div>
-                </div>
-            `;
-        }
-
-        // Финал (1 матч)
-        col3.innerHTML += `
-            <div class="bracket-match match-spacing-3">
-                <div class="bracket-team"><span>TBD</span><span class="bracket-score">-</span></div>
-                <div class="bracket-team"><span>TBD</span><span class="bracket-score">-</span></div>
+        // Колонка 1: Вайлдкард и Полуфиналы (слева)
+        const col1 = document.createElement('div'); 
+        col1.className = 'bracket-col';
+        col1.innerHTML = '<div class="bracket-title">ВАЙЛДКАРД</div>';
+        // Матч Вайлдкарда
+        col1.innerHTML += `
+            <div class="bracket-match match-spacing-wildcard">
+                <div class="bracket-team"><span>TBD (Пара 5)</span><span class="bracket-score">-</span></div>
+                <div class="bracket-team"><span>TBD (Пара 6)</span><span class="bracket-score">-</span></div>
             </div>
         `;
 
-        // Чемпион
+        // Колонка 2: Полуфиналы
+        const col2 = document.createElement('div'); 
+        col2.className = 'bracket-col';
+        col2.innerHTML = '<div class="bracket-title">ПОЛУФИНАЛЫ</div>';
+        // Полуфинал 1 (Пара 1 и Пара 2)
+        col2.innerHTML += `
+            <div class="bracket-match match-spacing-semi1">
+                <div class="bracket-team"><span>TBD (Пара 1)</span><span class="bracket-score">-</span></div>
+                <div class="bracket-team"><span>TBD (Пара 2)</span><span class="bracket-score">-</span></div>
+            </div>
+        `;
+        // Полуфинал 2 (Пара 3 и Победитель Вайлдкарда)
+        col2.innerHTML += `
+            <div class="bracket-match match-spacing-semi2">
+                <div class="bracket-team"><span>TBD (Пара 3)</span><span class="bracket-score">-</span></div>
+                <div class="bracket-team"><span>TBD (Победитель ВК)</span><span class="bracket-score">-</span></div>
+            </div>
+        `;
+
+        // Колонка 3: Финал
+        const col3 = document.createElement('div'); 
+        col3.className = 'bracket-col';
+        col3.innerHTML = '<div class="bracket-title">ГРАНД-ФИНАЛ</div>';
+        col3.innerHTML += `
+            <div class="bracket-match match-spacing-final">
+                <div class="bracket-team"><span>TBD (Победитель ПФ1)</span><span class="bracket-score">-</span></div>
+                <div class="bracket-team"><span>TBD (Победитель ПФ2)</span><span class="bracket-score">-</span></div>
+            </div>
+        `;
+
+        // Колонка 4: Чемпион
+        const col4 = document.createElement('div'); 
+        col4.className = 'bracket-col';
+        col4.innerHTML = '<div class="bracket-title">ЧЕМПИОН</div>';
         col4.innerHTML += `
-            <div class="bracket-match" style="margin-top: 230px; border-left-color: var(--accent); background: rgba(200,255,0,0.05);">
+            <div class="bracket-match match-spacing-champ" style="border-left-color: var(--accent); background: rgba(200,255,0,0.05);">
                 <div class="bracket-team" style="justify-content: center; color: var(--accent); font-weight: 800; font-size: 14px; padding: 20px 10px;">TBD</div>
             </div>
         `;
