@@ -2,8 +2,10 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL - Турнир</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=51">
     <style>
         .teams-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
         .team-card { background: var(--surface); border: 1px solid var(--border); padding: 20px 10px; text-align: center; border-radius: 0; transition: 0.2s; }
@@ -13,40 +15,40 @@
         .prize-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .prize-card { background: var(--surface-2); padding: 15px; border: 1px solid var(--border); text-align: center; border-radius: 0; }
         
-        #settingsPanel {
-            position: fixed; top: 70px; right: 20px; background: var(--surface); 
-            border: 1px solid var(--border); padding: 15px; display: none; 
-            flex-direction: column; gap: 10px; z-index: 1000; width: 250px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-        }
-        .settings-btn { background: transparent; border: 1px solid var(--border-2); color: var(--text); padding: 5px 10px; cursor: pointer; font-family: var(--mono); }
-        .settings-btn:hover { border-color: var(--accent); color: var(--accent); }
+        #settingsPanel { display: none; position: absolute; top: 60px; right: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.8); width: 250px; flex-direction: column; gap: 12px; }
     </style>
 </head>
 <body>
 <div class="container" id="app" style="display: none;">
-    <header class="header">
-        <div class="logo">
-            <h1>MPL <small>tournament</small></h1>
-        </div>
+    <div class="header">
+        <div class="logo"><h1 onclick="location.href='index.html'">MPL <small>tournament</small></h1></div>
         <div class="header-right">
-            <span class="status">LIVE</span>
-            <button class="theme-toggle" onclick="toggleSettings()" id="settingsBtn">⚙️</button>
-            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+            <span>📅 Май-Сентябрь 2026</span>
+            <span class="status">● LIVE</span>
+            <button class="lang-toggle" onclick="toggleLang()" id="langBtn">EN</button>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">◐</button>
+            <button class="theme-toggle" onclick="toggleSettings()" id="settingsBtn" title="Настройки">⚙️</button>
+            
+            <!-- ПАНЕЛЬ НАСТРОЕК (КАК НА ГЛАВНОЙ) -->
+            <div id="settingsPanel">
+                <div style="font-family:var(--mono); font-size:12px; font-weight:700; color:var(--text); border-bottom:1px solid var(--border); padding-bottom:8px;">🎨 Настройки сайта</div>
+                <div>
+                    <div style="font-size:11px; color:var(--muted); margin-bottom:6px;">Тема оформления:</div>
+                    <select id="themeSelect" onchange="changeTheme(this.value)" style="width:100%; background:var(--bg); color:var(--text); border:1px solid var(--border); padding:6px; border-radius:4px; font-family:var(--mono); font-size:11px; cursor:pointer;">
+                        <option value="theme-terminal">Terminal (Зеленая)</option>
+                        <option value="theme-cyberpunk">Cyberpunk (Розовая)</option>
+                        <option value="theme-ocean">Ocean (Синяя)</option>
+                        <option value="theme-blood">Blood Moon (Красная)</option>
+                        <option value="theme-matrix">Matrix (Черно-зеленая)</option>
+                    </select>
+                </div>
+                <div>
+                    <div style="font-size:11px; color:var(--muted); margin-bottom:6px;">Свой фон (картинка):</div>
+                    <input type="file" id="bgUpload" accept="image/*" style="width:100%; font-size:10px; color:var(--text); background:var(--bg); border:1px solid var(--border); padding:4px; border-radius:4px; cursor:pointer;">
+                    <button onclick="resetBg()" style="width:100%; margin-top:6px; background:var(--surface-2); border:none; color:var(--text); padding:6px; border-radius:4px; font-size:10px; cursor:pointer;">Сбросить фон</button>
+                </div>
+            </div>
         </div>
-    </header>
-
-    <!-- Панель настроек -->
-    <div id="settingsPanel">
-        <div style="font-family: var(--mono); font-size: 12px; font-weight: bold; margin-bottom: 5px;">Theme Settings</div>
-        <button class="settings-btn" onclick="setAccent('#c8ff00')">Acid Green</button>
-        <button class="settings-btn" onclick="setAccent('#00ff88')">Neon Green</button>
-        <button class="settings-btn" onclick="setAccent('#ff3b3b')">Red</button>
-        <button class="settings-btn" onclick="setAccent('#0984e3')">Blue</button>
-        
-        <div style="font-family: var(--mono); font-size: 12px; font-weight: bold; margin-top: 10px; margin-bottom: 5px;">Background</div>
-        <input type="file" id="bgUpload" accept="image/*" style="font-size: 10px; color: var(--text);">
-        <button class="settings-btn" onclick="resetBG()">Reset Background</button>
     </div>
 
     <div id="nav-placeholder"></div>
@@ -94,59 +96,56 @@
 
     <h2 class="panel-title" style="margin-top: 30px;">Распределение призовых <span>Prize distribution</span></h2>
     <div class="prize-grid" id="prize-container"></div>
+    <div class="footer">MPL · Mega Professional League · <b>TOURNAMENT</b></div>
 </div>
 
 <script>
     // ==========================================
-    // 1. ЛОГИКА ТЕМЫ И НАСТРОЕК
+    // 1. СИНХРОНИЗАЦИЯ ТЕМ (КАК В INDEX.HTML)
     // ==========================================
-    function toggleTheme() { 
-        document.body.classList.toggle('light'); 
-        document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '☀️' : '🌙'; 
+    const themes = {
+        'theme-terminal': { '--bg': '#0a0a0a', '--surface': '#101010', '--surface-2': '#161616', '--border': '#262626', '--text': '#e8e8e8', '--muted': '#737373', '--dim': '#4a4a4a', '--accent': '#c8ff00', '--success': '#00ff88', '--danger': '#ff3b3b' },
+        'theme-cyberpunk': { '--bg': '#0b0c10', '--surface': '#15171e', '--surface-2': '#1f232c', '--border': '#2e3440', '--text': '#f0f4f8', '--muted': '#8b9bb0', '--dim': '#4a5a6e', '--accent': '#ff0055', '--success': '#00d2ff', '--danger': '#ff3b3b' },
+        'theme-ocean': { '--bg': '#050a15', '--surface': '#0a1428', '--surface-2': '#0f1c38', '--border': '#1a2c4e', '--text': '#e0e8f0', '--muted': '#6e8fb0', '--dim': '#3a5a7a', '--accent': '#00d2ff', '--success': '#00ff88', '--danger': '#ff3b3b' },
+        'theme-blood': { '--bg': '#0d0404', '--surface': '#160707', '--surface-2': '#240c0c', '--border': '#3a1414', '--text': '#f0e6e6', '--muted': '#9e7373', '--dim': '#5e3a3a', '--accent': '#ff3b3b', '--success': '#ffb020', '--danger': '#c0392b' },
+        'theme-matrix': { '--bg': '#000000', '--surface': '#050505', '--surface-2': '#0a0a0a', '--border': '#112211', '--text': '#00ff41', '--muted': '#008f11', '--dim': '#004d0a', '--accent': '#00ff41', '--success': '#00ff88', '--danger': '#ff3b3b' }
+    };
+
+    function applyTheme(themeName) {
+        const theme = themes[themeName];
+        if (!theme) return;
+        for (const [key, value] of Object.entries(theme)) {
+            document.documentElement.style.setProperty(key, value);
+        }
     }
-    function toggleSettings() { 
-        const panel = document.getElementById('settingsPanel'); 
-        panel.style.display = panel.style.display === 'none' ? 'flex' : 'none'; 
+
+    function changeTheme(themeName) {
+        localStorage.setItem('mpl_theme', themeName);
+        applyTheme(themeName);
     }
-    function setAccent(color) { 
-        document.documentElement.style.setProperty('--accent', color); 
-        localStorage.setItem('mpl_accent', color); 
-    }
-    function resetBG() { 
-        document.body.style.backgroundImage = 'none'; 
-        document.body.style.backgroundColor = 'var(--bg)'; 
-        localStorage.removeItem('mpl_bg'); 
-        document.getElementById('bgUpload').value = ''; 
-    }
+
+    function toggleTheme() { document.body.classList.toggle('light'); document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '☀️' : '◐'; }
+    let lang = 'ru';
+    function toggleLang() { lang = lang === 'ru' ? 'en' : 'ru'; document.getElementById('langBtn').textContent = lang === 'ru' ? 'EN' : 'RU'; }
+    function toggleSettings() { const panel = document.getElementById('settingsPanel'); panel.style.display = panel.style.display === 'none' ? 'flex' : 'none'; }
+    function resetBg() { document.body.style.backgroundImage = 'none'; document.body.style.backgroundColor = 'var(--bg)'; localStorage.removeItem('mpl_bg'); document.getElementById('bgUpload').value = ''; }
     
     document.getElementById('bgUpload').addEventListener('change', function(e) {
         const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                document.body.style.backgroundImage = `url(${event.target.result})`;
-                document.body.style.backgroundSize = 'cover';
-                document.body.style.backgroundPosition = 'center';
-                localStorage.setItem('mpl_bg', event.target.result);
-            };
-            reader.readAsDataURL(file);
-        }
+        if (file) { const reader = new FileReader(); reader.onload = function(event) { document.body.style.backgroundImage = `url(${event.target.result})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; localStorage.setItem('mpl_bg', event.target.result); }; reader.readAsDataURL(file); }
     });
 
     window.addEventListener('DOMContentLoaded', () => {
-        const savedAccent = localStorage.getItem('mpl_accent'); 
-        if (savedAccent) document.documentElement.style.setProperty('--accent', savedAccent);
+        const savedTheme = localStorage.getItem('mpl_theme') || 'theme-terminal';
+        applyTheme(savedTheme);
+        const select = document.getElementById('themeSelect'); if (select) select.value = savedTheme;
         
         const savedBg = localStorage.getItem('mpl_bg'); 
-        if (savedBg) { 
-            document.body.style.backgroundImage = `url(${savedBg})`; 
-            document.body.style.backgroundSize = 'cover'; 
-            document.body.style.backgroundPosition = 'center'; 
-        }
+        if (savedBg) { document.body.style.backgroundImage = `url(${savedBg})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; }
     });
 
     // ==========================================
-    // 2. БАЗА ДАННЫХ ТУРНИРОВ (ТА ЖЕ, ЧТО И В КАЛЕНДАРЕ)
+    // 2. ГЕНЕРАТОР И ЛОГИКА СТРАНИЦЫ
     // ==========================================
     const generate2027Tournaments = () => {
         let tournaments = [];
@@ -185,9 +184,6 @@
 
     const tournamentsData = [...generate2027Tournaments()];
 
-    // ==========================================
-    // 3. РЕНДЕР СТРАНИЦЫ
-    // ==========================================
     document.addEventListener("DOMContentLoaded", () => {
         const urlParams = new URLSearchParams(window.location.search);
         const tournamentId = urlParams.get('id');
