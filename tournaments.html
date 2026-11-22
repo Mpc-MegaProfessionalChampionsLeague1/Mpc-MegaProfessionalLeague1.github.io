@@ -28,36 +28,77 @@
         <button class="tab-btn" id="btn-2027" onclick="switchYear(2027)">2027</button>
     </div>
 
-    <div id="calendar-content">
-        <!-- Сюда рендерится календарь -->
-    </div>
+    <!-- Контейнер для календаря -->
+    <div id="calendar-content"></div>
 </div>
 
-<script src="js/tournaments.js"></script>
 <script>
+    // ==========================================
+    // 1. БАЗА ДАННЫХ И ГЕНЕРАТОР ТУРНИРОВ (ВСТРОЕН)
+    // ==========================================
+    const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+    const monthCodes = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+
+    const generate2027Tournaments = () => {
+        let tournaments = [];
+        monthNames.forEach((monthName, index) => {
+            const mCode = monthCodes[index];
+            const mNum = index + 1;
+            
+            tournaments.push({
+                id: `mpl-ranked-${mNum}-2027`,
+                name: `MPL RANKED ${mCode} '27`,
+                year: 2027, month: mNum, status: "upcoming",
+                dates: `1-я неделя ${monthName} 2027`,
+                prizePool: "TBD", teamsCount: "TBD", location: "Online",
+                teams: [], prizeDistribution: [{ place: "Top 1", reward: "TBD" }, { place: "Top 2", reward: "TBD" }]
+            });
+
+            tournaments.push({
+                id: `mpl-cup-${mNum}-2027`,
+                name: `MPL CUP ${mCode} '27`,
+                year: 2027, month: mNum, status: "upcoming",
+                dates: `2-я неделя ${monthName} 2027`,
+                prizePool: "TBD", teamsCount: "TBD", location: "Online",
+                teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }, { place: "2nd", reward: "TBD" }]
+            });
+
+            tournaments.push({
+                id: `mpl-major-${mNum}-2027`,
+                name: `MPL MAJOR ${mCode} '27`,
+                year: 2027, month: mNum, status: "upcoming",
+                dates: `Конец ${monthName} 2027`,
+                prizePool: "TBD", teamsCount: "TBD", location: "Online",
+                teams: [], prizeDistribution: [{ place: "Champion", reward: "TBD" }, { place: "Runner-up", reward: "TBD" }]
+            });
+        });
+        return tournaments;
+    };
+
+    const tournamentsData = [...generate2027Tournaments()];
+
+    // ==========================================
+    // 2. ЛОГИКА РЕНДЕРА КАЛЕНДАРЯ
+    // ==========================================
     let currentYear = 2026;
 
     function switchYear(year) {
         currentYear = year;
-        // Обновляем кнопки
         document.getElementById('btn-2026').classList.remove('active');
         document.getElementById('btn-2027').classList.remove('active');
         document.getElementById('btn-' + year).classList.add('active');
-        
         renderCalendar();
     }
 
     function renderCalendar() {
         const container = document.getElementById('calendar-content');
         const yearTournaments = tournamentsData.filter(t => t.year === currentYear);
-        
         const months = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
         
         let html = '<div class="grid-3">';
         
         months.forEach((month, index) => {
             const monthTournaments = yearTournaments.filter(t => t.month === index + 1);
-            
             html += `<div class="glass-card" style="min-height: 150px;">
                 <div class="panel-title" style="margin-bottom: 10px;">${month} <span>${currentYear}</span></div>`;
             
@@ -86,17 +127,18 @@
         container.innerHTML = html;
     }
 
-    // Функция для темы (синхронизирована с другими страницами)
     function toggleTheme() { 
         document.body.classList.toggle('light'); 
         document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '☀️' : '🌙'; 
     }
 
-    // Инициализация при загрузке
-    renderCalendar();
+    // Запуск при загрузке
+    document.addEventListener("DOMContentLoaded", () => {
+        renderCalendar();
+    });
 </script>
 
-<!-- Подключение универсального меню -->
+<!-- Меню загружается отдельно -->
 <script src="js/nav.js"></script>
 </body>
 </html>
