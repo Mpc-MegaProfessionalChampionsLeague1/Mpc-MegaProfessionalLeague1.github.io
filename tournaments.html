@@ -107,16 +107,19 @@
             } else {
                 monthTournaments.forEach(t => {
                     const statusClass = t.status === 'upcoming' ? 'success' : (t.status === 'live' ? 'danger' : 'muted');
+                    // ВОТ ЗДЕСЬ ИСПРАВЛЕНИЕ: Оборачиваем в ссылку <a>, чтобы браузер корректно переходил
                     html += `
-                        <div class="match-card" style="margin-bottom: 10px;" onclick="location.href='tournament.html?id=${t.id}'">
-                            <div class="match-top">
-                                <span class="title">${t.name}</span>
-                                <span class="date" style="color: var(--${statusClass})">${t.status.toUpperCase()}</span>
+                        <a href="tournament.html?id=${t.id}" style="text-decoration: none; color: inherit; display: block; margin-bottom: 10px;">
+                            <div class="match-card">
+                                <div class="match-top">
+                                    <span class="title">${t.name}</span>
+                                    <span class="date" style="color: var(--${statusClass})">${t.status.toUpperCase()}</span>
+                                </div>
+                                <div class="match-teams" style="margin-top: 5px;">
+                                    <span style="font-size: 11px; color: var(--muted);">${t.dates}</span>
+                                </div>
                             </div>
-                            <div class="match-teams" style="margin-top: 5px;">
-                                <span style="font-size: 11px; color: var(--muted);">${t.dates}</span>
-                            </div>
-                        </div>
+                        </a>
                     `;
                 });
             }
