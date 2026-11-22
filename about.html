@@ -64,5 +64,8 @@
     document.getElementById('bgUpload').addEventListener('change', function(e) { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = function(event) { document.body.style.backgroundImage = `url(${event.target.result})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; localStorage.setItem('mpl_bg', event.target.result); }; reader.readAsDataURL(file); } });
     window.addEventListener('DOMContentLoaded', () => { const savedTheme = localStorage.getItem('mpl_theme') || 'theme-terminal'; document.body.className = savedTheme; const select = document.getElementById('themeSelect'); if (select) select.value = savedTheme; const savedBg = localStorage.getItem('mpl_bg'); if (savedBg) { document.body.style.backgroundImage = `url(${savedBg})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; } });
 </script>
+
+    <script src="js/nav.js"></script>
+    
 </body>
 </html>
