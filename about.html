@@ -5,8 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL — О сайте</title>
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=48">
+    <link rel="stylesheet" href="css/style.css?v=53">
     <style>
+        .about-header { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent); padding: 30px; margin-bottom: 20px; border-radius: 4px; }
+        .about-title { font-family: var(--mono); font-size: 28px; font-weight: 800; color: var(--text); margin-bottom: 10px; }
+        .about-desc { font-size: 14px; color: var(--muted); line-height: 1.6; max-width: 800px; }
+        
+        /* Терминальный стиль для обновлений */
+        .changelog-container { background: #050505; border: 1px solid #222; border-radius: 6px; padding: 20px; font-family: var(--mono); font-size: 13px; line-height: 1.8; color: #ccc; overflow-x: auto; box-shadow: inset 0 0 20px rgba(0,0,0,0.8); }
+        .changelog-line { display: flex; margin-bottom: 8px; }
+        .changelog-date { color: #666; width: 100px; flex-shrink: 0; }
+        .changelog-version { color: var(--accent); width: 80px; flex-shrink: 0; font-weight: 700; }
+        .changelog-text { color: #e0e0e0; }
+        .changelog-text b { color: #fff; font-weight: 700; }
+        
+        .changelog-text .tag-new { background: rgba(0, 255, 136, 0.15); color: #00ff88; padding: 1px 6px; border-radius: 3px; font-size: 10px; margin-right: 8px; border: 1px solid rgba(0, 255, 136, 0.3); text-transform: uppercase; }
+        .changelog-text .tag-fix { background: rgba(255, 59, 59, 0.15); color: #ff3b3b; padding: 1px 6px; border-radius: 3px; font-size: 10px; margin-right: 8px; border: 1px solid rgba(255, 59, 59, 0.3); text-transform: uppercase; }
+        .changelog-text .tag-imp { background: rgba(0, 210, 255, 0.15); color: #00d2ff; padding: 1px 6px; border-radius: 3px; font-size: 10px; margin-right: 8px; border: 1px solid rgba(0, 210, 255, 0.3); text-transform: uppercase; }
+        
+        .cursor-blink { display: inline-block; width: 8px; height: 15px; background: var(--accent); vertical-align: middle; margin-left: 5px; animation: blink 1s step-end infinite; }
+        @keyframes blink { 50% { opacity: 0; } }
+
         #settingsPanel { display: none; position: absolute; top: 60px; right: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.8); width: 250px; flex-direction: column; gap: 12px; }
     </style>
 </head>
@@ -22,39 +41,88 @@
             <button class="theme-toggle" onclick="toggleSettings()" id="settingsBtn" title="Настройки">⚙️</button>
             <div id="settingsPanel">
                 <div style="font-family:var(--mono); font-size:12px; font-weight:700; color:var(--text); border-bottom:1px solid var(--border); padding-bottom:8px;">🎨 Настройки сайта</div>
-                <div><div style="font-size:11px; color:var(--muted); margin-bottom:6px;">Тема оформления:</div><select id="themeSelect" onchange="changeTheme(this.value)" style="width:100%; background:var(--bg); color:var(--text); border:1px solid var(--border); padding:6px; border-radius:4px; font-family:var(--mono); font-size:11px; cursor:pointer;"><option value="theme-terminal">Terminal (Зеленая)</option><option value="theme-cyberpunk">Cyberpunk (Розовая)</option><option value="theme-ocean">Ocean (Синяя)</option><option value="theme-blood">Blood Moon (Красная)</option><option value="theme-matrix">Matrix (Черно-зеленая)</option></select></div>
-                <div><div style="font-size:11px; color:var(--muted); margin-bottom:6px;">Свой фон (картинка):</div><input type="file" id="bgUpload" accept="image/*" style="width:100%; font-size:10px; color:var(--text); background:var(--bg); border:1px solid var(--border); padding:4px; border-radius:4px; cursor:pointer;"><button onclick="resetBg()" style="width:100%; margin-top:6px; background:var(--surface-2); border:none; color:var(--text); padding:6px; border-radius:4px; font-size:10px; cursor:pointer;">Сбросить фон</button></div>
+                <div>
+                    <div style="font-size:11px; color:var(--muted); margin-bottom:6px;">Тема оформления:</div>
+                    <select id="themeSelect" onchange="changeTheme(this.value)" style="width:100%; background:var(--bg); color:var(--text); border:1px solid var(--border); padding:6px; border-radius:4px; font-family:var(--mono); font-size:11px; cursor:pointer;">
+                        <option value="theme-terminal">Terminal (Зеленая)</option>
+                        <option value="theme-cyberpunk">Cyberpunk (Розовая)</option>
+                        <option value="theme-ocean">Ocean (Синяя)</option>
+                        <option value="theme-blood">Blood Moon (Красная)</option>
+                        <option value="theme-matrix">Matrix (Черно-зеленая)</option>
+                    </select>
+                </div>
+                <div>
+                    <div style="font-size:11px; color:var(--muted); margin-bottom:6px;">Свой фон (картинка):</div>
+                    <input type="file" id="bgUpload" accept="image/*" style="width:100%; font-size:10px; color:var(--text); background:var(--bg); border:1px solid var(--border); padding:4px; border-radius:4px; cursor:pointer;">
+                    <button onclick="resetBg()" style="width:100%; margin-top:6px; background:var(--surface-2); border:none; color:var(--text); padding:6px; border-radius:4px; font-size:10px; cursor:pointer;">Сбросить фон</button>
+                </div>
             </div>
         </div>
     </div>
 
- <div id="nav-placeholder"></div>
+    <div id="nav-placeholder"></div>
 
-    <div class="glass-card">
-        <div class="page-title">ℹ️ О проекте MPL</div>
-        <div class="page-subtitle">Mega Professional League — статистика дружеских матчей</div>
-        <div class="about-text" style="color: var(--muted); line-height: 1.6; font-size: 14px;">
-            <p><b style="color:var(--text);">MPL (Mega Professional League)</b> — это проект для отслеживания статистики дружеских матчей по CS2.</p><br>
-            <p><b style="color:var(--text);">📊 Что здесь есть:</b></p>
-            <ul style="list-style:none;padding:0;margin:8px 0;">
-                <li>• 🏆 <span style="color:var(--accent);">Топ игроков</span> — по K/D и рейтингу</li>
-                <li>• 📋 <span style="color:var(--accent);">Все матчи</span> — с детальной статистикой</li>
-                <li>• 👥 <span style="color:var(--accent);">Все игроки</span> — с поиском и фильтрацией</li>
-                <li>• 📈 <span style="color:var(--accent);">Графики</span> — K/D, ADR, рейтинг, разница</li>
-                <li>• 🏅 <span style="color:var(--accent);">Достижения</span> — лучшие игроки в разных категориях</li>
-            </ul><br>
-            <p><b style="color:var(--text);">👤 Создатель:</b> <span style="color:var(--accent);">bomba69</span></p>
-            <p><b style="color:var(--text);">📅 Сезон:</b> Май-Сентябрь 2026</p>
-            <p><b style="color:var(--text);">🎮 Игра:</b> Counter-Strike 2 (4v4)</p><br>
-            <p style="color:var(--muted);font-size:12px;">Сайт сделан в стиле HLTV с любовью к CS 🖤</p>
+    <div class="about-header">
+        <div class="about-title">О проекте MPL</div>
+        <div class="about-desc">
+            MPL (Mega Professional League) — это дружеская киберспортивная лига, созданная для проведения турниров, отслеживания статистики и выявления сильнейших игроков. 
+            Сайт работает на GitHub Pages, а дизайн выполнен в стиле терминала (Neo-Brutalism). Мы собираем статистику матчей, рейтинги игроков и распределяем их по командам.
+        </div>
+    </div>
+
+    <div class="page-title" style="font-size: 20px; margin-bottom: 10px;">📜 Лог обновлений системы</div>
+    <div class="page-subtitle" style="margin-bottom: 20px;">Текущая версия: <b style="color: var(--accent);">v1.2.0</b></div>
+
+    <div class="changelog-container">
+        <!-- СЮДА ДОБАВЛЯЙ НОВЫЕ ОБНОВЛЕНИЯ СВЕРХУ -->
+        
+        <div class="changelog-line">
+            <div class="changelog-date">2026-11-23</div>
+            <div class="changelog-version">[v1.2.0]</div>
+            <div class="changelog-text">
+                <span class="tag-new">NEW</span> Добавлена система сравнения игроков (Head-to-Head). 
+                <span class="tag-imp">IMP</span> Улучшена синхронизация тем на всех страницах.
+            </div>
+        </div>
+
+        <div class="changelog-line">
+            <div class="changelog-date">2026-11-22</div>
+            <div class="changelog-version">[v1.1.0]</div>
+            <div class="changelog-text">
+                <span class="tag-new">NEW</span> Добавлен календарь турниров на 2027 год. 
+                <span class="tag-new">NEW</span> Создана страница турнира с турнирной сеткой (Bracket) на 6 команд.
+            </div>
+        </div>
+
+        <div class="changelog-line">
+            <div class="changelog-date">2026-11-20</div>
+            <div class="changelog-version">[v1.0.0]</div>
+            <div class="changelog-text">
+                <span class="tag-new">NEW</span> Глобальный редизайн сайта. Переход на Neo-Brutalism / Terminal стиль. 
+                <span class="tag-new">NEW</span> Добавлена темная/светлая тема, выбор акцента и свой фон. 
+                <span class="tag-fix">FIX</span> Исправлен баг с сохранением темы.
+            </div>
+        </div>
+        
+        <div class="changelog-line" style="margin-top: 20px; color: var(--muted);">
+            <div class="changelog-date">Root</div>
+            <div class="changelog-version">[v0.1.0]</div>
+            <div class="changelog-text">
+                Запуск базовой версии сайта. Главная страница, матчи, игроки, базовая статистика.
+            </div>
+        </div>
+
+        <!-- КУРСОР -->
+        <div class="changelog-line" style="margin-top: 10px;">
+            <div class="changelog-text" style="color: var(--accent);">root@mpl:~# <span class="cursor-blink"></span></div>
         </div>
     </div>
 
     <div class="footer">MPL · Mega Professional League · <b>TERMINAL</b> · Май-Сентябрь 2026</div>
 </div>
 
-<script src="js/data.js"></script>
 <script>
+    // Синхронизация тем (точно как на других страницах)
     function toggleTheme() { document.body.classList.toggle('light'); document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '☀️' : '◐'; }
     let lang = 'ru';
     function toggleLang() { lang = lang === 'ru' ? 'en' : 'ru'; document.getElementById('langBtn').textContent = lang === 'ru' ? 'EN' : 'RU'; }
@@ -65,7 +133,6 @@
     window.addEventListener('DOMContentLoaded', () => { const savedTheme = localStorage.getItem('mpl_theme') || 'theme-terminal'; document.body.className = savedTheme; const select = document.getElementById('themeSelect'); if (select) select.value = savedTheme; const savedBg = localStorage.getItem('mpl_bg'); if (savedBg) { document.body.style.backgroundImage = `url(${savedBg})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; } });
 </script>
 
-    <script src="js/nav.js"></script>
-    
+<script src="js/nav.js"></script>
 </body>
 </html>
