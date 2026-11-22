@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <title>MPL - Турниры</title>
     <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Стили для панели настроек, чтобы она не ломала верстку */
+        #settingsPanel {
+            position: fixed; top: 70px; right: 20px; background: var(--surface); 
+            border: 1px solid var(--border); padding: 15px; display: none; 
+            flex-direction: column; gap: 10px; z-index: 1000; width: 250px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+        .settings-btn { background: transparent; border: 1px solid var(--border-2); color: var(--text); padding: 5px 10px; cursor: pointer; font-family: var(--mono); }
+        .settings-btn:hover { border-color: var(--accent); color: var(--accent); }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -13,64 +24,119 @@
         </div>
         <div class="header-right">
             <span class="status">LIVE</span>
+            <button class="theme-toggle" onclick="toggleSettings()" id="settingsBtn">⚙️</button>
             <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
         </div>
     </header>
 
-    <!-- Сюда вставляется меню через nav.js -->
+    <!-- Панель настроек -->
+    <div id="settingsPanel">
+        <div style="font-family: var(--mono); font-size: 12px; font-weight: bold; margin-bottom: 5px;">Theme Settings</div>
+        <button class="settings-btn" onclick="setAccent('#c8ff00')">Acid Green</button>
+        <button class="settings-btn" onclick="setAccent('#00ff88')">Neon Green</button>
+        <button class="settings-btn" onclick="setAccent('#ff3b3b')">Red</button>
+        <button class="settings-btn" onclick="setAccent('#0984e3')">Blue</button>
+        
+        <div style="font-family: var(--mono); font-size: 12px; font-weight: bold; margin-top: 10px; margin-bottom: 5px;">Background</div>
+        <input type="file" id="bgUpload" accept="image/*" style="font-size: 10px; color: var(--text);">
+        <button class="settings-btn" onclick="resetBG()">Reset Background</button>
+    </div>
+
     <div id="nav-placeholder"></div>
 
     <h1 class="page-title" style="margin-top: 20px;">Календарь турниров</h1>
     
-    <!-- Переключатель года -->
     <div class="tabs-container" style="margin-bottom: 20px; max-width: 300px;">
         <button class="tab-btn active" id="btn-2026" onclick="switchYear(2026)">2026</button>
         <button class="tab-btn" id="btn-2027" onclick="switchYear(2027)">2027</button>
     </div>
 
-    <!-- Контейнер для календаря -->
     <div id="calendar-content"></div>
 </div>
 
 <script>
     // ==========================================
-    // 1. БАЗА ДАННЫХ И ГЕНЕРАТОР ТУРНИРОВ (ВСТРОЕН)
+    // 1. ЛОГИКА ТЕМЫ И НАСТРОЕК
     // ==========================================
-    const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
-    const monthCodes = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+    function toggleTheme() { 
+        document.body.classList.toggle('light'); 
+        document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '☀️' : '🌙'; 
+    }
+    function toggleSettings() { 
+        const panel = document.getElementById('settingsPanel'); 
+        panel.style.display = panel.style.display === 'none' ? 'flex' : 'none'; 
+    }
+    function setAccent(color) { 
+        document.documentElement.style.setProperty('--accent', color); 
+        localStorage.setItem('mpl_accent', color); 
+    }
+    function resetBG() { 
+        document.body.style.backgroundImage = 'none'; 
+        document.body.style.backgroundColor = 'var(--bg)'; 
+        localStorage.removeItem('mpl_bg'); 
+        document.getElementById('bgUpload').value = ''; 
+    }
+    
+    document.getElementById('bgUpload').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                document.body.style.backgroundImage = `url(${event.target.result})`;
+                document.body.style.backgroundSize = 'cover';
+                document.body.style.backgroundPosition = 'center';
+                localStorage.setItem('mpl_bg', event.target.result);
+            };
+            reader.readAsDataURL(file);
+        }
+    });
 
+    window.addEventListener('DOMContentLoaded', () => {
+        const savedAccent = localStorage.getItem('mpl_accent'); 
+        if (savedAccent) document.documentElement.style.setProperty('--accent', savedAccent);
+        
+        const savedBg = localStorage.getItem('mpl_bg'); 
+        if (savedBg) { 
+            document.body.style.backgroundImage = `url(${savedBg})`; 
+            document.body.style.backgroundSize = 'cover'; 
+            document.body.style.backgroundPosition = 'center'; 
+        }
+    });
+
+    // ==========================================
+    // 2. БАЗА ДАННЫХ ТУРНИРОВ
+    // ==========================================
     const generate2027Tournaments = () => {
         let tournaments = [];
+        const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+        const elements = ["FROST", "SNOW", "WIND", "RAIN", "STORM", "HEAT", "SUN", "DROUGHT", "LEAF", "FOG", "COLD", "BLIZZARD"];
+
         monthNames.forEach((monthName, index) => {
-            const mCode = monthCodes[index];
             const mNum = index + 1;
-            
-            tournaments.push({
-                id: `mpl-ranked-${mNum}-2027`,
-                name: `MPL RANKED ${mCode} '27`,
-                year: 2027, month: mNum, status: "upcoming",
-                dates: `1-я неделя ${monthName} 2027`,
-                prizePool: "TBD", teamsCount: "TBD", location: "Online",
-                teams: [], prizeDistribution: [{ place: "Top 1", reward: "TBD" }, { place: "Top 2", reward: "TBD" }]
-            });
+            const el = elements[index];
+            const el2 = elements[(index + 3) % 12];
 
-            tournaments.push({
-                id: `mpl-cup-${mNum}-2027`,
-                name: `MPL CUP ${mCode} '27`,
-                year: 2027, month: mNum, status: "upcoming",
-                dates: `2-я неделя ${monthName} 2027`,
-                prizePool: "TBD", teamsCount: "TBD", location: "Online",
-                teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }, { place: "2nd", reward: "TBD" }]
-            });
-
-            tournaments.push({
-                id: `mpl-major-${mNum}-2027`,
-                name: `MPL MAJOR ${mCode} '27`,
-                year: 2027, month: mNum, status: "upcoming",
-                dates: `Конец ${monthName} 2027`,
-                prizePool: "TBD", teamsCount: "TBD", location: "Online",
-                teams: [], prizeDistribution: [{ place: "Champion", reward: "TBD" }, { place: "Runner-up", reward: "TBD" }]
-            });
+            if (mNum === 6) { // Июнь - Summer Major
+                tournaments.push({ id: `mpl-summer-major-2027`, name: `MPL SUMMER MAJOR 2027`, year: 2027, month: 6, status: "upcoming", dates: `Середина Июня 2027`, prizePool: "TBD (Big)", teamsCount: "16", location: "Online", teams: [], prizeDistribution: [{ place: "Champion", reward: "TBD" }, { place: "Runner-up", reward: "TBD" }] });
+                tournaments.push({ id: `mpl-ranked-${mNum}-2027`, name: `MPL ${el} RANKED`, year: 2027, month: mNum, status: "upcoming", dates: `1-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "Top 1", reward: "TBD" }] });
+                tournaments.push({ id: `mpl-cup-${mNum}-2027`, name: `MPL ${el} CUP`, year: 2027, month: mNum, status: "upcoming", dates: `3-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
+            } else if (mNum === 12) { // Декабрь - Winter Major
+                tournaments.push({ id: `mpl-winter-major-2027`, name: `MPL WINTER MAJOR 2027`, year: 2027, month: 12, status: "upcoming", dates: `Середина Декабря 2027`, prizePool: "TBD (Big)", teamsCount: "16", location: "Online", teams: [], prizeDistribution: [{ place: "Champion", reward: "TBD" }, { place: "Runner-up", reward: "TBD" }] });
+                tournaments.push({ id: `mpl-ranked-${mNum}-2027`, name: `MPL ${el} RANKED`, year: 2027, month: mNum, status: "upcoming", dates: `1-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "Top 1", reward: "TBD" }] });
+                tournaments.push({ id: `mpl-cup-${mNum}-2027`, name: `MPL ${el} CUP`, year: 2027, month: mNum, status: "upcoming", dates: `3-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
+            } else if (mNum === 1) { // Январь - Kickoff
+                tournaments.push({ id: `mpl-kickoff-2027`, name: `MPL KICKOFF 2027`, year: 2027, month: 1, status: "upcoming", dates: `1-я неделя Января 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
+                tournaments.push({ id: `mpl-ranked-${mNum}-2027`, name: `MPL ${el} RANKED`, year: 2027, month: mNum, status: "upcoming", dates: `2-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "Top 1", reward: "TBD" }] });
+                tournaments.push({ id: `mpl-cup-${mNum}-2027`, name: `MPL ${el} CUP`, year: 2027, month: mNum, status: "upcoming", dates: `4-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
+            } else if (mNum === 7) { // Июль - Mid-Season
+                tournaments.push({ id: `mpl-midseason-2027`, name: `MPL MID-SEASON`, year: 2027, month: 7, status: "upcoming", dates: `1-я неделя Июля 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
+                tournaments.push({ id: `mpl-ranked-${mNum}-2027`, name: `MPL ${el} RANKED`, year: 2027, month: mNum, status: "upcoming", dates: `2-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "Top 1", reward: "TBD" }] });
+                tournaments.push({ id: `mpl-cup-${mNum}-2027`, name: `MPL ${el} CUP`, year: 2027, month: mNum, status: "upcoming", dates: `4-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
+            } else { // Остальные месяцы (3 турнира)
+                tournaments.push({ id: `mpl-ranked-${mNum}-2027`, name: `MPL ${el} RANKED`, year: 2027, month: mNum, status: "upcoming", dates: `1-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "Top 1", reward: "TBD" }] });
+                tournaments.push({ id: `mpl-cup-${mNum}-2027`, name: `MPL ${el} CUP`, year: 2027, month: mNum, status: "upcoming", dates: `2-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }, { place: "2nd", reward: "TBD" }] });
+                tournaments.push({ id: `mpl-open-${mNum}-2027`, name: `MPL ${el2} OPEN`, year: 2027, month: mNum, status: "upcoming", dates: `4-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
+            }
         });
         return tournaments;
     };
@@ -78,7 +144,7 @@
     const tournamentsData = [...generate2027Tournaments()];
 
     // ==========================================
-    // 2. ЛОГИКА РЕНДЕРА КАЛЕНДАРЯ
+    // 3. РЕНДЕР КАЛЕНДАРЯ
     // ==========================================
     let currentYear = 2026;
 
@@ -107,7 +173,6 @@
             } else {
                 monthTournaments.forEach(t => {
                     const statusClass = t.status === 'upcoming' ? 'success' : (t.status === 'live' ? 'danger' : 'muted');
-                    // ВОТ ЗДЕСЬ ИСПРАВЛЕНИЕ: Оборачиваем в ссылку <a>, чтобы браузер корректно переходил
                     html += `
                         <a href="tournament.html?id=${t.id}" style="text-decoration: none; color: inherit; display: block; margin-bottom: 10px;">
                             <div class="match-card">
@@ -130,18 +195,8 @@
         container.innerHTML = html;
     }
 
-    function toggleTheme() { 
-        document.body.classList.toggle('light'); 
-        document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '☀️' : '🌙'; 
-    }
-
-    // Запуск при загрузке
-    document.addEventListener("DOMContentLoaded", () => {
-        renderCalendar();
-    });
+    window.addEventListener('DOMContentLoaded', () => { renderCalendar(); });
 </script>
-
-<!-- Меню загружается отдельно -->
 <script src="js/nav.js"></script>
 </body>
 </html>
