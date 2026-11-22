@@ -1,68 +1,102 @@
-// Массивы для генерации
-const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
-const monthCodes = ["JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC"];
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>MPL - Турниры</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="container">
+    <header class="header">
+        <div class="logo">
+            <h1>MPL <small>tournaments</small></h1>
+        </div>
+        <div class="header-right">
+            <span class="status">LIVE</span>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+        </div>
+    </header>
 
-// Генератор турниров на 2027 год (3 штуки в месяц)
-const generate2027Tournaments = () => {
-    let tournaments = [];
+    <!-- Сюда вставляется меню через nav.js -->
+    <div id="nav-placeholder"></div>
+
+    <h1 class="page-title" style="margin-top: 20px;">Календарь турниров</h1>
     
-    monthNames.forEach((monthName, index) => {
-        const mCode = monthCodes[index];
-        const mNum = index + 1;
+    <!-- Переключатель года -->
+    <div class="tabs-container" style="margin-bottom: 20px; max-width: 300px;">
+        <button class="tab-btn active" id="btn-2026" onclick="switchYear(2026)">2026</button>
+        <button class="tab-btn" id="btn-2027" onclick="switchYear(2027)">2027</button>
+    </div>
+
+    <div id="calendar-content">
+        <!-- Сюда рендерится календарь -->
+    </div>
+</div>
+
+<script src="js/tournaments.js"></script>
+<script>
+    let currentYear = 2026;
+
+    function switchYear(year) {
+        currentYear = year;
+        // Обновляем кнопки
+        document.getElementById('btn-2026').classList.remove('active');
+        document.getElementById('btn-2027').classList.remove('active');
+        document.getElementById('btn-' + year).classList.add('active');
         
-        // 1. Первая неделя - Рейтинг
-        tournaments.push({
-            id: `mpl-ranked-${mNum}-2027`,
-            name: `MPL RANKED ${mCode} '27`,
-            year: 2027,
-            month: mNum,
-            status: "upcoming",
-            dates: `1-я неделя ${monthName} 2027`,
-            prizePool: "TBD",
-            teamsCount: "TBD",
-            location: "Online",
-            teams: [],
-            prizeDistribution: [{ place: "Top 1", reward: "TBD" }, { place: "Top 2", reward: "TBD" }],
-            matches: []
+        renderCalendar();
+    }
+
+    function renderCalendar() {
+        const container = document.getElementById('calendar-content');
+        const yearTournaments = tournamentsData.filter(t => t.year === currentYear);
+        
+        const months = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
+        
+        let html = '<div class="grid-3">';
+        
+        months.forEach((month, index) => {
+            const monthTournaments = yearTournaments.filter(t => t.month === index + 1);
+            
+            html += `<div class="glass-card" style="min-height: 150px;">
+                <div class="panel-title" style="margin-bottom: 10px;">${month} <span>${currentYear}</span></div>`;
+            
+            if (monthTournaments.length === 0) {
+                html += `<div style="color: var(--dim); font-family: var(--mono); font-size: 11px; padding: 10px 0;">— НЕТ ТУРНИРОВ —</div>`;
+            } else {
+                monthTournaments.forEach(t => {
+                    const statusClass = t.status === 'upcoming' ? 'success' : (t.status === 'live' ? 'danger' : 'muted');
+                    html += `
+                        <div class="match-card" style="margin-bottom: 10px;" onclick="location.href='tournament.html?id=${t.id}'">
+                            <div class="match-top">
+                                <span class="title">${t.name}</span>
+                                <span class="date" style="color: var(--${statusClass})">${t.status.toUpperCase()}</span>
+                            </div>
+                            <div class="match-teams" style="margin-top: 5px;">
+                                <span style="font-size: 11px; color: var(--muted);">${t.dates}</span>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            html += `</div>`;
         });
+        
+        html += '</div>';
+        container.innerHTML = html;
+    }
 
-        // 2. Вторая неделя - Кубок
-        tournaments.push({
-            id: `mpl-cup-${mNum}-2027`,
-            name: `MPL CUP ${mCode} '27`,
-            year: 2027,
-            month: mNum,
-            status: "upcoming",
-            dates: `2-я неделя ${monthName} 2027`,
-            prizePool: "TBD",
-            teamsCount: "TBD",
-            location: "Online",
-            teams: [],
-            prizeDistribution: [{ place: "1st", reward: "TBD" }, { place: "2nd", reward: "TBD" }],
-            matches: []
-        });
+    // Функция для темы (синхронизирована с другими страницами)
+    function toggleTheme() { 
+        document.body.classList.toggle('light'); 
+        document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '☀️' : '🌙'; 
+    }
 
-        // 3. Конец месяца - Мейджор
-        tournaments.push({
-            id: `mpl-major-${mNum}-2027`,
-            name: `MPL MAJOR ${mCode} '27`,
-            year: 2027,
-            month: mNum,
-            status: "upcoming",
-            dates: `Конец ${monthName} 2027`,
-            prizePool: "TBD",
-            teamsCount: "TBD",
-            location: "Online",
-            teams: [],
-            prizeDistribution: [{ place: "Champion", reward: "TBD" }, { place: "Runner-up", reward: "TBD" }],
-            matches: []
-        });
-    });
+    // Инициализация при загрузке
+    renderCalendar();
+</script>
 
-    return tournaments;
-};
-
-// Итоговый массив (можно добавлять свои вручную)
-const tournamentsData = [
-    ...generate2027Tournaments()
-];
+<!-- Подключение универсального меню -->
+<script src="js/nav.js"></script>
+</body>
+</html>
