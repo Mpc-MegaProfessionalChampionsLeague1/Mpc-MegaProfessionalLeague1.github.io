@@ -2,44 +2,45 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL - Турниры</title>
-    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=51">
     <style>
-        /* Стили для панели настроек, чтобы она не ломала верстку */
-        #settingsPanel {
-            position: fixed; top: 70px; right: 20px; background: var(--surface); 
-            border: 1px solid var(--border); padding: 15px; display: none; 
-            flex-direction: column; gap: 10px; z-index: 1000; width: 250px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
-        }
-        .settings-btn { background: transparent; border: 1px solid var(--border-2); color: var(--text); padding: 5px 10px; cursor: pointer; font-family: var(--mono); }
-        .settings-btn:hover { border-color: var(--accent); color: var(--accent); }
+        #settingsPanel { display: none; position: absolute; top: 60px; right: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.8); width: 250px; flex-direction: column; gap: 12px; }
     </style>
 </head>
 <body>
 <div class="container">
-    <header class="header">
-        <div class="logo">
-            <h1>MPL <small>tournaments</small></h1>
-        </div>
+    <div class="header">
+        <div class="logo"><h1 onclick="location.href='index.html'">MPL <small>tournaments</small></h1></div>
         <div class="header-right">
-            <span class="status">LIVE</span>
-            <button class="theme-toggle" onclick="toggleSettings()" id="settingsBtn">⚙️</button>
-            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">🌙</button>
+            <span>📅 Май-Сентябрь 2026</span>
+            <span class="status">● LIVE</span>
+            <button class="lang-toggle" onclick="toggleLang()" id="langBtn">EN</button>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">◐</button>
+            <button class="theme-toggle" onclick="toggleSettings()" id="settingsBtn" title="Настройки">⚙️</button>
+            
+            <!-- ПАНЕЛЬ НАСТРОЕК (КАК НА ГЛАВНОЙ) -->
+            <div id="settingsPanel">
+                <div style="font-family:var(--mono); font-size:12px; font-weight:700; color:var(--text); border-bottom:1px solid var(--border); padding-bottom:8px;">🎨 Настройки сайта</div>
+                <div>
+                    <div style="font-size:11px; color:var(--muted); margin-bottom:6px;">Тема оформления:</div>
+                    <select id="themeSelect" onchange="changeTheme(this.value)" style="width:100%; background:var(--bg); color:var(--text); border:1px solid var(--border); padding:6px; border-radius:4px; font-family:var(--mono); font-size:11px; cursor:pointer;">
+                        <option value="theme-terminal">Terminal (Зеленая)</option>
+                        <option value="theme-cyberpunk">Cyberpunk (Розовая)</option>
+                        <option value="theme-ocean">Ocean (Синяя)</option>
+                        <option value="theme-blood">Blood Moon (Красная)</option>
+                        <option value="theme-matrix">Matrix (Черно-зеленая)</option>
+                    </select>
+                </div>
+                <div>
+                    <div style="font-size:11px; color:var(--muted); margin-bottom:6px;">Свой фон (картинка):</div>
+                    <input type="file" id="bgUpload" accept="image/*" style="width:100%; font-size:10px; color:var(--text); background:var(--bg); border:1px solid var(--border); padding:4px; border-radius:4px; cursor:pointer;">
+                    <button onclick="resetBg()" style="width:100%; margin-top:6px; background:var(--surface-2); border:none; color:var(--text); padding:6px; border-radius:4px; font-size:10px; cursor:pointer;">Сбросить фон</button>
+                </div>
+            </div>
         </div>
-    </header>
-
-    <!-- Панель настроек -->
-    <div id="settingsPanel">
-        <div style="font-family: var(--mono); font-size: 12px; font-weight: bold; margin-bottom: 5px;">Theme Settings</div>
-        <button class="settings-btn" onclick="setAccent('#c8ff00')">Acid Green</button>
-        <button class="settings-btn" onclick="setAccent('#00ff88')">Neon Green</button>
-        <button class="settings-btn" onclick="setAccent('#ff3b3b')">Red</button>
-        <button class="settings-btn" onclick="setAccent('#0984e3')">Blue</button>
-        
-        <div style="font-family: var(--mono); font-size: 12px; font-weight: bold; margin-top: 10px; margin-bottom: 5px;">Background</div>
-        <input type="file" id="bgUpload" accept="image/*" style="font-size: 10px; color: var(--text);">
-        <button class="settings-btn" onclick="resetBG()">Reset Background</button>
     </div>
 
     <div id="nav-placeholder"></div>
@@ -52,59 +53,56 @@
     </div>
 
     <div id="calendar-content"></div>
+    <div class="footer">MPL · Mega Professional League · <b>TOURNAMENTS</b></div>
 </div>
 
 <script>
     // ==========================================
-    // 1. ЛОГИКА ТЕМЫ И НАСТРОЕК
+    // 1. СИНХРОНИЗАЦИЯ ТЕМ (КАК В INDEX.HTML)
     // ==========================================
-    function toggleTheme() { 
-        document.body.classList.toggle('light'); 
-        document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '☀️' : '🌙'; 
+    const themes = {
+        'theme-terminal': { '--bg': '#0a0a0a', '--surface': '#101010', '--surface-2': '#161616', '--border': '#262626', '--text': '#e8e8e8', '--muted': '#737373', '--dim': '#4a4a4a', '--accent': '#c8ff00', '--success': '#00ff88', '--danger': '#ff3b3b' },
+        'theme-cyberpunk': { '--bg': '#0b0c10', '--surface': '#15171e', '--surface-2': '#1f232c', '--border': '#2e3440', '--text': '#f0f4f8', '--muted': '#8b9bb0', '--dim': '#4a5a6e', '--accent': '#ff0055', '--success': '#00d2ff', '--danger': '#ff3b3b' },
+        'theme-ocean': { '--bg': '#050a15', '--surface': '#0a1428', '--surface-2': '#0f1c38', '--border': '#1a2c4e', '--text': '#e0e8f0', '--muted': '#6e8fb0', '--dim': '#3a5a7a', '--accent': '#00d2ff', '--success': '#00ff88', '--danger': '#ff3b3b' },
+        'theme-blood': { '--bg': '#0d0404', '--surface': '#160707', '--surface-2': '#240c0c', '--border': '#3a1414', '--text': '#f0e6e6', '--muted': '#9e7373', '--dim': '#5e3a3a', '--accent': '#ff3b3b', '--success': '#ffb020', '--danger': '#c0392b' },
+        'theme-matrix': { '--bg': '#000000', '--surface': '#050505', '--surface-2': '#0a0a0a', '--border': '#112211', '--text': '#00ff41', '--muted': '#008f11', '--dim': '#004d0a', '--accent': '#00ff41', '--success': '#00ff88', '--danger': '#ff3b3b' }
+    };
+
+    function applyTheme(themeName) {
+        const theme = themes[themeName];
+        if (!theme) return;
+        for (const [key, value] of Object.entries(theme)) {
+            document.documentElement.style.setProperty(key, value);
+        }
     }
-    function toggleSettings() { 
-        const panel = document.getElementById('settingsPanel'); 
-        panel.style.display = panel.style.display === 'none' ? 'flex' : 'none'; 
+
+    function changeTheme(themeName) {
+        localStorage.setItem('mpl_theme', themeName);
+        applyTheme(themeName);
     }
-    function setAccent(color) { 
-        document.documentElement.style.setProperty('--accent', color); 
-        localStorage.setItem('mpl_accent', color); 
-    }
-    function resetBG() { 
-        document.body.style.backgroundImage = 'none'; 
-        document.body.style.backgroundColor = 'var(--bg)'; 
-        localStorage.removeItem('mpl_bg'); 
-        document.getElementById('bgUpload').value = ''; 
-    }
+
+    function toggleTheme() { document.body.classList.toggle('light'); document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '☀️' : '◐'; }
+    let lang = 'ru';
+    function toggleLang() { lang = lang === 'ru' ? 'en' : 'ru'; document.getElementById('langBtn').textContent = lang === 'ru' ? 'EN' : 'RU'; }
+    function toggleSettings() { const panel = document.getElementById('settingsPanel'); panel.style.display = panel.style.display === 'none' ? 'flex' : 'none'; }
+    function resetBg() { document.body.style.backgroundImage = 'none'; document.body.style.backgroundColor = 'var(--bg)'; localStorage.removeItem('mpl_bg'); document.getElementById('bgUpload').value = ''; }
     
     document.getElementById('bgUpload').addEventListener('change', function(e) {
         const file = e.target.files[0];
-        if (file) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                document.body.style.backgroundImage = `url(${event.target.result})`;
-                document.body.style.backgroundSize = 'cover';
-                document.body.style.backgroundPosition = 'center';
-                localStorage.setItem('mpl_bg', event.target.result);
-            };
-            reader.readAsDataURL(file);
-        }
+        if (file) { const reader = new FileReader(); reader.onload = function(event) { document.body.style.backgroundImage = `url(${event.target.result})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; localStorage.setItem('mpl_bg', event.target.result); }; reader.readAsDataURL(file); }
     });
 
     window.addEventListener('DOMContentLoaded', () => {
-        const savedAccent = localStorage.getItem('mpl_accent'); 
-        if (savedAccent) document.documentElement.style.setProperty('--accent', savedAccent);
+        const savedTheme = localStorage.getItem('mpl_theme') || 'theme-terminal';
+        applyTheme(savedTheme);
+        const select = document.getElementById('themeSelect'); if (select) select.value = savedTheme;
         
         const savedBg = localStorage.getItem('mpl_bg'); 
-        if (savedBg) { 
-            document.body.style.backgroundImage = `url(${savedBg})`; 
-            document.body.style.backgroundSize = 'cover'; 
-            document.body.style.backgroundPosition = 'center'; 
-        }
+        if (savedBg) { document.body.style.backgroundImage = `url(${savedBg})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; }
     });
 
     // ==========================================
-    // 2. БАЗА ДАННЫХ ТУРНИРОВ
+    // 2. ГЕНЕРАТОР ТУРНИРОВ (3 В МЕСЯЦ)
     // ==========================================
     const generate2027Tournaments = () => {
         let tournaments = [];
@@ -116,23 +114,23 @@
             const el = elements[index];
             const el2 = elements[(index + 3) % 12];
 
-            if (mNum === 6) { // Июнь - Summer Major
+            if (mNum === 6) { // Summer Major
                 tournaments.push({ id: `mpl-summer-major-2027`, name: `MPL SUMMER MAJOR 2027`, year: 2027, month: 6, status: "upcoming", dates: `Середина Июня 2027`, prizePool: "TBD (Big)", teamsCount: "16", location: "Online", teams: [], prizeDistribution: [{ place: "Champion", reward: "TBD" }, { place: "Runner-up", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-ranked-${mNum}-2027`, name: `MPL ${el} RANKED`, year: 2027, month: mNum, status: "upcoming", dates: `1-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "Top 1", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-cup-${mNum}-2027`, name: `MPL ${el} CUP`, year: 2027, month: mNum, status: "upcoming", dates: `3-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
-            } else if (mNum === 12) { // Декабрь - Winter Major
+            } else if (mNum === 12) { // Winter Major
                 tournaments.push({ id: `mpl-winter-major-2027`, name: `MPL WINTER MAJOR 2027`, year: 2027, month: 12, status: "upcoming", dates: `Середина Декабря 2027`, prizePool: "TBD (Big)", teamsCount: "16", location: "Online", teams: [], prizeDistribution: [{ place: "Champion", reward: "TBD" }, { place: "Runner-up", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-ranked-${mNum}-2027`, name: `MPL ${el} RANKED`, year: 2027, month: mNum, status: "upcoming", dates: `1-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "Top 1", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-cup-${mNum}-2027`, name: `MPL ${el} CUP`, year: 2027, month: mNum, status: "upcoming", dates: `3-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
-            } else if (mNum === 1) { // Январь - Kickoff
+            } else if (mNum === 1) { // Kickoff
                 tournaments.push({ id: `mpl-kickoff-2027`, name: `MPL KICKOFF 2027`, year: 2027, month: 1, status: "upcoming", dates: `1-я неделя Января 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-ranked-${mNum}-2027`, name: `MPL ${el} RANKED`, year: 2027, month: mNum, status: "upcoming", dates: `2-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "Top 1", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-cup-${mNum}-2027`, name: `MPL ${el} CUP`, year: 2027, month: mNum, status: "upcoming", dates: `4-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
-            } else if (mNum === 7) { // Июль - Mid-Season
+            } else if (mNum === 7) { // Mid-Season
                 tournaments.push({ id: `mpl-midseason-2027`, name: `MPL MID-SEASON`, year: 2027, month: 7, status: "upcoming", dates: `1-я неделя Июля 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-ranked-${mNum}-2027`, name: `MPL ${el} RANKED`, year: 2027, month: mNum, status: "upcoming", dates: `2-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "Top 1", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-cup-${mNum}-2027`, name: `MPL ${el} CUP`, year: 2027, month: mNum, status: "upcoming", dates: `4-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
-            } else { // Остальные месяцы (3 турнира)
+            } else { // Остальные
                 tournaments.push({ id: `mpl-ranked-${mNum}-2027`, name: `MPL ${el} RANKED`, year: 2027, month: mNum, status: "upcoming", dates: `1-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "Top 1", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-cup-${mNum}-2027`, name: `MPL ${el} CUP`, year: 2027, month: mNum, status: "upcoming", dates: `2-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }, { place: "2nd", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-open-${mNum}-2027`, name: `MPL ${el2} OPEN`, year: 2027, month: mNum, status: "upcoming", dates: `4-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
