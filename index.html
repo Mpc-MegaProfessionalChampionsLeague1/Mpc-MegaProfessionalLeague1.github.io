@@ -1,42 +1,50 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
+   <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MPL — Главная</title>
+    <title>MPL — Mega Professional League</title>
+    
+    <!-- МЕТА-ТЕГИ ДЛЯ ПОИСКА -->
+    <meta name="description" content="Дружеская киберспортивная лига MPL. Турниры, статистика, матчи и рейтинги игроков.">
+    <meta name="keywords" content="MPL, киберспорт, CS2, турниры, статистика, друзья">
+    
+    <!-- OG-ТЕГИ ДЛЯ DISCORD И TELEGRAM -->
+    <meta property="og:title" content="MPL — Mega Professional League">
+    <meta property="og:description" content="Присоединяйся к дружеской лиге MPL! Матчи, статистика, турниры.">
+    <meta property="og:type" content="website">
+    
+    <!-- FAVICON (Кислотный плюс) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230a0a0a'/><text x='50' y='78' font-size='80' text-anchor='middle' fill='%23c8ff00' font-family='monospace' font-weight='bold'>+</text></svg>">
+
+    <!-- ТВОИ ШРИФТЫ И СТИЛИ -->
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css?v=51">
-    <style>
-        .team-card { background: var(--surface); border: 1px solid var(--border); border-left: 3px solid var(--accent); padding: 12px 16px; margin-bottom: 10px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 12px; border-radius: 6px; }
-        .team-card:hover { transform: translateX(4px); background: var(--surface-2); border-left-color: var(--accent); }
-        .transfer-row { display: flex; align-items: center; padding: 8px 10px; border-bottom: 1px solid var(--border); transition: 0.15s; }
-        .transfer-row:hover { background: var(--surface-2); }
-        .transfer-row:last-child { border-bottom: none; }
-        .transfer-photo { width: 40px; height: 40px; border-radius: 4px; background: var(--bg); border: 1px solid #777; overflow: hidden; flex-shrink: 0; position: relative; display: flex; align-items: center; justify-content: center; }
-        .transfer-photo .team-bg { position: absolute; width: 80%; height: 80%; opacity: 0.3; z-index: 1; object-fit: contain; }
-        .transfer-photo .player-img { position: relative; z-index: 2; width: 100%; height: 100%; object-fit: cover; }
-        .transfer-name { flex: 1; margin-left: 10px; font-weight: 600; font-size: 12px; color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-        .transfer-arrow { color: var(--dim); margin: 0 8px; font-size: 12px; }
-        .transfer-logo { width: 40px; height: 40px; padding: 4px; background: var(--surface-2); border: 1px solid var(--border); border-radius: 4px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-        .transfer-logo img { width: 100%; height: 100%; object-fit: contain; }
-        
-        #heroBanner { background: var(--surface); border: 1px solid var(--border); border-top: 4px solid var(--accent); padding: 24px 30px; display: flex; align-items: center; gap: 24px; position: relative; overflow: hidden; margin-bottom: 16px; border-radius: 8px; transition: transform 0.1s ease; transform-style: preserve-3d; }
-        #settingsPanel { display: none; position: absolute; top: 60px; right: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.8); width: 250px; flex-direction: column; gap: 12px; }
+    <link rel="stylesheet" href="css/style.css?v=52"> <!-- Версию css можно оставить свою -->
+    
+    <!-- ТВОИ СТИЛИ <style>... -->
     </style>
 </head>
 <body>
 <div class="container">
-    <div class="header">
-        <div class="logo"><h1 onclick="location.href='index.html'">MPL <small>Mega Professional League</small></h1></div>
-        <div class="header-right">
-            <span>📅 Май-Сентябрь 2026</span>
-            <span class="status">● LIVE</span>
-            <button class="lang-toggle" onclick="toggleLang()" id="langBtn">EN</button>
-            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">◐</button>
-            <button class="theme-toggle" onclick="toggleSettings()" id="settingsBtn" title="Настройки">⚙️</button>
-            <div id="settingsPanel">
-                <div style="font-family:var(--mono); font-size:12px; font-weight:700; color:var(--text); border-bottom:1px solid var(--border); padding-bottom:8px;">🎨 Настройки сайта</div>
-                <div>
+<div class="logo" onclick="location.href='index.html'" style="cursor:pointer; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+    <!-- Основной текст MPL -->
+    <div style="display:flex; align-items:flex-start; gap:2px;">
+        <svg width="120" height="40" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+            <!-- Буквы M, P, L -->
+            <text x="0" y="32" font-family="'JetBrains Mono', monospace" font-weight="800" font-size="36" fill="#ffffff" letter-spacing="-2">MPL</text>
+            
+            <!-- Кислотный плюс (внутри буквы P) -->
+            <g transform="translate(67, 10)">
+                <rect x="6" y="0" width="4" height="16" fill="var(--accent)" />
+                <rect x="0" y="6" width="16" height="4" fill="var(--accent)" />
+            </g>
+        </svg>
+    </div>
+    <!-- Подпись снизу -->
+    <div style="font-family:'JetBrains Mono', monospace; font-size:9px; color:#00d2ff; letter-spacing: 3px; margin-top:-6px; margin-left: 2px;">
+        FRIENDLY MATCHES
+    </div>
+</div>
                     <div style="font-size:11px; color:var(--muted); margin-bottom:6px;">Тема оформления:</div>
                     <select id="themeSelect" onchange="changeTheme(this.value)" style="width:100%; background:var(--bg); color:var(--text); border:1px solid var(--border); padding:6px; border-radius:4px; font-family:var(--mono); font-size:11px; cursor:pointer;">
                         <option value="theme-terminal">Terminal (Зеленая)</option>
