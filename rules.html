@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MPL — Правила лиги</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=54">
+    <style>
+        .rules-header { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--accent); padding: 30px; margin-bottom: 30px; border-radius: 4px; }
+        .rules-title { font-family: var(--mono); font-size: 28px; font-weight: 800; color: var(--text); margin-bottom: 10px; }
+        .rules-desc { font-size: 14px; color: var(--muted); line-height: 1.6; max-width: 800px; }
+
+        .rule-accordion { background: var(--surface); border: 1px solid var(--border); margin-bottom: 10px; border-radius: 4px; overflow: hidden; }
+        .rule-header { padding: 18px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; user-select: none; }
+        .rule-header:hover { background: var(--surface-2); }
+        .rule-header.active { border-bottom: 1px solid var(--border); background: var(--surface-2); }
+        .rule-title { font-family: var(--mono); font-size: 14px; font-weight: 700; color: var(--text); display: flex; align-items: center; gap: 10px; }
+        .rule-icon { font-size: 18px; }
+        .rule-arrow { color: var(--muted); transition: 0.3s; font-size: 12px; }
+        .rule-header.active .rule-arrow { transform: rotate(180deg); color: var(--accent); }
+        
+        .rule-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-out; background: var(--bg); }
+        .rule-content-inner { padding: 20px; font-size: 14px; color: var(--muted); line-height: 1.7; }
+        .rule-content-inner ul { margin-left: 20px; margin-top: 10px; margin-bottom: 10px; }
+        .rule-content-inner li { margin-bottom: 8px; }
+        .rule-content-inner b { color: var(--text); }
+        .rule-content-inner .highlight { color: var(--accent); font-family: var(--mono); font-weight: 700; }
+        .rule-content-inner .danger { color: var(--danger); font-weight: 700; }
+
+        /* Стили для таблицы Эло */
+        .elo-table { width: 100%; border-collapse: collapse; margin-top: 15px; background: var(--surface); border: 1px solid var(--border); font-family: var(--mono); font-size: 12px; }
+        .elo-table th { background: var(--surface-2); padding: 10px; text-align: center; color: var(--text); border-bottom: 1px solid var(--border); }
+        .elo-table td { padding: 10px; text-align: center; border-bottom: 1px solid var(--border); color: var(--muted); }
+        .elo-table tr:last-child td { border-bottom: none; }
+        .elo-table .win { color: var(--success); font-weight: 700; }
+        .elo-table .loss { color: var(--danger); font-weight: 700; }
+        
+        .elo-example { background: rgba(200,255,0,0.05); border-left: 3px solid var(--accent); padding: 15px; margin-top: 15px; font-family: var(--mono); font-size: 12px; color: var(--text); }
+
+        #settingsPanel { display: none; position: absolute; top: 60px; right: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.8); width: 250px; flex-direction: column; gap: 12px; }
+    </style>
+</head>
+<body class="theme-terminal">
+<div class="container">
+    <div class="header">
+        <div class="logo"><h1 onclick="location.href='index.html'">MPL <small>Mega Professional League</small></h1></div>
+        <div class="header-right">
+            <span>📅 Май-Сентябрь 2026</span>
+            <span class="status">● LIVE</span>
+            <button class="lang-toggle" onclick="toggleLang()" id="langBtn">EN</button>
+            <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">◐</button>
+            <button class="theme-toggle" onclick="toggleSettings()" id="settingsBtn" title="Настройки">⚙️</button>
+            <div id="settingsPanel">
+                <div style="font-family:var(--mono); font-size:12px; font-weight:700; color:var(--text); border-bottom:1px solid var(--border); padding-bottom:8px;">🎨 Настройки сайта</div>
+                <div>
+                    <div style="font-size:11px; color:var(--muted); margin-bottom:6px;">Тема оформления:</div>
+                    <select id="themeSelect" onchange="changeTheme(this.value)" style="width:100%; background:var(--bg); color:var(--text); border:1px solid var(--border); padding:6px; border-radius:4px; font-family:var(--mono); font-size:11px; cursor:pointer;">
+                        <option value="theme-terminal">Terminal (Зеленая)</option>
+                        <option value="theme-cyberpunk">Cyberpunk (Розовая)</option>
+                        <option value="theme-ocean">Ocean (Синяя)</option>
+                        <option value="theme-blood">Blood Moon (Красная)</option>
+                        <option value="theme-matrix">Matrix (Черно-зеленая)</option>
+                    </select>
+                </div>
+                <div>
+                    <div style="font-size:11px; color:var(--muted); margin-bottom:6px;">Свой фон (картинка):</div>
+                    <input type="file" id="bgUpload" accept="image/*" style="width:100%; font-size:10px; color:var(--text); background:var(--bg); border:1px solid var(--border); padding:4px; border-radius:4px; cursor:pointer;">
+                    <button onclick="resetBg()" style="width:100%; margin-top:6px; background:var(--surface-2); border:none; color:var(--text); padding:6px; border-radius:4px; font-size:10px; cursor:pointer;">Сбросить фон</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="nav-placeholder"></div>
+
+    <div class="rules-header">
+        <div class="rules-title">📜 Правила MPL</div>
+        <div class="rules-desc">
+            Дружеский свод правил Mega Professional League. Мы здесь, чтобы получать удовольствие от игры. Соблюдайте уважение друг к другу и не забывайте договариваться о матчах заранее. Нажмите на любой блок, чтобы раскрыть подробности.
+        </div>
+    </div>
+
+    <div class="page-title" style="font-size: 18px; margin-bottom: 15px; color: var(--accent); font-family: var(--mono);">>_ ОБЩИЕ ПОЛОЖЕНИЯ</div>
+    
+    <div class="rule-accordion">
+        <div class="rule-header" onclick="toggleRule(this)">
+            <div class="rule-title"><span class="rule-icon">🤝</span> Честная игра и уважение</div>
+            <div class="rule-arrow">▼</div>
+        </div>
+        <div class="rule-content">
+            <div class="rule-content-inner">
+                <ul>
+                    <li>Мы играем ради фана, поэтому токсичность и оскорбления участников не приветствуются.</li>
+                    <li>Использование читов и стороннего ПО, дающего преимущество, карается вечным баном (это единственное жесткое правило).</li>
+                    <li>Просто играйте в свою игру и получайте удовольствие!</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="rule-accordion">
+        <div class="rule-header" onclick="toggleRule(this)">
+            <div class="rule-title"><span class="rule-icon">⚙️</span> Формат матчей в турнирах</div>
+            <div class="rule-arrow">▼</div>
+        </div>
+        <div class="rule-content">
+            <div class="rule-content-inner">
+                <ul>
+                    <li><b>Ranked и Cup:</b> Играется только <span class="highlight">Вайлдкард в формате BO1</span>.</li>
+                    <li><b>Плей-офф (Полуфиналы):</b> Играются в формате <span class="highlight">BO3</span> (Best of 3).</li>
+                    <li><b>Гранд-Финал:</b> Играется в формате <span class="highlight">BO5</span> (Best of 5).</li>
+                    <li><b>Мейджоры (Summer/Winter Major):</b> Формат BO3 или BO5 обсуждается отдельно перед турниром.</li>
+                    <li>Карты выбираются через систему «пик/бан» (капитаны команд банят по очереди).</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="rule-accordion">
+        <div class="rule-header" onclick="toggleRule(this)">
+            <div class="rule-title"><span class="rule-icon">💻</span> Технические требования и связь</div>
+            <div class="rule-arrow">▼</div>
+        </div>
+        <div class="rule-content">
+            <div class="rule-content-inner">
+                <ul>
+                    <li>Главное — стабильный интернет. Если у кого-то вылетел интернет прямо в середине матча, ставим игру на паузу и ждем.</li>
+                    <li><b>Важно:</b> Если вы не можете играть в назначенное время, <span class="highlight">предупредите соперника и администрацию заранее</span> (хотя бы за пару часов). В этом случае матч просто переносится без каких-либо штрафов.</li>
+                    <li>Если команда <span class="danger">не пришла и не предупредила</span> (игнорит сообщения), ей засчитывается техническое поражение.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="rule-accordion">
+        <div class="rule-header" onclick="toggleRule(this)">
+            <div class="rule-title"><span class="rule-icon">📅</span> Расписание и переносы</div>
+            <div class="rule-arrow">▼</div>
+        </div>
+        <div class="rule-content">
+            <div class="rule-content-inner">
+                <ul>
+                    <li>Все матчи назначаются по обоюдному согласию команд.</li>
+                    <li>Если вы договорились поиграть в 19:00, а один из игроков задержался на 10-15 минут — это нормально, никто не дисквалифицирует. Просто предупредите.</li>
+                    <li>Если обе команды забыли про матч, его можно перенести на любой удобный день.</li>
+                    <li>Мы не используем жесткие дедлайны — главное, чтобы все матчи были сыграны до конца сезона.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ОБНОВЛЕННЫЙ БЛОК ОЧКОВ -->
+    <div class="rule-accordion">
+        <div class="rule-header" onclick="toggleRule(this)">
+            <div class="rule-title"><span class="rule-icon">🏆</span> Система очков (Elo)</div>
+            <div class="rule-arrow">▼</div>
+        </div>
+        <div class="rule-content">
+            <div class="rule-content-inner">
+                <p>Мы используем систему рейтинга <b>Эло</b> (как в шахматах и на Faceit). Это значит, что очки начисляются не просто за победу, а в зависимости от силы соперника.</p>
+                <ul>
+                    <li><b>Слабая команда побеждает сильную:</b> Получает <span class="win">много очков</span> (+25...30). Это апсет!</li>
+                    <li><b>Сильная команда побеждает слабую:</b> Получает <span class="win">мало очков</span> (+5...10). Так и должно быть.</li>
+                    <li><b>Сильная команда проигрывает слабой:</b> Теряет <span class="loss">много очков</span> (-25...30). Это провал.</li>
+                    <li><b>Слабая команда проигрывает сильной:</b> Теряет <span class="loss">мало очков</span> (-5...10). Ничего страшного.</li>
+                    <li><b>Равные команды:</b> Получают/теряют примерно одинаковое количество очков (+15/-15).</li>
+                </ul>
+
+                <div class="elo-example">
+                    <b>Пример:</b> Если Team Fortress 2 (Рейтинг 1500) играет против Team Magic (Рейтинг 1400):<br><br>
+                    • Если TF2 выигрывает: TF2 получает +10, Magic теряет -10.<br>
+                    • Если Magic выигрывает: Magic получает +25, TF2 теряет -25.<br><br>
+                    <i>Именно поэтому побеждать сильных — почетно и выгодно!</i>
+                </div>
+
+                <table class="elo-table">
+                    <thead>
+                        <tr>
+                            <th>Ситуация</th>
+                            <th>Очки победителю</th>
+                            <th>Очки проигравшему</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Слабый победил сильного (Апсет)</td>
+                            <td class="win">+25...30</td>
+                            <td class="loss">-25...30</td>
+                        </tr>
+                        <tr>
+                            <td>Сильный победил слабого</td>
+                            <td class="win">+5...10</td>
+                            <td class="loss">-5...10</td>
+                        </tr>
+                        <tr>
+                            <td>Равные команды</td>
+                            <td class="win">+15</td>
+                            <td class="loss">-15</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="rule-accordion">
+        <div class="rule-header" onclick="toggleRule(this)">
+            <div class="rule-title"><span class="rule-icon">⚖️</span> Спорные ситуации</div>
+            <div class="rule-arrow">▼</div>
+        </div>
+        <div class="rule-content">
+            <div class="rule-content-inner">
+                <ul>
+                    <li>Любой спор (например, был ли фраг или нет) решается администрацией или судьей, если он есть на матче.</li>
+                    <li>Если команда не пришла на матч, не предупредив заранее (игнор), она получает техническое поражение. За повторное такое поведение — <span class="danger">дисквалификация с турнира</span>.</li>
+                    <li>Если команда сама снимается с турнира, результаты её матчей аннулируются.</li>
+                    <li>Все апелляции подаются в чат лиги в течение часа после матча.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">MPL · Mega Professional League · <b>TERMINAL</b> · Май-Сентябрь 2026</div>
+</div>
+
+<script>
+    // Логика аккордеона
+    function toggleRule(header) {
+        const content = header.nextElementSibling;
+        const isActive = header.classList.contains('active');
+
+        document.querySelectorAll('.rule-header').forEach(h => {
+            h.classList.remove('active');
+            h.nextElementSibling.style.maxHeight = null;
+        });
+
+        if (!isActive) {
+            header.classList.add('active');
+            content.style.maxHeight = content.scrollHeight + "px";
+        }
+    }
+
+    // Синхронизация тем
+    function toggleTheme() { document.body.classList.toggle('light'); document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '☀️' : '◐'; }
+    let lang = 'ru';
+    function toggleLang() { lang = lang === 'ru' ? 'en' : 'ru'; document.getElementById('langBtn').textContent = lang === 'ru' ? 'EN' : 'RU'; }
+    function toggleSettings() { const panel = document.getElementById('settingsPanel'); panel.style.display = panel.style.display === 'none' ? 'flex' : 'none'; }
+    function changeTheme(themeName) { localStorage.setItem('mpl_theme', themeName); document.body.className = themeName; location.reload(); }
+    function resetBg() { document.body.style.backgroundImage = 'none'; document.body.style.backgroundColor = 'var(--bg)'; localStorage.removeItem('mpl_bg'); document.getElementById('bgUpload').value = ''; }
+    document.getElementById('bgUpload').addEventListener('change', function(e) { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = function(event) { document.body.style.backgroundImage = `url(${event.target.result})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; localStorage.setItem('mpl_bg', event.target.result); }; reader.readAsDataURL(file); } });
+    window.addEventListener('DOMContentLoaded', () => { const savedTheme = localStorage.getItem('mpl_theme') || 'theme-terminal'; document.body.className = savedTheme; const select = document.getElementById('themeSelect'); if (select) select.value = savedTheme; const savedBg = localStorage.getItem('mpl_bg'); if (savedBg) { document.body.style.backgroundImage = `url(${savedBg})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; } });
+</script>
+
+<script src="js/nav.js"></script>
+</body>
+</html>
