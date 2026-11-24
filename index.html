@@ -102,43 +102,18 @@
 </div>
 
 <script src="js/data.js"></script>
+<script src="js/mvp.js"></script>
 <script>
     // ==== ОПРЕДЕЛЕНИЕ ТЕМ ====
     const themes = {
-        'theme-terminal': {
-            '--bg': '#0a0a0a', '--surface': '#101010', '--surface-2': '#161616', '--border': '#262626',
-            '--text': '#e8e8e8', '--muted': '#737373', '--dim': '#4a4a4a', '--accent': '#c8ff00', '--success': '#00ff88', '--danger': '#ff3b3b'
-        },
-        'theme-cyberpunk': {
-            '--bg': '#0b0c10', '--surface': '#15171e', '--surface-2': '#1f232c', '--border': '#2e3440',
-            '--text': '#f0f4f8', '--muted': '#8b9bb0', '--dim': '#4a5a6e', '--accent': '#ff0055', '--success': '#00d2ff', '--danger': '#ff3b3b'
-        },
-        'theme-ocean': {
-            '--bg': '#050a15', '--surface': '#0a1428', '--surface-2': '#0f1c38', '--border': '#1a2c4e',
-            '--text': '#e0e8f0', '--muted': '#6e8fb0', '--dim': '#3a5a7a', '--accent': '#00d2ff', '--success': '#00ff88', '--danger': '#ff3b3b'
-        },
-        'theme-blood': {
-            '--bg': '#0d0404', '--surface': '#160707', '--surface-2': '#240c0c', '--border': '#3a1414',
-            '--text': '#f0e6e6', '--muted': '#9e7373', '--dim': '#5e3a3a', '--accent': '#ff3b3b', '--success': '#ffb020', '--danger': '#c0392b'
-        },
-        'theme-matrix': {
-            '--bg': '#000000', '--surface': '#050505', '--surface-2': '#0a0a0a', '--border': '#112211',
-            '--text': '#00ff41', '--muted': '#008f11', '--dim': '#004d0a', '--accent': '#00ff41', '--success': '#00ff88', '--danger': '#ff3b3b'
-        }
+        'theme-terminal': { '--bg': '#0a0a0a', '--surface': '#101010', '--surface-2': '#161616', '--border': '#262626', '--text': '#e8e8e8', '--muted': '#737373', '--dim': '#4a4a4a', '--accent': '#c8ff00', '--success': '#00ff88', '--danger': '#ff3b3b' },
+        'theme-cyberpunk': { '--bg': '#0b0c10', '--surface': '#15171e', '--surface-2': '#1f232c', '--border': '#2e3440', '--text': '#f0f4f8', '--muted': '#8b9bb0', '--dim': '#4a5a6e', '--accent': '#ff0055', '--success': '#00d2ff', '--danger': '#ff3b3b' },
+        'theme-ocean': { '--bg': '#050a15', '--surface': '#0a1428', '--surface-2': '#0f1c38', '--border': '#1a2c4e', '--text': '#e0e8f0', '--muted': '#6e8fb0', '--dim': '#3a5a7a', '--accent': '#00d2ff', '--success': '#00ff88', '--danger': '#ff3b3b' },
+        'theme-blood': { '--bg': '#0d0404', '--surface': '#160707', '--surface-2': '#240c0c', '--border': '#3a1414', '--text': '#f0e6e6', '--muted': '#9e7373', '--dim': '#5e3a3a', '--accent': '#ff3b3b', '--success': '#ffb020', '--danger': '#c0392b' },
+        'theme-matrix': { '--bg': '#000000', '--surface': '#050505', '--surface-2': '#0a0a0a', '--border': '#112211', '--text': '#00ff41', '--muted': '#008f11', '--dim': '#004d0a', '--accent': '#00ff41', '--success': '#00ff88', '--danger': '#ff3b3b' }
     };
-
-    function applyTheme(themeName) {
-        const theme = themes[themeName];
-        if (!theme) return;
-        for (const [key, value] of Object.entries(theme)) {
-            document.documentElement.style.setProperty(key, value);
-        }
-    }
-
-    function changeTheme(themeName) {
-        localStorage.setItem('mpl_theme', themeName);
-        applyTheme(themeName);
-    }
+    function applyTheme(themeName) { const theme = themes[themeName]; if (!theme) return; for (const [key, value] of Object.entries(theme)) { document.documentElement.style.setProperty(key, value); } }
+    function changeTheme(themeName) { localStorage.setItem('mpl_theme', themeName); applyTheme(themeName); }
 
     // ==== ДАННЫЕ ====
     const tf2Roster = ['bomba69', 'Хомяк с авт', 'uxaxaxaxa', 'AFKE'];
@@ -166,12 +141,10 @@
         if (!container) return;
         const topPlayer = [...playersData].sort((a, b) => b.rating - a.rating)[0];
         if (!topPlayer) return;
-
         let teamLogo = fallbackSVG;
         let teamName = 'Без команды';
         if (tf2Roster.includes(topPlayer.name)) { teamLogo = 'img/tf2.png'; teamName = 'Team Fortress 2'; }
         else if (magicRoster.includes(topPlayer.name)) { teamLogo = 'img/magic.png'; teamName = 'Team Magic'; }
-
         container.innerHTML = `
             <img src="${teamLogo}" style="position: absolute; right: -20px; bottom: -20px; width: 200px; height: 200px; opacity: 0.05; object-fit: contain; pointer-events: none;">
             <div style="position: relative; z-index: 2; width: 100px; height: 100px; border-radius: 8px; border: 2px solid #777; background: #111; display: flex; align-items: center; justify-content: center; overflow: hidden;">
@@ -202,6 +175,11 @@
         container.innerHTML = keys.map(id => {
             const m = matchData[id];
             const isLoss = m.loser.includes('Team 1');
+            
+            // --- АВТОМАТИЧЕСКИЙ MVP ---
+            const mvpData = calculateMatchMVP(m);
+            let mvpText = mvpData ? `${mvpData.name} (${mvpData.k}-${mvpData.d})` : '—';
+            
             return `
                 <div class="match-card ${isLoss ? 'loss' : ''}" onclick="location.href='match.html?id=${id}'">
                     <div class="match-top"><span class="title">${m.title}</span><span class="date">${m.date} · ${m.score}</span></div>
@@ -210,6 +188,7 @@
                         <span class="vs">vs</span>
                         <div class="team loss"><span class="score">${m.score.split(':')[1]}</span><span class="name">${m.loser}</span></div>
                     </div>
+                    <div class="match-stats-row"><span>🏆 <b class="mvp">${mvpText}</b></span></div>
                 </div>
             `;
         }).join('');
