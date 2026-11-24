@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL — Все игроки</title>
+    <meta name="description" content="Список всех игроков MPL. Статистика, рейтинги и сравнение.">
+    <meta property="og:title" content="MPL — Игроки">
+    <meta property="og:description" content="Смотри статистику всех игроков лиги.">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230a0a0a'/><text x='50' y='78' font-size='80' text-anchor='middle' fill='%23c8ff00' font-family='monospace' font-weight='bold'>+</text></svg>">
+    
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css?v=52">
     <style>
@@ -16,7 +21,20 @@
 <body class="theme-terminal">
 <div class="container">
     <div class="header">
-        <div class="logo"><h1 onclick="location.href='index.html'">MPL <small>Mega Professional League</small></h1></div>
+        <!-- SVG ЛОГОТИП -->
+        <div class="logo" onclick="location.href='index.html'" style="cursor:pointer; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+            <div style="display:flex; align-items:flex-start; gap:2px;">
+                <svg width="120" height="40" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+                    <text x="0" y="32" font-family="'JetBrains Mono', monospace" font-weight="800" font-size="36" fill="#ffffff" letter-spacing="-2">MPL</text>
+                    <g transform="translate(67, 10)">
+                        <rect x="6" y="0" width="4" height="16" fill="var(--accent)" />
+                        <rect x="0" y="6" width="16" height="4" fill="var(--accent)" />
+                    </g>
+                </svg>
+            </div>
+            <div style="font-family:'JetBrains Mono', monospace; font-size:9px; color:#00d2ff; letter-spacing: 3px; margin-top:-6px; margin-left: 2px;">FRIENDLY MATCHES</div>
+        </div>
+
         <div class="header-right">
             <span>📅 Май-Сентябрь 2026</span>
             <span class="status">● LIVE</span>
@@ -159,6 +177,7 @@
     renderPlayers();
 </script>
 
-<script src="js/nav.js"></script>
+    <script src="js/nav.js"></script>
+    
 </body>
 </html>
