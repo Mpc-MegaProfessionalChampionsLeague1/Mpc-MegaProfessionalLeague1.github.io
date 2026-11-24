@@ -88,6 +88,7 @@
 </div>
 
 <script src="js/data.js"></script>
+<script src="js/mvp.js"></script>
 <script>
     function switchTab(tab) {
         document.getElementById('tabList').className = tab === 'list' ? 'tab-btn active' : 'tab-btn';
@@ -107,16 +108,23 @@
 
         container.innerHTML = filtered.map(({ id, data }) => {
             const isLoss = data.loser.includes('Team 1') || data.loser.includes('Team Magic');
-            let mvp = '—', worst = '—';
+            
+            // --- АВТОМАТИЧЕСКИЙ MVP ---
+            const mvpData = calculateMatchMVP(data);
+            let mvp = '—';
+            if (mvpData) {
+                mvp = `${mvpData.name} (${mvpData.k}-${mvpData.d})`;
+            }
+            // ---------------------------
+
+            let worst = '—';
             if (data.teams) {
-                const winPlayers = data.teams.win.players || []; const lossPlayers = data.teams.loss.players || [];
-                const mvpPlayer = winPlayers.find(p => p.highlight); const worstPlayer = lossPlayers.find(p => p.worst);
-                if (mvpPlayer) mvp = mvpPlayer.name + ` (${mvpPlayer.k}-${mvpPlayer.d})`; else if (winPlayers.length > 0) mvp = winPlayers[0].name;
+                const lossPlayers = data.teams.loss.players || [];
+                const worstPlayer = lossPlayers.find(p => p.worst);
                 if (worstPlayer) worst = worstPlayer.name; else if (lossPlayers.length > 0) worst = lossPlayers[0].name;
             } else if (data.total) {
-                const winPlayers = data.total.teams.win.players || []; const lossPlayers = data.total.teams.loss.players || [];
-                const mvpPlayer = winPlayers.find(p => p.highlight); const worstPlayer = lossPlayers.find(p => p.worst);
-                if (mvpPlayer) mvp = mvpPlayer.name + ` (${mvpPlayer.k}-${mvpPlayer.d})`; else if (winPlayers.length > 0) mvp = winPlayers[0].name;
+                const lossPlayers = data.total.teams.loss.players || [];
+                const worstPlayer = lossPlayers.find(p => p.worst);
                 if (worstPlayer) worst = worstPlayer.name; else if (lossPlayers.length > 0) worst = lossPlayers[0].name;
             }
             return `
@@ -144,10 +152,14 @@
             if (isWin) wins++; else losses++;
             const maps = data.map.split(' + ');
             maps.forEach(m => { if (!mapStats[m]) mapStats[m] = { wins: 0, losses: 0, total: 0 }; mapStats[m].total++; if (isWin) mapStats[m].wins++; else mapStats[m].losses++; });
-            let mvpName = '';
-            if (data.teams) { const winPlayers = data.teams.win.players || []; const mvpPlayer = winPlayers.find(p => p.highlight); if (mvpPlayer) mvpName = mvpPlayer.name; else if (winPlayers.length > 0) mvpName = winPlayers[0].name; }
-            else if (data.total) { const winPlayers = data.total.teams.win.players || []; const mvpPlayer = winPlayers.find(p => p.highlight); if (mvpPlayer) mvpName = mvpPlayer.name; else if (winPlayers.length > 0) mvpName = winPlayers[0].name; }
-            if (mvpName) { if (!mvpStats[mvpName]) mvpStats[mvpName] = 0; mvpStats[mvpName]++; }
+            
+            // --- СТАТИСТИКА MVP (АВТО) ---
+            const mvpData = calculateMatchMVP(data);
+            if (mvpData) { 
+                if (!mvpStats[mvpData.name]) mvpStats[mvpData.name] = 0; 
+                mvpStats[mvpData.name]++; 
+            }
+            // ----------------------------
         });
 
         const totalKills = playersData.reduce((sum, p) => sum + p.k, 0);
