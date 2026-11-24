@@ -13,7 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
         { href: 'players.html', label: '03 / Игроки' },
         { href: 'tournaments.html', label: '04 / Турниры' },
         { href: 'stats.html', label: '05 / Статистика' },
-        { href: 'about.html', label: '06 / О сайте' }
+        { href: 'rules.html', label: '06 / Правила' }, // <--- ДОБАВЬ ВОТ ЭТУ СТРОКУ
+        { href: 'about.html', label: '07 / О сайте' }
     ];
 
     let navHTML = '<nav class="nav">';
