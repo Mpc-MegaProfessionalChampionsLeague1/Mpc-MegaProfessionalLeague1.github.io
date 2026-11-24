@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL — О сайте</title>
+    
+    <!-- МЕТА-ТЕГИ И OG -->
+    <meta name="description" content="История обновлений и информация о проекте Mega Professional League.">
+    <meta property="og:title" content="MPL — О сайте">
+    <meta property="og:description" content="Лог обновлений системы и информация о дружеской лиге MPL.">
+    
+    <!-- FAVICON (Кислотный плюс) -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230a0a0a'/><text x='50' y='78' font-size='80' text-anchor='middle' fill='%23c8ff00' font-family='monospace' font-weight='bold'>+</text></svg>">
+
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css?v=53">
     <style>
@@ -32,7 +41,20 @@
 <body class="theme-terminal">
 <div class="container">
     <div class="header">
-        <div class="logo"><h1 onclick="location.href='index.html'">MPL <small>Mega Professional League</small></h1></div>
+        <!-- SVG ЛОГОТИП -->
+        <div class="logo" onclick="location.href='index.html'" style="cursor:pointer; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+            <div style="display:flex; align-items:flex-start; gap:2px;">
+                <svg width="120" height="40" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+                    <text x="0" y="32" font-family="'JetBrains Mono', monospace" font-weight="800" font-size="36" fill="#ffffff" letter-spacing="-2">MPL</text>
+                    <g transform="translate(67, 10)">
+                        <rect x="6" y="0" width="4" height="16" fill="var(--accent)" />
+                        <rect x="0" y="6" width="16" height="4" fill="var(--accent)" />
+                    </g>
+                </svg>
+            </div>
+            <div style="font-family:'JetBrains Mono', monospace; font-size:9px; color:#00d2ff; letter-spacing: 3px; margin-top:-6px; margin-left: 2px;">FRIENDLY MATCHES</div>
+        </div>
+
         <div class="header-right">
             <span>📅 Май-Сентябрь 2026</span>
             <span class="status">● LIVE</span>
@@ -71,13 +93,33 @@
     </div>
 
     <div class="page-title" style="font-size: 20px; margin-bottom: 10px;">📜 Лог обновлений системы</div>
-    <div class="page-subtitle" style="margin-bottom: 20px;">Текущая версия: <b style="color: var(--accent);">v1.2.0</b></div>
+    <div class="page-subtitle" style="margin-bottom: 20px;">Текущая версия: <b style="color: var(--accent);">v1.4.0</b></div>
 
     <div class="changelog-container">
-        <!-- СЮДА ДОБАВЛЯЙ НОВЫЕ ОБНОВЛЕНИЯ СВЕРХУ -->
+        <!-- САМЫЕ СВЕЖИЕ ОБНОВЛЕНИЯ СВЕРХУ -->
         
         <div class="changelog-line">
+            <div class="changelog-date">2026-11-24</div>
+            <div class="changelog-version">[v1.4.0]</div>
+            <div class="changelog-text">
+                <span class="tag-new">NEW</span> Добавлен блок «Расписание» на главную. 
+                <span class="tag-imp">IMP</span> Обновлена страница правил (система Elo и лояльные правила). 
+                <span class="tag-imp">IMP</span> Обновлен логотип и Favicon.
+            </div>
+        </div>
+
+        <div class="changelog-line">
             <div class="changelog-date">2026-11-23</div>
+            <div class="changelog-version">[v1.3.0]</div>
+            <div class="changelog-text">
+                <span class="tag-new">NEW</span> Добавлен автоматический расчет MVP (по формуле). 
+                <span class="tag-fix">FIX</span> Исправлена синхронизация тем на всех страницах. 
+                <span class="tag-new">NEW</span> Добавлена страница правил (rules.html).
+            </div>
+        </div>
+
+        <div class="changelog-line">
+            <div class="changelog-date">2026-11-22</div>
             <div class="changelog-version">[v1.2.0]</div>
             <div class="changelog-text">
                 <span class="tag-new">NEW</span> Добавлена система сравнения игроков (Head-to-Head). 
@@ -86,7 +128,7 @@
         </div>
 
         <div class="changelog-line">
-            <div class="changelog-date">2026-11-22</div>
+            <div class="changelog-date">2026-11-21</div>
             <div class="changelog-version">[v1.1.0]</div>
             <div class="changelog-text">
                 <span class="tag-new">NEW</span> Добавлен календарь турниров на 2027 год. 
@@ -122,15 +164,50 @@
 </div>
 
 <script>
-    // Синхронизация тем (точно как на других страницах)
-    function toggleTheme() { document.body.classList.toggle('light'); document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '☀️' : '◐'; }
+    // СИНХРОНИЗАЦИЯ ТЕМ
+    function toggleTheme() { 
+        document.body.classList.toggle('light'); 
+        document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '☀️' : '◐'; 
+    }
     let lang = 'ru';
-    function toggleLang() { lang = lang === 'ru' ? 'en' : 'ru'; document.getElementById('langBtn').textContent = lang === 'ru' ? 'EN' : 'RU'; }
-    function toggleSettings() { const panel = document.getElementById('settingsPanel'); panel.style.display = panel.style.display === 'none' ? 'flex' : 'none'; }
-    function changeTheme(themeName) { localStorage.setItem('mpl_theme', themeName); document.body.className = themeName; location.reload(); }
-    function resetBg() { document.body.style.backgroundImage = 'none'; document.body.style.backgroundColor = 'var(--bg)'; localStorage.removeItem('mpl_bg'); document.getElementById('bgUpload').value = ''; }
-    document.getElementById('bgUpload').addEventListener('change', function(e) { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = function(event) { document.body.style.backgroundImage = `url(${event.target.result})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; localStorage.setItem('mpl_bg', event.target.result); }; reader.readAsDataURL(file); } });
-    window.addEventListener('DOMContentLoaded', () => { const savedTheme = localStorage.getItem('mpl_theme') || 'theme-terminal'; document.body.className = savedTheme; const select = document.getElementById('themeSelect'); if (select) select.value = savedTheme; const savedBg = localStorage.getItem('mpl_bg'); if (savedBg) { document.body.style.backgroundImage = `url(${savedBg})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; } });
+    function toggleLang() { 
+        lang = lang === 'ru' ? 'en' : 'ru'; 
+        document.getElementById('langBtn').textContent = lang === 'ru' ? 'EN' : 'RU'; 
+    }
+    function toggleSettings() { 
+        const panel = document.getElementById('settingsPanel'); 
+        panel.style.display = panel.style.display === 'none' ? 'flex' : 'none'; 
+    }
+    function changeTheme(themeName) { 
+        localStorage.setItem('mpl_theme', themeName); 
+        document.body.className = themeName; 
+        location.reload(); 
+    }
+    function resetBg() { 
+        document.body.style.backgroundImage = 'none'; 
+        document.body.style.backgroundColor = 'var(--bg)'; 
+        localStorage.removeItem('mpl_bg'); 
+        document.getElementById('bgUpload').value = ''; 
+    }
+    document.getElementById('bgUpload').addEventListener('change', function(e) { 
+        const file = e.target.files[0]; 
+        if (file) { 
+            const reader = new FileReader(); 
+            reader.onload = function(event) { 
+                document.body.style.backgroundImage = `url(${event.target.result})`; 
+                document.body.style.backgroundSize = 'cover'; 
+                document.body.style.backgroundPosition = 'center'; 
+                localStorage.setItem('mpl_bg', event.target.result); 
+            }; 
+            reader.readAsDataURL(file); 
+        } 
+    });
+    window.addEventListener('DOMContentLoaded', () => { 
+        const savedTheme = localStorage.getItem('mpl_theme') || 'theme-terminal'; 
+        document.body.className = savedTheme; 
+        const select = document.getElementById('themeSelect'); if (select) select.value = savedTheme; 
+        const savedBg = localStorage.getItem('mpl_bg'); if (savedBg) { document.body.style.backgroundImage = `url(${savedBg})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; } 
+    });
 </script>
 
 <script src="js/nav.js"></script>
