@@ -4,24 +4,45 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL - Турниры</title>
+    
+    <!-- МЕТА-ТЕГИ И OG -->
+    <meta name="description" content="Календарь турниров Mega Professional League на 2027 год.">
+    <meta property="og:title" content="MPL — Турниры">
+    <meta property="og:description" content="Полное расписание турниров MPL на 2027 год.">
+    
+    <!-- FAVICON -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230a0a0a'/><text x='50' y='78' font-size='80' text-anchor='middle' fill='%23c8ff00' font-family='monospace' font-weight='bold'>+</text></svg>">
+    
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css?v=51">
     <style>
         #settingsPanel { display: none; position: absolute; top: 60px; right: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.8); width: 250px; flex-direction: column; gap: 12px; }
     </style>
 </head>
-<body>
+<body class="theme-terminal">
 <div class="container">
     <div class="header">
-        <div class="logo"><h1 onclick="location.href='index.html'">MPL <small>tournaments</small></h1></div>
+        <!-- SVG ЛОГОТИП -->
+        <div class="logo" onclick="location.href='index.html'" style="cursor:pointer; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+            <div style="display:flex; align-items:flex-start; gap:2px;">
+                <svg width="120" height="40" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+                    <text x="0" y="32" font-family="'JetBrains Mono', monospace" font-weight="800" font-size="36" fill="#ffffff" letter-spacing="-2">MPL</text>
+                    <g transform="translate(67, 10)">
+                        <rect x="6" y="0" width="4" height="16" fill="var(--accent)" />
+                        <rect x="0" y="6" width="16" height="4" fill="var(--accent)" />
+                    </g>
+                </svg>
+            </div>
+            <div style="font-family:'JetBrains Mono', monospace; font-size:9px; color:#00d2ff; letter-spacing: 3px; margin-top:-6px; margin-left: 2px;">FRIENDLY MATCHES</div>
+        </div>
+
         <div class="header-right">
-            <span>📅 Май-Сентябрь 2026</span>
-            <span class="status">● LIVE</span>
+            <span>📅 2027</span>
+            <span class="status">● UPCOMING</span>
             <button class="lang-toggle" onclick="toggleLang()" id="langBtn">EN</button>
             <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">◐</button>
             <button class="theme-toggle" onclick="toggleSettings()" id="settingsBtn" title="Настройки">⚙️</button>
             
-            <!-- ПАНЕЛЬ НАСТРОЕК (КАК НА ГЛАВНОЙ) -->
             <div id="settingsPanel">
                 <div style="font-family:var(--mono); font-size:12px; font-weight:700; color:var(--text); border-bottom:1px solid var(--border); padding-bottom:8px;">🎨 Настройки сайта</div>
                 <div>
@@ -57,9 +78,7 @@
 </div>
 
 <script>
-    // ==========================================
-    // 1. СИНХРОНИЗАЦИЯ ТЕМ (КАК В INDEX.HTML)
-    // ==========================================
+    // ТЕМЫ
     const themes = {
         'theme-terminal': { '--bg': '#0a0a0a', '--surface': '#101010', '--surface-2': '#161616', '--border': '#262626', '--text': '#e8e8e8', '--muted': '#737373', '--dim': '#4a4a4a', '--accent': '#c8ff00', '--success': '#00ff88', '--danger': '#ff3b3b' },
         'theme-cyberpunk': { '--bg': '#0b0c10', '--surface': '#15171e', '--surface-2': '#1f232c', '--border': '#2e3440', '--text': '#f0f4f8', '--muted': '#8b9bb0', '--dim': '#4a5a6e', '--accent': '#ff0055', '--success': '#00d2ff', '--danger': '#ff3b3b' },
@@ -67,43 +86,24 @@
         'theme-blood': { '--bg': '#0d0404', '--surface': '#160707', '--surface-2': '#240c0c', '--border': '#3a1414', '--text': '#f0e6e6', '--muted': '#9e7373', '--dim': '#5e3a3a', '--accent': '#ff3b3b', '--success': '#ffb020', '--danger': '#c0392b' },
         'theme-matrix': { '--bg': '#000000', '--surface': '#050505', '--surface-2': '#0a0a0a', '--border': '#112211', '--text': '#00ff41', '--muted': '#008f11', '--dim': '#004d0a', '--accent': '#00ff41', '--success': '#00ff88', '--danger': '#ff3b3b' }
     };
-
-    function applyTheme(themeName) {
-        const theme = themes[themeName];
-        if (!theme) return;
-        for (const [key, value] of Object.entries(theme)) {
-            document.documentElement.style.setProperty(key, value);
-        }
-    }
-
-    function changeTheme(themeName) {
-        localStorage.setItem('mpl_theme', themeName);
-        applyTheme(themeName);
-    }
+    function applyTheme(themeName) { const theme = themes[themeName]; if (!theme) return; for (const [key, value] of Object.entries(theme)) { document.documentElement.style.setProperty(key, value); } }
+    function changeTheme(themeName) { localStorage.setItem('mpl_theme', themeName); applyTheme(themeName); }
 
     function toggleTheme() { document.body.classList.toggle('light'); document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '☀️' : '◐'; }
     let lang = 'ru';
     function toggleLang() { lang = lang === 'ru' ? 'en' : 'ru'; document.getElementById('langBtn').textContent = lang === 'ru' ? 'EN' : 'RU'; }
     function toggleSettings() { const panel = document.getElementById('settingsPanel'); panel.style.display = panel.style.display === 'none' ? 'flex' : 'none'; }
     function resetBg() { document.body.style.backgroundImage = 'none'; document.body.style.backgroundColor = 'var(--bg)'; localStorage.removeItem('mpl_bg'); document.getElementById('bgUpload').value = ''; }
-    
-    document.getElementById('bgUpload').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) { const reader = new FileReader(); reader.onload = function(event) { document.body.style.backgroundImage = `url(${event.target.result})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; localStorage.setItem('mpl_bg', event.target.result); }; reader.readAsDataURL(file); }
-    });
-
+    document.getElementById('bgUpload').addEventListener('change', function(e) { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = function(event) { document.body.style.backgroundImage = `url(${event.target.result})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; localStorage.setItem('mpl_bg', event.target.result); }; reader.readAsDataURL(file); } });
     window.addEventListener('DOMContentLoaded', () => {
         const savedTheme = localStorage.getItem('mpl_theme') || 'theme-terminal';
         applyTheme(savedTheme);
         const select = document.getElementById('themeSelect'); if (select) select.value = savedTheme;
-        
         const savedBg = localStorage.getItem('mpl_bg'); 
         if (savedBg) { document.body.style.backgroundImage = `url(${savedBg})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; }
     });
 
-    // ==========================================
-    // 2. ГЕНЕРАТОР ТУРНИРОВ (3 В МЕСЯЦ)
-    // ==========================================
+    // ГЕНЕРАТОР
     const generate2027Tournaments = () => {
         let tournaments = [];
         const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
@@ -114,23 +114,23 @@
             const el = elements[index];
             const el2 = elements[(index + 3) % 12];
 
-            if (mNum === 6) { // Summer Major
+            if (mNum === 6) {
                 tournaments.push({ id: `mpl-summer-major-2027`, name: `MPL SUMMER MAJOR 2027`, year: 2027, month: 6, status: "upcoming", dates: `Середина Июня 2027`, prizePool: "TBD (Big)", teamsCount: "16", location: "Online", teams: [], prizeDistribution: [{ place: "Champion", reward: "TBD" }, { place: "Runner-up", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-ranked-${mNum}-2027`, name: `MPL ${el} RANKED`, year: 2027, month: mNum, status: "upcoming", dates: `1-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "Top 1", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-cup-${mNum}-2027`, name: `MPL ${el} CUP`, year: 2027, month: mNum, status: "upcoming", dates: `3-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
-            } else if (mNum === 12) { // Winter Major
+            } else if (mNum === 12) {
                 tournaments.push({ id: `mpl-winter-major-2027`, name: `MPL WINTER MAJOR 2027`, year: 2027, month: 12, status: "upcoming", dates: `Середина Декабря 2027`, prizePool: "TBD (Big)", teamsCount: "16", location: "Online", teams: [], prizeDistribution: [{ place: "Champion", reward: "TBD" }, { place: "Runner-up", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-ranked-${mNum}-2027`, name: `MPL ${el} RANKED`, year: 2027, month: mNum, status: "upcoming", dates: `1-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "Top 1", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-cup-${mNum}-2027`, name: `MPL ${el} CUP`, year: 2027, month: mNum, status: "upcoming", dates: `3-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
-            } else if (mNum === 1) { // Kickoff
-                tournaments.push({ id: `mpl-kickoff-2027`, name: `MPL KICKOFF 2027`, year: 2027, month: 1, status: "upcoming", dates: `2-3 Января`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
+            } else if (mNum === 1) {
+                tournaments.push({ id: `mpl-kickoff-2027`, name: `MPL KICKOFF 2027`, year: 2027, month: 1, status: "upcoming", dates: `2-3 Января 2027`, prizePool: "Points", teamsCount: "6", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }, {place: "2nd", reward: "TBD"}, {place: "3rd-4th", reward: "TBD"}, {place: "5th-6th", reward: "TBD"}] });
                 tournaments.push({ id: `mpl-ranked-${mNum}-2027`, name: `MPL ${el} RANKED`, year: 2027, month: mNum, status: "upcoming", dates: `2-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "Top 1", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-cup-${mNum}-2027`, name: `MPL ${el} CUP`, year: 2027, month: mNum, status: "upcoming", dates: `4-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
-            } else if (mNum === 7) { // Mid-Season
+            } else if (mNum === 7) {
                 tournaments.push({ id: `mpl-midseason-2027`, name: `MPL MID-SEASON`, year: 2027, month: 7, status: "upcoming", dates: `1-я неделя Июля 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-ranked-${mNum}-2027`, name: `MPL ${el} RANKED`, year: 2027, month: mNum, status: "upcoming", dates: `2-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "Top 1", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-cup-${mNum}-2027`, name: `MPL ${el} CUP`, year: 2027, month: mNum, status: "upcoming", dates: `4-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
-            } else { // Остальные
+            } else {
                 tournaments.push({ id: `mpl-ranked-${mNum}-2027`, name: `MPL ${el} RANKED`, year: 2027, month: mNum, status: "upcoming", dates: `1-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "Top 1", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-cup-${mNum}-2027`, name: `MPL ${el} CUP`, year: 2027, month: mNum, status: "upcoming", dates: `2-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }, { place: "2nd", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-open-${mNum}-2027`, name: `MPL ${el2} OPEN`, year: 2027, month: mNum, status: "upcoming", dates: `4-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
@@ -141,11 +141,8 @@
 
     const tournamentsData = [...generate2027Tournaments()];
 
-    // ==========================================
-    // 3. РЕНДЕР КАЛЕНДАРЯ
-    // ==========================================
+    // КАЛЕНДАРЬ
     let currentYear = 2026;
-
     function switchYear(year) {
         currentYear = year;
         document.getElementById('btn-2026').classList.remove('active');
@@ -160,7 +157,6 @@
         const months = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
         
         let html = '<div class="grid-3">';
-        
         months.forEach((month, index) => {
             const monthTournaments = yearTournaments.filter(t => t.month === index + 1);
             html += `<div class="glass-card" style="min-height: 150px;">
@@ -188,11 +184,9 @@
             }
             html += `</div>`;
         });
-        
         html += '</div>';
         container.innerHTML = html;
     }
-
     window.addEventListener('DOMContentLoaded', () => { renderCalendar(); });
 </script>
 <script src="js/nav.js"></script>
