@@ -4,10 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MPL - Турнир</title>
+    
+    <!-- МЕТА-ТЕГИ -->
+    <meta name="description" content="Страница турнира MPL. Сетка, участники и расписание.">
+    <meta property="og:title" content="MPL — Турнир">
+    
+    <!-- FAVICON -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230a0a0a'/><text x='50' y='78' font-size='80' text-anchor='middle' fill='%23c8ff00' font-family='monospace' font-weight='bold'>+</text></svg>">
+
     <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css?v=51">
     <style>
-        /* Стили для команд и призовых */
         .teams-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 10px; }
         .team-card { background: var(--surface); border: 1px solid var(--border); padding: 20px 10px; text-align: center; border-radius: 0; transition: 0.2s; }
         .team-card:hover { border-color: var(--border-2); }
@@ -16,15 +23,12 @@
         .prize-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
         .prize-card { background: var(--surface-2); padding: 15px; border: 1px solid var(--border); text-align: center; border-radius: 0; }
         
-        /* Панель настроек */
         #settingsPanel { display: none; position: absolute; top: 60px; right: 20px; background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 16px; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.8); width: 250px; flex-direction: column; gap: 12px; }
 
-        /* Стили для турнирной сетки (Bracket) */
         .bracket-container { display: flex; gap: 40px; min-width: 900px; margin-top: 20px; padding-bottom: 20px; overflow-x: auto; }
         .bracket-col { display: flex; flex-direction: column; justify-content: space-around; gap: 20px; }
         .bracket-title { font-family: var(--mono); font-size: 12px; color: var(--muted); text-align: center; text-transform: uppercase; margin-bottom: 15px; font-weight: 700; }
         
-        /* Обертка для матча, чтобы добавить дату */
         .bracket-match-wrapper { display: flex; flex-direction: column; width: 200px; }
         .bracket-match-date { font-family: var(--mono); font-size: 10px; color: var(--accent); text-align: center; margin-bottom: 4px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
 
@@ -36,22 +40,33 @@
         .bracket-team.loser { color: var(--dim); opacity: 0.7; }
         .bracket-score { font-weight: 800; color: var(--muted); background: var(--bg); padding: 2px 6px; border-radius: 2px; border: 1px solid var(--border); }
         
-        /* Отступы для 6 команд (Вайлдкард + Полуфинал) */
         .match-spacing-wildcard { margin-top: 45px; }
         .match-spacing-semi1 { margin-top: 10px; }
         .match-spacing-semi2 { margin-top: 120px; }
         .match-spacing-final { margin-top: 90px; }
         .match-spacing-champ { margin-top: 105px; }
 
-        /* Скрытие вкладок */
         .tab-content { display: none; }
         .tab-content.active { display: block; }
     </style>
 </head>
-<body>
+<body class="theme-terminal">
 <div class="container" id="app" style="display: none;">
     <div class="header">
-        <div class="logo"><h1 onclick="location.href='index.html'">MPL <small>tournament</small></h1></div>
+        <!-- SVG ЛОГОТИП -->
+        <div class="logo" onclick="location.href='index.html'" style="cursor:pointer; display:flex; flex-direction:column; align-items:flex-start; justify-content:center;">
+            <div style="display:flex; align-items:flex-start; gap:2px;">
+                <svg width="120" height="40" viewBox="0 0 120 40" xmlns="http://www.w3.org/2000/svg">
+                    <text x="0" y="32" font-family="'JetBrains Mono', monospace" font-weight="800" font-size="36" fill="#ffffff" letter-spacing="-2">MPL</text>
+                    <g transform="translate(67, 10)">
+                        <rect x="6" y="0" width="4" height="16" fill="var(--accent)" />
+                        <rect x="0" y="6" width="16" height="4" fill="var(--accent)" />
+                    </g>
+                </svg>
+            </div>
+            <div style="font-family:'JetBrains Mono', monospace; font-size:9px; color:#00d2ff; letter-spacing: 3px; margin-top:-6px; margin-left: 2px;">FRIENDLY MATCHES</div>
+        </div>
+
         <div class="header-right">
             <span>📅 Январь 2027</span>
             <span class="status">● UPCOMING</span>
@@ -59,7 +74,6 @@
             <button class="theme-toggle" onclick="toggleTheme()" id="themeBtn">◐</button>
             <button class="theme-toggle" onclick="toggleSettings()" id="settingsBtn" title="Настройки">⚙️</button>
             
-            <!-- ПАНЕЛЬ НАСТРОЕК -->
             <div id="settingsPanel">
                 <div style="font-family:var(--mono); font-size:12px; font-weight:700; color:var(--text); border-bottom:1px solid var(--border); padding-bottom:8px;">🎨 Настройки сайта</div>
                 <div>
@@ -87,7 +101,6 @@
         <a href="tournaments.html" class="back-btn">← Назад к турнирам</a>
     </div>
 
-    <!-- ШАПКА ТУРНИРА -->
     <div class="glass-card" style="padding: 0; overflow: hidden; margin-bottom: 20px; border: 2px solid var(--border-2);">
         <div style="background: var(--surface-2); padding: 40px 20px; text-align: center; position: relative; border-bottom: 2px solid var(--accent);">
             <div style="position: absolute; top: 15px; right: 15px; background: var(--accent); color: #000; font-family: var(--mono); font-size: 10px; font-weight: 800; padding: 4px 10px; text-transform: uppercase;">
@@ -115,7 +128,6 @@
             </div>
         </div>
         
-        <!-- ТАБЫ -->
         <div class="tabs-container" style="margin: 0; border: none; border-bottom: 1px solid var(--border);">
             <button class="tab-btn active" onclick="switchTab('overview')" id="tab-overview" style="flex: 1; padding: 15px;">Обзор</button>
             <button class="tab-btn" onclick="switchTab('matches')" id="tab-matches" style="flex: 1; padding: 15px;">Матчи</button>
@@ -123,7 +135,6 @@
         </div>
     </div>
 
-    <!-- СЕКЦИЯ ОБЗОРА -->
     <div id="content-overview" class="tab-content active">
         <h2 class="panel-title">Участники <span>Team list</span></h2>
         <div class="teams-grid" id="teams-container"></div>
@@ -132,12 +143,10 @@
         <div class="prize-grid" id="prize-container"></div>
     </div>
 
-    <!-- СЕКЦИЯ МАТЧЕЙ -->
     <div id="content-matches" class="tab-content">
         <div id="matches-list-container"></div>
     </div>
 
-    <!-- СЕКЦИЯ СЕТКИ (BRACKET) -->
     <div id="content-bracket" class="tab-content" style="overflow-x: auto;">
         <div id="bracket-container" class="bracket-container"></div>
     </div>
@@ -146,9 +155,6 @@
 </div>
 
 <script>
-    // ==========================================
-    // 1. СИНХРОНИЗАЦИЯ ТЕМ
-    // ==========================================
     const themes = {
         'theme-terminal': { '--bg': '#0a0a0a', '--surface': '#101010', '--surface-2': '#161616', '--border': '#262626', '--text': '#e8e8e8', '--muted': '#737373', '--dim': '#4a4a4a', '--accent': '#c8ff00', '--success': '#00ff88', '--danger': '#ff3b3b' },
         'theme-cyberpunk': { '--bg': '#0b0c10', '--surface': '#15171e', '--surface-2': '#1f232c', '--border': '#2e3440', '--text': '#f0f4f8', '--muted': '#8b9bb0', '--dim': '#4a5a6e', '--accent': '#ff0055', '--success': '#00d2ff', '--danger': '#ff3b3b' },
@@ -156,43 +162,23 @@
         'theme-blood': { '--bg': '#0d0404', '--surface': '#160707', '--surface-2': '#240c0c', '--border': '#3a1414', '--text': '#f0e6e6', '--muted': '#9e7373', '--dim': '#5e3a3a', '--accent': '#ff3b3b', '--success': '#ffb020', '--danger': '#c0392b' },
         'theme-matrix': { '--bg': '#000000', '--surface': '#050505', '--surface-2': '#0a0a0a', '--border': '#112211', '--text': '#00ff41', '--muted': '#008f11', '--dim': '#004d0a', '--accent': '#00ff41', '--success': '#00ff88', '--danger': '#ff3b3b' }
     };
-
-    function applyTheme(themeName) {
-        const theme = themes[themeName];
-        if (!theme) return;
-        for (const [key, value] of Object.entries(theme)) {
-            document.documentElement.style.setProperty(key, value);
-        }
-    }
-
-    function changeTheme(themeName) {
-        localStorage.setItem('mpl_theme', themeName);
-        applyTheme(themeName);
-    }
+    function applyTheme(themeName) { const theme = themes[themeName]; if (!theme) return; for (const [key, value] of Object.entries(theme)) { document.documentElement.style.setProperty(key, value); } }
+    function changeTheme(themeName) { localStorage.setItem('mpl_theme', themeName); applyTheme(themeName); }
 
     function toggleTheme() { document.body.classList.toggle('light'); document.getElementById('themeBtn').textContent = document.body.classList.contains('light') ? '☀️' : '◐'; }
     let lang = 'ru';
     function toggleLang() { lang = lang === 'ru' ? 'en' : 'ru'; document.getElementById('langBtn').textContent = lang === 'ru' ? 'EN' : 'RU'; }
     function toggleSettings() { const panel = document.getElementById('settingsPanel'); panel.style.display = panel.style.display === 'none' ? 'flex' : 'none'; }
     function resetBg() { document.body.style.backgroundImage = 'none'; document.body.style.backgroundColor = 'var(--bg)'; localStorage.removeItem('mpl_bg'); document.getElementById('bgUpload').value = ''; }
-    
-    document.getElementById('bgUpload').addEventListener('change', function(e) {
-        const file = e.target.files[0];
-        if (file) { const reader = new FileReader(); reader.onload = function(event) { document.body.style.backgroundImage = `url(${event.target.result})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; localStorage.setItem('mpl_bg', event.target.result); }; reader.readAsDataURL(file); }
-    });
-
+    document.getElementById('bgUpload').addEventListener('change', function(e) { const file = e.target.files[0]; if (file) { const reader = new FileReader(); reader.onload = function(event) { document.body.style.backgroundImage = `url(${event.target.result})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; localStorage.setItem('mpl_bg', event.target.result); }; reader.readAsDataURL(file); } });
     window.addEventListener('DOMContentLoaded', () => {
         const savedTheme = localStorage.getItem('mpl_theme') || 'theme-terminal';
         applyTheme(savedTheme);
         const select = document.getElementById('themeSelect'); if (select) select.value = savedTheme;
-        
         const savedBg = localStorage.getItem('mpl_bg'); 
         if (savedBg) { document.body.style.backgroundImage = `url(${savedBg})`; document.body.style.backgroundSize = 'cover'; document.body.style.backgroundPosition = 'center'; }
     });
 
-    // ==========================================
-    // 2. ГЕНЕРАТОР И ЛОГИКА
-    // ==========================================
     const generate2027Tournaments = () => {
         let tournaments = [];
         const monthNames = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"];
@@ -203,23 +189,23 @@
             const el = elements[index];
             const el2 = elements[(index + 3) % 12];
 
-            if (mNum === 6) { // Summer Major
+            if (mNum === 6) {
                 tournaments.push({ id: `mpl-summer-major-2027`, name: `MPL SUMMER MAJOR 2027`, year: 2027, month: 6, status: "upcoming", dates: `Середина Июня 2027`, prizePool: "TBD (Big)", teamsCount: "16", location: "Online", teams: [], prizeDistribution: [{ place: "Champion", reward: "TBD" }, { place: "Runner-up", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-ranked-${mNum}-2027`, name: `MPL ${el} RANKED`, year: 2027, month: mNum, status: "upcoming", dates: `1-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "Top 1", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-cup-${mNum}-2027`, name: `MPL ${el} CUP`, year: 2027, month: mNum, status: "upcoming", dates: `3-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
-            } else if (mNum === 12) { // Winter Major
+            } else if (mNum === 12) {
                 tournaments.push({ id: `mpl-winter-major-2027`, name: `MPL WINTER MAJOR 2027`, year: 2027, month: 12, status: "upcoming", dates: `Середина Декабря 2027`, prizePool: "TBD (Big)", teamsCount: "16", location: "Online", teams: [], prizeDistribution: [{ place: "Champion", reward: "TBD" }, { place: "Runner-up", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-ranked-${mNum}-2027`, name: `MPL ${el} RANKED`, year: 2027, month: mNum, status: "upcoming", dates: `1-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "Top 1", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-cup-${mNum}-2027`, name: `MPL ${el} CUP`, year: 2027, month: mNum, status: "upcoming", dates: `3-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
-            } else if (mNum === 1) { // Kickoff
+            } else if (mNum === 1) {
                 tournaments.push({ id: `mpl-kickoff-2027`, name: `MPL KICKOFF 2027`, year: 2027, month: 1, status: "upcoming", dates: `2-3 Января 2027`, prizePool: "Points", teamsCount: "6", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }, {place: "2nd", reward: "TBD"}, {place: "3rd-4th", reward: "TBD"}, {place: "5th-6th", reward: "TBD"}] });
                 tournaments.push({ id: `mpl-ranked-${mNum}-2027`, name: `MPL ${el} RANKED`, year: 2027, month: mNum, status: "upcoming", dates: `2-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "Top 1", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-cup-${mNum}-2027`, name: `MPL ${el} CUP`, year: 2027, month: mNum, status: "upcoming", dates: `4-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
-            } else if (mNum === 7) { // Mid-Season
+            } else if (mNum === 7) {
                 tournaments.push({ id: `mpl-midseason-2027`, name: `MPL MID-SEASON`, year: 2027, month: 7, status: "upcoming", dates: `1-я неделя Июля 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-ranked-${mNum}-2027`, name: `MPL ${el} RANKED`, year: 2027, month: mNum, status: "upcoming", dates: `2-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "Top 1", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-cup-${mNum}-2027`, name: `MPL ${el} CUP`, year: 2027, month: mNum, status: "upcoming", dates: `4-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
-            } else { // Остальные
+            } else {
                 tournaments.push({ id: `mpl-ranked-${mNum}-2027`, name: `MPL ${el} RANKED`, year: 2027, month: mNum, status: "upcoming", dates: `1-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "Top 1", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-cup-${mNum}-2027`, name: `MPL ${el} CUP`, year: 2027, month: mNum, status: "upcoming", dates: `2-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }, { place: "2nd", reward: "TBD" }] });
                 tournaments.push({ id: `mpl-open-${mNum}-2027`, name: `MPL ${el2} OPEN`, year: 2027, month: mNum, status: "upcoming", dates: `4-я неделя ${monthName} 2027`, prizePool: "Points", teamsCount: "TBD", location: "Online", teams: [], prizeDistribution: [{ place: "1st", reward: "TBD" }] });
@@ -230,9 +216,6 @@
 
     const tournamentsData = [...generate2027Tournaments()];
 
-    // ==========================================
-    // 3. РЕНДЕР СТРАНИЦЫ И ВКЛАДОК
-    // ==========================================
     document.addEventListener("DOMContentLoaded", () => {
         const urlParams = new URLSearchParams(window.location.search);
         const tournamentId = urlParams.get('id');
@@ -305,7 +288,6 @@
         
         container.innerHTML = '';
 
-        // Колонка 1: Вайлдкард
         const col1 = document.createElement('div'); 
         col1.className = 'bracket-col';
         col1.innerHTML = '<div class="bracket-title">ВАЙЛДКАРД</div>';
@@ -319,7 +301,6 @@
             </div>
         `;
 
-        // Колонка 2: Полуфиналы
         const col2 = document.createElement('div'); 
         col2.className = 'bracket-col';
         col2.innerHTML = '<div class="bracket-title">ПОЛУФИНАЛЫ</div>';
@@ -342,7 +323,6 @@
             </div>
         `;
 
-        // Колонка 3: Финал
         const col3 = document.createElement('div'); 
         col3.className = 'bracket-col';
         col3.innerHTML = '<div class="bracket-title">ГРАНД-ФИНАЛ</div>';
@@ -356,7 +336,6 @@
             </div>
         `;
 
-        // Колонка 4: Чемпион
         const col4 = document.createElement('div'); 
         col4.className = 'bracket-col';
         col4.innerHTML = '<div class="bracket-title">ЧЕМПИОН</div>';
